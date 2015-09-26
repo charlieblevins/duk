@@ -1,0 +1,512 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		94DE92EF6C599BF36CFF1626 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D295458223855C4955AD90D2 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		EC6DDCD91BAF31EE00458B42 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */; };
+		EC6DDCDB1BAF31EE00458B42 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCDA1BAF31EE00458B42 /* ViewController.swift */; };
+		EC6DDCDE1BAF31EE00458B42 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCDC1BAF31EE00458B42 /* Main.storyboard */; };
+		EC6DDCE01BAF31EE00458B42 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCDF1BAF31EE00458B42 /* Images.xcassets */; };
+		EC6DDCE31BAF31EE00458B42 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCE11BAF31EE00458B42 /* LaunchScreen.xib */; };
+		EC6DDCEF1BAF31EE00458B42 /* DuckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCEE1BAF31EE00458B42 /* DuckTests.swift */; };
+		EC6DDCF91BAF329F00458B42 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCF81BAF329F00458B42 /* Settings.bundle */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		EC6DDCE91BAF31EE00458B42 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = EC6DDCCB1BAF31EE00458B42 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = EC6DDCD21BAF31EE00458B42;
+			remoteInfo = Duck;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		1E3235C2EC6C88894FAEFA6A /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
+		C74B69403AD094A8120F45EA /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		D295458223855C4955AD90D2 /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC6DDCD31BAF31EE00458B42 /* Duck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Duck.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC6DDCD71BAF31EE00458B42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		EC6DDCDA1BAF31EE00458B42 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		EC6DDCDD1BAF31EE00458B42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		EC6DDCDF1BAF31EE00458B42 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		EC6DDCE21BAF31EE00458B42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		EC6DDCE81BAF31EE00458B42 /* DuckTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DuckTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		EC6DDCED1BAF31EE00458B42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		EC6DDCEE1BAF31EE00458B42 /* DuckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuckTests.swift; sourceTree = "<group>"; };
+		EC6DDCF81BAF329F00458B42 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = ../../../../Downloads/Settings.bundle; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		EC6DDCD01BAF31EE00458B42 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				94DE92EF6C599BF36CFF1626 /* Pods.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC6DDCE51BAF31EE00458B42 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		62203B32355042E29FCE00DD /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				C74B69403AD094A8120F45EA /* Pods.debug.xcconfig */,
+				1E3235C2EC6C88894FAEFA6A /* Pods.release.xcconfig */,
+			);
+			name = Pods;
+			sourceTree = "<group>";
+		};
+		DF705FA15A4EC39A46C0C1AA /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				D295458223855C4955AD90D2 /* Pods.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		EC6DDCCA1BAF31EE00458B42 = {
+			isa = PBXGroup;
+			children = (
+				EC6DDCD51BAF31EE00458B42 /* Duck */,
+				EC6DDCEB1BAF31EE00458B42 /* DuckTests */,
+				EC6DDCD41BAF31EE00458B42 /* Products */,
+				62203B32355042E29FCE00DD /* Pods */,
+				DF705FA15A4EC39A46C0C1AA /* Frameworks */,
+			);
+			sourceTree = "<group>";
+		};
+		EC6DDCD41BAF31EE00458B42 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				EC6DDCD31BAF31EE00458B42 /* Duck.app */,
+				EC6DDCE81BAF31EE00458B42 /* DuckTests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		EC6DDCD51BAF31EE00458B42 /* Duck */ = {
+			isa = PBXGroup;
+			children = (
+				EC6DDCF81BAF329F00458B42 /* Settings.bundle */,
+				EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */,
+				EC6DDCDA1BAF31EE00458B42 /* ViewController.swift */,
+				EC6DDCDC1BAF31EE00458B42 /* Main.storyboard */,
+				EC6DDCDF1BAF31EE00458B42 /* Images.xcassets */,
+				EC6DDCE11BAF31EE00458B42 /* LaunchScreen.xib */,
+				EC6DDCD61BAF31EE00458B42 /* Supporting Files */,
+			);
+			path = Duck;
+			sourceTree = "<group>";
+		};
+		EC6DDCD61BAF31EE00458B42 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EC6DDCD71BAF31EE00458B42 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		EC6DDCEB1BAF31EE00458B42 /* DuckTests */ = {
+			isa = PBXGroup;
+			children = (
+				EC6DDCEE1BAF31EE00458B42 /* DuckTests.swift */,
+				EC6DDCEC1BAF31EE00458B42 /* Supporting Files */,
+			);
+			path = DuckTests;
+			sourceTree = "<group>";
+		};
+		EC6DDCEC1BAF31EE00458B42 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				EC6DDCED1BAF31EE00458B42 /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EC6DDCD21BAF31EE00458B42 /* Duck */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EC6DDCF21BAF31EE00458B42 /* Build configuration list for PBXNativeTarget "Duck" */;
+			buildPhases = (
+				DADD13E38C1C4DD09686DCAC /* Check Pods Manifest.lock */,
+				EC6DDCCF1BAF31EE00458B42 /* Sources */,
+				EC6DDCD01BAF31EE00458B42 /* Frameworks */,
+				EC6DDCD11BAF31EE00458B42 /* Resources */,
+				209800DA6F381ABD894C8C6A /* Embed Pods Frameworks */,
+				CCD1754B9A88C733E0560104 /* Copy Pods Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Duck;
+			productName = Duck;
+			productReference = EC6DDCD31BAF31EE00458B42 /* Duck.app */;
+			productType = "com.apple.product-type.application";
+		};
+		EC6DDCE71BAF31EE00458B42 /* DuckTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = EC6DDCF51BAF31EE00458B42 /* Build configuration list for PBXNativeTarget "DuckTests" */;
+			buildPhases = (
+				EC6DDCE41BAF31EE00458B42 /* Sources */,
+				EC6DDCE51BAF31EE00458B42 /* Frameworks */,
+				EC6DDCE61BAF31EE00458B42 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				EC6DDCEA1BAF31EE00458B42 /* PBXTargetDependency */,
+			);
+			name = DuckTests;
+			productName = DuckTests;
+			productReference = EC6DDCE81BAF31EE00458B42 /* DuckTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		EC6DDCCB1BAF31EE00458B42 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0640;
+				ORGANIZATIONNAME = "Charlie Blevins";
+				TargetAttributes = {
+					EC6DDCD21BAF31EE00458B42 = {
+						CreatedOnToolsVersion = 6.4;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
+					};
+					EC6DDCE71BAF31EE00458B42 = {
+						CreatedOnToolsVersion = 6.4;
+						TestTargetID = EC6DDCD21BAF31EE00458B42;
+					};
+				};
+			};
+			buildConfigurationList = EC6DDCCE1BAF31EE00458B42 /* Build configuration list for PBXProject "Duck" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = EC6DDCCA1BAF31EE00458B42;
+			productRefGroup = EC6DDCD41BAF31EE00458B42 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EC6DDCD21BAF31EE00458B42 /* Duck */,
+				EC6DDCE71BAF31EE00458B42 /* DuckTests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		EC6DDCD11BAF31EE00458B42 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC6DDCF91BAF329F00458B42 /* Settings.bundle in Resources */,
+				EC6DDCDE1BAF31EE00458B42 /* Main.storyboard in Resources */,
+				EC6DDCE31BAF31EE00458B42 /* LaunchScreen.xib in Resources */,
+				EC6DDCE01BAF31EE00458B42 /* Images.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC6DDCE61BAF31EE00458B42 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		209800DA6F381ABD894C8C6A /* Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Embed Pods Frameworks";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		CCD1754B9A88C733E0560104 /* Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Pods Resources";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods/Pods-resources.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		DADD13E38C1C4DD09686DCAC /* Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Check Pods Manifest.lock";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_ROOT}/../Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [[ $? != 0 ]] ; then\n    cat << EOM\nerror: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\nEOM\n    exit 1\nfi\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		EC6DDCCF1BAF31EE00458B42 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC6DDCDB1BAF31EE00458B42 /* ViewController.swift in Sources */,
+				EC6DDCD91BAF31EE00458B42 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		EC6DDCE41BAF31EE00458B42 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				EC6DDCEF1BAF31EE00458B42 /* DuckTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		EC6DDCEA1BAF31EE00458B42 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = EC6DDCD21BAF31EE00458B42 /* Duck */;
+			targetProxy = EC6DDCE91BAF31EE00458B42 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		EC6DDCDC1BAF31EE00458B42 /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EC6DDCDD1BAF31EE00458B42 /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		EC6DDCE11BAF31EE00458B42 /* LaunchScreen.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				EC6DDCE21BAF31EE00458B42 /* Base */,
+			);
+			name = LaunchScreen.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		EC6DDCF01BAF31EE00458B42 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		EC6DDCF11BAF31EE00458B42 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		EC6DDCF31BAF31EE00458B42 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C74B69403AD094A8120F45EA /* Pods.debug.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = Duck/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		EC6DDCF41BAF31EE00458B42 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 1E3235C2EC6C88894FAEFA6A /* Pods.release.xcconfig */;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				INFOPLIST_FILE = Duck/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
+		EC6DDCF61BAF31EE00458B42 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = DuckTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Duck.app/Duck";
+			};
+			name = Debug;
+		};
+		EC6DDCF71BAF31EE00458B42 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = DuckTests/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Duck.app/Duck";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		EC6DDCCE1BAF31EE00458B42 /* Build configuration list for PBXProject "Duck" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EC6DDCF01BAF31EE00458B42 /* Debug */,
+				EC6DDCF11BAF31EE00458B42 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EC6DDCF21BAF31EE00458B42 /* Build configuration list for PBXNativeTarget "Duck" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EC6DDCF31BAF31EE00458B42 /* Debug */,
+				EC6DDCF41BAF31EE00458B42 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		EC6DDCF51BAF31EE00458B42 /* Build configuration list for PBXNativeTarget "DuckTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				EC6DDCF61BAF31EE00458B42 /* Debug */,
+				EC6DDCF71BAF31EE00458B42 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = EC6DDCCB1BAF31EE00458B42 /* Project object */;
+}
