@@ -41,7 +41,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     func showMap() {
         mapView = MGLMapView(frame: view.bounds)
         mapView.showsUserLocation = true;
-        mapView.autoresizingMask = .FlexibleWidth | .FlexibleHeight
+        mapView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         
         // set the map's center coordinate ,
         mapView.setCenterCoordinate(CLLocationCoordinate2D(latitude: 51.513594,
@@ -75,7 +75,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     
     // Show Add Marker button
     func showAddMarkerButton() {
-        let button   = UIButton.buttonWithType(UIButtonType.System) as! UIButton
+        let button = UIButton()
         
         // Build button
         button.frame = CGRectMake(100, 100, 100, 50)
@@ -84,7 +84,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         button.setTitle("Add Marker", forState: UIControlState.Normal)
         
         // Position
-        button.setTranslatesAutoresizingMaskIntoConstraints(false)
+        //button.setTranslatesAutoresizingMaskIntoConstraints(false)
         let horizontalConstraint = NSLayoutConstraint(
             item: button,
             attribute: .CenterX,
@@ -116,7 +116,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     
     func addMarker(sender:UIButton!)
     {
-        println("Adding marker...")
+        print("Adding marker...")
     }
     
 }
