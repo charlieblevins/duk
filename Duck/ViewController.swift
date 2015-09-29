@@ -84,7 +84,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         button.setTitle("Add Marker", forState: UIControlState.Normal)
         
         // Position
-        //button.setTranslatesAutoresizingMaskIntoConstraints(false)
+        button.translatesAutoresizingMaskIntoConstraints = false
         let horizontalConstraint = NSLayoutConstraint(
             item: button,
             attribute: .CenterX,
