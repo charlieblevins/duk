@@ -52,16 +52,20 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         // Set the delegate property of our map view to self after instantiating it.
         mapView.delegate = self
         
+        // Add a test marker
+        self.addMarker(51.502202, markerLng: -0.134982)
+        
+    }
+    
+    func addMarker (markerLat: CLLocationDegrees, markerLng: CLLocationDegrees) {
         // Declare the marker `hello` and set its coordinates, title, and subtitle
         let hello = MGLPointAnnotation()
-        hello.coordinate = CLLocationCoordinate2D(latitude: 51.502202, longitude: -0.134982)
+        hello.coordinate = CLLocationCoordinate2D(latitude: markerLat, longitude: markerLng)
         hello.title = "Hello world!"
         hello.subtitle = "Welcome to my marker"
         
         // Add marker `hello` to the map
         mapView.addAnnotation(hello)
-        
-        
     }
     
     // Use the default marker; see our custom marker example for more information
@@ -114,9 +118,9 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         verticalConstraint.active = true
     }
     
-    func addMarker(sender:UIButton!)
-    {
+    func addMarker(sender:UIButton!) {
         print("Adding marker...")
+        self.addMarker(51.505009, markerLng: -0.120699)
     }
     
 }
