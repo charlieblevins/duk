@@ -28,7 +28,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     }
     
     // Callback for user location permissions
-    func locationManager(manager: CLLocationManager!, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         if status == .AuthorizedAlways {
             locationManager.startUpdatingLocation()
             
@@ -120,7 +120,11 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     
     func addMarker(sender:UIButton!) {
         print("Adding marker...")
-        self.addMarker(51.505009, markerLng: -0.120699)
+        
+        let MarkerNavigation = self.storyboard!.instantiateViewControllerWithIdentifier("MarkerNavigation")
+        self.presentViewController(MarkerNavigation, animated: true, completion: nil)
+        
+        //self.addMarker(51.505009, markerLng: -0.120699)
     }
     
 }
