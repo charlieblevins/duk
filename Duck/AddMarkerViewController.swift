@@ -14,6 +14,8 @@ class AddMarkerViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        self.title = "Add A Marker"
 
         print("Loaded add marker view...")
     }

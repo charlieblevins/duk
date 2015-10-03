@@ -17,6 +17,7 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
     
     override func viewDidLoad() {
         super.viewDidLoad()
+
         
         // Request user location
         locationManager = CLLocationManager()
@@ -25,6 +26,14 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         locationManager.requestAlwaysAuthorization()
         locationManager.startUpdatingLocation()
 
+    }
+    
+    // Hide nav bar for this view, but show for others
+    override func viewWillAppear(animated: Bool) {
+        self.navigationController?.navigationBarHidden = true
+    }
+    override func viewWillDisappear(animated: Bool) {
+        self.navigationController?.navigationBarHidden = false
     }
     
     // Callback for user location permissions
@@ -118,11 +127,12 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         verticalConstraint.active = true
     }
     
+    // Moves user to MarkerNavigation
     func addMarker(sender:UIButton!) {
         print("Adding marker...")
         
-        let MarkerNavigation = self.storyboard!.instantiateViewControllerWithIdentifier("MarkerNavigation")
-        self.presentViewController(MarkerNavigation, animated: true, completion: nil)
+        let AddMarkerViewController = self.storyboard!.instantiateViewControllerWithIdentifier("AddMarkerViewController")
+        self.navigationController?.pushViewController(AddMarkerViewController, animated: true)
         
         //self.addMarker(51.505009, markerLng: -0.120699)
     }

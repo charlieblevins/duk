@@ -16,6 +16,7 @@
 		EC6DDCEF1BAF31EE00458B42 /* DuckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCEE1BAF31EE00458B42 /* DuckTests.swift */; };
 		EC6DDCF91BAF329F00458B42 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCF81BAF329F00458B42 /* Settings.bundle */; };
 		ECD579201BBC82F30096FA1B /* AddMarkerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD5791F1BBC82F30096FA1B /* AddMarkerViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		ECD579241BBDFBAD0096FA1B /* MarkerNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579231BBDFBAD0096FA1B /* MarkerNavigation.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		EC6DDCEE1BAF31EE00458B42 /* DuckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuckTests.swift; sourceTree = "<group>"; };
 		EC6DDCF81BAF329F00458B42 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = ../../../../Downloads/Settings.bundle; sourceTree = "<group>"; };
 		ECD5791F1BBC82F30096FA1B /* AddMarkerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMarkerViewController.swift; sourceTree = "<group>"; };
+		ECD579231BBDFBAD0096FA1B /* MarkerNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerNavigation.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -108,8 +110,9 @@
 				EC6DDCF81BAF329F00458B42 /* Settings.bundle */,
 				EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */,
 				EC6DDCDA1BAF31EE00458B42 /* ViewController.swift */,
-				EC6DDCDC1BAF31EE00458B42 /* Main.storyboard */,
+				ECD579231BBDFBAD0096FA1B /* MarkerNavigation.swift */,
 				ECD5791F1BBC82F30096FA1B /* AddMarkerViewController.swift */,
+				EC6DDCDC1BAF31EE00458B42 /* Main.storyboard */,
 				EC6DDCDF1BAF31EE00458B42 /* Images.xcassets */,
 				EC6DDCE11BAF31EE00458B42 /* LaunchScreen.xib */,
 				EC6DDCD61BAF31EE00458B42 /* Supporting Files */,
@@ -303,6 +306,7 @@
 				EC6DDCDB1BAF31EE00458B42 /* ViewController.swift in Sources */,
 				ECD579201BBC82F30096FA1B /* AddMarkerViewController.swift in Sources */,
 				EC6DDCD91BAF31EE00458B42 /* AppDelegate.swift in Sources */,
+				ECD579241BBDFBAD0096FA1B /* MarkerNavigation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
