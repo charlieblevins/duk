@@ -1,5 +1,5 @@
 //
-//  MarkerNavigation.swift
+//  MainNavigation.swift
 //  Duck
 //
 //  Created by Charlie Blevins on 10/1/15.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class MarkerNavigation: UINavigationController {
+class MainNavigation: UINavigationController {
     
     override func viewDidLoad() {
         super.viewDidLoad()

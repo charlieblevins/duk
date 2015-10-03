@@ -9,14 +9,17 @@
 /* Begin PBXBuildFile section */
 		94DE92EF6C599BF36CFF1626 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D295458223855C4955AD90D2 /* Pods.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		EC6DDCD91BAF31EE00458B42 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */; };
-		EC6DDCDB1BAF31EE00458B42 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCDA1BAF31EE00458B42 /* ViewController.swift */; };
+		EC6DDCDB1BAF31EE00458B42 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */; };
 		EC6DDCDE1BAF31EE00458B42 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCDC1BAF31EE00458B42 /* Main.storyboard */; };
 		EC6DDCE01BAF31EE00458B42 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCDF1BAF31EE00458B42 /* Images.xcassets */; };
 		EC6DDCE31BAF31EE00458B42 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCE11BAF31EE00458B42 /* LaunchScreen.xib */; };
 		EC6DDCEF1BAF31EE00458B42 /* DuckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCEE1BAF31EE00458B42 /* DuckTests.swift */; };
 		EC6DDCF91BAF329F00458B42 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCF81BAF329F00458B42 /* Settings.bundle */; };
 		ECD579201BBC82F30096FA1B /* AddMarkerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD5791F1BBC82F30096FA1B /* AddMarkerViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		ECD579241BBDFBAD0096FA1B /* MarkerNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579231BBDFBAD0096FA1B /* MarkerNavigation.swift */; settings = {ASSET_TAGS = (); }; };
+		ECD579241BBDFBAD0096FA1B /* MainNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */; settings = {ASSET_TAGS = (); }; };
+		ECD579261BC01B720096FA1B /* AddIconMarkerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579251BC01B720096FA1B /* AddIconMarkerController.swift */; settings = {ASSET_TAGS = (); }; };
+		ECD579281BC01BC70096FA1B /* AddPhotoMarkerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579271BC01BC70096FA1B /* AddPhotoMarkerController.swift */; settings = {ASSET_TAGS = (); }; };
+		ECD5792A1BC01C0C0096FA1B /* AddPathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579291BC01C0C0096FA1B /* AddPathController.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,7 +39,7 @@
 		EC6DDCD31BAF31EE00458B42 /* Duck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Duck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC6DDCD71BAF31EE00458B42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		EC6DDCDA1BAF31EE00458B42 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		EC6DDCDD1BAF31EE00458B42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		EC6DDCDF1BAF31EE00458B42 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		EC6DDCE21BAF31EE00458B42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -45,7 +48,10 @@
 		EC6DDCEE1BAF31EE00458B42 /* DuckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuckTests.swift; sourceTree = "<group>"; };
 		EC6DDCF81BAF329F00458B42 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = ../../../../Downloads/Settings.bundle; sourceTree = "<group>"; };
 		ECD5791F1BBC82F30096FA1B /* AddMarkerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMarkerViewController.swift; sourceTree = "<group>"; };
-		ECD579231BBDFBAD0096FA1B /* MarkerNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerNavigation.swift; sourceTree = "<group>"; };
+		ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainNavigation.swift; sourceTree = "<group>"; };
+		ECD579251BC01B720096FA1B /* AddIconMarkerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddIconMarkerController.swift; sourceTree = "<group>"; };
+		ECD579271BC01BC70096FA1B /* AddPhotoMarkerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPhotoMarkerController.swift; sourceTree = "<group>"; };
+		ECD579291BC01C0C0096FA1B /* AddPathController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPathController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -109,9 +115,12 @@
 			children = (
 				EC6DDCF81BAF329F00458B42 /* Settings.bundle */,
 				EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */,
-				EC6DDCDA1BAF31EE00458B42 /* ViewController.swift */,
-				ECD579231BBDFBAD0096FA1B /* MarkerNavigation.swift */,
+				EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */,
+				ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */,
 				ECD5791F1BBC82F30096FA1B /* AddMarkerViewController.swift */,
+				ECD579251BC01B720096FA1B /* AddIconMarkerController.swift */,
+				ECD579271BC01BC70096FA1B /* AddPhotoMarkerController.swift */,
+				ECD579291BC01C0C0096FA1B /* AddPathController.swift */,
 				EC6DDCDC1BAF31EE00458B42 /* Main.storyboard */,
 				EC6DDCDF1BAF31EE00458B42 /* Images.xcassets */,
 				EC6DDCE11BAF31EE00458B42 /* LaunchScreen.xib */,
@@ -303,10 +312,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EC6DDCDB1BAF31EE00458B42 /* ViewController.swift in Sources */,
+				ECD5792A1BC01C0C0096FA1B /* AddPathController.swift in Sources */,
+				EC6DDCDB1BAF31EE00458B42 /* MapViewController.swift in Sources */,
+				ECD579261BC01B720096FA1B /* AddIconMarkerController.swift in Sources */,
 				ECD579201BBC82F30096FA1B /* AddMarkerViewController.swift in Sources */,
 				EC6DDCD91BAF31EE00458B42 /* AppDelegate.swift in Sources */,
-				ECD579241BBDFBAD0096FA1B /* MarkerNavigation.swift in Sources */,
+				ECD579281BC01BC70096FA1B /* AddPhotoMarkerController.swift in Sources */,
+				ECD579241BBDFBAD0096FA1B /* MainNavigation.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

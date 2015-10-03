@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MapViewController.swift
 //  Duck
 //
 //  Created by Charlie Blevins on 9/20/15.
@@ -10,7 +10,7 @@ import Mapbox
 import Foundation
 import CoreLocation
 
-class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
+class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
     
     var mapView: MGLMapView!
     var locationManager: CLLocationManager!
@@ -127,9 +127,8 @@ class ViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDel
         verticalConstraint.active = true
     }
     
-    // Moves user to MarkerNavigation
+    // Moves user to add marker view
     func addMarker(sender:UIButton!) {
-        print("Adding marker...")
         
         let AddMarkerViewController = self.storyboard!.instantiateViewControllerWithIdentifier("AddMarkerViewController")
         self.navigationController?.pushViewController(AddMarkerViewController, animated: true)

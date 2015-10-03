@@ -5,10 +5,10 @@
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
     </dependencies>
     <scenes>
-        <!--View Controller-->
+        <!--Map View Controller-->
         <scene sceneID="ufC-wZ-h7g">
             <objects>
-                <viewController id="vXZ-lx-hvc" customClass="ViewController" customModule="Duck" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="MapViewController" id="vXZ-lx-hvc" customClass="MapViewController" customModule="Duck" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="jyV-Pf-zRb"/>
                         <viewControllerLayoutGuide type="bottom" id="2fi-mo-0CV"/>
@@ -30,7 +30,7 @@
         <!--Add Marker View Controller-->
         <scene sceneID="rLF-5F-bAA">
             <objects>
-                <viewController storyboardIdentifier="AddMarkerViewController" id="8V6-d6-3Ex" customClass="AddMarkerViewController" customModule="Duck" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AddMarkerViewController" id="8V6-d6-3Ex" customClass="AddMarkerViewController" customModule="Duck" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="gLB-5p-Ww6"/>
                         <viewControllerLayoutGuide type="bottom" id="tRy-5x-KJv"/>
@@ -40,15 +40,15 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUv-eU-xtP">
-                                <rect key="frame" x="131" y="49" width="30" height="30"/>
+                                <rect key="frame" x="126" y="98" width="30" height="30"/>
                                 <state key="normal" title="Icon"/>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fQu-e3-yRe">
-                                <rect key="frame" x="126" y="136" width="41" height="30"/>
+                                <rect key="frame" x="125" y="168" width="41" height="30"/>
                                 <state key="normal" title="Photo"/>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WXZ-y2-4Za">
-                                <rect key="frame" x="130" y="206" width="31" height="30"/>
+                                <rect key="frame" x="130" y="285" width="31" height="30"/>
                                 <state key="normal" title="Path"/>
                             </button>
                         </subviews>
@@ -59,25 +59,81 @@
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
                         <outlet property="IconMarker" destination="vUv-eU-xtP" id="J2F-6B-taB"/>
+                        <outlet property="PathMarker" destination="WXZ-y2-4Za" id="8Hq-dw-dg2"/>
+                        <outlet property="PhotoMarker" destination="fQu-e3-yRe" id="Ucx-ig-VGv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uc9-74-w09" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1170" y="376"/>
         </scene>
-        <!--Marker Navigation-->
+        <!--Add Icon Marker Controller-->
+        <scene sceneID="Y3v-Ox-vjp">
+            <objects>
+                <viewController storyboardIdentifier="AddIconMarkerController" id="esS-Rh-OdG" customClass="AddIconMarkerController" customModule="Duck" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="scY-I6-jA3"/>
+                        <viewControllerLayoutGuide type="bottom" id="0dl-8h-GLk"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="qS2-ZF-HX2">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ySQ-HF-wmJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1948" y="-285"/>
+        </scene>
+        <!--Add Photo Marker Controller-->
+        <scene sceneID="yxI-kT-uQW">
+            <objects>
+                <viewController storyboardIdentifier="AddPhotoMarkerController" id="qwp-Vw-ANI" customClass="AddPhotoMarkerController" customModule="Duck" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="bJQ-6R-SwD"/>
+                        <viewControllerLayoutGuide type="bottom" id="eOw-u5-xdc"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="BCu-JJ-30K">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Onf-eN-vGu" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1943" y="401"/>
+        </scene>
+        <!--Add Path Controller-->
+        <scene sceneID="Bei-MM-g94">
+            <objects>
+                <viewController storyboardIdentifier="AddPathController" id="eog-3o-2Zk" customClass="AddPathController" customModule="Duck" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="Wfl-AS-0Rq"/>
+                        <viewControllerLayoutGuide type="bottom" id="cN0-q3-uGO"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="y9r-O6-Har">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="lGQ-fR-jb1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1947" y="1085"/>
+        </scene>
+        <!--Main Navigation-->
         <scene sceneID="XO1-Lb-6si">
             <objects>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="CZX-SY-dnb" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <navigationController storyboardIdentifier="MarkerNavigation" id="JpL-cz-e6M" customClass="MarkerNavigation" customModule="Duck" customModuleProvider="target" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="MainNavigation" id="JpL-cz-e6M" customClass="MainNavigation" sceneMemberID="viewController">
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="58t-KB-4nF">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="vXZ-lx-hvc" kind="relationship" relationship="rootViewController" id="LWI-0B-6nN"/>
+                        <segue destination="vXZ-lx-hvc" kind="relationship" relationship="rootViewController" id="Zhh-6q-G3p"/>
                     </connections>
                 </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="CZX-SY-dnb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="-296" y="376"/>
         </scene>
