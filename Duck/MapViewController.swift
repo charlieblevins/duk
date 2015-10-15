@@ -52,6 +52,9 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
         mapView.showsUserLocation = true;
         mapView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         
+        // Turn on debug
+        //mapView.toggleDebug()
+        
         // set the map's center coordinate ,
         mapView.setCenterCoordinate(CLLocationCoordinate2D(latitude: 51.513594,
             longitude: -0.127210),
@@ -77,10 +80,16 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
         mapView.addAnnotation(hello)
     }
     
-    // Use the default marker; see our custom marker example for more information
     func mapView(mapView: MGLMapView, imageForAnnotation annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        return nil
+        // Memory efficiency: If a marker is available from the reusable queue, use it
+        if let pin = mapView.dequeueReusableAnnotationImageWithIdentifier("customPin") {
+            return pin
+        }
+        
+        let image = UIImage(named: "mapMarker")!
+        return MGLAnnotationImage(image: image, reuseIdentifier: "customPin")
     }
+    
     
     func mapView(mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
         return true

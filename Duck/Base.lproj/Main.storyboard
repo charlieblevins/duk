@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="14F27" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JpL-cz-e6M">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="8191" systemVersion="15A284" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="JpL-cz-e6M">
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="8154"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
         <!--Map View Controller-->
@@ -16,6 +18,7 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                     </view>
                     <navigationItem key="navigationItem" id="5bT-pm-eFx"/>
@@ -40,55 +43,35 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUv-eU-xtP">
-                                <rect key="frame" x="126" y="98" width="30" height="30"/>
-                                <state key="normal" title="Icon"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fQu-e3-yRe">
-                                <rect key="frame" x="125" y="168" width="41" height="30"/>
-                                <state key="normal" title="Photo"/>
+                                <rect key="frame" x="224" y="152" width="152" height="87"/>
+                                <animations/>
+                                <state key="normal" title="Marker"/>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WXZ-y2-4Za">
-                                <rect key="frame" x="130" y="285" width="31" height="30"/>
+                                <rect key="frame" x="285" y="327" width="31" height="30"/>
+                                <animations/>
                                 <state key="normal" title="Path"/>
                             </button>
                         </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                     <toolbarItems/>
                     <navigationItem key="navigationItem" id="gi2-6q-HBT"/>
                     <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
                     <connections>
-                        <outlet property="IconMarker" destination="vUv-eU-xtP" id="J2F-6B-taB"/>
-                        <outlet property="PathMarker" destination="WXZ-y2-4Za" id="8Hq-dw-dg2"/>
-                        <outlet property="PhotoMarker" destination="fQu-e3-yRe" id="Ucx-ig-VGv"/>
+                        <outlet property="addMarker" destination="vUv-eU-xtP" id="OHc-cG-EgX"/>
+                        <outlet property="addPath" destination="WXZ-y2-4Za" id="btd-CQ-6hX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uc9-74-w09" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1170" y="376"/>
         </scene>
-        <!--Add Icon Marker Controller-->
-        <scene sceneID="Y3v-Ox-vjp">
-            <objects>
-                <viewController storyboardIdentifier="AddIconMarkerController" id="esS-Rh-OdG" customClass="AddIconMarkerController" customModule="Duck" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="scY-I6-jA3"/>
-                        <viewControllerLayoutGuide type="bottom" id="0dl-8h-GLk"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="qS2-ZF-HX2">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="ySQ-HF-wmJ" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1948" y="-285"/>
-        </scene>
-        <!--Add Photo Marker Controller-->
+        <!--Add Marker Controller-->
         <scene sceneID="yxI-kT-uQW">
             <objects>
-                <viewController storyboardIdentifier="AddPhotoMarkerController" id="qwp-Vw-ANI" customClass="AddPhotoMarkerController" customModule="Duck" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="AddMarkerController" id="qwp-Vw-ANI" customClass="AddMarkerController" customModule="Duck" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="bJQ-6R-SwD"/>
                         <viewControllerLayoutGuide type="bottom" id="eOw-u5-xdc"/>
@@ -96,12 +79,78 @@
                     <view key="view" contentMode="scaleToFill" id="BCu-JJ-30K">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="2qB-8a-3GE" userLabel="IconSection">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="200"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1WO-lA-D63">
+                                        <rect key="frame" x="274" y="160" width="53" height="30"/>
+                                        <animations/>
+                                        <state key="normal" title="Change"/>
+                                    </button>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Icon" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="hIg-yQ-qon">
+                                        <rect key="frame" x="284" y="14" width="33" height="21"/>
+                                        <animations/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="vaD-nD-rhm" userLabel="IconImage">
+                                        <rect key="frame" x="250" y="50" width="100" height="100"/>
+                                        <animations/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="100" id="N7i-qT-COL"/>
+                                            <constraint firstAttribute="width" constant="100" id="xK1-lU-JgL"/>
+                                        </constraints>
+                                    </imageView>
+                                </subviews>
+                                <animations/>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="1WO-lA-D63" secondAttribute="bottom" constant="10" id="alv-TW-r8E"/>
+                                    <constraint firstItem="hIg-yQ-qon" firstAttribute="top" secondItem="2qB-8a-3GE" secondAttribute="top" constant="14" id="lLw-aj-ads"/>
+                                    <constraint firstItem="hIg-yQ-qon" firstAttribute="centerX" secondItem="2qB-8a-3GE" secondAttribute="centerX" id="mJI-4v-8NZ"/>
+                                    <constraint firstItem="1WO-lA-D63" firstAttribute="centerX" secondItem="2qB-8a-3GE" secondAttribute="centerX" id="r1x-5e-paT"/>
+                                    <constraint firstItem="vaD-nD-rhm" firstAttribute="centerY" secondItem="2qB-8a-3GE" secondAttribute="centerY" id="rp9-00-0og"/>
+                                    <constraint firstItem="vaD-nD-rhm" firstAttribute="centerX" secondItem="2qB-8a-3GE" secondAttribute="centerX" id="y6c-oC-7LD"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="V0H-Ka-gWk" userLabel="PhotoSection">
+                                <rect key="frame" x="0.0" y="200" width="600" height="200"/>
+                                <animations/>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="exJ-za-ldw" userLabel="TextSection">
+                                <rect key="frame" x="0.0" y="400" width="600" height="208"/>
+                                <animations/>
+                                <color key="backgroundColor" red="0.18174140232661085" green="0.86077615113270345" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                            </view>
+                        </subviews>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="V0H-Ka-gWk" firstAttribute="top" secondItem="2qB-8a-3GE" secondAttribute="bottom" id="0pP-RZ-bv8"/>
+                            <constraint firstItem="2qB-8a-3GE" firstAttribute="top" secondItem="BCu-JJ-30K" secondAttribute="topMargin" id="3mf-Gx-T6K"/>
+                            <constraint firstAttribute="trailing" secondItem="2qB-8a-3GE" secondAttribute="trailing" id="Cda-IZ-lse"/>
+                            <constraint firstItem="2qB-8a-3GE" firstAttribute="width" secondItem="V0H-Ka-gWk" secondAttribute="width" id="HhY-ow-Pen"/>
+                            <constraint firstItem="eOw-u5-xdc" firstAttribute="top" secondItem="2qB-8a-3GE" secondAttribute="bottom" constant="400" id="IvM-QW-bz1"/>
+                            <constraint firstItem="V0H-Ka-gWk" firstAttribute="leading" secondItem="BCu-JJ-30K" secondAttribute="leading" id="Nke-Np-Rfv"/>
+                            <constraint firstItem="V0H-Ka-gWk" firstAttribute="width" secondItem="BCu-JJ-30K" secondAttribute="width" id="QFn-uF-NOs"/>
+                            <constraint firstAttribute="bottomMargin" secondItem="exJ-za-ldw" secondAttribute="bottom" constant="-8" id="ZaT-Qr-0pl"/>
+                            <constraint firstItem="V0H-Ka-gWk" firstAttribute="height" secondItem="BCu-JJ-30K" secondAttribute="height" multiplier="0.3333" id="apS-aa-ObZ"/>
+                            <constraint firstItem="exJ-za-ldw" firstAttribute="trailing" secondItem="V0H-Ka-gWk" secondAttribute="trailing" id="dQZ-Vo-xpj"/>
+                            <constraint firstItem="exJ-za-ldw" firstAttribute="top" secondItem="V0H-Ka-gWk" secondAttribute="bottom" id="lS6-1C-TU1"/>
+                            <constraint firstItem="exJ-za-ldw" firstAttribute="leading" secondItem="V0H-Ka-gWk" secondAttribute="leading" id="mFX-Jf-6tb"/>
+                            <constraint firstItem="2qB-8a-3GE" firstAttribute="height" secondItem="V0H-Ka-gWk" secondAttribute="height" id="oGd-oK-1VU"/>
+                        </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
+                    <connections>
+                        <outlet property="IconSection" destination="2qB-8a-3GE" id="QD1-AZ-HX1"/>
+                        <outlet property="PhotoSection" destination="V0H-Ka-gWk" id="das-5M-n0P"/>
+                        <outlet property="TextSection" destination="exJ-za-ldw" id="tEZ-0f-XeM"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Onf-eN-vGu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1943" y="401"/>
+            <point key="canvasLocation" x="1800" y="157"/>
         </scene>
         <!--Add Path Controller-->
         <scene sceneID="Bei-MM-g94">
@@ -114,12 +163,13 @@
                     <view key="view" contentMode="scaleToFill" id="y9r-O6-Har">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lGQ-fR-jb1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1947" y="1085"/>
+            <point key="canvasLocation" x="1800" y="832"/>
         </scene>
         <!--Main Navigation-->
         <scene sceneID="XO1-Lb-6si">
@@ -128,6 +178,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="58t-KB-4nF">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <animations/>
                     </navigationBar>
                     <connections>
                         <segue destination="vXZ-lx-hvc" kind="relationship" relationship="rootViewController" id="Zhh-6q-G3p"/>
