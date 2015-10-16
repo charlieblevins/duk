@@ -24,6 +24,7 @@ class AddMarkerController: UIViewController {
         
         // Add styles
         self.stylePhotoSection()
+        self.addBottomBorder()
     }
 
     override func didReceiveMemoryWarning() {
@@ -32,11 +33,16 @@ class AddMarkerController: UIViewController {
     }
     
     func stylePhotoSection () {
-        PhotoSection.layer.borderColor = UIColor.darkGrayColor().CGColor
-        PhotoSection.layer.borderWidth = 2
+        //PhotoSection.layer.borderColor = UIColor.darkGrayColor().CGColor
+        //PhotoSection.layer.borderWidth = 2
     }
     
-
+    func addBottomBorder () {
+        let bottomBorder = CALayer()
+        bottomBorder.frame = CGRect(x: 0.0, y: 140, width: IconSection.frame.size.width, height: 1.0)
+        bottomBorder.backgroundColor = UIColor.blackColor().CGColor
+        IconSection.layer.addSublayer(bottomBorder)
+    }
     /*
     // MARK: - Navigation
 

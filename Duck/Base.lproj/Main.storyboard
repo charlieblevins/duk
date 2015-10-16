@@ -104,6 +104,7 @@
                                     </imageView>
                                 </subviews>
                                 <animations/>
+                                <color key="backgroundColor" red="1" green="0.19963011059999999" blue="0.51188210140000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="1WO-lA-D63" secondAttribute="bottom" constant="10" id="alv-TW-r8E"/>
                                     <constraint firstItem="hIg-yQ-qon" firstAttribute="top" secondItem="2qB-8a-3GE" secondAttribute="top" constant="14" id="lLw-aj-ads"/>
@@ -130,7 +131,6 @@
                             <constraint firstItem="2qB-8a-3GE" firstAttribute="top" secondItem="BCu-JJ-30K" secondAttribute="topMargin" id="3mf-Gx-T6K"/>
                             <constraint firstAttribute="trailing" secondItem="2qB-8a-3GE" secondAttribute="trailing" id="Cda-IZ-lse"/>
                             <constraint firstItem="2qB-8a-3GE" firstAttribute="width" secondItem="V0H-Ka-gWk" secondAttribute="width" id="HhY-ow-Pen"/>
-                            <constraint firstItem="eOw-u5-xdc" firstAttribute="top" secondItem="2qB-8a-3GE" secondAttribute="bottom" constant="400" id="IvM-QW-bz1"/>
                             <constraint firstItem="V0H-Ka-gWk" firstAttribute="leading" secondItem="BCu-JJ-30K" secondAttribute="leading" id="Nke-Np-Rfv"/>
                             <constraint firstItem="V0H-Ka-gWk" firstAttribute="width" secondItem="BCu-JJ-30K" secondAttribute="width" id="QFn-uF-NOs"/>
                             <constraint firstAttribute="bottomMargin" secondItem="exJ-za-ldw" secondAttribute="bottom" constant="-8" id="ZaT-Qr-0pl"/>
