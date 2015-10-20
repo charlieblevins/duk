@@ -10,11 +10,15 @@
 
 import UIKit
 
-class AddMarkerController: UIViewController {
+class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
 
-    @IBOutlet weak var IconSection: UIView!
     @IBOutlet weak var PhotoSection: UIView!
     @IBOutlet weak var TextSection: UIView!
+    
+    @IBOutlet weak var cameraPhoto: UIImageView!
+    @IBOutlet weak var addPhotoBtn: UIButton!
+    
+    var imagePicker: UIImagePickerController!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -22,6 +26,9 @@ class AddMarkerController: UIViewController {
         print("AddPhotoMarkerController view loaded")
         // Do any additional setup after loading the view.
         
+    }
+    
+    override func viewDidAppear(animated: Bool) {
         // Add styles
         self.stylePhotoSection()
         self.addBottomBorder()
@@ -39,10 +46,32 @@ class AddMarkerController: UIViewController {
     
     func addBottomBorder () {
         let bottomBorder = CALayer()
-        bottomBorder.frame = CGRect(x: 0.0, y: 140, width: IconSection.frame.size.width, height: 1.0)
+        bottomBorder.frame = CGRect(x: 0.0, y: PhotoSection.frame.height - 1, width: PhotoSection.frame.size.width, height: 1.0)
         bottomBorder.backgroundColor = UIColor.blackColor().CGColor
-        IconSection.layer.addSublayer(bottomBorder)
+        PhotoSection.layer.addSublayer(bottomBorder)
     }
+    
+    // Load camera to take photo
+    @IBAction func addPhoto(sender: UIButton) {
+        imagePicker = UIImagePickerController()
+        imagePicker.delegate = self
+        imagePicker.sourceType = .Camera
+        
+        presentViewController(imagePicker, animated: true, completion: nil)
+    }
+    
+    // Display taken photo
+    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+        
+        if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            cameraPhoto.contentMode = .ScaleAspectFit
+            cameraPhoto.image = pickedImage
+            cameraPhoto.layer.masksToBounds = true
+        }
+        
+        dismissViewControllerAnimated(true, completion: nil)
+    }
+    
     /*
     // MARK: - Navigation
 
