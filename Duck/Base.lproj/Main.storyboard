@@ -115,8 +115,8 @@
                                         <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="72m-IJ-iT0">
-                                        <rect key="frame" x="210" y="136" width="180" height="128"/>
+                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="72m-IJ-iT0">
+                                        <rect key="frame" x="0.0" y="60" width="600" height="280"/>
                                         <animations/>
                                     </imageView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kaz-Sn-epE">
@@ -130,7 +130,9 @@
                                 </subviews>
                                 <animations/>
                                 <constraints>
+                                    <constraint firstItem="72m-IJ-iT0" firstAttribute="width" secondItem="V0H-Ka-gWk" secondAttribute="width" id="5jS-GO-k8F"/>
                                     <constraint firstItem="72m-IJ-iT0" firstAttribute="centerX" secondItem="V0H-Ka-gWk" secondAttribute="centerX" id="7TO-Y4-aq9"/>
+                                    <constraint firstItem="72m-IJ-iT0" firstAttribute="height" secondItem="V0H-Ka-gWk" secondAttribute="height" multiplier="0.7" id="CwN-0b-3Jy"/>
                                     <constraint firstItem="kaz-Sn-epE" firstAttribute="centerX" secondItem="V0H-Ka-gWk" secondAttribute="centerX" id="HG7-G4-vVj"/>
                                     <constraint firstItem="72m-IJ-iT0" firstAttribute="centerY" secondItem="V0H-Ka-gWk" secondAttribute="centerY" id="P8E-bM-oyo"/>
                                     <constraint firstItem="zoG-WT-qJo" firstAttribute="top" secondItem="V0H-Ka-gWk" secondAttribute="top" constant="10" id="SUd-er-UFS"/>

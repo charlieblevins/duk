@@ -66,7 +66,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             cameraPhoto.contentMode = .ScaleAspectFit
             cameraPhoto.image = pickedImage
-            cameraPhoto.layer.masksToBounds = true
         }
         
         dismissViewControllerAnimated(true, completion: nil)
