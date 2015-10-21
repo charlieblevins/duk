@@ -31,7 +31,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     override func viewDidAppear(animated: Bool) {
         // Add styles
         self.stylePhotoSection()
-        self.addBottomBorder()
+        self.addBottomBorder(PhotoSection)
+        self.addBottomBorder(TextSection)
     }
 
     override func didReceiveMemoryWarning() {
@@ -44,11 +45,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         //PhotoSection.layer.borderWidth = 2
     }
     
-    func addBottomBorder () {
+    func addBottomBorder (section: UIView) {
         let bottomBorder = CALayer()
-        bottomBorder.frame = CGRect(x: 0.0, y: PhotoSection.frame.height - 1, width: PhotoSection.frame.size.width, height: 1.0)
+        bottomBorder.frame = CGRect(x: 0.0, y: section.frame.height - 1, width: section.frame.size.width, height: 1.0)
         bottomBorder.backgroundColor = UIColor.blackColor().CGColor
-        PhotoSection.layer.addSublayer(bottomBorder)
+        section.layer.addSublayer(bottomBorder)
     }
     
     // Load camera to take photo
