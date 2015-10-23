@@ -15,6 +15,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBOutlet weak var PhotoSection: UIView!
     @IBOutlet weak var TextSection: UIView!
     
+    @IBOutlet weak var TagField: UITextField!
+    @IBOutlet weak var DoneBtn: UIButton!
+    
+    @IBOutlet weak var PhotoSectionTopConstraint: NSLayoutConstraint!
+    
     @IBOutlet weak var cameraPhoto: UIImageView!
     @IBOutlet weak var addPhotoBtn: UIButton!
     
@@ -24,7 +29,13 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         super.viewDidLoad()
         self.title = "Add Marker"
         print("AddPhotoMarkerController view loaded")
-        // Do any additional setup after loading the view.
+        
+        // Add event handler for keyboard display
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: nil);
+        
+        // Add tap recognizer to close keyboard by tapping anywhere 
+        var tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
+        view.addGestureRecognizer(tap)
         
     }
     
@@ -38,6 +49,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func DismissKeyboard () {
+        view.endEditing(true)
     }
     
     func stylePhotoSection () {
@@ -72,6 +87,22 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         dismissViewControllerAnimated(true, completion: nil)
     }
     
+    // Adjust view when keyboard is displayed
+    func keyboardWillShow(notification: NSNotification) {
+        var info = notification.userInfo!
+        var keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+        print("Keyboard shown")
+        
+        UIView.animateWithDuration(0.1, animations: { () -> Void in self.PhotoSectionTopConstraint.constant = 0 - (keyboardFrame.size.height + 20)
+        })
+        
+    }
+    
+    @IBAction func DoneBuildingMarker(sender: UIButton) {
+        if TagField.text != nil {
+            print(TagField.text!)
+        }
+    }
     /*
     // MARK: - Navigation
 
