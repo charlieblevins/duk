@@ -50,10 +50,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
-    func DismissKeyboard () {
-        view.endEditing(true)
-    }
+
     
     func stylePhotoSection () {
         //PhotoSection.layer.borderColor = UIColor.darkGrayColor().CGColor
@@ -90,12 +87,20 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     // Adjust view when keyboard is displayed
     func keyboardWillShow(notification: NSNotification) {
         var info = notification.userInfo!
-        var keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
+        let keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
         print("Keyboard shown")
         
-        UIView.animateWithDuration(0.1, animations: { () -> Void in self.PhotoSectionTopConstraint.constant = 0 - (keyboardFrame.size.height + 20)
+        UIView.animateWithDuration(0.1, animations: {
+            self.PhotoSectionTopConstraint.constant = 0 - (keyboardFrame.size.height + 20)
         })
-        
+    }
+    
+    // Reset view as keyboard hides
+    func DismissKeyboard () {
+        UIView.animateWithDuration(0.1, animations: {
+            self.PhotoSectionTopConstraint.constant = 0
+        })
+        view.endEditing(true)
     }
     
     @IBAction func DoneBuildingMarker(sender: UIButton) {
