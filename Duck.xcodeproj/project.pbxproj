@@ -15,10 +15,11 @@
 		EC6DDCE31BAF31EE00458B42 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCE11BAF31EE00458B42 /* LaunchScreen.xib */; };
 		EC6DDCEF1BAF31EE00458B42 /* DuckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCEE1BAF31EE00458B42 /* DuckTests.swift */; };
 		EC6DDCF91BAF329F00458B42 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCF81BAF329F00458B42 /* Settings.bundle */; };
-		ECD579201BBC82F30096FA1B /* AddMarkerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD5791F1BBC82F30096FA1B /* AddMarkerViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		ECD579241BBDFBAD0096FA1B /* MainNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */; settings = {ASSET_TAGS = (); }; };
-		ECD579281BC01BC70096FA1B /* AddMarkerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579271BC01BC70096FA1B /* AddMarkerController.swift */; settings = {ASSET_TAGS = (); }; };
-		ECD5792A1BC01C0C0096FA1B /* AddPathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579291BC01C0C0096FA1B /* AddPathController.swift */; settings = {ASSET_TAGS = (); }; };
+		EC7843731BE383CC003E3AE9 /* IconModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7843721BE383CC003E3AE9 /* IconModel.swift */; };
+		ECD579201BBC82F30096FA1B /* AddMarkerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD5791F1BBC82F30096FA1B /* AddMarkerViewController.swift */; };
+		ECD579241BBDFBAD0096FA1B /* MainNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */; };
+		ECD579281BC01BC70096FA1B /* AddMarkerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579271BC01BC70096FA1B /* AddMarkerController.swift */; };
+		ECD5792A1BC01C0C0096FA1B /* AddPathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579291BC01C0C0096FA1B /* AddPathController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -46,6 +47,7 @@
 		EC6DDCED1BAF31EE00458B42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EC6DDCEE1BAF31EE00458B42 /* DuckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuckTests.swift; sourceTree = "<group>"; };
 		EC6DDCF81BAF329F00458B42 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = ../../../../Downloads/Settings.bundle; sourceTree = "<group>"; };
+		EC7843721BE383CC003E3AE9 /* IconModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconModel.swift; sourceTree = "<group>"; };
 		ECD5791F1BBC82F30096FA1B /* AddMarkerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMarkerViewController.swift; sourceTree = "<group>"; };
 		ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainNavigation.swift; sourceTree = "<group>"; };
 		ECD579271BC01BC70096FA1B /* AddMarkerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMarkerController.swift; sourceTree = "<group>"; };
@@ -119,6 +121,7 @@
 				ECD579271BC01BC70096FA1B /* AddMarkerController.swift */,
 				ECD579291BC01C0C0096FA1B /* AddPathController.swift */,
 				EC6DDCDC1BAF31EE00458B42 /* Main.storyboard */,
+				EC7843721BE383CC003E3AE9 /* IconModel.swift */,
 				EC6DDCDF1BAF31EE00458B42 /* Images.xcassets */,
 				EC6DDCE11BAF31EE00458B42 /* LaunchScreen.xib */,
 				EC6DDCD61BAF31EE00458B42 /* Supporting Files */,
@@ -311,6 +314,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ECD5792A1BC01C0C0096FA1B /* AddPathController.swift in Sources */,
+				EC7843731BE383CC003E3AE9 /* IconModel.swift in Sources */,
 				EC6DDCDB1BAF31EE00458B42 /* MapViewController.swift in Sources */,
 				ECD579201BBC82F30096FA1B /* AddMarkerViewController.swift in Sources */,
 				EC6DDCD91BAF31EE00458B42 /* AppDelegate.swift in Sources */,
