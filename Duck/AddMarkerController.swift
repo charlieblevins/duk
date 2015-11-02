@@ -25,6 +25,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     var imagePicker: UIImagePickerController!
     
+    var iconModel: IconModel!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = "Add Marker"
@@ -34,9 +36,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: nil);
         
         // Add tap recognizer to close keyboard by tapping anywhere 
-        var tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
         view.addGestureRecognizer(tap)
         
+        // Respond to text change events
+        TagField.addTarget(self, action: "tagFieldDidChange:", forControlEvents: UIControlEvents.EditingChanged)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -93,6 +97,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         UIView.animateWithDuration(0.1, animations: {
             self.PhotoSectionTopConstraint.constant = 0 - (keyboardFrame.size.height + 20)
         })
+        
+        // Load icon data
+        iconModel = IconModel()
     }
     
     // Reset view as keyboard hides
@@ -101,6 +108,19 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             self.PhotoSectionTopConstraint.constant = 0
         })
         view.endEditing(true)
+    }
+    
+    // Handle changes to text in tag field
+    func tagFieldDidChange (sender: UITextField) {
+        
+        // Get index of matching icon as user types
+        let index = iconModel.icons.indexOf({$0.tag.rangeOfString(sender.text!) != nil})
+        
+        // NEEDS ATTENTION - handle nil case for index
+        if index > -1 {
+            print(iconModel.icons[index!].tag)
+        }
+        
     }
     
     @IBAction func DoneBuildingMarker(sender: UIButton) {
