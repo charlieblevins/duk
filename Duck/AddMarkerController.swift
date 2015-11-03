@@ -110,16 +110,37 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         view.endEditing(true)
     }
     
-    // Handle changes to text in tag field
+    // Show matching tags as user types
     func tagFieldDidChange (sender: UITextField) {
         
         // Get index of matching icon as user types
-        let index = iconModel.icons.indexOf({$0.tag.rangeOfString(sender.text!) != nil})
+        let matchingIcons: [IconModel.Icon]? = iconModel.icons.filter({
+            let foundString: Range? = $0.tag.rangeOfString(sender.text!)
+            5
+            // all characters of typed string match first characters of Icon name
+            if foundString != nil && foundString!.startIndex == sender.text!.startIndex {
+                return true
+            } else {
+                return false
+            }
+        })
         
-        // NEEDS ATTENTION - handle nil case for index
-        if index > -1 {
-            print(iconModel.icons[index!].tag)
+        // Display matching items in dropdown
+        if matchingIcons != nil {
+            print(matchingIcons)
+            // Limit to 5 results
+            
+            // Measure amount of space needed
+            
+            // Extend tag area by measurement
+            
+            // Append suggestions (icon names)
+            
+            // Make suggestion tap-able
+            
+            // When suggestion tapped, add it to list below
         }
+        
         
     }
     

@@ -24,7 +24,8 @@ public class IconModel {
     
     public var icons: [Icon] = [
         Icon(tag: "hazard", fullName: "Hazard", imageName: "hazard"),
-        Icon(tag: "photo", fullName: "Photo", imageName: "Photo")
+        Icon(tag: "photo", fullName: "Photo", imageName: "Photo"),
+        Icon(tag: "parking", fullName: "Parking", imageName: "parking")
     ]
     
     init() {
