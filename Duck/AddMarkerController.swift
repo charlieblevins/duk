@@ -98,8 +98,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             self.PhotoSectionTopConstraint.constant = 0 - (keyboardFrame.size.height + 20)
         })
         
-        // Load icon data
-        iconModel = IconModel()
+
     }
     
     // Reset view as keyboard hides
@@ -112,6 +111,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     // Show matching tags as user types
     func tagFieldDidChange (sender: UITextField) {
+        
+        // Load icon data
+        if iconModel == nil {
+            iconModel = IconModel()
+        }
         
         // Get index of matching icon as user types
         let matchingIcons: [IconModel.Icon]? = iconModel.icons.filter({
@@ -131,9 +135,17 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             // Limit to 5 results
             
             // Measure amount of space needed
+            let height = CGFloat(matchingIcons!.count) * sender.frame.size.height
             
+            // Build/show autocomplete container
+            let aFrame = CGRect(x: sender.frame.origin.x, y: sender.frame.origin.y + 30, width: sender.frame.size.width, height: height)
+            let autocomplete: UIView = UIView(frame: aFrame)
+            autocomplete.layer.borderWidth = 1.0
+            autocomplete.layer.borderColor = sender.layer.borderColor
+            sender.superview!.addSubview(autocomplete)
+       
             // Extend tag area by measurement
-            
+            print(matchingIcons)
             // Append suggestions (icon names)
             
             // Make suggestion tap-able
