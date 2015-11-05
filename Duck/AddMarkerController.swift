@@ -26,6 +26,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     var imagePicker: UIImagePickerController!
     
     var iconModel: IconModel!
+    var autocomplete: UIView! = nil
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -118,9 +120,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         }
         
         // Get index of matching icon as user types
-        let matchingIcons: [IconModel.Icon]? = iconModel.icons.filter({
+        let matchingIcons: [IconModel.Icon] = iconModel.icons.filter({
+            
+            // Check if icon tag contains typed text
             let foundString: Range? = $0.tag.rangeOfString(sender.text!)
-            5
+            
             // all characters of typed string match first characters of Icon name
             if foundString != nil && foundString!.startIndex == sender.text!.startIndex {
                 return true
@@ -130,27 +134,52 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         })
         
         // Display matching items in dropdown
-        if matchingIcons != nil {
-            print(matchingIcons)
+        if matchingIcons.count > 0 {
             // Limit to 5 results
             
             // Measure amount of space needed
-            let height = CGFloat(matchingIcons!.count) * sender.frame.size.height
+            let height = CGFloat(matchingIcons.count) * sender.frame.size.height
             
             // Build/show autocomplete container
-            let aFrame = CGRect(x: sender.frame.origin.x, y: sender.frame.origin.y + 30, width: sender.frame.size.width, height: height)
-            let autocomplete: UIView = UIView(frame: aFrame)
-            autocomplete.layer.borderWidth = 1.0
-            autocomplete.layer.borderColor = sender.layer.borderColor
-            sender.superview!.addSubview(autocomplete)
+            if autocomplete === nil {
+                let aFrame = CGRect(x: sender.frame.origin.x, y: sender.frame.origin.y + 30, width: sender.frame.size.width, height: height)
+                autocomplete = UIView(frame: aFrame)
+                autocomplete.layer.borderWidth = 1.0
+                autocomplete.layer.borderColor = sender.layer.borderColor
+                sender.superview!.addSubview(autocomplete)
+        
+            // If autocomplete exists but height needs to change
+            } else if autocomplete.frame.height != height {
+                autocomplete.frame = CGRect(x: sender.frame.origin.x, y: sender.frame.origin.y + 30, width: sender.frame.size.width, height: height)
+            }
+            
+            // Append suggestions (icon names)
+            let limit = matchingIcons.count
+            for var i = 0; i < limit; ++i {
+                
+                let icon = matchingIcons[i]
+                
+                // Increase y value for each icon
+                let yPos = CGFloat(i) * sender.frame.size.height
+                let iconBtn: UIButton = UIButton(frame: CGRectMake(0, yPos, sender.frame.size.width, sender.frame.size.height))
+                iconBtn.setTitleColor(UIColor.grayColor(), forState: .Normal)
+                iconBtn.setTitle(icon.tag, forState: .Normal)
+                autocomplete.addSubview(iconBtn)
+                
+            } // End for loop
        
             // Extend tag area by measurement
             print(matchingIcons)
-            // Append suggestions (icon names)
+
             
             // Make suggestion tap-able
             
             // When suggestion tapped, add it to list below
+        } else {
+            // No icons were found
+            autocomplete.removeFromSuperview()
+            autocomplete = nil
+            
         }
         
         
