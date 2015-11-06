@@ -22,6 +22,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     @IBOutlet weak var cameraPhoto: UIImageView!
     @IBOutlet weak var addPhotoBtn: UIButton!
+    @IBOutlet weak var textSectionHeightConstraint: NSLayoutConstraint!
     
     var imagePicker: UIImagePickerController!
     
@@ -49,7 +50,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         // Add styles
         self.stylePhotoSection()
         self.addBottomBorder(PhotoSection)
-        self.addBottomBorder(TextSection)
+        //self.addBottomBorder(TextSection)
     }
 
     override func didReceiveMemoryWarning() {
@@ -63,6 +64,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         //PhotoSection.layer.borderWidth = 2
     }
     
+    // Adds a bottom border element at position of element
     func addBottomBorder (section: UIView) {
         let bottomBorder = CALayer()
         bottomBorder.frame = CGRect(x: 0.0, y: section.frame.height - 1, width: section.frame.size.width, height: 1.0)
@@ -140,6 +142,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             // Measure amount of space needed
             let height = CGFloat(matchingIcons.count) * sender.frame.size.height
             
+            // Make room in text container
+            textSectionHeightConstraint.constant = height
+            
             // Build/show autocomplete container
             if autocomplete === nil {
                 let aFrame = CGRect(x: sender.frame.origin.x, y: sender.frame.origin.y + 30, width: sender.frame.size.width, height: height)
@@ -168,21 +173,20 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
                 
             } // End for loop
        
-            // Extend tag area by measurement
-            print(matchingIcons)
+            // Save original frame and add height to account for autocomplete container
+            
+            //TextSection.frame = CGRect(x: TextSection.frame.origin.x, y: TextSection.frame.origin.x, width: TextSection.frame.size.width, height: TextSection.frame.size.height + height)
 
             
             // Make suggestion tap-able
             
             // When suggestion tapped, add it to list below
-        } else {
+        } else if autocomplete != nil {
             // No icons were found
             autocomplete.removeFromSuperview()
             autocomplete = nil
-            
+            textSectionHeightConstraint.constant = 0
         }
-        
-        
     }
     
     @IBAction func DoneBuildingMarker(sender: UIButton) {

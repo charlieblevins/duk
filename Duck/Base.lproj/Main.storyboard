@@ -137,6 +137,7 @@
                                     </button>
                                 </subviews>
                                 <animations/>
+                                <color key="backgroundColor" red="0.88032670454545459" green="0.88032670454545459" blue="0.88032670454545459" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
                                     <constraint firstItem="A2d-TG-p3G" firstAttribute="centerX" secondItem="exJ-za-ldw" secondAttribute="centerX" id="LPL-Yh-Bpw"/>
                                     <constraint firstItem="Gng-AI-JTq" firstAttribute="width" secondItem="exJ-za-ldw" secondAttribute="width" multiplier="0.7" id="OAv-Pv-EAb"/>
@@ -191,6 +192,7 @@
                         <outlet property="TextSection" destination="exJ-za-ldw" id="tEZ-0f-XeM"/>
                         <outlet property="addPhotoBtn" destination="kaz-Sn-epE" id="XIg-4B-1RH"/>
                         <outlet property="cameraPhoto" destination="72m-IJ-iT0" id="Hac-0J-GkG"/>
+                        <outlet property="textSectionHeightConstraint" destination="ToR-GJ-C3F" id="teq-jz-Oj8"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Onf-eN-vGu" userLabel="First Responder" sceneMemberID="firstResponder"/>
