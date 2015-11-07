@@ -23,10 +23,12 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBOutlet weak var cameraPhoto: UIImageView!
     @IBOutlet weak var addPhotoBtn: UIButton!
     @IBOutlet weak var textSectionHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var TagFieldYConstraint: NSLayoutConstraint!
     
     var imagePicker: UIImagePickerController!
     
     var iconModel: IconModel!
+
     var autocomplete: UIView! = nil
     
     
@@ -139,11 +141,15 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         if matchingIcons.count > 0 {
             // Limit to 5 results
             
+
             // Measure amount of space needed
             let height = CGFloat(matchingIcons.count) * sender.frame.size.height
             
             // Make room in text container
             textSectionHeightConstraint.constant = height
+            
+            // Offset the tag field
+            TagFieldYConstraint.constant = -(height / 2)
             
             // Build/show autocomplete container
             if autocomplete === nil {
@@ -153,9 +159,12 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
                 autocomplete.layer.borderColor = sender.layer.borderColor
                 sender.superview!.addSubview(autocomplete)
         
-            // If autocomplete exists but height needs to change
+            // If autocomplete exists but results have changed
             } else if autocomplete.frame.height != height {
                 autocomplete.frame = CGRect(x: sender.frame.origin.x, y: sender.frame.origin.y + 30, width: sender.frame.size.width, height: height)
+
+                // Clear old results
+                autocomplete.subviews.forEach({ $0.removeFromSuperview() })
             }
             
             // Append suggestions (icon names)
@@ -173,11 +182,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
                 
             } // End for loop
        
-            // Save original frame and add height to account for autocomplete container
-            
-            //TextSection.frame = CGRect(x: TextSection.frame.origin.x, y: TextSection.frame.origin.x, width: TextSection.frame.size.width, height: TextSection.frame.size.height + height)
-
-            
             // Make suggestion tap-able
             
             // When suggestion tapped, add it to list below
@@ -186,6 +190,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             autocomplete.removeFromSuperview()
             autocomplete = nil
             textSectionHeightConstraint.constant = 0
+            TagFieldYConstraint.constant = 0
         }
     }
     

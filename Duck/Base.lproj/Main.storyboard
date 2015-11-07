@@ -124,14 +124,14 @@
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Gng-AI-JTq">
-                                        <rect key="frame" x="91" y="60" width="420" height="30"/>
+                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Gng-AI-JTq">
+                                        <rect key="frame" x="90" y="60" width="420" height="30"/>
                                         <animations/>
                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                         <textInputTraits key="textInputTraits"/>
                                     </textField>
                                     <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="DHw-Ej-vET">
-                                        <rect key="frame" x="344" y="6" width="84" height="30"/>
+                                        <rect key="frame" x="0.0" y="-380" width="84" height="30"/>
                                         <animations/>
                                         <state key="normal" title="See All Tags"/>
                                     </button>
@@ -189,6 +189,7 @@
                         <outlet property="PhotoSection" destination="V0H-Ka-gWk" id="das-5M-n0P"/>
                         <outlet property="PhotoSectionTopConstraint" destination="TnN-3A-waP" id="xr3-Lh-rB2"/>
                         <outlet property="TagField" destination="Gng-AI-JTq" id="9RQ-sU-TlF"/>
+                        <outlet property="TagFieldYConstraint" destination="xZs-0k-pYw" id="G6E-WD-xZ1"/>
                         <outlet property="TextSection" destination="exJ-za-ldw" id="tEZ-0f-XeM"/>
                         <outlet property="addPhotoBtn" destination="kaz-Sn-epE" id="XIg-4B-1RH"/>
                         <outlet property="cameraPhoto" destination="72m-IJ-iT0" id="Hac-0J-GkG"/>
