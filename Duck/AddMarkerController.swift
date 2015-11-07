@@ -13,29 +13,33 @@ import UIKit
 class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
 
     @IBOutlet weak var PhotoSection: UIView!
-    @IBOutlet weak var TextSection: UIView!
-    
-    @IBOutlet weak var TagField: UITextField!
-    @IBOutlet weak var DoneBtn: UIButton!
-    
-    @IBOutlet weak var PhotoSectionTopConstraint: NSLayoutConstraint!
-    
-    @IBOutlet weak var cameraPhoto: UIImageView!
-    @IBOutlet weak var addPhotoBtn: UIButton!
-    @IBOutlet weak var textSectionHeightConstraint: NSLayoutConstraint!
-    @IBOutlet weak var TagFieldYConstraint: NSLayoutConstraint!
     
     var imagePicker: UIImagePickerController!
+    @IBOutlet weak var DoneBtn: UIButton!
+    @IBOutlet weak var TagField: UITextField!
+    @IBOutlet weak var TextSection: UIView!
     
     var iconModel: IconModel!
 
+    @IBOutlet weak var addPhotoBtn: UIButton!
+    @IBOutlet weak var cameraPhoto: UIImageView!
+    
+    @IBOutlet weak var TagFieldYConstraint: NSLayoutConstraint!
+    @IBOutlet weak var textSectionHeightConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var containerView: UIView!
+    
     var autocomplete: UIView! = nil
     
     
     override func viewDidLoad() {
+
         super.viewDidLoad()
+
         self.title = "Add Marker"
         print("AddPhotoMarkerController view loaded")
+        print(containerView)
+        containerView.frame = CGRect(x: containerView.frame.origin.x, y: containerView.frame.origin.y, width: self.view.frame.size.width, height: containerView.frame.height)
         
         // Add event handler for keyboard display
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: nil);
@@ -101,7 +105,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         print("Keyboard shown")
         
         UIView.animateWithDuration(0.1, animations: {
-            self.PhotoSectionTopConstraint.constant = 0 - (keyboardFrame.size.height + 20)
+            //self.PhotoSectionTopConstraint.constant = 0 - (keyboardFrame.size.height + 20)
         })
         
 
@@ -110,7 +114,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     // Reset view as keyboard hides
     func DismissKeyboard () {
         UIView.animateWithDuration(0.1, animations: {
-            self.PhotoSectionTopConstraint.constant = 0
+            //self.PhotoSectionTopConstraint.constant = 0
         })
         view.endEditing(true)
     }
