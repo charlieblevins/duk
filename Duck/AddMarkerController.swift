@@ -12,6 +12,7 @@ import UIKit
 
 class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
 
+    @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var PhotoSection: UIView!
     
     var imagePicker: UIImagePickerController!
@@ -31,7 +32,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     var autocomplete: UIView! = nil
     
-    
     override func viewDidLoad() {
 
         super.viewDidLoad()
@@ -39,8 +39,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         self.title = "Add Marker"
         print("AddPhotoMarkerController view loaded")
         print(containerView)
-        containerView.frame = CGRect(x: containerView.frame.origin.x, y: containerView.frame.origin.y, width: self.view.frame.size.width, height: containerView.frame.height)
         
+        
+        //scrollView.contentSize = containerView.bounds.size
+        containerView.frame = CGRect(x: containerView.frame.origin.x, y: containerView.frame.origin.y, width: self.view.frame.size.width, height: 1200)
+
         // Add event handler for keyboard display
         NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: nil);
         
@@ -50,6 +53,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         // Respond to text change events
         TagField.addTarget(self, action: "tagFieldDidChange:", forControlEvents: UIControlEvents.EditingChanged)
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        scrollView.contentSize = CGSize(width:320, height:600)
     }
     
     override func viewDidAppear(animated: Bool) {
