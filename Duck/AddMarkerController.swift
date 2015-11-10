@@ -12,6 +12,7 @@ import UIKit
 
 class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
 
+    @IBOutlet weak var photoSectionTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var PhotoSection: UIView!
     
@@ -38,14 +39,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
 
         self.title = "Add Marker"
         print("AddPhotoMarkerController view loaded")
-        print(containerView)
-        
-        
-        //scrollView.contentSize = containerView.bounds.size
-        containerView.frame = CGRect(x: containerView.frame.origin.x, y: containerView.frame.origin.y, width: self.view.frame.size.width, height: 1200)
 
         // Add event handler for keyboard display
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: nil);
+        //NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: nil);
+        registerForKeyboardNotifications()
         
         // Add tap recognizer to close keyboard by tapping anywhere 
         let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
@@ -57,7 +54,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        scrollView.contentSize = CGSize(width:320, height:600)
+        scrollView.contentSize = CGSize(width: view.frame.size.width, height: view.frame.size.height)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -106,17 +103,41 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         dismissViewControllerAnimated(true, completion: nil)
     }
     
+    func registerForKeyboardNotifications() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWasShown:", name: UIKeyboardDidShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillBeHidden:", name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    func keyboardWasShown(aNotification: NSNotification) {
+        var info = aNotification.userInfo
+        let kbSize: CGSize = info![UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
+        let contentInsets: UIEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0)
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+        var aRect: CGRect = self.view.frame
+        aRect.size.height -= kbSize.height
+        if !CGRectContainsPoint(aRect, TagField.frame.origin) {
+            let scrollPoint: CGPoint = CGPointMake(0.0, TagField.frame.origin.y - kbSize.height)
+            scrollView.setContentOffset(scrollPoint, animated: true)
+        }
+    }
+    
+    func keyboardWillBeHidden(aNotification: NSNotification) {
+        let contentInsets: UIEdgeInsets = UIEdgeInsetsZero
+        scrollView.contentInset = contentInsets
+        scrollView.scrollIndicatorInsets = contentInsets
+    }
+    
     // Adjust view when keyboard is displayed
     func keyboardWillShow(notification: NSNotification) {
         var info = notification.userInfo!
         let keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
         print("Keyboard shown")
+        //scrollView.contentSize = CGSize(width: scrollView.frame.size.width, height: scrollView.frame.size.height + keyboardFrame.size.height)
         
         UIView.animateWithDuration(0.1, animations: {
-            //self.PhotoSectionTopConstraint.constant = 0 - (keyboardFrame.size.height + 20)
+            //self.photoSectionTopConstraint.constant = 0 - (keyboardFrame.size.height + 20)
         })
-        
-
     }
     
     // Reset view as keyboard hides

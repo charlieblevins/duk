@@ -121,7 +121,7 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JoL-QU-Pnj" userLabel="TextSection">
-                                                <rect key="frame" x="0.0" y="360" width="600" height="270"/>
+                                                <rect key="frame" x="0.0" y="360" width="600" height="150"/>
                                                 <subviews>
                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tag(s)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="run-Eb-yRq">
                                                         <rect key="frame" x="276" y="10" width="48" height="21"/>
@@ -131,7 +131,7 @@
                                                         <nil key="highlightedColor"/>
                                                     </label>
                                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FL0-pW-wIl">
-                                                        <rect key="frame" x="90" y="120" width="420" height="30"/>
+                                                        <rect key="frame" x="90" y="60" width="420" height="30"/>
                                                         <animations/>
                                                         <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                         <textInputTraits key="textInputTraits"/>
@@ -153,10 +153,10 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xc9-8z-WyT" userLabel="DoneView">
-                                                <rect key="frame" x="0.0" y="630" width="600" height="90"/>
+                                                <rect key="frame" x="0.0" y="510" width="600" height="60"/>
                                                 <subviews>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HUM-2v-u5E">
-                                                        <rect key="frame" x="282" y="30" width="37" height="30"/>
+                                                        <rect key="frame" x="282" y="15" width="37" height="30"/>
                                                         <animations/>
                                                         <state key="normal" title="Done"/>
                                                         <connections>
@@ -187,10 +187,10 @@
                                             <constraint firstItem="xc9-8z-WyT" firstAttribute="leading" secondItem="JkQ-0E-2WQ" secondAttribute="leading" id="VUG-kJ-1cS"/>
                                             <constraint firstItem="CCt-3F-3ql" firstAttribute="height" secondItem="JkQ-0E-2WQ" secondAttribute="height" multiplier="0.6" id="Vfg-Aq-bPz"/>
                                             <constraint firstAttribute="height" constant="1200" id="a0c-5b-arc"/>
-                                            <constraint firstItem="xc9-8z-WyT" firstAttribute="height" secondItem="JkQ-0E-2WQ" secondAttribute="height" multiplier="0.15" id="dSi-Rq-fDA"/>
+                                            <constraint firstItem="xc9-8z-WyT" firstAttribute="height" secondItem="JkQ-0E-2WQ" secondAttribute="height" multiplier="0.1" id="dSi-Rq-fDA"/>
                                             <constraint firstAttribute="bottom" secondItem="xc9-8z-WyT" secondAttribute="bottom" id="qcd-eD-iEg"/>
                                             <constraint firstItem="JoL-QU-Pnj" firstAttribute="top" secondItem="CCt-3F-3ql" secondAttribute="bottom" id="wbd-NL-yfa"/>
-                                            <constraint firstItem="JoL-QU-Pnj" firstAttribute="height" secondItem="JkQ-0E-2WQ" secondAttribute="height" multiplier="0.45" id="yAd-hY-eNV"/>
+                                            <constraint firstItem="JoL-QU-Pnj" firstAttribute="height" secondItem="JkQ-0E-2WQ" secondAttribute="height" multiplier="0.25" id="yAd-hY-eNV"/>
                                         </constraints>
                                         <variation key="default">
                                             <mask key="constraints">
@@ -233,6 +233,7 @@
                         <outlet property="addPhotoBtn" destination="uay-sv-EJ1" id="uno-v0-EJr"/>
                         <outlet property="cameraPhoto" destination="IVc-kA-wdL" id="2FV-Lz-i04"/>
                         <outlet property="containerView" destination="JkQ-0E-2WQ" id="vSy-NZ-nUe"/>
+                        <outlet property="photoSectionTopConstraint" destination="HyY-7Q-Hr9" id="Ve0-mV-HfQ"/>
                         <outlet property="scrollView" destination="WT4-hc-neF" id="gCJ-eT-D5j"/>
                         <outlet property="textSectionHeightConstraint" destination="yAd-hY-eNV" id="Ve9-Yp-aI5"/>
                     </connections>
