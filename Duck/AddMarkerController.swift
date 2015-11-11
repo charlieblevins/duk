@@ -107,7 +107,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     func keyboardWillShow(aNotification: NSNotification) {
         let scrollPoint: CGPoint = CGPointMake(0.0, self.TextSection.frame.origin.y)
                     print(scrollPoint)
-        self.scrollView.setContentOffset(scrollPoint, animated: true)
+        self.scrollView.setContentOffset(scrollPoint, animated: false)
     }
     
     func keyboardWasShown(aNotification: NSNotification) {
@@ -118,8 +118,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         var aRect: CGRect = self.view.frame
         aRect.size.height -= kbSize.height
         if !CGRectContainsPoint(aRect, TagField.frame.origin) {
-            //self.scrollView.contentInset = contentInsets
-            //scrollView.scrollIndicatorInsets = contentInsets
+            
+            // NEED to wait until contentoffset animation is complete before doing these
+            self.scrollView.contentInset = contentInsets
+            scrollView.scrollIndicatorInsets = contentInsets
         }
     }
     
