@@ -41,13 +41,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         print("AddPhotoMarkerController view loaded")
 
         // Add event handler for keyboard display
-        //NSNotificationCenter.defaultCenter().addObserver(self, selector: Selector("keyboardWillShow:"), name:UIKeyboardWillShowNotification, object: nil);
         registerForKeyboardNotifications()
-        
-        // Add tap recognizer to close keyboard by tapping anywhere 
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "DismissKeyboard")
-        view.addGestureRecognizer(tap)
-        
+    
         // Respond to text change events
         TagField.addTarget(self, action: "tagFieldDidChange:", forControlEvents: UIControlEvents.EditingChanged)
     }
@@ -104,21 +99,27 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     }
     
     func registerForKeyboardNotifications() {
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardDidShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWasShown:", name: UIKeyboardDidShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillBeHidden:", name: UIKeyboardWillHideNotification, object: nil)
+    }
+    
+    func keyboardWillShow(aNotification: NSNotification) {
+        let scrollPoint: CGPoint = CGPointMake(0.0, self.TextSection.frame.origin.y)
+                    print(scrollPoint)
+        self.scrollView.setContentOffset(scrollPoint, animated: true)
     }
     
     func keyboardWasShown(aNotification: NSNotification) {
         var info = aNotification.userInfo
         let kbSize: CGSize = info![UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
         let contentInsets: UIEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0)
-        scrollView.contentInset = contentInsets
-        scrollView.scrollIndicatorInsets = contentInsets
+
         var aRect: CGRect = self.view.frame
         aRect.size.height -= kbSize.height
         if !CGRectContainsPoint(aRect, TagField.frame.origin) {
-            let scrollPoint: CGPoint = CGPointMake(0.0, TagField.frame.origin.y - kbSize.height)
-            scrollView.setContentOffset(scrollPoint, animated: true)
+            //self.scrollView.contentInset = contentInsets
+            //scrollView.scrollIndicatorInsets = contentInsets
         }
     }
     
@@ -126,26 +127,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         let contentInsets: UIEdgeInsets = UIEdgeInsetsZero
         scrollView.contentInset = contentInsets
         scrollView.scrollIndicatorInsets = contentInsets
-    }
-    
-    // Adjust view when keyboard is displayed
-    func keyboardWillShow(notification: NSNotification) {
-        var info = notification.userInfo!
-        let keyboardFrame: CGRect = (info[UIKeyboardFrameEndUserInfoKey] as! NSValue).CGRectValue()
-        print("Keyboard shown")
-        //scrollView.contentSize = CGSize(width: scrollView.frame.size.width, height: scrollView.frame.size.height + keyboardFrame.size.height)
-        
-        UIView.animateWithDuration(0.1, animations: {
-            //self.photoSectionTopConstraint.constant = 0 - (keyboardFrame.size.height + 20)
-        })
-    }
-    
-    // Reset view as keyboard hides
-    func DismissKeyboard () {
-        UIView.animateWithDuration(0.1, animations: {
-            //self.PhotoSectionTopConstraint.constant = 0
-        })
-        view.endEditing(true)
     }
     
     // Show matching tags as user types
