@@ -16,22 +16,26 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var PhotoSection: UIView!
     
-    var imagePicker: UIImagePickerController!
+
     @IBOutlet weak var DoneBtn: UIButton!
     @IBOutlet weak var TagField: UITextField!
     @IBOutlet weak var TextSection: UIView!
     
-    var iconModel: IconModel!
+
 
     @IBOutlet weak var addPhotoBtn: UIButton!
     @IBOutlet weak var cameraPhoto: UIImageView!
     
     @IBOutlet weak var TagFieldYConstraint: NSLayoutConstraint!
     @IBOutlet weak var textSectionHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var tagAddWrapView: UIView!
     
     @IBOutlet weak var containerView: UIView!
     
+    var imagePicker: UIImagePickerController!
+    var iconModel: IconModel!
     var autocomplete: UIView! = nil
+    var tagBubbles: UIView! = nil
     
     override func viewDidLoad() {
 
@@ -45,6 +49,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
         // Respond to text change events
         TagField.addTarget(self, action: "tagFieldDidChange:", forControlEvents: UIControlEvents.EditingChanged)
+        
+        // Center text field content
+        TagField.textAlignment = .Center
     }
     
     override func viewDidLayoutSubviews() {
@@ -98,6 +105,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         dismissViewControllerAnimated(true, completion: nil)
     }
     
+    // Handle Keyboard show/hide
     func registerForKeyboardNotifications() {
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardDidShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWasShown:", name: UIKeyboardDidShowNotification, object: nil)
@@ -165,15 +173,15 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             textSectionHeightConstraint.constant = height
             
             // Offset the tag field
-            TagFieldYConstraint.constant = -(height / 2)
+            //TagFieldYConstraint.constant = -(height / 2)
             
             // Build/show autocomplete container
             if autocomplete === nil {
-                let aFrame = CGRect(x: sender.frame.origin.x, y: sender.frame.origin.y + 30, width: sender.frame.size.width, height: height)
+                let aFrame = CGRect(x: tagAddWrapView.frame.origin.x, y: tagAddWrapView.frame.origin.y + 30, width: sender.frame.size.width, height: height)
                 autocomplete = UIView(frame: aFrame)
                 autocomplete.layer.borderWidth = 1.0
                 autocomplete.layer.borderColor = sender.layer.borderColor
-                sender.superview!.addSubview(autocomplete)
+                TextSection.addSubview(autocomplete)
         
             // If autocomplete exists but results have changed
             } else if autocomplete.frame.height != height {
@@ -194,22 +202,42 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
                 let iconBtn: UIButton = UIButton(frame: CGRectMake(0, yPos, sender.frame.size.width, sender.frame.size.height))
                 iconBtn.setTitleColor(UIColor.grayColor(), forState: .Normal)
                 iconBtn.setTitle(icon.tag, forState: .Normal)
+                iconBtn.addTarget(self, action: "suggestionChosen:", forControlEvents: .TouchUpInside)
                 autocomplete.addSubview(iconBtn)
                 
             } // End for loop
-       
-            // Make suggestion tap-able
-            
-            // When suggestion tapped, add it to list below
         } else if autocomplete != nil {
             // No icons were found
             autocomplete.removeFromSuperview()
             autocomplete = nil
             textSectionHeightConstraint.constant = 0
-            TagFieldYConstraint.constant = 0
         }
     }
     
+    // Autocomplete suggestion tapped
+    func suggestionChosen(sender:UIButton!) {
+        // Hide autocomplete
+        autocomplete.removeFromSuperview()
+        
+        // Create tag bubble view
+        let tagHeight = 30
+        if tagBubbles === nil {
+            let tFrame = CGRect(x: tagAddWrapView.frame.origin.x, y: tagAddWrapView.frame.origin.y + 50, width: tagAddWrapView.frame.size.width, height: CGFloat(tagHeight))
+            tagBubbles = UIView(frame: tFrame)
+            tagBubbles.layer.backgroundColor = UIColor.redColor().CGColor
+            TextSection.addSubview(tagBubbles)
+        }
+        // Display new tag bubble
+        
+        // If this is the first tag, also display the icon
+        
+        // Bind an event handler for tag bubble
+        
+        // Clear text field
+        
+    }
+    
+    // Add Marker Done Action
     @IBAction func DoneBuildingMarker(sender: UIButton) {
         if TagField.text != nil {
             print(TagField.text!)

@@ -120,38 +120,6 @@
                                                     <constraint firstItem="5ng-Mz-PhY" firstAttribute="centerX" secondItem="CCt-3F-3ql" secondAttribute="centerX" id="wqy-73-JXp"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JoL-QU-Pnj" userLabel="TextSection">
-                                                <rect key="frame" x="0.0" y="360" width="600" height="150"/>
-                                                <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tag(s)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="run-Eb-yRq">
-                                                        <rect key="frame" x="276" y="10" width="48" height="21"/>
-                                                        <animations/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FL0-pW-wIl">
-                                                        <rect key="frame" x="90" y="60" width="420" height="30"/>
-                                                        <animations/>
-                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                        <textInputTraits key="textInputTraits"/>
-                                                    </textField>
-                                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KcH-Ij-fG0">
-                                                        <rect key="frame" x="0.0" y="-380" width="84" height="30"/>
-                                                        <animations/>
-                                                        <state key="normal" title="See All Tags"/>
-                                                    </button>
-                                                </subviews>
-                                                <animations/>
-                                                <color key="backgroundColor" red="0.88032670449999995" green="0.88032670449999995" blue="0.88032670449999995" alpha="1" colorSpace="calibratedRGB"/>
-                                                <constraints>
-                                                    <constraint firstItem="run-Eb-yRq" firstAttribute="top" secondItem="JoL-QU-Pnj" secondAttribute="top" constant="10" id="5Yc-z3-dtl"/>
-                                                    <constraint firstItem="FL0-pW-wIl" firstAttribute="width" secondItem="JoL-QU-Pnj" secondAttribute="width" multiplier="0.7" id="CKv-Es-4LV"/>
-                                                    <constraint firstItem="run-Eb-yRq" firstAttribute="centerX" secondItem="JoL-QU-Pnj" secondAttribute="centerX" id="QbQ-XW-CNk"/>
-                                                    <constraint firstItem="FL0-pW-wIl" firstAttribute="centerY" secondItem="JoL-QU-Pnj" secondAttribute="centerY" id="SQq-rG-KTf"/>
-                                                    <constraint firstItem="FL0-pW-wIl" firstAttribute="centerX" secondItem="JoL-QU-Pnj" secondAttribute="centerX" id="gsx-Cs-3ih"/>
-                                                </constraints>
-                                            </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xc9-8z-WyT" userLabel="DoneView">
                                                 <rect key="frame" x="0.0" y="510" width="600" height="60"/>
                                                 <subviews>
@@ -170,6 +138,74 @@
                                                     <constraint firstItem="HUM-2v-u5E" firstAttribute="centerY" secondItem="xc9-8z-WyT" secondAttribute="centerY" id="5rj-37-W3s"/>
                                                     <constraint firstItem="HUM-2v-u5E" firstAttribute="centerX" secondItem="xc9-8z-WyT" secondAttribute="centerX" id="gWU-lX-76J"/>
                                                 </constraints>
+                                            </view>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JoL-QU-Pnj" userLabel="TextSection">
+                                                <rect key="frame" x="0.0" y="360" width="600" height="150"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tag(s)" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="run-Eb-yRq">
+                                                        <rect key="frame" x="276" y="10" width="48" height="21"/>
+                                                        <animations/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KcH-Ij-fG0">
+                                                        <rect key="frame" x="0.0" y="-380" width="84" height="30"/>
+                                                        <animations/>
+                                                        <state key="normal" title="See All Tags"/>
+                                                    </button>
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HmF-NO-85N" userLabel="TagAddWrap">
+                                                        <rect key="frame" x="30" y="56" width="540" height="30"/>
+                                                        <subviews>
+                                                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="FL0-pW-wIl">
+                                                                <rect key="frame" x="0.0" y="0.0" width="440" height="30"/>
+                                                                <animations/>
+                                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                                <textInputTraits key="textInputTraits"/>
+                                                            </textField>
+                                                        </subviews>
+                                                        <animations/>
+                                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                                                        <constraints>
+                                                            <constraint firstItem="FL0-pW-wIl" firstAttribute="top" secondItem="HmF-NO-85N" secondAttribute="top" id="5F3-t7-b4n"/>
+                                                            <constraint firstItem="FL0-pW-wIl" firstAttribute="width" secondItem="HmF-NO-85N" secondAttribute="width" constant="-100" id="ZU2-7d-UUX"/>
+                                                            <constraint firstItem="FL0-pW-wIl" firstAttribute="leading" secondItem="HmF-NO-85N" secondAttribute="leading" id="nk0-zb-qYi"/>
+                                                            <constraint firstAttribute="height" constant="30" id="o56-dJ-fHz"/>
+                                                            <constraint firstItem="FL0-pW-wIl" firstAttribute="height" secondItem="HmF-NO-85N" secondAttribute="height" id="xj6-R8-9ep"/>
+                                                        </constraints>
+                                                    </view>
+                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PaF-W3-7E6">
+                                                        <rect key="frame" x="490" y="56" width="80" height="30"/>
+                                                        <animations/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="80" id="Xjl-OW-cuJ"/>
+                                                        </constraints>
+                                                        <state key="normal" title="Add +">
+                                                            <color key="titleShadowColor" red="0.921875" green="0.9101709115278771" blue="0.91491980694375608" alpha="1" colorSpace="calibratedRGB"/>
+                                                        </state>
+                                                    </button>
+                                                </subviews>
+                                                <animations/>
+                                                <color key="backgroundColor" red="0.88032670449999995" green="0.88032670449999995" blue="0.88032670449999995" alpha="1" colorSpace="calibratedRGB"/>
+                                                <constraints>
+                                                    <constraint firstItem="run-Eb-yRq" firstAttribute="top" secondItem="JoL-QU-Pnj" secondAttribute="top" constant="10" id="5Yc-z3-dtl"/>
+                                                    <constraint firstItem="HmF-NO-85N" firstAttribute="top" secondItem="run-Eb-yRq" secondAttribute="bottom" constant="25" id="B4M-ue-84A"/>
+                                                    <constraint firstItem="HmF-NO-85N" firstAttribute="centerX" secondItem="JoL-QU-Pnj" secondAttribute="centerX" id="KnY-N6-Jdj"/>
+                                                    <constraint firstItem="run-Eb-yRq" firstAttribute="centerX" secondItem="JoL-QU-Pnj" secondAttribute="centerX" id="QbQ-XW-CNk"/>
+                                                    <constraint firstItem="PaF-W3-7E6" firstAttribute="top" secondItem="HmF-NO-85N" secondAttribute="top" id="U88-e8-QOc"/>
+                                                    <constraint firstItem="HmF-NO-85N" firstAttribute="width" secondItem="JoL-QU-Pnj" secondAttribute="width" multiplier="0.9" id="Vzf-TH-7fW"/>
+                                                    <constraint firstItem="HmF-NO-85N" firstAttribute="centerY" secondItem="JoL-QU-Pnj" secondAttribute="centerY" id="X5g-2T-ydf"/>
+                                                    <constraint firstItem="PaF-W3-7E6" firstAttribute="trailing" secondItem="HmF-NO-85N" secondAttribute="trailing" id="bTN-g0-AeC"/>
+                                                    <constraint firstItem="PaF-W3-7E6" firstAttribute="top" secondItem="JoL-QU-Pnj" secondAttribute="top" id="l8M-og-UrQ"/>
+                                                    <constraint firstAttribute="trailing" secondItem="PaF-W3-7E6" secondAttribute="trailing" constant="1" id="raS-Ag-wH7"/>
+                                                </constraints>
+                                                <variation key="default">
+                                                    <mask key="constraints">
+                                                        <exclude reference="X5g-2T-ydf"/>
+                                                        <exclude reference="l8M-og-UrQ"/>
+                                                        <exclude reference="raS-Ag-wH7"/>
+                                                    </mask>
+                                                </variation>
                                             </view>
                                         </subviews>
                                         <animations/>
@@ -228,13 +264,13 @@
                         <outlet property="DoneBtn" destination="HUM-2v-u5E" id="eHV-sa-QXH"/>
                         <outlet property="PhotoSection" destination="CCt-3F-3ql" id="oxe-mx-QxV"/>
                         <outlet property="TagField" destination="FL0-pW-wIl" id="V4h-A0-e40"/>
-                        <outlet property="TagFieldYConstraint" destination="SQq-rG-KTf" id="B6T-bC-5xj"/>
                         <outlet property="TextSection" destination="JoL-QU-Pnj" id="6Fi-63-nWn"/>
                         <outlet property="addPhotoBtn" destination="uay-sv-EJ1" id="uno-v0-EJr"/>
                         <outlet property="cameraPhoto" destination="IVc-kA-wdL" id="2FV-Lz-i04"/>
                         <outlet property="containerView" destination="JkQ-0E-2WQ" id="vSy-NZ-nUe"/>
                         <outlet property="photoSectionTopConstraint" destination="HyY-7Q-Hr9" id="Ve0-mV-HfQ"/>
                         <outlet property="scrollView" destination="WT4-hc-neF" id="gCJ-eT-D5j"/>
+                        <outlet property="tagAddWrapView" destination="HmF-NO-85N" id="xM0-jf-pEN"/>
                         <outlet property="textSectionHeightConstraint" destination="yAd-hY-eNV" id="Ve9-Yp-aI5"/>
                     </connections>
                 </viewController>
