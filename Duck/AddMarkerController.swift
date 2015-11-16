@@ -15,26 +15,22 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBOutlet weak var photoSectionTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var PhotoSection: UIView!
-    
-
     @IBOutlet weak var DoneBtn: UIButton!
     @IBOutlet weak var TagField: UITextField!
     @IBOutlet weak var TextSection: UIView!
-    
-
-
     @IBOutlet weak var addPhotoBtn: UIButton!
     @IBOutlet weak var cameraPhoto: UIImageView!
-    
     @IBOutlet weak var TagFieldYConstraint: NSLayoutConstraint!
     @IBOutlet weak var textSectionHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var tagAddWrapView: UIView!
-    
+    @IBOutlet weak var tagAddBtn: UIButton!
     @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var containerViewHeightConstraint: NSLayoutConstraint!
     
     var imagePicker: UIImagePickerController!
     var iconModel: IconModel!
     var autocomplete: UIView! = nil
+
     var tagBubbles: UIView! = nil
     
     override func viewDidLoad() {
@@ -42,7 +38,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         super.viewDidLoad()
 
         self.title = "Add Marker"
+        
         print("AddPhotoMarkerController view loaded")
+
 
         // Add event handler for keyboard display
         registerForKeyboardNotifications()
@@ -52,10 +50,14 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         // Center text field content
         TagField.textAlignment = .Center
+        
+        // Handle tap on Add btn
+        tagAddBtn.addTarget(self, action: "suggestionChosen:", forControlEvents: .TouchUpInside)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
+        view.systemLayoutSizeFittingSize(UILayoutFittingExpandedSize)
         scrollView.contentSize = CGSize(width: view.frame.size.width, height: view.frame.size.height)
     }
     
@@ -217,24 +219,41 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     // Autocomplete suggestion tapped
     func suggestionChosen(sender:UIButton!) {
         // Hide autocomplete
-        autocomplete.removeFromSuperview()
+        if autocomplete != nil {
+            autocomplete.removeFromSuperview()
+        }
         
         // Create tag bubble view
         let tagHeight = 30
         if tagBubbles === nil {
-            let tFrame = CGRect(x: tagAddWrapView.frame.origin.x, y: tagAddWrapView.frame.origin.y + 50, width: tagAddWrapView.frame.size.width, height: CGFloat(tagHeight))
-            tagBubbles = UIView(frame: tFrame)
-            tagBubbles.layer.backgroundColor = UIColor.redColor().CGColor
+            let tbFrame = CGRect(x: tagAddWrapView.frame.origin.x, y: tagAddWrapView.frame.origin.y + 50, width: tagAddWrapView.frame.size.width, height: CGFloat(tagHeight))
+            tagBubbles = UIView(frame: tbFrame)
+            //tagBubbles.layer.backgroundColor = UIColor.redColor().CGColor
+            
+            // Display new tag bubble
             TextSection.addSubview(tagBubbles)
         }
-        // Display new tag bubble
+        
+        // If Add was tapped, use text field value, otherwise use the autocomplete button's title
+        let tagBubble = UIButton(frame: CGRect(x: 0, y: tagBubbles.subviews.count * tagHeight, width: Int(tagAddWrapView.frame.size.width), height: tagHeight))
+        if sender.currentTitle! == "Add +" {
+            tagBubble.setTitle("#" + TagField.text!, forState: .Normal)
+        } else {
+            tagBubble.setTitle("#" + sender.currentTitle!, forState: .Normal)
+        }
+
+        tagBubbles.addSubview(tagBubble)
         
         // If this is the first tag, also display the icon
+        
+        // Update height of text section
+        textSectionHeightConstraint.constant = CGFloat(tagBubbles.subviews.count * tagHeight)
+        //containerViewHeightConstraint.constant = CGFloat(tagBubbles.subviews.count * tagHeight)
         
         // Bind an event handler for tag bubble
         
         // Clear text field
-        
+        TagField.text = nil
     }
     
     // Add Marker Done Action
