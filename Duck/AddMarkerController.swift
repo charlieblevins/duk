@@ -12,20 +12,22 @@ import UIKit
 
 class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate {
 
+    @IBOutlet weak var containerView: UIView!
+    @IBOutlet weak var containerViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var photoSectionTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var PhotoSection: UIView!
     @IBOutlet weak var DoneBtn: UIButton!
     @IBOutlet weak var TagField: UITextField!
     @IBOutlet weak var TextSection: UIView!
+    @IBOutlet weak var textSectionHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var addPhotoBtn: UIButton!
     @IBOutlet weak var cameraPhoto: UIImageView!
     @IBOutlet weak var TagFieldYConstraint: NSLayoutConstraint!
-    @IBOutlet weak var textSectionHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var tagAddWrapView: UIView!
     @IBOutlet weak var tagAddBtn: UIButton!
-    @IBOutlet weak var containerView: UIView!
-    @IBOutlet weak var containerViewHeightConstraint: NSLayoutConstraint!
+
+    @IBOutlet weak var DoneView: UIView!
     
     var imagePicker: UIImagePickerController!
     var iconModel: IconModel!
@@ -37,10 +39,13 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
 
         super.viewDidLoad()
 
+
         self.title = "Add Marker"
+
         
         print("AddPhotoMarkerController view loaded")
 
+        //containerView.systemLayoutSizeFittingSize(UILayoutFittingExpandedSize)
 
         // Add event handler for keyboard display
         registerForKeyboardNotifications()
@@ -57,8 +62,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-        view.systemLayoutSizeFittingSize(UILayoutFittingExpandedSize)
-        scrollView.contentSize = CGSize(width: view.frame.size.width, height: view.frame.size.height)
+
+        // Adjust height of container and scroll views according to subview height
+        let heightOfSubviews = PhotoSection.frame.size.height + TextSection.frame.size.height + DoneView.frame.size.height
+        containerViewHeightConstraint.constant = heightOfSubviews
+        scrollView.contentSize = CGSize(width: containerView.frame.size.width, height: containerView.frame.size.height)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -247,7 +255,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         // If this is the first tag, also display the icon
         
         // Update height of text section
-        textSectionHeightConstraint.constant = CGFloat(tagBubbles.subviews.count * tagHeight)
+        textSectionHeightConstraint.constant = 150 + CGFloat(tagBubbles.subviews.count * tagHeight)
         //containerViewHeightConstraint.constant = CGFloat(tagBubbles.subviews.count * tagHeight)
         
         // Bind an event handler for tag bubble
