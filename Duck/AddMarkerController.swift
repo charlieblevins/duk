@@ -34,6 +34,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     var autocomplete: UIView! = nil
 
     var tagBubbles: UIView! = nil
+    var initialTextSectionHeight: CGFloat!
     
     override func viewDidLoad() {
 
@@ -157,6 +158,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             iconModel = IconModel()
         }
         
+        // Store height pre-autocomplete
+        initialTextSectionHeight = textSectionHeightConstraint.constant
+        
         // Get index of matching icon as user types
         let matchingIcons: [IconModel.Icon] = iconModel.icons.filter({
             
@@ -179,14 +183,14 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             // Measure amount of space needed
             let height = CGFloat(matchingIcons.count) * sender.frame.size.height
             
-            // Make room in text container
-            textSectionHeightConstraint.constant = height
-            
-            // Offset the tag field
-            //TagFieldYConstraint.constant = -(height / 2)
+
             
             // Build/show autocomplete container
             if autocomplete === nil {
+                
+                // Make room in text container
+                textSectionHeightConstraint.constant += height
+                
                 let aFrame = CGRect(x: tagAddWrapView.frame.origin.x, y: tagAddWrapView.frame.origin.y + 30, width: sender.frame.size.width, height: height)
                 autocomplete = UIView(frame: aFrame)
                 autocomplete.layer.borderWidth = 1.0
@@ -195,6 +199,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
             // If autocomplete exists but results have changed
             } else if autocomplete.frame.height != height {
+                // Adjust text section from original height
+                textSectionHeightConstraint.constant = initialTextSectionHeight + height
+                
+                // Set new autocomplete height
                 autocomplete.frame = CGRect(x: sender.frame.origin.x, y: sender.frame.origin.y + 30, width: sender.frame.size.width, height: height)
 
                 // Clear old results
@@ -220,15 +228,18 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             // No icons were found
             autocomplete.removeFromSuperview()
             autocomplete = nil
-            textSectionHeightConstraint.constant = 0
+            textSectionHeightConstraint.constant = initialTextSectionHeight
         }
     }
     
     // Autocomplete suggestion tapped
     func suggestionChosen(sender:UIButton!) {
+        
+        print("suggestion chosen")
         // Hide autocomplete
         if autocomplete != nil {
             autocomplete.removeFromSuperview()
+            autocomplete = nil
         }
         
         // Create tag bubble view
@@ -269,6 +280,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         if TagField.text != nil {
             print(TagField.text!)
         }
+        
+        print("Done.")
     }
     /*
     // MARK: - Navigation
