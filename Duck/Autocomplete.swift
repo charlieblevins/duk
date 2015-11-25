@@ -17,7 +17,7 @@ public class Autocomplete: NSObject {
     
     public var itemHeight: CGFloat = 20
     public var itemWidth: CGFloat = 200
-    public var borderColor: CGColor = UIColor.blackColor().CGColor
+    public var backgroundColor: CGColor = UIColor.whiteColor().CGColor
     
     var delegate: AutocompleteDelegate?
     
@@ -33,7 +33,7 @@ public class Autocomplete: NSObject {
     
     // Takes a string. Finds all matching icons and returns a ui view containing
     // each matching icon as a button
-    public func suggest (search: String) -> UIView {
+    public func suggest (search: String) -> UIView? {
         
         // Load icon data
         if iconModel == nil {
@@ -51,7 +51,7 @@ public class Autocomplete: NSObject {
                 autocompleteView = nil
             }
 
-            return autocompleteView!
+            return autocompleteView
         }
         
         // Display matching items in dropdown
@@ -66,8 +66,7 @@ public class Autocomplete: NSObject {
             
             let aFrame = CGRect(x: 0, y: 0, width: self.itemWidth, height: height)
             autocompleteView = UIView(frame: aFrame)
-            autocompleteView!.layer.borderWidth = 1.0
-            autocompleteView!.layer.borderColor = self.borderColor
+            autocompleteView!.layer.backgroundColor = self.backgroundColor
             
             // If autocomplete exists but results have changed
         } else if autocompleteView!.frame.height != height {

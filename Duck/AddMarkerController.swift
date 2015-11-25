@@ -158,6 +158,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         if (autocomplete == nil) {
             autocomplete = Autocomplete()
             autocomplete.delegate = self
+            
+            // Set autocomplete item sizes to match text field
+            autocomplete.itemWidth = sender.frame.size.width
+            autocomplete.itemHeight = sender.frame.size.height
         }
         
         autocompleteView = autocomplete.suggest(sender.text!)
@@ -168,87 +172,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             textSectionHeightConstraint.constant = initialTextSectionHeight + autocompleteView.frame.height
             
             TextSection.addSubview(autocompleteView)
+
+            autocompleteView!.frame.origin.x = sender.superview!.frame.origin.x
+            autocompleteView!.frame.origin.y = sender.superview!.frame.origin.y + sender.frame.size.height
         }
-    }
-    
-    // Show matching tags as user types
-    func tagFieldDidChange2 (sender: UITextField) {
-        
-//        // Load icon data
-//        if iconModel == nil {
-//            iconModel = IconModel()
-//        }
-//        
-//        // Store height pre-autocomplete
-//        initialTextSectionHeight = textSectionHeightConstraint.constant
-//        
-//        // Get index of matching icon as user types
-//        let matchingIcons: [IconModel.Icon] = iconModel.icons.filter({
-//            
-//            // Check if icon tag contains typed text
-//            let foundString: Range? = $0.tag.rangeOfString(sender.text!)
-//            
-//            // all characters of typed string match first characters of Icon name
-//            if foundString != nil && foundString!.startIndex == sender.text!.startIndex {
-//                return true
-//            } else {
-//                return false
-//            }
-//        })
-//        
-//        // Display matching items in dropdown
-//        if matchingIcons.count > 0 {
-//            // Limit to 5 results
-//            
-//
-//            // Measure amount of space needed
-//            let height = CGFloat(matchingIcons.count) * sender.frame.size.height
-//            
-//            // Build/show autocomplete container
-//            if autocomplete === nil {
-//                
-//                // Make room in text container
-//                textSectionHeightConstraint.constant += height
-//                
-//                let aFrame = CGRect(x: tagAddWrapView.frame.origin.x, y: tagAddWrapView.frame.origin.y + 30, width: sender.frame.size.width, height: height)
-//                autocomplete = UIView(frame: aFrame)
-//                autocomplete.layer.borderWidth = 1.0
-//                autocomplete.layer.borderColor = sender.layer.borderColor
-//                TextSection.addSubview(autocomplete)
-//        
-//            // If autocomplete exists but results have changed
-//            } else if autocomplete.frame.height != height {
-//                // Adjust text section from original height
-//                textSectionHeightConstraint.constant = initialTextSectionHeight + height
-//                
-//                // Set new autocomplete height
-//                autocomplete.frame = CGRect(x: sender.frame.origin.x, y: sender.frame.origin.y + 30, width: sender.frame.size.width, height: height)
-//
-//                // Clear old results
-//                autocomplete.subviews.forEach({ $0.removeFromSuperview() })
-//            }
-//            
-//            // Append suggestions (icon names)
-//            let limit = matchingIcons.count
-//            for var i = 0; i < limit; ++i {
-//                
-//                let icon = matchingIcons[i]
-//                
-//                // Increase y value for each icon
-//                let yPos = CGFloat(i) * sender.frame.size.height
-//                let iconBtn: UIButton = UIButton(frame: CGRectMake(0, yPos, sender.frame.size.width, sender.frame.size.height))
-//                iconBtn.setTitleColor(UIColor.grayColor(), forState: .Normal)
-//                iconBtn.setTitle(icon.tag, forState: .Normal)
-//                iconBtn.addTarget(self, action: "suggestionChosen:", forControlEvents: .TouchUpInside)
-//                autocomplete.addSubview(iconBtn)
-//                
-//            } // End for loop
-//        } else if autocomplete != nil {
-//            // No icons were found
-//            autocomplete.removeFromSuperview()
-//            autocomplete = nil
-//            textSectionHeightConstraint.constant = initialTextSectionHeight
-//        }
     }
     
     func willChooseTag(autocomplete: Autocomplete, tag: UIButton) {
