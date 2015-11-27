@@ -205,10 +205,21 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         // If Add was tapped, use text field value, otherwise use the autocomplete button's title
         let tagBubble = UIButton(frame: CGRect(x: 0, y: tagBubbles.subviews.count * tagHeight, width: Int(tagAddWrapView.frame.size.width), height: tagHeight))
+        
+        // Custom tag
         if sender.currentTitle! == "Add +" {
+            
             tagBubble.setTitle("#" + TagField.text!, forState: .Normal)
+            
+        // Autocomplete tag
         } else {
+            
             tagBubble.setTitle("#" + sender.currentTitle!, forState: .Normal)
+            tagBubble.setTitleColor(UIColor.blackColor(), forState: .Normal)
+            tagBubble.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
+            tagBubble.imageView?.contentMode = UIViewContentMode.ScaleAspectFit
+            tagBubble.setImage(sender.imageView?.image, forState: .Normal)
+            
         }
 
         tagBubbles.addSubview(tagBubble)

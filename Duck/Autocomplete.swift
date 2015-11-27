@@ -84,13 +84,22 @@ public class Autocomplete: NSObject {
             
             let icon = matchingIcons[i]
             
-            // Increase y value for each icon
+            // Increase y value for each suggestion
             let yPos = CGFloat(i) * self.itemHeight
+            
+            // Get icon
+            let iconImg = UIImage(named: icon.imageName)
             
             // Build button
             let iconBtn: UIButton = UIButton(frame: CGRectMake(0, yPos, self.itemWidth, self.itemHeight))
+            iconBtn.imageView?.contentMode = UIViewContentMode.ScaleAspectFit
+            iconBtn.imageView?.frame = CGRectMake(2, 2, self.itemWidth - 4, self.itemHeight - 4)
+            iconBtn.setImage(iconImg, forState: .Normal)
             iconBtn.setTitleColor(UIColor.grayColor(), forState: .Normal)
             iconBtn.setTitle(icon.tag, forState: .Normal)
+            
+            // Set button image insets (padding)
+            iconBtn.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
             
             // Listen for tap
             iconBtn.addTarget(self, action: "willChooseTag:", forControlEvents: .TouchUpInside)
