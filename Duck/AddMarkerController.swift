@@ -10,8 +10,9 @@
 
 import UIKit
 import CoreData
+import CoreLocation
 
-class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, AutocompleteDelegate {
+class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, AutocompleteDelegate, CLLocationManagerDelegate {
 
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var containerViewHeightConstraint: NSLayoutConstraint!
@@ -37,6 +38,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
 
     var tagBubbles: UIView! = nil
     var initialTextSectionHeight: CGFloat!
+    var locationManager: CLLocationManager!
+    var coords: CLLocationCoordinate2D!
 
     
     override func viewDidLoad() {
@@ -79,21 +82,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         self.addBottomBorder(PhotoSection)
         //self.addBottomBorder(TextSection)
         
-        //1
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
-        let managedContext = appDelegate.managedObjectContext
-        
-        //2
-        let fetchRequest = NSFetchRequest(entityName: "Marker")
-        
-        //3
-        do {
-            let results = try managedContext.executeFetchRequest(fetchRequest)
-            print(results)
-        } catch let error as NSError {
-            print("Could not fetch \(error), \(error.userInfo)")
-        }
+
     }
 
     override func didReceiveMemoryWarning() {
@@ -101,7 +90,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         // Dispose of any resources that can be recreated.
     }
 
-    
     func stylePhotoSection () {
         //PhotoSection.layer.borderColor = UIColor.darkGrayColor().CGColor
         //PhotoSection.layer.borderWidth = 2
@@ -124,15 +112,41 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         presentViewController(imagePicker, animated: true, completion: nil)
     }
     
-    // Display taken photo
+    // Display taken photo AND
+    // get current location coords
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             cameraPhoto.contentMode = .ScaleAspectFit
             cameraPhoto.image = pickedImage
+            
+            // Grab location coords
+            if locationManager == nil {
+                locationManager = CLLocationManager()
+                
+                if CLLocationManager.locationServicesEnabled() {
+                    locationManager.delegate = self
+                    locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+                } else {
+                    print("location services not enabled. Could not get location!")
+                    return
+                }
+            }
+            
+            locationManager.startUpdatingLocation()
         }
         
         dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+        // Only save location if associated with taking a photo
+        coords = manager.location!.coordinate
+        print("locations = \(coords.latitude) \(coords.longitude)")
+        
+        // Location updates no longer needed. Ensures location is only captured at moment of photo capture
+        locationManager.stopUpdatingLocation()
     }
     
     // Handle Keyboard show/hide
@@ -245,7 +259,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         // Update height of text section
         textSectionHeightConstraint.constant = 150 + CGFloat(tagBubbles.subviews.count * tagHeight)
-        //containerViewHeightConstraint.constant = CGFloat(tagBubbles.subviews.count * tagHeight)
         
         // Bind an event handler for tag bubble
         
@@ -261,29 +274,47 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         // Save in core data
         
-        // 1
+        // 1. Get managed object context
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
         let managedContext = appDelegate.managedObjectContext
         
-        // 2
+        // 2. Create new object as marker entity
         let entity = NSEntityDescription.entityForName("Marker", inManagedObjectContext:managedContext)
         let marker = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
         
-        // 3
-        marker.setValue(2.0, forKey:"latitude")
+        // 3. Add data to marker object
+        marker.setValue(Double(coords.latitude), forKey:"latitude")
+        marker.setValue(Double(coords.longitude), forKey:"longitude")
         
-        // 4
+        // Create space separated list for tags
+        
+        
+        // 4. Save the marker object
         do {
             try managedContext.save()
-        
-        // 5
-            //marker.
         } catch let error as NSError {
             print("Could not save \(error), \(error.userInfo)")
         }
         
         print("Done.")
+    }
+    
+    func fetchCoreData () {
+        //1
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        let managedContext = appDelegate.managedObjectContext
+        
+        //2
+        let fetchRequest = NSFetchRequest(entityName: "Marker")
+        
+        //3
+        do {
+            let results = try managedContext.executeFetchRequest(fetchRequest)
+            print(results)
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
     }
     /*
     // MARK: - Navigation

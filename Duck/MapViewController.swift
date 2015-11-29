@@ -152,15 +152,14 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
         self.navigationController?.pushViewController(AddMarkerViewController, animated: true)
     }
     
+    // Request user location
     func reqUserLocation () {
-        // Request user location
         locationManager = CLLocationManager()
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
         mapView.showsUserLocation = true;
     }
-    
     
     // Callback for user location permissions
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
