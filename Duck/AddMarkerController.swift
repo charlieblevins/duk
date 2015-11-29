@@ -9,6 +9,7 @@
 // This page is used to build a marker including an icon and photo
 
 import UIKit
+import CoreData
 
 class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, AutocompleteDelegate {
 
@@ -77,6 +78,22 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         self.stylePhotoSection()
         self.addBottomBorder(PhotoSection)
         //self.addBottomBorder(TextSection)
+        
+        //1
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        let managedContext = appDelegate.managedObjectContext
+        
+        //2
+        let fetchRequest = NSFetchRequest(entityName: "Marker")
+        
+        //3
+        do {
+            let results = try managedContext.executeFetchRequest(fetchRequest)
+            print(results)
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+        }
     }
 
     override func didReceiveMemoryWarning() {
@@ -240,6 +257,30 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBAction func DoneBuildingMarker(sender: UIButton) {
         if TagField.text != nil {
             print(TagField.text!)
+        }
+        
+        // Save in core data
+        
+        // 1
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        
+        let managedContext = appDelegate.managedObjectContext
+        
+        // 2
+        let entity = NSEntityDescription.entityForName("Marker", inManagedObjectContext:managedContext)
+        let marker = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+        
+        // 3
+        marker.setValue(2.0, forKey:"latitude")
+        
+        // 4
+        do {
+            try managedContext.save()
+        
+        // 5
+            //marker.
+        } catch let error as NSError {
+            print("Could not save \(error), \(error.userInfo)")
         }
         
         print("Done.")
