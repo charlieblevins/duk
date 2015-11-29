@@ -14,18 +14,13 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
     
     var mapView: MGLMapView!
     var locationManager: CLLocationManager!
+    var tryingToAddMarker: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        
-        // Request user location
-        locationManager = CLLocationManager()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestAlwaysAuthorization()
-        locationManager.startUpdatingLocation()
-
+        showMap()
+        showAddMarkerButton()
     }
     
     // Hide nav bar for this view, but show for others
@@ -35,21 +30,11 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
     override func viewWillDisappear(animated: Bool) {
         self.navigationController?.navigationBarHidden = false
     }
-    
-    // Callback for user location permissions
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        if status == .AuthorizedAlways {
-            locationManager.startUpdatingLocation()
-            
-            showMap()
-            showAddMarkerButton()
-        }
-    }
+
     
     // Initialize a Mapbox Map
     func showMap() {
         mapView = MGLMapView(frame: view.bounds)
-        mapView.showsUserLocation = true;
         mapView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         
         // Turn on debug
@@ -139,10 +124,74 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
     // Moves user to add marker view
     func addMarker(sender:UIButton!) {
         
-        let AddMarkerViewController = self.storyboard!.instantiateViewControllerWithIdentifier("AddMarkerViewController")
-        self.navigationController?.pushViewController(AddMarkerViewController, animated: true)
+        switch CLLocationManager.authorizationStatus() {
+            
+        case .AuthorizedWhenInUse:
+            fallthrough
+        case .AuthorizedAlways:
+            goToAddMarkerView()
+            
+        case .NotDetermined:
+            tryingToAddMarker = true
+            reqUserLocation()
+            return
+        
+        case .Denied:
+            fallthrough
+        case .Restricted:
+            showLocationAcessDeniedAlert()
+        }
+
+
         
         //self.addMarker(51.505009, markerLng: -0.120699)
+    }
+    
+    func goToAddMarkerView () {
+        let AddMarkerViewController = self.storyboard!.instantiateViewControllerWithIdentifier("AddMarkerViewController")
+        self.navigationController?.pushViewController(AddMarkerViewController, animated: true)
+    }
+    
+    func reqUserLocation () {
+        // Request user location
+        locationManager = CLLocationManager()
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        mapView.showsUserLocation = true;
+    }
+    
+    
+    // Callback for user location permissions
+    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
+        if status == .AuthorizedWhenInUse {
+            locationManager.startUpdatingLocation()
+            
+            if tryingToAddMarker == true {
+                goToAddMarkerView()
+            }
+        }
+    }
+    
+    // Help user adjust settings if accidentally denied
+    func showLocationAcessDeniedAlert() {
+        let alertController = UIAlertController(title: "Sad Face Emoji!",
+            message: "Access to your location is required. Please enable it in Settings to continue.",
+            preferredStyle: .Alert)
+        
+        let settingsAction = UIAlertAction(title: "Settings", style: .Default) { (alertAction) in
+            
+            // THIS IS WHERE THE MAGIC HAPPENS!!!!
+            if let appSettings = NSURL(string: UIApplicationOpenSettingsURLString) {
+                UIApplication.sharedApplication().openURL(appSettings)
+            }
+        }
+        alertController.addAction(settingsAction)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
     }
     
 }
