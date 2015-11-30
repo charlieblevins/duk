@@ -8,9 +8,9 @@
 // This is the marker builder page.
 // This page is used to build a marker including an icon and photo
 
-import UIKit
 import CoreData
 import CoreLocation
+import UIKit
 
 class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, AutocompleteDelegate, CLLocationManagerDelegate {
 
@@ -32,6 +32,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBOutlet weak var DoneView: UIView!
     
     var imagePicker: UIImagePickerController!
+    var imageChosen: Bool = false
     var iconModel: IconModel!
     var autocompleteView: UIView! = nil
     var autocomplete: Autocomplete!
@@ -65,6 +66,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         // Handle tap on Add btn
         tagAddBtn.addTarget(self, action: "suggestionChosen:", forControlEvents: .TouchUpInside)
+        
+        // Tap to dismiss keyboard
+        //Looks for single or multiple taps.
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        view.addGestureRecognizer(tap)
     }
     
     override func viewDidLayoutSubviews() {
@@ -119,6 +125,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             cameraPhoto.contentMode = .ScaleAspectFit
             cameraPhoto.image = pickedImage
+            imageChosen = true
             
             // Grab location coords
             if locationManager == nil {
@@ -151,7 +158,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     // Handle Keyboard show/hide
     func registerForKeyboardNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardDidShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWasShown:", name: UIKeyboardDidShowNotification, object: nil)
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillBeHidden:", name: UIKeyboardWillHideNotification, object: nil)
     }
@@ -181,6 +188,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         let contentInsets: UIEdgeInsets = UIEdgeInsetsZero
         scrollView.contentInset = contentInsets
         scrollView.scrollIndicatorInsets = contentInsets
+    }
+    
+    func dismissKeyboard() {
+        //Causes the view (or one of its embedded text fields) to resign the first responder status.
+        view.endEditing(true)
     }
     
     func tagFieldDidChange (sender: UITextField) {
@@ -228,7 +240,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         if tagBubbles === nil {
             let tbFrame = CGRect(x: tagAddWrapView.frame.origin.x, y: tagAddWrapView.frame.origin.y + 50, width: tagAddWrapView.frame.size.width, height: CGFloat(tagHeight))
             tagBubbles = UIView(frame: tbFrame)
-            //tagBubbles.layer.backgroundColor = UIColor.redColor().CGColor
             
             // Display new tag bubble
             TextSection.addSubview(tagBubbles)
@@ -255,12 +266,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
 
         tagBubbles.addSubview(tagBubble)
         
-        // If this is the first tag, also display the icon
-        
         // Update height of text section
         textSectionHeightConstraint.constant = 150 + CGFloat(tagBubbles.subviews.count * tagHeight)
-        
-        // Bind an event handler for tag bubble
         
         // Clear text field
         TagField.text = nil
@@ -270,6 +277,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBAction func DoneBuildingMarker(sender: UIButton) {
         if TagField.text != nil {
             print(TagField.text!)
+        }
+        
+        // Validate
+        if validateData() == false {
+            return
         }
         
         // Save in core data
@@ -282,12 +294,19 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         let entity = NSEntityDescription.entityForName("Marker", inManagedObjectContext:managedContext)
         let marker = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
         
-        // 3. Add data to marker object
+        // 3. Add data to marker object (and validate)
         marker.setValue(Double(coords.latitude), forKey:"latitude")
         marker.setValue(Double(coords.longitude), forKey:"longitude")
         
         // Create space separated list for tags
+        for tagButton in tagBubbles.subviews {
+            let casted = tagButton as! UIButton
+            print(casted)
+        }
         
+        // Save image as binary
+        let imageData = UIImageJPEGRepresentation(cameraPhoto.image!, 1)
+        marker.setValue(imageData, forKey: "photo")
         
         // 4. Save the marker object
         do {
@@ -297,6 +316,36 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         }
         
         print("Done.")
+    }
+    
+    func validateData () -> Bool {
+        var errors: [String] = []
+        
+        if imageChosen == false {
+            errors.append("Please add a photo (required).")
+        }
+        
+        if tagBubbles == nil || tagBubbles.subviews.count < 1 {
+            errors.append("Please add at least one tag (required).")
+        }
+        
+        if errors.count > 0 {
+            popValidationAlert(errors.joinWithSeparator("\n"))
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    func popValidationAlert(text:String) {
+        let alertController = UIAlertController(title: "Missing Data",
+            message: text,
+            preferredStyle: .Alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
+        alertController.addAction(okAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
     }
     
     func fetchCoreData () {
