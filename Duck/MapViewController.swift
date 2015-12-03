@@ -9,6 +9,7 @@
 import Mapbox
 import Foundation
 import CoreLocation
+import CoreData
 
 class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
     
@@ -37,21 +38,39 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
         mapView = MGLMapView(frame: view.bounds)
         mapView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
         
-        // Turn on debug
-        //mapView.toggleDebug()
-        
-        // set the map's center coordinate ,
-        mapView.setCenterCoordinate(CLLocationCoordinate2D(latitude: 51.513594,
-            longitude: -0.127210),
-            zoomLevel: 12, animated: false)
-        view.addSubview(mapView)
-        
         // Set the delegate property of our map view to self after instantiating it.
         mapView.delegate = self
         
-        // Add a test marker
-        self.addMarker(51.502202, markerLng: -0.134982)
+        view.addSubview(mapView)
+
+        // Show user's saved markers if they exist
+        let savedMarkers = fetchCoreData("Marker")
         
+        if savedMarkers.count > 0 {
+            for marker in savedMarkers {
+                print(marker)
+                
+                mapView.setCenterCoordinate(CLLocationCoordinate2D(latitude: marker.latitude,
+                    longitude: marker.longitude),
+                    zoomLevel: 12, animated: false)
+                
+                // Add a test marker
+                self.addMarker(marker.latitude, markerLng: marker.longitude)
+            }
+        } else {
+            // London - test
+            // set the map's center coordinate
+            mapView.setCenterCoordinate(CLLocationCoordinate2D(latitude: 51.513594,
+                longitude: -0.127210),
+                zoomLevel: 12, animated: false)
+            
+            // Add a test marker
+            self.addMarker(51.502202, markerLng: -0.134982)
+        }
+
+        
+        // Turn on debug
+        //mapView.toggleDebug()
     }
     
     func addMarker (markerLat: CLLocationDegrees, markerLng: CLLocationDegrees) {
@@ -191,6 +210,23 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
         alertController.addAction(cancelAction)
         
         presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func fetchCoreData (entityName: String) -> [AnyObject]! {
+        //1
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        
+        //2
+        let fetchRequest = NSFetchRequest(entityName: entityName)
+        
+        //3
+        do {
+            return try managedContext.executeFetchRequest(fetchRequest)
+        } catch let error as NSError {
+            print("Could not fetch \(error), \(error.userInfo)")
+            return nil
+        }
     }
     
 }

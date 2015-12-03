@@ -117,6 +117,7 @@
 		EC6DDCD51BAF31EE00458B42 /* Duck */ = {
 			isa = PBXGroup;
 			children = (
+				EC6DDCDC1BAF31EE00458B42 /* Main.storyboard */,
 				EC6DDCF81BAF329F00458B42 /* Settings.bundle */,
 				EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */,
 				ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */,
@@ -125,7 +126,6 @@
 				ECD5791F1BBC82F30096FA1B /* AddMarkerViewController.swift */,
 				ECD579271BC01BC70096FA1B /* AddMarkerController.swift */,
 				ECD579291BC01C0C0096FA1B /* AddPathController.swift */,
-				EC6DDCDC1BAF31EE00458B42 /* Main.storyboard */,
 				EC7843721BE383CC003E3AE9 /* IconModel.swift */,
 				EC9210D51C01FE9800814131 /* Autocomplete.swift */,
 				EC6DDCDF1BAF31EE00458B42 /* Images.xcassets */,

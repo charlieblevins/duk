@@ -275,9 +275,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     // Add Marker Done Action
     @IBAction func DoneBuildingMarker(sender: UIButton) {
-        if TagField.text != nil {
-            print(TagField.text!)
-        }
         
         // Validate
         if validateData() == false {
@@ -298,11 +295,14 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         marker.setValue(Double(coords.latitude), forKey:"latitude")
         marker.setValue(Double(coords.longitude), forKey:"longitude")
         
-        // Create space separated list for tags
+        // Create space separated string of tags
+        var tagString: String = ""
         for tagButton in tagBubbles.subviews {
             let casted = tagButton as! UIButton
-            print(casted)
+            tagString += casted.titleLabel!.text! + " "
         }
+        tagString = tagString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        marker.setValue(tagString, forKey: "tags")
         
         // Save image as binary
         let imageData = UIImageJPEGRepresentation(cameraPhoto.image!, 1)
@@ -348,23 +348,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         presentViewController(alertController, animated: true, completion: nil)
     }
     
-    func fetchCoreData () {
-        //1
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        
-        let managedContext = appDelegate.managedObjectContext
-        
-        //2
-        let fetchRequest = NSFetchRequest(entityName: "Marker")
-        
-        //3
-        do {
-            let results = try managedContext.executeFetchRequest(fetchRequest)
-            print(results)
-        } catch let error as NSError {
-            print("Could not fetch \(error), \(error.userInfo)")
-        }
-    }
+
     /*
     // MARK: - Navigation
 

@@ -27,7 +27,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="417" y="376"/>
+            <point key="canvasLocation" x="1195" y="1052"/>
         </scene>
         <!--Add Marker View Controller-->
         <scene sceneID="rLF-5F-bAA">
@@ -65,7 +65,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="uc9-74-w09" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1170" y="376"/>
+            <point key="canvasLocation" x="1916" y="1052"/>
         </scene>
         <!--Add Marker Controller-->
         <scene sceneID="yxI-kT-uQW">
@@ -274,7 +274,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Onf-eN-vGu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1800" y="190"/>
+            <point key="canvasLocation" x="2546" y="866"/>
         </scene>
         <!--Add Path Controller-->
         <scene sceneID="Bei-MM-g94">
@@ -293,12 +293,13 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="lGQ-fR-jb1" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1881" y="903"/>
+            <point key="canvasLocation" x="2627" y="1579"/>
         </scene>
-        <!--Main Navigation-->
+        <!--Item-->
         <scene sceneID="XO1-Lb-6si">
             <objects>
-                <navigationController storyboardIdentifier="MainNavigation" id="JpL-cz-e6M" customClass="MainNavigation" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="MainNavigation" id="JpL-cz-e6M" customClass="MainNavigation" customModule="Duck" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Item" id="V3g-Kp-vZr"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="58t-KB-4nF">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -310,7 +311,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CZX-SY-dnb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-296" y="376"/>
+            <point key="canvasLocation" x="486" y="1052"/>
         </scene>
     </scenes>
     <resources>
