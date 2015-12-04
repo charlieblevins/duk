@@ -23,11 +23,43 @@
                     <navigationItem key="navigationItem" id="5bT-pm-eFx"/>
                     <connections>
                         <segue destination="8V6-d6-3Ex" kind="showDetail" id="eiE-bV-4Fr"/>
+                        <segue destination="PRT-KV-WT9" kind="show" id="aHA-iD-u80"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="1195" y="1052"/>
+        </scene>
+        <!--My Markers Controller-->
+        <scene sceneID="qsH-gR-DNp">
+            <objects>
+                <tableViewController storyboardIdentifier="MyMarkersController" id="PRT-KV-WT9" customClass="MyMarkersController" customModule="Duck" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="1KV-fc-96y">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <animations/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" id="Zq5-fA-IZw">
+                                <rect key="frame" x="0.0" y="92" width="600" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Zq5-fA-IZw" id="muh-2c-PwY">
+                                    <rect key="frame" x="0.0" y="0.0" width="600" height="43"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <animations/>
+                                </tableViewCellContentView>
+                                <animations/>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="PRT-KV-WT9" id="EIB-DH-smm"/>
+                            <outlet property="delegate" destination="PRT-KV-WT9" id="Df7-S1-y8m"/>
+                        </connections>
+                    </tableView>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4cl-Lp-5ij" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1195" y="1799"/>
         </scene>
         <!--Add Marker View Controller-->
         <scene sceneID="rLF-5F-bAA">

@@ -42,35 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
         self.saveContext()
 
-        deleteCoreData()
-    }
-    
-    // Utility for dev only
-    func deleteCoreData () {
-        
-        // Clear markers for now - NOT FOR PRODUCTION!
-        let allMarkers: NSFetchRequest = NSFetchRequest()
-        let managedContext = self.managedObjectContext
-        allMarkers.entity = NSEntityDescription.entityForName("Marker", inManagedObjectContext: managedContext)
-        allMarkers.includesPropertyValues = false
-        //only fetch the managedObjectID
-        var markers: [AnyObject]
-        
-        do {
-            markers = try managedContext.executeFetchRequest(allMarkers)
-            
-            for marker in markers {
-                managedContext.deleteObject(marker as! NSManagedObject)
-            }
-        } catch let error as NSError {
-            print("Fetch failed: \(error.localizedDescription)")
-        }
-        
-        do {
-            try managedContext.save()
-        } catch {
-            print("save failed")
-        }
+        Util.deleteCoreDataForEntity("Marker")
     }
 
     // MARK: - Core Data stack

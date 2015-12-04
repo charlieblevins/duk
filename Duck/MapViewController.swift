@@ -22,6 +22,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
 
         showMap()
         showAddMarkerButton()
+        showMyMarkersButton()
     }
     
     // Hide nav bar for this view, but show for others
@@ -32,7 +33,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
         self.navigationController?.navigationBarHidden = false
     }
 
-    
     // Initialize a Mapbox Map
     func showMap() {
         mapView = MGLMapView(frame: view.bounds)
@@ -44,7 +44,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
         view.addSubview(mapView)
 
         // Show user's saved markers if they exist
-        let savedMarkers = fetchCoreData("Marker")
+        let savedMarkers = Util.fetchCoreData("Marker")
         
         if savedMarkers.count > 0 {
             for marker in savedMarkers {
@@ -94,7 +94,6 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
         return MGLAnnotationImage(image: image, reuseIdentifier: "customPin")
     }
     
-    
     func mapView(mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
         return true
     }
@@ -139,7 +138,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
         horizontalConstraint.active = true
         verticalConstraint.active = true
     }
-    
+ 
     // Moves user to add marker view
     func addMarker(sender:UIButton!) {
         
@@ -164,6 +163,52 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
 
         
         //self.addMarker(51.505009, markerLng: -0.120699)
+    }
+    
+    func showMyMarkersButton () {
+        let button = UIButton()
+        
+        // Build button
+        button.frame = CGRectMake(100, 100, 100, 50)
+        
+        button.backgroundColor = UIColor.blueColor()
+        button.setTitle("My Markers", forState: UIControlState.Normal)
+        
+        // Position
+        button.translatesAutoresizingMaskIntoConstraints = false
+        let horizontalConstraint = NSLayoutConstraint(
+            item: button,
+            attribute: .Left,
+            relatedBy: .Equal,
+            toItem: view,
+            attribute: .Left,
+            multiplier: 1,
+            constant: 0)
+        
+        let verticalConstraint = NSLayoutConstraint(
+            item: button,
+            attribute: .Top,
+            relatedBy: .Equal,
+            toItem: view,
+            attribute: .Top,
+            multiplier: 1,
+            constant: 0)
+        
+        // Set action
+        button.addTarget(self, action: "goToMyMarkers:", forControlEvents: UIControlEvents.TouchUpInside)
+        
+        // Add button to view
+        self.view.addSubview(button)
+        
+        // Activate constraints
+        horizontalConstraint.active = true
+        verticalConstraint.active = true
+    }
+    
+    func goToMyMarkers (sender: UIButton) {
+        print("going to my markers...")
+        let MyMarkersController = self.storyboard!.instantiateViewControllerWithIdentifier("MyMarkersController")
+        self.navigationController?.pushViewController(MyMarkersController, animated: true)
     }
     
     func goToAddMarkerView () {
@@ -228,6 +273,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
             return nil
         }
     }
+
     
 }
 

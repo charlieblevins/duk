@@ -13,7 +13,7 @@ class MainNavigation: UINavigationController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        print("Loaded MarkerNavigation...")
+        print("Loaded Main Navigation...")
         
     }
     
