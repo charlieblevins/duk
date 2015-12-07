@@ -315,6 +315,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             print("Could not save \(error), \(error.userInfo)")
         }
         
+        // Move back to map view
+        let mapView = self.storyboard!.instantiateViewControllerWithIdentifier("MapViewController")
+        self.navigationController?.pushViewController(mapView, animated: true)
+        
         print("Done.")
     }
     

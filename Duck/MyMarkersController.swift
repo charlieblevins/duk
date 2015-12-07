@@ -9,17 +9,25 @@
 import UIKit
 
 class MyMarkersController: UITableViewController {
+    
+    var savedMarkers: [AnyObject]!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
         print("My Markers loaded")
+        
+        // Get marker data
+        savedMarkers = Util.fetchCoreData("Marker")
+        
+        // Register cell class
+        self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
 
         // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
+         self.clearsSelectionOnViewWillAppear = false
 
         // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+         self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
     override func didReceiveMemoryWarning() {
@@ -31,23 +39,29 @@ class MyMarkersController: UITableViewController {
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        return 0
+        if savedMarkers != nil {
+            return savedMarkers.count
+        } else {
+            return 0
+        }
     }
 
-    /*
+    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("reuseIdentifier", forIndexPath: indexPath)
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
 
         // Configure the cell...
+        let markerObj = savedMarkers[indexPath.row]
+        cell.textLabel?.text = markerObj.valueForKey("tags") as? String
 
         return cell
     }
-    */
+    
 
     /*
     // Override to support conditional editing of the table view.

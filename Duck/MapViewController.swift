@@ -41,36 +41,14 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
         // Set the delegate property of our map view to self after instantiating it.
         mapView.delegate = self
         
-        view.addSubview(mapView)
-
-        // Show user's saved markers if they exist
-        let savedMarkers = Util.fetchCoreData("Marker")
+        NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "addMarkersFromCore", userInfo: nil, repeats: false)
         
-        if savedMarkers.count > 0 {
-            for marker in savedMarkers {
-                print(marker)
-                
-                mapView.setCenterCoordinate(CLLocationCoordinate2D(latitude: marker.latitude,
-                    longitude: marker.longitude),
-                    zoomLevel: 12, animated: false)
-                
-                // Add a test marker
-                self.addMarker(marker.latitude, markerLng: marker.longitude)
-            }
-        } else {
-            // London - test
-            // set the map's center coordinate
-            mapView.setCenterCoordinate(CLLocationCoordinate2D(latitude: 51.513594,
-                longitude: -0.127210),
-                zoomLevel: 12, animated: false)
-            
-            // Add a test marker
-            self.addMarker(51.502202, markerLng: -0.134982)
-        }
-
-        
+        let curBounds = mapView.visibleCoordinateBounds
+        print(curBounds)
         // Turn on debug
         //mapView.toggleDebug()
+        
+        view.addSubview(mapView)
     }
     
     func addMarker (markerLat: CLLocationDegrees, markerLng: CLLocationDegrees) {
@@ -96,6 +74,34 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
     
     func mapView(mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
         return true
+    }
+    
+    func addMarkersFromCore () {
+        
+        // Show user's saved markers if they exist
+        let savedMarkers = Util.fetchCoreData("Marker")
+        
+        if savedMarkers.count > 0 {
+            for marker in savedMarkers {
+                print(marker)
+                
+                mapView.setCenterCoordinate(CLLocationCoordinate2D(latitude: marker.latitude,
+                    longitude: marker.longitude),
+                    zoomLevel: 12, animated: false)
+                
+                // Add a test marker
+                self.addMarker(marker.latitude, markerLng: marker.longitude)
+            }
+        } else {
+            // London - test
+            // set the map's center coordinate
+            mapView.setCenterCoordinate(CLLocationCoordinate2D(latitude: 51.513594,
+                longitude: -0.127210),
+                zoomLevel: 12, animated: false)
+            
+            // Add a test marker
+            self.addMarker(51.502202, markerLng: -0.134982)
+        }
     }
     
     // Show Add Marker button
@@ -192,7 +198,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
             toItem: view,
             attribute: .Top,
             multiplier: 1,
-            constant: 0)
+            constant: 20)
         
         // Set action
         button.addTarget(self, action: "goToMyMarkers:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -256,24 +262,8 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
         
         presentViewController(alertController, animated: true, completion: nil)
     }
-    
-    func fetchCoreData (entityName: String) -> [AnyObject]! {
-        //1
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
-        
-        //2
-        let fetchRequest = NSFetchRequest(entityName: entityName)
-        
-        //3
-        do {
-            return try managedContext.executeFetchRequest(fetchRequest)
-        } catch let error as NSError {
-            print("Could not fetch \(error), \(error.userInfo)")
-            return nil
-        }
-    }
 
+    
     
 }
 
