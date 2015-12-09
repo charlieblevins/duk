@@ -11,6 +11,8 @@ import UIKit
 class MyMarkersController: UITableViewController {
     
     var savedMarkers: [AnyObject]!
+    var deleteMarkerIndexPath: NSIndexPath? = nil
+    var deleteMarkerTimestamp: Double? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -71,17 +73,47 @@ class MyMarkersController: UITableViewController {
     }
     */
 
-    /*
     // Override to support editing the table view.
     override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
         if editingStyle == .Delete {
             // Delete the row from the data source
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-        } else if editingStyle == .Insert {
-            // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
-        }    
+            //Util.deleteCoreDataForEntity()
+            //tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
+            deleteMarkerIndexPath = indexPath
+            deleteMarkerTimestamp = savedMarkers[indexPath.row].valueForKey("timestamp") as? Double
+            popAlert("Are you sure you want to delete this marker?")
+        }
     }
-    */
+    
+    func popAlert(text:String) {
+        let alertController = UIAlertController(title: "Delete Marker",
+            message: text,
+            preferredStyle: .ActionSheet)
+        
+        let deleteAction = UIAlertAction(title: "Delete", style: .Destructive, handler: handleDeleteMarker)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        alertController.addAction(deleteAction)
+        alertController.addAction(cancelAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func handleDeleteMarker (alertAction: UIAlertAction!) -> Void {
+        if let indexPath = deleteMarkerIndexPath {
+            tableView.beginUpdates()
+            
+            // Delete from local var
+            savedMarkers.removeAtIndex(indexPath.row)
+            
+            // Delete from table view
+            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+            
+            // Delete from core data
+            Util.deleteCoreDataByTime("Marker", timestamp: deleteMarkerTimestamp!)
+        }
+        
+    }
+    
 
     /*
     // Override to support rearranging the table view.

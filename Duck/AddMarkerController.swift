@@ -292,6 +292,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         let marker = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
         
         // 3. Add data to marker object (and validate)
+        let timestamp = NSDate().timeIntervalSince1970
+        marker.setValue(timestamp, forKey: "timestamp")
+        
         marker.setValue(Double(coords.latitude), forKey:"latitude")
         marker.setValue(Double(coords.longitude), forKey:"longitude")
         

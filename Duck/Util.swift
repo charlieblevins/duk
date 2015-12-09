@@ -30,7 +30,8 @@ class Util {
         }
     }
     
-    // Utility for dev only
+    // Utility
+    // Delete all objects of a certain entity type from core data
     class func deleteCoreDataForEntity (entityName: String) {
         
         // Clear markers for now - NOT FOR PRODUCTION!
@@ -45,6 +46,39 @@ class Util {
         
         do {
             markers = try managedContext.executeFetchRequest(allMarkers)
+            
+            for marker in markers {
+                managedContext.deleteObject(marker as! NSManagedObject)
+            }
+        } catch let error as NSError {
+            print("Fetch failed: \(error.localizedDescription)")
+        }
+        
+        do {
+            try managedContext.save()
+        } catch {
+            print("save failed")
+        }
+    }
+    
+    // Delete objects with a certain time stamp from core data
+    class func deleteCoreDataByTime (entityName: String, timestamp: Double) {
+        // Clear markers for now - NOT FOR PRODUCTION!
+        let marker: NSFetchRequest = NSFetchRequest()
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        marker.entity = NSEntityDescription.entityForName(entityName, inManagedObjectContext: managedContext)
+        marker.includesPropertyValues = false
+        
+        // Query by timestamp
+        let predicate = NSPredicate(format: "timestamp = %lf", timestamp)
+        marker.predicate = predicate
+        
+        var markers: [AnyObject]
+        
+        do {
+            markers = try managedContext.executeFetchRequest(marker)
             
             for marker in markers {
                 managedContext.deleteObject(marker as! NSManagedObject)
