@@ -53,15 +53,23 @@ class MyMarkersController: UITableViewController {
         }
     }
 
-    
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
 
         // Configure the cell...
         let markerObj = savedMarkers[indexPath.row]
         cell.textLabel?.text = markerObj.valueForKey("tags") as? String
+        
+        
+        let data: NSData = markerObj.valueForKey("photo") as! NSData
+        let image: UIImage! = UIImage(data: data)
+        cell.imageView!.image = image
 
         return cell
+    }
+    
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 84.0
     }
     
 
@@ -110,6 +118,8 @@ class MyMarkersController: UITableViewController {
             
             // Delete from core data
             Util.deleteCoreDataByTime("Marker", timestamp: deleteMarkerTimestamp!)
+            
+            tableView.endUpdates()
         }
         
     }

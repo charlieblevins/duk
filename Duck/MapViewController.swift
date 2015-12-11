@@ -51,11 +51,17 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
         view.addSubview(mapView)
     }
     
-    func addMarker (markerLat: CLLocationDegrees, markerLng: CLLocationDegrees) {
+    func addMarker (markerLat: CLLocationDegrees, markerLng: CLLocationDegrees, titleText: String?, image: UIImage?) {
         // Declare the marker `hello` and set its coordinates, title, and subtitle
         let hello = MGLPointAnnotation()
         hello.coordinate = CLLocationCoordinate2D(latitude: markerLat, longitude: markerLng)
-        hello.title = "Hello world!"
+        
+        if let title = titleText {
+            hello.title = title
+        } else {
+            hello.title = "Hello world!"
+        }
+        
         hello.subtitle = "Welcome to my marker"
         
         // Add marker `hello` to the map
@@ -89,8 +95,9 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
                     longitude: marker.longitude),
                     zoomLevel: 12, animated: false)
                 
-                // Add a test marker
-                self.addMarker(marker.latitude, markerLng: marker.longitude)
+                // Add marker
+                let image = UIImage(data: marker.valueForKey("photo") as! NSData)
+                self.addMarker(marker.latitude, markerLng: marker.longitude, titleText: marker.valueForKey("tags") as? String, image: image)
             }
         } else {
             // London - test
@@ -100,7 +107,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
                 zoomLevel: 12, animated: false)
             
             // Add a test marker
-            self.addMarker(51.502202, markerLng: -0.134982)
+            self.addMarker(51.502202, markerLng: -0.134982, titleText: "test marker", image: nil)
         }
     }
     
