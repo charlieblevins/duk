@@ -1,3 +1,3 @@
-pod 'Mapbox-iOS-SDK'
-
-use_frameworks!
+source 'https://github.com/CocoaPods/Specs.git'
+platform :ios, '8.1'
+pod 'GoogleMaps'

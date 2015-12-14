@@ -6,21 +6,20 @@
 //  Copyright (c) 2015 Charlie Blevins. All rights reserved.
 //
 
-import Mapbox
 import Foundation
 import CoreLocation
 import CoreData
+import GoogleMaps
 
-class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManagerDelegate {
+class MapViewController: UIViewController, CLLocationManagerDelegate {
     
-    var mapView: MGLMapView!
     var locationManager: CLLocationManager!
     var tryingToAddMarker: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        showMap()
+        showGMap()
         showAddMarkerButton()
         showMyMarkersButton()
     }
@@ -32,84 +31,98 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
     override func viewWillDisappear(animated: Bool) {
         self.navigationController?.navigationBarHidden = false
     }
+    
+    func showGMap () {
+        let camera = GMSCameraPosition.cameraWithLatitude(-33.86,
+            longitude: 151.20, zoom: 6)
+        let mapView = GMSMapView.mapWithFrame(CGRectZero, camera: camera)
+        mapView.myLocationEnabled = true
+        self.view = mapView
+        
+        let marker = GMSMarker()
+        marker.position = CLLocationCoordinate2DMake(-33.86, 151.20)
+        marker.title = "Sydney"
+        marker.snippet = "Australia"
+        marker.map = mapView
+    }
 
     // Initialize a Mapbox Map
-    func showMap() {
-        mapView = MGLMapView(frame: view.bounds)
-        mapView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
-        
-        // Set the delegate property of our map view to self after instantiating it.
-        mapView.delegate = self
-        
-        NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "addMarkersFromCore", userInfo: nil, repeats: false)
-        
-        let curBounds = mapView.visibleCoordinateBounds
-        print(curBounds)
-        // Turn on debug
-        //mapView.toggleDebug()
-        
-        view.addSubview(mapView)
-    }
+//    func showMap() {
+//        mapView = MGLMapView(frame: view.bounds)
+//        mapView.autoresizingMask = [.FlexibleWidth, .FlexibleHeight]
+//        
+//        // Set the delegate property of our map view to self after instantiating it.
+//        mapView.delegate = self
+//        
+//        NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "addMarkersFromCore", userInfo: nil, repeats: false)
+//        
+//        let curBounds = mapView.visibleCoordinateBounds
+//        print(curBounds)
+//        // Turn on debug
+//        //mapView.toggleDebug()
+//        
+//        view.addSubview(mapView)
+//    }
     
-    func addMarker (markerLat: CLLocationDegrees, markerLng: CLLocationDegrees, titleText: String?, image: UIImage?) {
-        // Declare the marker `hello` and set its coordinates, title, and subtitle
-        let hello = MGLPointAnnotation()
-        hello.coordinate = CLLocationCoordinate2D(latitude: markerLat, longitude: markerLng)
-        
-        if let title = titleText {
-            hello.title = title
-        } else {
-            hello.title = "Hello world!"
-        }
-        
-        hello.subtitle = "Welcome to my marker"
-        
-        // Add marker `hello` to the map
-        mapView.addAnnotation(hello)
-    }
+//    func addMarker (markerLat: CLLocationDegrees, markerLng: CLLocationDegrees, titleText: String?, image: UIImage?) {
+//        // Declare the marker `hello` and set its coordinates, title, and subtitle
+//        let hello = MGLPointAnnotation()
+//        hello.coordinate = CLLocationCoordinate2D(latitude: markerLat, longitude: markerLng)
+//        
+//        if let title = titleText {
+//            hello.title = title
+//        } else {
+//            hello.title = "Hello world!"
+//        }
+//        
+//        hello.subtitle = "Welcome to my marker"
+//        
+//        // Add marker to the map
+//        mapView.addAnnotation(hello)
+//    }
     
-    func mapView(mapView: MGLMapView, imageForAnnotation annotation: MGLAnnotation) -> MGLAnnotationImage? {
-        // Memory efficiency: If a marker is available from the reusable queue, use it
-        if let pin = mapView.dequeueReusableAnnotationImageWithIdentifier("customPin") {
-            return pin
-        }
-        
-        let image = UIImage(named: "mapMarker")!
-        return MGLAnnotationImage(image: image, reuseIdentifier: "customPin")
-    }
+//    func mapView(mapView: MGLMapView, imageForAnnotation annotation: MGLAnnotation) -> MGLAnnotationImage? {
+//        // Memory efficiency: If a marker is available from the reusable queue, use it
+//        if let pin = mapView.dequeueReusableAnnotationImageWithIdentifier("customPin") {
+//            return pin
+//        }
+//        
+//        let image = UIImage(named: "mapMarker")!
+//        return MGLAnnotationImage(image: image, reuseIdentifier: "customPin")
+//    }
+//    
+//    func mapView(mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
+//        return false
+//    }
     
-    func mapView(mapView: MGLMapView, annotationCanShowCallout annotation: MGLAnnotation) -> Bool {
-        return true
-    }
-    
-    func addMarkersFromCore () {
-        
-        // Show user's saved markers if they exist
-        let savedMarkers = Util.fetchCoreData("Marker")
-        
-        if savedMarkers.count > 0 {
-            for marker in savedMarkers {
-                print(marker)
-                
-                mapView.setCenterCoordinate(CLLocationCoordinate2D(latitude: marker.latitude,
-                    longitude: marker.longitude),
-                    zoomLevel: 12, animated: false)
-                
-                // Add marker
-                let image = UIImage(data: marker.valueForKey("photo") as! NSData)
-                self.addMarker(marker.latitude, markerLng: marker.longitude, titleText: marker.valueForKey("tags") as? String, image: image)
-            }
-        } else {
-            // London - test
-            // set the map's center coordinate
-            mapView.setCenterCoordinate(CLLocationCoordinate2D(latitude: 51.513594,
-                longitude: -0.127210),
-                zoomLevel: 12, animated: false)
-            
-            // Add a test marker
-            self.addMarker(51.502202, markerLng: -0.134982, titleText: "test marker", image: nil)
-        }
-    }
+//    func addMarkersFromCore () {
+//        
+//        // Show user's saved markers if they exist
+//        let savedMarkers = Util.fetchCoreData("Marker")
+//        
+//        if savedMarkers.count > 0 {
+//            for marker in savedMarkers {
+//                print(marker)
+//                
+//                mapView.setCenterCoordinate(CLLocationCoordinate2D(latitude: marker.latitude,
+//                    longitude: marker.longitude),
+//                    zoomLevel: 12, animated: false)
+//                
+//                // Add marker
+//                let image = UIImage(data: marker.valueForKey("photo") as! NSData)
+//                self.addMarker(marker.latitude, markerLng: marker.longitude, titleText: marker.valueForKey("tags") as? String, image: image)
+//            }
+//        } else {
+//            // London - test
+//            // set the map's center coordinate
+//            mapView.setCenterCoordinate(CLLocationCoordinate2D(latitude: 51.513594,
+//                longitude: -0.127210),
+//                zoomLevel: 12, animated: false)
+//            
+//            // Add a test marker
+//            self.addMarker(51.502202, markerLng: -0.134982, titleText: "test marker", image: nil)
+//        }
+//    }
     
     // Show Add Marker button
     func showAddMarkerButton() {
@@ -164,7 +177,7 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
             
         case .NotDetermined:
             tryingToAddMarker = true
-            reqUserLocation()
+            //reqUserLocation()
             return
         
         case .Denied:
@@ -229,14 +242,14 @@ class MapViewController: UIViewController, MGLMapViewDelegate, CLLocationManager
         self.navigationController?.pushViewController(AddMarkerViewController, animated: true)
     }
     
-    // Request user location
-    func reqUserLocation () {
-        locationManager = CLLocationManager()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-        locationManager.requestWhenInUseAuthorization()
-        mapView.showsUserLocation = true;
-    }
+//    // Request user location
+//    func reqUserLocation () {
+//        locationManager = CLLocationManager()
+//        locationManager.delegate = self
+//        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+//        locationManager.requestWhenInUseAuthorization()
+//        mapView.showsUserLocation = true;
+//    }
     
     // Callback for user location permissions
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
