@@ -16,6 +16,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     var mapView: GMSMapView?
     var locationManager: CLLocationManager!
     var tryingToAddMarker: Bool = false
+    var savedMarkers: [AnyObject] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,24 +39,29 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         let camera = GMSCameraPosition.cameraWithLatitude(-33.86,
             longitude: 151.20, zoom: 6)
         mapView = GMSMapView.mapWithFrame(CGRectZero, camera: camera)
+        mapView!.delegate = self
         self.view = mapView
+        
     }
 
     
-    func addMarker (markerLat: CLLocationDegrees, markerLng: CLLocationDegrees, titleText: String?, image: UIImage?) {
+    func addMarker (markerLat: CLLocationDegrees, markerLng: CLLocationDegrees, timestamp: String?, pinImage: UIImage?) {
 
         let marker = GMSMarker()
         marker.position = CLLocationCoordinate2DMake(markerLat, markerLng)
         
-        if let title = titleText {
-            marker.title = title
+        // Store timestamp as title for id
+        if timestamp != nil {
+            marker.title = timestamp
         } else {
             marker.title = "Hello world!"
         }
         
         marker.snippet = "Test snippet"
         
-        //marker.icon = image
+        if pinImage != nil {
+            marker.icon = pinImage
+        }
         
         // Add marker to the map
         marker.map = mapView
@@ -64,14 +70,26 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     func addMarkersFromCore () {
         
         // Show user's saved markers if they exist
-        let savedMarkers = Util.fetchCoreData("Marker")
+        savedMarkers = Util.fetchCoreData("Marker")
         
         if savedMarkers.count > 0 {
             for marker in savedMarkers {
                 
+                // Get timestamp
+                let timestamp = marker.valueForKey("timestamp") as! Double
+                let timestampString = String(format: "%.6f", timestamp)
+                
+                // Use icon matching first tag
+                // TO DO: write function getIconForTags that
+                // searches tags until it finds one that matches a marker icon.
+                // If none are found, return photo icon
+                let tagString = marker.valueForKey("tags") as! String
+                let tags: [String] = tagString.characters.split{$0 == ","}.map(String.init)
+                let iconName: String = tags[0].stringByReplacingOccurrencesOfString("#", withString: "") + "Marker"
+                let pinImage = UIImage(named: iconName)
+                
                 // Add marker
-                let image = UIImage(data: marker.valueForKey("photo") as! NSData)
-                self.addMarker(marker.latitude, markerLng: marker.longitude, titleText: marker.valueForKey("tags") as? String, image: image)
+                self.addMarker(marker.latitude, markerLng: marker.longitude, timestamp: timestampString, pinImage: pinImage)
             }
             
             // Set mapview to last marker
@@ -81,9 +99,30 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
     }
     
-    func mapView(mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView {
+    // Show custom info window
+    func mapView(mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView! {
         print("marker is about to show")
-        return UIView()
+        let customInfoWindow = UIView(frame: CGRectMake(0, 0, 100, 100))
+        
+        
+        // Find marker that matches timestamp
+        let timestamp = Double(marker.title)
+        
+        let matchingMarker = savedMarkers.filter{
+            let t = $0.valueForKey("timestamp") as! Double
+            return t == timestamp
+        }.first
+        
+        // Add image to custom info window
+        let imageView = UIImageView(frame: CGRectMake(0, 0, 100, 100))
+        let data: NSData = matchingMarker!.valueForKey("photo") as! NSData
+        imageView.image = UIImage(data: data)
+        
+        customInfoWindow.addSubview(imageView)
+        
+        customInfoWindow.backgroundColor = UIColor.whiteColor()
+        
+        return customInfoWindow
     }
     
     // Show Add Marker button
