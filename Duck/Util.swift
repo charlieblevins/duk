@@ -93,4 +93,31 @@ class Util {
             print("save failed")
         }
     }
+    
+    // searches tags until it finds one that matches a marker icon.
+    // If none are found, return photo icon
+    class func getIconForTags (tags: String) -> UIImage? {
+        
+        // Split string into array
+        let tagArr = tags.characters.split{ $0 == "," }.map {
+            item in
+            String(item).stringByReplacingOccurrencesOfString("#", withString: "")
+        }
+        
+        //check each item for matching icon
+        var img: UIImage? = nil
+        for tag in tagArr {
+            img = UIImage(named: tag + "Marker")
+            if img != nil {
+                break
+            }
+        }
+        
+        // Default: photoMarker
+        if img == nil {
+            img = UIImage(named: "photoMarker")
+        }
+        
+        return img
+    }
 }

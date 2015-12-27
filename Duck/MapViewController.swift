@@ -30,6 +30,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Hide nav bar for this view, but show for others
     override func viewWillAppear(animated: Bool) {
         self.navigationController?.navigationBarHidden = true
+        
+        print("test")
     }
     override func viewWillDisappear(animated: Bool) {
         self.navigationController?.navigationBarHidden = false
@@ -77,16 +79,11 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
                 
                 // Get timestamp
                 let timestamp = marker.valueForKey("timestamp") as! Double
-                let timestampString = String(format: "%.6f", timestamp)
+                let timestampString = String(format: "%.7f", timestamp)
                 
                 // Use icon matching first tag
-                // TO DO: write function getIconForTags that
-                // searches tags until it finds one that matches a marker icon.
-                // If none are found, return photo icon
-                let tagString = marker.valueForKey("tags") as! String
-                let tags: [String] = tagString.characters.split{$0 == ","}.map(String.init)
-                let iconName: String = tags[0].stringByReplacingOccurrencesOfString("#", withString: "") + "Marker"
-                let pinImage = UIImage(named: iconName)
+                let tags = marker.valueForKey("tags") as! String
+                let pinImage = Util.getIconForTags(tags)
                 
                 // Add marker
                 self.addMarker(marker.latitude, markerLng: marker.longitude, timestamp: timestampString, pinImage: pinImage)
