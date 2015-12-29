@@ -319,8 +319,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         }
         
         // Move back to map view
-        let mapView = self.storyboard!.instantiateViewControllerWithIdentifier("MapViewController")
-        self.navigationController?.pushViewController(mapView, animated: true)
+        navigationController?.popToRootViewControllerAnimated(true)
         
         print("Done.")
     }

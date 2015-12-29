@@ -13,6 +13,7 @@ class MyMarkersController: UITableViewController {
     var savedMarkers: [AnyObject]!
     var deleteMarkerIndexPath: NSIndexPath? = nil
     var deleteMarkerTimestamp: Double? = nil
+    var deletedMarkers: [Double] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,6 +113,10 @@ class MyMarkersController: UITableViewController {
             
             // Delete from local var
             savedMarkers.removeAtIndex(indexPath.row)
+            
+            // Pass deleted items to mapview for removal
+            let mvc = navigationController?.viewControllers.first as! MapViewController
+            mvc.deletedMarkers.append(deleteMarkerTimestamp!)
             
             // Delete from table view
             tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)

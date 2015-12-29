@@ -17,6 +17,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     var locationManager: CLLocationManager!
     var tryingToAddMarker: Bool = false
     var savedMarkers: [AnyObject] = []
+    var deletedMarkers: [Double] = []
+    var curMapMarkers: [GMSMarker] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,8 +33,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     override func viewWillAppear(animated: Bool) {
         self.navigationController?.navigationBarHidden = true
         
-        print("test")
+        print(deletedMarkers)
+        removeDeleted()
     }
+    
     override func viewWillDisappear(animated: Bool) {
         self.navigationController?.navigationBarHidden = false
     }
@@ -44,29 +48,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         mapView!.delegate = self
         self.view = mapView
         
-    }
-
-    
-    func addMarker (markerLat: CLLocationDegrees, markerLng: CLLocationDegrees, timestamp: String?, pinImage: UIImage?) {
-
-        let marker = GMSMarker()
-        marker.position = CLLocationCoordinate2DMake(markerLat, markerLng)
-        
-        // Store timestamp as title for id
-        if timestamp != nil {
-            marker.title = timestamp
-        } else {
-            marker.title = "Hello world!"
-        }
-        
-        marker.snippet = "Test snippet"
-        
-        if pinImage != nil {
-            marker.icon = pinImage
-        }
-        
-        // Add marker to the map
-        marker.map = mapView
     }
     
     func addMarkersFromCore () {
@@ -94,6 +75,32 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             mapView!.animateToLocation(CLLocationCoordinate2DMake(lastMarker!.latitude, lastMarker!.longitude))
             mapView!.animateToZoom(12)
         }
+    }
+    
+    // Add marker to map
+    func addMarker (markerLat: CLLocationDegrees, markerLng: CLLocationDegrees, timestamp: String?, pinImage: UIImage?) {
+        
+        let marker = GMSMarker()
+        marker.position = CLLocationCoordinate2DMake(markerLat, markerLng)
+        
+        // Store timestamp as title for id
+        if timestamp != nil {
+            marker.title = timestamp
+        } else {
+            marker.title = "Hello world!"
+        }
+        
+        marker.snippet = "Test snippet"
+        
+        if pinImage != nil {
+            marker.icon = pinImage
+        }
+        
+        // Add marker to the map
+        marker.map = mapView
+        
+        // Store all map markers
+        curMapMarkers.append(marker)
     }
     
     // Show custom info window
@@ -281,7 +288,21 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         presentViewController(alertController, animated: true, completion: nil)
     }
 
-    
+    func removeDeleted() {
+        
+        // Loop through deleted items
+        for timestamp in deletedMarkers {
+            
+            // Get marker by timestamp
+            let marker = curMapMarkers.filter{ $0.title == String(format: "%.7f", timestamp) }.first! as GMSMarker
+            
+            // Remove from map
+            marker.map = nil
+        }
+        
+        // Clear deleted markers
+        //deletedMarkers = []
+    }
     
 }
 
