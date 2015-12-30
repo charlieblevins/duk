@@ -272,58 +272,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         // Clear text field
         TagField.text = nil
     }
-    
-    // Add Marker Done Action
-    @IBAction func DoneBuildingMarker(sender: UIButton) {
-        
-        // Validate
-        if validateData() == false {
-            return
-        }
-        
-        // Save in core data
-        
-        // 1. Get managed object context
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
-        
-        // 2. Create new object as marker entity
-        let entity = NSEntityDescription.entityForName("Marker", inManagedObjectContext:managedContext)
-        let marker = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
-        
-        // 3. Add data to marker object (and validate)
-        let timestamp = NSDate().timeIntervalSince1970
-        marker.setValue(timestamp, forKey: "timestamp")
-        
-        marker.setValue(Double(coords.latitude), forKey:"latitude")
-        marker.setValue(Double(coords.longitude), forKey:"longitude")
-        
-        // Create space separated string of tags
-        var tagString: String = ""
-        for tagButton in tagBubbles.subviews {
-            let casted = tagButton as! UIButton
-            tagString += casted.titleLabel!.text! + " "
-        }
-        tagString = tagString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
-        marker.setValue(tagString, forKey: "tags")
-        
-        // Save image as binary
-        let imageData = UIImageJPEGRepresentation(cameraPhoto.image!, 1)
-        marker.setValue(imageData, forKey: "photo")
-        
-        // 4. Save the marker object
-        do {
-            try managedContext.save()
-        } catch let error as NSError {
-            print("Could not save \(error), \(error.userInfo)")
-        }
-        
-        // Move back to map view
-        navigationController?.popToRootViewControllerAnimated(true)
-        
-        print("Done.")
-    }
-    
+
     func validateData () -> Bool {
         var errors: [String] = []
         
@@ -354,6 +303,66 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         presentViewController(alertController, animated: true, completion: nil)
     }
     
+    // Add Marker Done Action
+    @IBAction func DoneBuildingMarker(sender: UIButton) {
+        
+        // Validate
+        if validateData() == false {
+            return
+        }
+        
+        // Save in core data
+        
+        // 1. Get managed object context
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        
+        // 2. Create new object as marker entity
+        let entity = NSEntityDescription.entityForName("Marker", inManagedObjectContext:managedContext)
+        let marker = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+        
+        // 3. Add data to marker object (and validate)
+        let timestamp = NSDate().timeIntervalSince1970
+        marker.setValue(timestamp, forKey: "timestamp")
+        
+        let latitude = Double(coords.latitude)
+        marker.setValue(latitude, forKey:"latitude")
+        
+        let longitude = Double(coords.longitude)
+        marker.setValue(longitude, forKey:"longitude")
+        
+        // Create space separated string of tags
+        var tagString: String = ""
+        for tagButton in tagBubbles.subviews {
+            let casted = tagButton as! UIButton
+            tagString += casted.titleLabel!.text! + " "
+        }
+        tagString = tagString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        marker.setValue(tagString, forKey: "tags")
+        
+        // Save image as binary
+        let imageData = UIImageJPEGRepresentation(cameraPhoto.image!, 1)
+        marker.setValue(imageData, forKey: "photo")
+        
+        // 4. Save the marker object
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("Could not save \(error), \(error.userInfo)")
+        }
+        
+        // Add marker to map view
+        let mvc = navigationController?.viewControllers.first as! MapViewController
+        mvc.markerToAdd.append(latitude)
+        mvc.markerToAdd.append(longitude)
+        mvc.markerToAdd.append(timestamp)
+        mvc.markerToAdd.append(tagString)
+        
+        // Move back to map view
+        navigationController?.popToRootViewControllerAnimated(true)
+        
+        print("Done.")
+    }
 
     /*
     // MARK: - Navigation

@@ -19,6 +19,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     var savedMarkers: [AnyObject] = []
     var deletedMarkers: [Double] = []
     var curMapMarkers: [GMSMarker] = []
+    var markerToAdd: [AnyObject] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -33,8 +34,29 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     override func viewWillAppear(animated: Bool) {
         self.navigationController?.navigationBarHidden = true
         
-        print(deletedMarkers)
-        removeDeleted()
+        // Remove deleted from map
+        if (deletedMarkers.count > 0) {
+            removeDeleted()
+        }
+        
+        // Add new markers to map
+        if (markerToAdd.count > 0) {
+            let timestamp = markerToAdd[2] as! Double
+            let timestampString = String(format: "%.7f", timestamp)
+            
+            // Use icon matching first tag
+            let tags = markerToAdd[3] as! String
+            let pinImage = Util.getIconForTags(tags)
+            
+            let lat = markerToAdd[0] as! Double
+            let lng = markerToAdd[1] as! Double
+            
+            // Add marker
+            self.addMarker(lat, markerLng: lng, timestamp: timestampString, pinImage: pinImage)
+            
+            // Clear the array
+            markerToAdd = []
+        }
     }
     
     override func viewWillDisappear(animated: Bool) {
@@ -103,11 +125,13 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         curMapMarkers.append(marker)
     }
     
-    // Show custom info window
+    // Info Window Pop Up
     func mapView(mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView! {
         print("marker is about to show")
         let customInfoWindow = UIView(frame: CGRectMake(0, 0, 100, 100))
         
+        // Get latest core data
+        savedMarkers = Util.fetchCoreData("Marker")
         
         // Find marker that matches timestamp
         let timestamp = Double(marker.title)
