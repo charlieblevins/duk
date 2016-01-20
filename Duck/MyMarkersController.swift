@@ -61,12 +61,64 @@ class MyMarkersController: UITableViewController {
         let markerObj = savedMarkers[indexPath.row]
         cell.textLabel?.text = markerObj.valueForKey("tags") as? String
         
+        // Add publish button
+        let pubBtn = UIButton()
+        pubBtn.frame.size = CGSizeMake(100, 50)
+        pubBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10)
+        pubBtn.setTitle("Publish", forState: .Normal)
+        pubBtn.backgroundColor = UIColor.blueColor()
+        pubBtn.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Handle tap
+        pubBtn.addTarget(self, action: "publishAction:", forControlEvents: .TouchUpInside)
+        
+        cell.contentView.addSubview(pubBtn)
+        
+
+        let hrzC = NSLayoutConstraint(
+            item: pubBtn,
+            attribute: .Trailing,
+            relatedBy: .Equal,
+            toItem: cell.contentView,
+            attribute: .Trailing,
+            multiplier: 1.0,
+            constant: 0
+        )
+        let vrtC = NSLayoutConstraint(
+            item: pubBtn,
+            attribute: .CenterY,
+            relatedBy: .Equal,
+            toItem: cell.contentView,
+            attribute: .CenterY,
+            multiplier: 1.0,
+            constant: 0
+        )
+        let hgtC = NSLayoutConstraint(
+            item: pubBtn,
+            attribute: .Height,
+            relatedBy: .Equal,
+            toItem: cell.contentView,
+            attribute: .Height,
+            multiplier: 1.0,
+            constant: 0
+        )
+        
+        
+        // Activate all constraints
+        NSLayoutConstraint.activateConstraints([hrzC, vrtC, hgtC])
+        
         
         let data: NSData = markerObj.valueForKey("photo") as! NSData
         let image: UIImage! = UIImage(data: data)
         cell.imageView!.image = image
 
         return cell
+    }
+    
+    func publishAction(sender: UIButton!) {
+        // If not signed in, send to account page
+        let AccountViewController = self.storyboard!.instantiateViewControllerWithIdentifier("AccountViewController")
+        self.navigationController?.pushViewController(AccountViewController, animated: true)
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
