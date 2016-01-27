@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6738B3579B0889284C4AD3FC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 758B5B48D9103EB04AF52974 /* libPods.a */; };
-		EC3C82551C4FB5A800B17D58 /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3C82541C4FB5A800B17D58 /* AccountViewController.swift */; };
+		EC3C82551C4FB5A800B17D58 /* SignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3C82541C4FB5A800B17D58 /* SignInController.swift */; };
 		EC6DDCD91BAF31EE00458B42 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */; };
 		EC6DDCDB1BAF31EE00458B42 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */; };
 		EC6DDCDE1BAF31EE00458B42 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCDC1BAF31EE00458B42 /* Main.storyboard */; };
@@ -41,7 +41,7 @@
 		1E3235C2EC6C88894FAEFA6A /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		758B5B48D9103EB04AF52974 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		C74B69403AD094A8120F45EA /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
-		EC3C82541C4FB5A800B17D58 /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
+		EC3C82541C4FB5A800B17D58 /* SignInController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInController.swift; sourceTree = "<group>"; };
 		EC6DDCD31BAF31EE00458B42 /* Duck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Duck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC6DDCD71BAF31EE00458B42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -129,7 +129,7 @@
 				ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */,
 				EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */,
 				ECFD74CA1C11BA8500124C9D /* MyMarkersController.swift */,
-				EC3C82541C4FB5A800B17D58 /* AccountViewController.swift */,
+				EC3C82541C4FB5A800B17D58 /* SignInController.swift */,
 				ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */,
 				ECD5791F1BBC82F30096FA1B /* AddMarkerViewController.swift */,
 				ECD579271BC01BC70096FA1B /* AddMarkerController.swift */,
@@ -330,7 +330,7 @@
 			files = (
 				ECFD74CD1C11BFC900124C9D /* Util.swift in Sources */,
 				ECD5792A1BC01C0C0096FA1B /* AddPathController.swift in Sources */,
-				EC3C82551C4FB5A800B17D58 /* AccountViewController.swift in Sources */,
+				EC3C82551C4FB5A800B17D58 /* SignInController.swift in Sources */,
 				EC7843731BE383CC003E3AE9 /* IconModel.swift in Sources */,
 				EC6DDCDB1BAF31EE00458B42 /* MapViewController.swift in Sources */,
 				ECD579201BBC82F30096FA1B /* AddMarkerViewController.swift in Sources */,

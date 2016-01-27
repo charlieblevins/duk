@@ -117,8 +117,8 @@ class MyMarkersController: UITableViewController {
     
     func publishAction(sender: UIButton!) {
         // If not signed in, send to account page
-        let AccountViewController = self.storyboard!.instantiateViewControllerWithIdentifier("AccountViewController")
-        self.navigationController?.pushViewController(AccountViewController, animated: true)
+        let SignInView = self.storyboard!.instantiateViewControllerWithIdentifier("SignInController")
+        self.navigationController?.pushViewController(SignInView, animated: true)
     }
     
     override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
