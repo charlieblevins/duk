@@ -32,17 +32,33 @@ class SignInController: UIViewController {
     
     @IBAction func SignIn(sender: UIButton) {
         print("sign in action")
+        let email = emailField.text!
+        let pass = passwordField.text!
         
         // Basic validation
-        if isValidEmail(emailField.text!) == false {
+        if isValidEmail(email) == false {
             popValidationAlert("Please make sure your email is correct.", title: "Invalid or missing email address")
         }
         
-        if passwordField.text == "" {
+        if pass == "" {
             popValidationAlert("Password is required.", title: "Missing password")
         }
         
         // POST to api
+        let urlPath: String = "http://dukapp.io/api/authCheck"
+        let url: NSURL = NSURL(string: urlPath)!
+        let request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
+        
+        // Add basic auth to request url
+        let loginString = NSString(format: "%@:%@", email, pass)
+        let loginData: NSData = loginString.dataUsingEncoding(NSUTF8StringEncoding)!
+        let base64LoginString = loginData.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
+        request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+        
+        let queue:NSOperationQueue = NSOperationQueue()
+        NSURLConnection.sendAsynchronousRequest(request, queue: queue, completionHandler: { (response: NSURLResponse?, data: NSData?, error: NSError?) -> Void in
+            print(response)
+        })
         
         // If error, display message
         
