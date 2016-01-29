@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Gloss
 
 class SignInController: UIViewController {
 
@@ -38,10 +39,12 @@ class SignInController: UIViewController {
         // Basic validation
         if isValidEmail(email) == false {
             popValidationAlert("Please make sure your email is correct.", title: "Invalid or missing email address")
+            return
         }
         
         if pass == "" {
             popValidationAlert("Password is required.", title: "Missing password")
+            return
         }
         
         // POST to api

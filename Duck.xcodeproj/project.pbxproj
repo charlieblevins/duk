@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		6738B3579B0889284C4AD3FC /* libPods.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 758B5B48D9103EB04AF52974 /* libPods.a */; };
+		4A44319079F6CFF318AE9BCA /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEB3346C0FB62E777A85B9B /* Pods.framework */; };
 		EC3C82551C4FB5A800B17D58 /* SignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3C82541C4FB5A800B17D58 /* SignInController.swift */; };
 		EC6DDCD91BAF31EE00458B42 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */; };
 		EC6DDCDB1BAF31EE00458B42 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */; };
@@ -39,7 +39,7 @@
 
 /* Begin PBXFileReference section */
 		1E3235C2EC6C88894FAEFA6A /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
-		758B5B48D9103EB04AF52974 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		2BEB3346C0FB62E777A85B9B /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C74B69403AD094A8120F45EA /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
 		EC3C82541C4FB5A800B17D58 /* SignInController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInController.swift; sourceTree = "<group>"; };
 		EC6DDCD31BAF31EE00458B42 /* Duck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Duck.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -69,7 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6738B3579B0889284C4AD3FC /* libPods.a in Frameworks */,
+				4A44319079F6CFF318AE9BCA /* Pods.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -95,7 +95,7 @@
 		DF705FA15A4EC39A46C0C1AA /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				758B5B48D9103EB04AF52974 /* libPods.a */,
+				2BEB3346C0FB62E777A85B9B /* Pods.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
