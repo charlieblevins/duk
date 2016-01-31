@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import Gloss
 
 class SignInController: UIViewController {
 
@@ -21,9 +20,7 @@ class SignInController: UIViewController {
     
     
     override func viewDidLoad() {
-
         super.viewDidLoad()
-        print("loaded sign in view")
     }
 
     override func didReceiveMemoryWarning() {
@@ -32,40 +29,34 @@ class SignInController: UIViewController {
     }
     
     @IBAction func SignIn(sender: UIButton) {
-        print("sign in action")
-        let email = emailField.text!
-        let pass = passwordField.text!
-        
+
         // Basic validation
+        let email = emailField.text!
         if isValidEmail(email) == false {
             popValidationAlert("Please make sure your email is correct.", title: "Invalid or missing email address")
             return
         }
         
-        if pass == "" {
+        guard let password = passwordField.text else {
             popValidationAlert("Password is required.", title: "Missing password")
             return
         }
         
-        // POST to api
-        let urlPath: String = "http://dukapp.io/api/authCheck"
-        let url: NSURL = NSURL(string: urlPath)!
-        let request: NSMutableURLRequest = NSMutableURLRequest(URL: url)
+        // Verify login credentials
+        let apiRequest = ApiRequest()
+        apiRequest.checkCredentials(email, password: password, successHandler: handleCredentSuccess, failureHandler: handleCredentFail)
+    }
+    
+    func handleCredentSuccess () {
+        print("Handle credent success")
+    }
+    
+    func handleCredentFail (message: String?) {
+        print("Handle credent FAIL")
+    }
+    
+    func flashMessage (text: String) {
         
-        // Add basic auth to request url
-        let loginString = NSString(format: "%@:%@", email, pass)
-        let loginData: NSData = loginString.dataUsingEncoding(NSUTF8StringEncoding)!
-        let base64LoginString = loginData.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
-        request.setValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
-        
-        let queue:NSOperationQueue = NSOperationQueue()
-        NSURLConnection.sendAsynchronousRequest(request, queue: queue, completionHandler: { (response: NSURLResponse?, data: NSData?, error: NSError?) -> Void in
-            print(response)
-        })
-        
-        // If error, display message
-        
-        // If success, pop this view and load My Markers with alert window "Are you sure you want to publish...?"
     }
     
     // TODO: Check for top-level domain (eg. .com, .io, etc)
