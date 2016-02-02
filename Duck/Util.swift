@@ -35,20 +35,20 @@ class Util {
     class func deleteCoreDataForEntity (entityName: String) {
         
         // Clear markers for now - NOT FOR PRODUCTION!
-        let allMarkers: NSFetchRequest = NSFetchRequest()
+        let allItems: NSFetchRequest = NSFetchRequest()
         
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
-        allMarkers.entity = NSEntityDescription.entityForName(entityName, inManagedObjectContext: managedContext)
-        allMarkers.includesPropertyValues = false
+        allItems.entity = NSEntityDescription.entityForName(entityName, inManagedObjectContext: managedContext)
+        allItems.includesPropertyValues = false
         //only fetch the managedObjectID
-        var markers: [AnyObject]
+        var items: [AnyObject]
         
         do {
-            markers = try managedContext.executeFetchRequest(allMarkers)
+            items = try managedContext.executeFetchRequest(allItems)
             
-            for marker in markers {
-                managedContext.deleteObject(marker as! NSManagedObject)
+            for item in items {
+                managedContext.deleteObject(item as! NSManagedObject)
             }
         } catch let error as NSError {
             print("Fetch failed: \(error.localizedDescription)")

@@ -16,6 +16,7 @@
 		EC6DDCE31BAF31EE00458B42 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCE11BAF31EE00458B42 /* LaunchScreen.xib */; };
 		EC6DDCEF1BAF31EE00458B42 /* DuckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCEE1BAF31EE00458B42 /* DuckTests.swift */; };
 		EC6DDCF91BAF329F00458B42 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCF81BAF329F00458B42 /* Settings.bundle */; };
+		EC7043891C60E0AE00EA0BE4 /* PublishConfirmController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */; };
 		EC7843731BE383CC003E3AE9 /* IconModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7843721BE383CC003E3AE9 /* IconModel.swift */; };
 		EC9210D61C01FE9800814131 /* Autocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9210D51C01FE9800814131 /* Autocomplete.swift */; };
 		ECBB67701C5D4C7E002842E5 /* ApiModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBB676F1C5D4C7E002842E5 /* ApiModel.swift */; };
@@ -55,6 +56,7 @@
 		EC6DDCED1BAF31EE00458B42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EC6DDCEE1BAF31EE00458B42 /* DuckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuckTests.swift; sourceTree = "<group>"; };
 		EC6DDCF81BAF329F00458B42 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = ../../../../Downloads/Settings.bundle; sourceTree = "<group>"; };
+		EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublishConfirmController.swift; sourceTree = "<group>"; };
 		EC7843721BE383CC003E3AE9 /* IconModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconModel.swift; sourceTree = "<group>"; };
 		EC9210D51C01FE9800814131 /* Autocomplete.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Autocomplete.swift; sourceTree = "<group>"; };
 		ECBB676F1C5D4C7E002842E5 /* ApiModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiModel.swift; sourceTree = "<group>"; };
@@ -133,6 +135,7 @@
 				ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */,
 				EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */,
 				ECFD74CA1C11BA8500124C9D /* MyMarkersController.swift */,
+				EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */,
 				EC3C82541C4FB5A800B17D58 /* SignInController.swift */,
 				ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */,
 				ECD5791F1BBC82F30096FA1B /* AddMarkerViewController.swift */,
@@ -337,6 +340,7 @@
 				ECFD74CD1C11BFC900124C9D /* Util.swift in Sources */,
 				ECBB67701C5D4C7E002842E5 /* ApiModel.swift in Sources */,
 				ECD5792A1BC01C0C0096FA1B /* AddPathController.swift in Sources */,
+				EC7043891C60E0AE00EA0BE4 /* PublishConfirmController.swift in Sources */,
 				EC3C82551C4FB5A800B17D58 /* SignInController.swift in Sources */,
 				EC7843731BE383CC003E3AE9 /* IconModel.swift in Sources */,
 				EC6DDCDB1BAF31EE00458B42 /* MapViewController.swift in Sources */,

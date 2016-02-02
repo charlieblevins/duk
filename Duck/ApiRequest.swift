@@ -25,8 +25,6 @@ class ApiRequest {
         Alamofire.request(.GET, "\(baseURL)/authCheck", headers: headers)
             .responseString { response in
                 
-                debugPrint(response)
-                
                 switch response.result {
                 case .Success:
                     successHandler()
