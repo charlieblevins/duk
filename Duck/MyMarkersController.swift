@@ -118,10 +118,17 @@ class MyMarkersController: UITableViewController {
     func publishAction(sender: UIButton!) {
         
         let credentArr = Util.fetchCoreData("Login")
+        
+        // Sign in credentials exist
         if let credentEntry: AnyObject? = credentArr[0] {
             
+            // Get email/pass
             let email = credentEntry?.valueForKey("email") as! String
             let password = credentEntry?.valueForKey("password") as! String
+            
+            // Load publish confirmation view
+            let PublishConfirmView = self.storyboard!.instantiateViewControllerWithIdentifier("PublishConfirmController")
+            self.navigationController?.pushViewController(PublishConfirmView, animated: true)
             
         // If not signed in, send to account page
         } else {
