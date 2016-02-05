@@ -52,6 +52,9 @@
                             <outlet property="delegate" destination="PRT-KV-WT9" id="Df7-S1-y8m"/>
                         </connections>
                     </tableView>
+                    <connections>
+                        <segue destination="fKt-Xx-La4" kind="show" identifier="GoToPublish" id="ary-UW-X04"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4cl-Lp-5ij" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -69,7 +72,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="23c-os-oKt" userLabel="MarkerData">
+                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="23c-os-oKt" userLabel="MarkerData">
                                 <rect key="frame" x="0.0" y="55" width="600" height="385"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="dmH-rT-DQt">
@@ -179,10 +182,15 @@
                             <constraint firstItem="KQW-ig-k4R" firstAttribute="height" secondItem="FyL-3n-nBj" secondAttribute="height" multiplier="0.3" id="ySl-Iy-wOE"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="imageView" destination="dmH-rT-DQt" id="5wq-AM-E7Z"/>
+                        <outlet property="publishBtn" destination="vsH-6Y-vak" id="enE-KA-5R4"/>
+                        <outlet property="tagLabel" destination="jYy-io-xGz" id="HRZ-tE-YvU"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IhG-r4-Aft" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1195" y="2467"/>
+            <point key="canvasLocation" x="1189" y="2548"/>
         </scene>
         <!--Add Marker View Controller-->
         <scene sceneID="rLF-5F-bAA">

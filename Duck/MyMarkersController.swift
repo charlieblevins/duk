@@ -70,6 +70,7 @@ class MyMarkersController: UITableViewController {
         pubBtn.translatesAutoresizingMaskIntoConstraints = false
         
         // Handle tap
+        pubBtn.tag = indexPath.row
         pubBtn.addTarget(self, action: "publishAction:", forControlEvents: .TouchUpInside)
         
         cell.contentView.addSubview(pubBtn)
@@ -115,25 +116,35 @@ class MyMarkersController: UITableViewController {
         return cell
     }
     
-    func publishAction(sender: UIButton!) {
+    func publishAction(sender: AnyObject) {
         
         let credentArr = Util.fetchCoreData("Login")
         
         // Sign in credentials exist
         if let credentEntry: AnyObject? = credentArr[0] {
             
-            // Get email/pass
-            let email = credentEntry?.valueForKey("email") as! String
-            let password = credentEntry?.valueForKey("password") as! String
+            // Create array with marker and login data
+            let loginAndMarker: [AnyObject] = [savedMarkers[sender.tag], credentEntry!]
             
             // Load publish confirmation view
-            let PublishConfirmView = self.storyboard!.instantiateViewControllerWithIdentifier("PublishConfirmController")
-            self.navigationController?.pushViewController(PublishConfirmView, animated: true)
+            performSegueWithIdentifier("GoToPublish", sender: loginAndMarker)
             
         // If not signed in, send to account page
         } else {
             let SignInView = self.storyboard!.instantiateViewControllerWithIdentifier("SignInController")
             self.navigationController?.pushViewController(SignInView, animated: true)
+        }
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        let loginAndMarker = sender
+
+        if segue.identifier == "GoToPublish" {
+            print(segue.identifier)
+            print(segue.destinationViewController)
+            let publishView = segue.destinationViewController as! PublishConfirmController
+            publishView.markerData = loginAndMarker![0];
+            publishView.loginData = loginAndMarker![1];
         }
     }
     
