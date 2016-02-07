@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+    </dependencies>
+    <objects>
+        <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PopOverDate" customModule="Duck" customModuleProvider="target">
+            <connections>
+                <outlet property="view" destination="pRn-Ng-n6S" id="fnz-Br-3Ny"/>
+            </connections>
+        </placeholder>
+        <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
+        <view contentMode="scaleToFill" id="pRn-Ng-n6S" userLabel="PopOverView">
+            <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+            <subviews>
+                <datePicker contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="Izb-J0-VNZ">
+                    <rect key="frame" x="0.0" y="0.0" width="600" height="216"/>
+                    <date key="date" timeIntervalSinceReferenceDate="476548200.58292502">
+                        <!--2016-02-07 14:30:00 +0000-->
+                    </date>
+                </datePicker>
+                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vKs-BG-zBO">
+                    <rect key="frame" x="277" y="226" width="46" height="30"/>
+                    <state key="normal" title="Button"/>
+                </button>
+            </subviews>
+            <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+            <constraints>
+                <constraint firstItem="Izb-J0-VNZ" firstAttribute="leading" secondItem="pRn-Ng-n6S" secondAttribute="leading" id="AHO-Zt-4RQ"/>
+                <constraint firstItem="vKs-BG-zBO" firstAttribute="top" secondItem="Izb-J0-VNZ" secondAttribute="bottom" constant="10" id="PqI-YG-6Fb"/>
+                <constraint firstItem="vKs-BG-zBO" firstAttribute="centerX" secondItem="pRn-Ng-n6S" secondAttribute="centerX" id="bmf-dM-xcs"/>
+                <constraint firstItem="Izb-J0-VNZ" firstAttribute="width" secondItem="pRn-Ng-n6S" secondAttribute="width" id="fVI-HI-yjH"/>
+                <constraint firstItem="Izb-J0-VNZ" firstAttribute="top" secondItem="pRn-Ng-n6S" secondAttribute="topMargin" id="hh6-o3-uIT"/>
+            </constraints>
+        </view>
+    </objects>
+</document>
