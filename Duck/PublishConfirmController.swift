@@ -8,7 +8,7 @@
 
 import UIKit
 
-class PublishConfirmController: UIViewController, UIPopoverPresentationControllerDelegate {
+class PublishConfirmController: UIViewController, UIPopoverPresentationControllerDelegate, PopOverDateDelegate {
 
     @IBOutlet weak var publishBtn: UIButton!
     @IBOutlet weak var tagLabel: UILabel!
@@ -45,20 +45,31 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         
         // Present PopOverDate in modal view
         let popOverDate = PopOverDate()
-        popOverDate.modalPresentationStyle = .Popover
         
-        let popover = popOverDate.popoverPresentationController
-        //popOverDate.popoverPresentationController.preferredContentSize = CGSizeMake(100, 100)
-        popover!.delegate = self
-
-        popover!.sourceRect = CGRect(
-            x: 0,
-            y: 0,
-            width: 1,
-            height: 1)
-        popover!.sourceView = sender
+        // Define delegate for my custom view within popover
+        popOverDate.delegate = self
+        
+        // Show view as popover
+        popOverDate.modalPresentationStyle = .Popover
+        if let popover = popOverDate.popoverPresentationController {
+            
+            // Define delegate for popover controller
+            popover.delegate = self
+            
+            // Define size of popover
+            popover.sourceRect = CGRect(
+                x: 0,
+                y: 0,
+                width: 100,
+                height: 100)
+            popover.sourceView = sender
+        }
         
         self.presentViewController(popOverDate, animated: true, completion: nil)
-        
+    }
+    
+    // Receive data message from PopOverDate controller
+    func savePublishDate(chosenTime: String) {
+        print(chosenTime)
     }
 }

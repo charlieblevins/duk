@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9531" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9532" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
-        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="PopOverDate" customModule="Duck" customModuleProvider="target">
             <connections>
+                <outlet property="doneBtn" destination="vKs-BG-zBO" id="VFt-7x-dwV"/>
                 <outlet property="view" destination="pRn-Ng-n6S" id="fnz-Br-3Ny"/>
             </connections>
         </placeholder>
@@ -16,24 +16,28 @@
             <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <datePicker contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="Izb-J0-VNZ">
+                <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="zz9-uE-Zjt">
                     <rect key="frame" x="0.0" y="0.0" width="600" height="216"/>
-                    <date key="date" timeIntervalSinceReferenceDate="476548200.58292502">
-                        <!--2016-02-07 14:30:00 +0000-->
-                    </date>
-                </datePicker>
-                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vKs-BG-zBO">
-                    <rect key="frame" x="277" y="226" width="46" height="30"/>
-                    <state key="normal" title="Button"/>
+                    <connections>
+                        <outlet property="dataSource" destination="-1" id="rZD-Of-Ha0"/>
+                        <outlet property="delegate" destination="-1" id="TeW-Ka-a0m"/>
+                    </connections>
+                </pickerView>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vKs-BG-zBO">
+                    <rect key="frame" x="282" y="216" width="37" height="30"/>
+                    <state key="normal" title="Done"/>
+                    <connections>
+                        <action selector="finishedPickingDate:" destination="-1" eventType="touchUpInside" id="Nhg-sT-3wl"/>
+                    </connections>
                 </button>
             </subviews>
             <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
-                <constraint firstItem="Izb-J0-VNZ" firstAttribute="leading" secondItem="pRn-Ng-n6S" secondAttribute="leading" id="AHO-Zt-4RQ"/>
-                <constraint firstItem="vKs-BG-zBO" firstAttribute="top" secondItem="Izb-J0-VNZ" secondAttribute="bottom" constant="10" id="PqI-YG-6Fb"/>
+                <constraint firstItem="zz9-uE-Zjt" firstAttribute="leading" secondItem="pRn-Ng-n6S" secondAttribute="leading" id="IS4-zw-RgD"/>
                 <constraint firstItem="vKs-BG-zBO" firstAttribute="centerX" secondItem="pRn-Ng-n6S" secondAttribute="centerX" id="bmf-dM-xcs"/>
-                <constraint firstItem="Izb-J0-VNZ" firstAttribute="width" secondItem="pRn-Ng-n6S" secondAttribute="width" id="fVI-HI-yjH"/>
-                <constraint firstItem="Izb-J0-VNZ" firstAttribute="top" secondItem="pRn-Ng-n6S" secondAttribute="topMargin" id="hh6-o3-uIT"/>
+                <constraint firstItem="vKs-BG-zBO" firstAttribute="top" secondItem="zz9-uE-Zjt" secondAttribute="bottom" id="dgr-3F-eP7"/>
+                <constraint firstItem="zz9-uE-Zjt" firstAttribute="top" secondItem="pRn-Ng-n6S" secondAttribute="top" id="eqh-43-H9e"/>
+                <constraint firstItem="zz9-uE-Zjt" firstAttribute="width" secondItem="pRn-Ng-n6S" secondAttribute="width" id="vw9-68-cQm"/>
             </constraints>
         </view>
     </objects>
