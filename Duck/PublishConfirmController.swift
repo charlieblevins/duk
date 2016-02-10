@@ -10,6 +10,7 @@ import UIKit
 
 class PublishConfirmController: UIViewController, UIPopoverPresentationControllerDelegate, PopOverDateDelegate {
 
+    @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var publishBtn: UIButton!
     @IBOutlet weak var tagLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
@@ -40,6 +41,14 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         // Dispose of any resources that can be recreated.
     }
     
+    override func shouldAutorotate() -> Bool {
+        return false
+    }
+    
+    // Restrict to potrait view only
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.Portrait
+    }
     
     @IBAction func ChangeDateAction(sender: UIButton) {
         
@@ -69,7 +78,11 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
     }
     
     // Receive data message from PopOverDate controller
-    func savePublishDate(chosenTime: String) {
-        print(chosenTime)
+    func savePublishDate(chosenTime: String?) {
+
+        // Update UI to show newly chosen time
+        if let chosen = chosenTime {
+            dateLabel.text = chosen
+        }
     }
 }

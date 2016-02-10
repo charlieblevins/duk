@@ -21,5 +21,13 @@ class MainNavigation: UINavigationController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
+    
+    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        
+        if let visibleView = self.visibleViewController {
+            return visibleView.supportedInterfaceOrientations()
+        } else {
+            return UIInterfaceOrientationMask.All
+        }
+    }
 }

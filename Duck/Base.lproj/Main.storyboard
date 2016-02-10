@@ -73,16 +73,16 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="23c-os-oKt" userLabel="MarkerData">
-                                <rect key="frame" x="0.0" y="64" width="600" height="385"/>
+                                <rect key="frame" x="0.0" y="64" width="600" height="350"/>
                                 <subviews>
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dmH-rT-DQt">
-                                        <rect key="frame" x="0.0" y="0.0" width="600" height="270"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="245"/>
                                     </imageView>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qYl-kg-2h1" userLabel="TagView">
-                                        <rect key="frame" x="0.0" y="270" width="600" height="115"/>
+                                        <rect key="frame" x="0.0" y="245" width="600" height="105"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tags" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jYy-io-xGz">
-                                                <rect key="frame" x="282" y="47" width="37" height="21"/>
+                                                <rect key="frame" x="282" y="15" width="37" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -91,24 +91,7 @@
                                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                         <constraints>
                                             <constraint firstItem="jYy-io-xGz" firstAttribute="centerX" secondItem="qYl-kg-2h1" secondAttribute="centerX" id="8U2-Up-okC"/>
-                                            <constraint firstItem="jYy-io-xGz" firstAttribute="centerY" secondItem="qYl-kg-2h1" secondAttribute="centerY" id="qEg-2m-mDz"/>
-                                        </constraints>
-                                    </view>
-                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="GZq-ck-bP9" userLabel="Title">
-                                        <rect key="frame" x="28" y="-64" width="0.0" height="35"/>
-                                        <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Publish" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JvL-uw-shh">
-                                                <rect key="frame" x="-28" y="7" width="56" height="21"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
-                                        </subviews>
-                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                        <constraints>
-                                            <constraint firstAttribute="height" constant="35" id="0JP-Sc-hoX"/>
-                                            <constraint firstItem="JvL-uw-shh" firstAttribute="centerX" secondItem="GZq-ck-bP9" secondAttribute="centerX" id="DRM-1U-HFk"/>
-                                            <constraint firstItem="JvL-uw-shh" firstAttribute="centerY" secondItem="GZq-ck-bP9" secondAttribute="centerY" id="XrR-wu-zHr"/>
+                                            <constraint firstItem="jYy-io-xGz" firstAttribute="top" secondItem="qYl-kg-2h1" secondAttribute="top" constant="15" id="Rh2-fA-XWf"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -129,8 +112,8 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KQW-ig-k4R" userLabel="PublishActionView">
                                 <rect key="frame" x="0.0" y="420" width="600" height="180"/>
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Publish Date and Time:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xcu-YQ-Ych">
-                                        <rect key="frame" x="20" y="5" width="177" height="21"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Publish Date:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xcu-YQ-Ych">
+                                        <rect key="frame" x="20" y="5" width="101" height="21"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                         <nil key="highlightedColor"/>
@@ -174,7 +157,7 @@
                         <constraints>
                             <constraint firstItem="KQW-ig-k4R" firstAttribute="width" secondItem="FyL-3n-nBj" secondAttribute="width" id="3yZ-Vx-Grg"/>
                             <constraint firstAttribute="bottom" secondItem="KQW-ig-k4R" secondAttribute="bottom" id="AX2-df-RW2"/>
-                            <constraint firstItem="23c-os-oKt" firstAttribute="height" secondItem="FyL-3n-nBj" secondAttribute="height" multiplier="0.7" constant="-35" id="Ald-JF-bDM"/>
+                            <constraint firstItem="23c-os-oKt" firstAttribute="height" secondItem="FyL-3n-nBj" secondAttribute="height" multiplier="0.7" constant="-70" id="Ald-JF-bDM"/>
                             <constraint firstItem="23c-os-oKt" firstAttribute="centerX" secondItem="FyL-3n-nBj" secondAttribute="centerX" id="UEr-GC-IQC"/>
                             <constraint firstItem="23c-os-oKt" firstAttribute="top" secondItem="Ux4-Vb-U6e" secondAttribute="bottom" id="gSS-kK-Xpl"/>
                             <constraint firstItem="23c-os-oKt" firstAttribute="leading" secondItem="FyL-3n-nBj" secondAttribute="leading" id="gt1-Fk-HgP"/>
@@ -185,6 +168,7 @@
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="dateLabel" destination="Rtg-5S-vZz" id="ts8-HB-bfP"/>
                         <outlet property="imageView" destination="dmH-rT-DQt" id="5wq-AM-E7Z"/>
                         <outlet property="publishBtn" destination="vsH-6Y-vak" id="enE-KA-5R4"/>
                         <outlet property="tagLabel" destination="jYy-io-xGz" id="HRZ-tE-YvU"/>
