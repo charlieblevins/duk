@@ -8,6 +8,7 @@
 
 import Foundation
 import Alamofire
+import SwiftyJSON
 
 class ApiRequest {
     
@@ -52,5 +53,45 @@ class ApiRequest {
                 }
 
             }
+    }
+    
+    func publishSingleMarker (credentials: Credentials, marker: Marker, successHandler: (() -> Void), failureHandler: ((message: String?) -> Void)) {
+        
+        // Add basic auth to request header
+        let loginData = "\(credentials.email):\(credentials.password)".dataUsingEncoding(NSUTF8StringEncoding)!
+        let base64LoginString = loginData.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
+        
+        let headers = ["Authorization": "Basic \(base64LoginString)"]
+        
+        // Execute request
+        Alamofire.upload(
+            .POST,
+            "\(baseURL)/markers",
+            headers: headers,
+            multipartFormData: { multipartFormData in
+                multipartFormData.appendBodyPart(data: "\(marker.latitude)".dataUsingEncoding(NSUTF8StringEncoding)!, name: "latitude")
+                multipartFormData.appendBodyPart(data: "\(marker.longitude)".dataUsingEncoding(NSUTF8StringEncoding)!, name: "longitude")
+                multipartFormData.appendBodyPart(data: "\(marker.tags)".dataUsingEncoding(NSUTF8StringEncoding)!, name: "tags")
+                multipartFormData.appendBodyPart(data: marker.photo, name: "photo", fileName: "TestFile", mimeType: "image/jpeg")
+            },
+            encodingCompletion: { encodingResult in
+                
+                switch encodingResult {
+                    
+                case .Success(let upload, _, _):
+                    
+                    print("upload SUCCESS")
+                    upload.responseJSON { response in
+                        let data_str = NSString(data: response.data!, encoding: NSUTF8StringEncoding)
+                        print(data_str)
+                        let json = JSON(data_str!)
+                        print(json)
+                    }
+                case .Failure(let encodingError):
+                    print("upload FAIL")
+                    print(encodingError)
+                }
+            }
+        )
     }
 }

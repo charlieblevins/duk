@@ -121,7 +121,11 @@ class MyMarkersController: UITableViewController {
         let credentArr = Util.fetchCoreData("Login")
         
         // Sign in credentials exist
-        if let credentEntry: AnyObject? = credentArr[0] {
+        if  credentArr.count != 0 {
+            
+            print("credentials found")
+            
+            let credentEntry: AnyObject? = credentArr[0]
             
             // Create array with marker and login data
             let loginAndMarker: [AnyObject] = [savedMarkers[sender.tag], credentEntry!]
@@ -131,6 +135,7 @@ class MyMarkersController: UITableViewController {
             
         // If not signed in, send to account page
         } else {
+            print("no credentials found")
             let SignInView = self.storyboard!.instantiateViewControllerWithIdentifier("SignInController")
             self.navigationController?.pushViewController(SignInView, animated: true)
         }

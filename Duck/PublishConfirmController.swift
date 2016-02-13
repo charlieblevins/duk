@@ -10,6 +10,7 @@ import UIKit
 
 class PublishConfirmController: UIViewController, UIPopoverPresentationControllerDelegate, PopOverDateDelegate {
 
+
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var publishBtn: UIButton!
     @IBOutlet weak var tagLabel: UILabel!
@@ -85,4 +86,40 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
             dateLabel.text = chosen
         }
     }
+    
+    func publishSuccess () {
+        print("successful publish")
+    }
+    
+    func publishFail (message: String?) {
+        print("publish failed")
+        if message != nil {
+            print(message)
+        }
+    }
+    
+    @IBAction func publishMarker(sender: AnyObject) {
+        guard self.markerData != nil else {
+            print("marker data not present.")
+            return
+        }
+        
+        guard self.loginData != nil else {
+            print("credentials not present.")
+            return
+        }
+        
+        let marker = Marker(fromCoreData: self.markerData!)
+        let credentials = Credentials(fromCoreData: self.loginData!)
+        
+        let request = ApiRequest()
+        request.publishSingleMarker(credentials, marker: marker, successHandler: publishSuccess, failureHandler: publishFail)
+    }
 }
+
+
+
+
+
+
+

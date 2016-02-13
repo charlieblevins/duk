@@ -130,6 +130,9 @@
                                             <constraint firstAttribute="height" constant="45" id="2dK-Xf-LQY"/>
                                         </constraints>
                                         <state key="normal" title="Publish"/>
+                                        <connections>
+                                            <action selector="publishMarker:" destination="fKt-Xx-La4" eventType="touchUpInside" id="qZU-1E-1wt"/>
+                                        </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kFY-s8-0IM">
                                         <rect key="frame" x="527" y="0.0" width="53" height="30"/>
