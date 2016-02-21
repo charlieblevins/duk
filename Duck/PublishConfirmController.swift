@@ -8,13 +8,13 @@
 
 import UIKit
 
-class PublishConfirmController: UIViewController, UIPopoverPresentationControllerDelegate, PopOverDateDelegate {
-
+class PublishConfirmController: UIViewController, UIPopoverPresentationControllerDelegate, PopOverDateDelegate, ApiRequestDelegate {
 
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var publishBtn: UIButton!
     @IBOutlet weak var tagLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var progressView: UIProgressView!
     
     var markerData: AnyObject? = nil
     var loginData: AnyObject? = nil
@@ -24,9 +24,14 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         
         self.title = "Publish Marker"
         
+        // Define uploading state for publish btn
+        publishBtn.setTitle("Uploading...", forState: .Selected)
+        
+        progressView.setProgress(0.0, animated: true)
+        
+        // Populate marker data in view
         if markerData !== nil {
             
-            // Populate marker data in view
             let tags = markerData!.valueForKey("tags") as! String
             tagLabel.text = tags
             
@@ -113,7 +118,27 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         let credentials = Credentials(fromCoreData: self.loginData!)
         
         let request = ApiRequest()
+        request.delegate = self
         request.publishSingleMarker(credentials, marker: marker, successHandler: publishSuccess, failureHandler: publishFail)
+    }
+    
+    
+    // MARK: upload delegate method handlers
+    
+    // Show upload began
+    func uploadDidStart() {
+        publishBtn.selected = true
+    }
+    
+    // Show progress
+    func uploadDidProgress(progress: Float) {
+        print(progress)
+        progressView.setProgress(progress, animated: true)
+    }
+    
+    // Save new data to core data
+    func uploadDidComplete() {
+        print("upload complete")
     }
 }
 

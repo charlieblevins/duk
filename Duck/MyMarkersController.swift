@@ -142,14 +142,14 @@ class MyMarkersController: UITableViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let loginAndMarker = sender
+        let loginAndMarker = sender as! NSArray
 
         if segue.identifier == "GoToPublish" {
             print(segue.identifier)
             print(segue.destinationViewController)
             let publishView = segue.destinationViewController as! PublishConfirmController
-            publishView.markerData = loginAndMarker![0];
-            publishView.loginData = loginAndMarker![1];
+            publishView.markerData = loginAndMarker[0];
+            publishView.loginData = loginAndMarker[1];
         }
     }
     
