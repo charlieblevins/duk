@@ -137,8 +137,14 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
     }
     
     // Save new data to core data
-    func uploadDidComplete() {
+    func uploadDidComplete(data: NSDictionary) {
         print("upload complete")
+    }
+    
+    func uploadDidFail(error: ErrorType) {
+        print("upload failure")
+        let err_msg = (error as NSError).userInfo["NSLocalizedDescription"] as! String
+        print(err_msg)
     }
 }
 

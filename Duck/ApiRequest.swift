@@ -16,17 +16,25 @@ protocol ApiRequestDelegate {
     
     func uploadDidProgress(progress: Float)
     
-    func uploadDidComplete()
+    func uploadDidComplete(data: NSDictionary)
+    
+    func uploadDidFail(error: ErrorType)
+}
+
+enum APIError: ErrorType {
+    case NoInternet
+    case HTTPError(message: String)
+    case ServerError(message: String)
 }
 
 class ApiRequest {
     
+    // MARK: Vars
     var delegate: ApiRequestDelegate?
-    
+    var progress: Float = 0.0
     let baseURL: String = "http://dukapp.io/api"
     
-    var progress: Float = 0.0
-    
+    // MARK: Methods
     func checkCredentials (email: String, password: String, successHandler: (() -> Void), failureHandler: ((message: String?) -> Void)) {
         
         // Add basic auth to request header
@@ -124,19 +132,52 @@ class ApiRequest {
                     // TODO: Handle request failure (server not responding)
                     // TODO: Handle failure response codes
                     upload.responseJSON { response in
-                        let data_str = NSString(data: response.data!, encoding: NSUTF8StringEncoding)
-                        print(data_str)
-                        let json = JSON(data_str!)
-                        print(json)
-                        
-                        // Notify delegates of upload complete
-                        self.delegate?.uploadDidComplete()
+
+                        self.handleResponse(response)
+
                     }
                 case .Failure(let encodingError):
-                    print("upload FAIL")
+                    print("encoding error!!")
                     print(encodingError)
                 }
             }
         )
+    }
+    
+    // Handles an alamofire response object and calls associated delegate methods
+    func handleResponse (response: Response<AnyObject, NSError>) {
+        print("handling response")
+        
+        switch response.result {
+            
+        case .Success(let JSON):
+            
+            // Get json as dictionary
+            let res_json_dictionary = JSON as! NSDictionary
+
+            // Get http status code
+            let response_code = response.response!.statusCode
+            
+            // Success: code between 200 and 300
+            if response_code >= 200 && response_code < 300 {
+                
+                // Notify delegates of upload complete
+                self.delegate?.uploadDidComplete(res_json_dictionary)
+            
+            // 400 status code. message prop should exist
+            } else if response_code >= 300 && response_code < 500 {
+                
+                let message = res_json_dictionary.objectForKey("message") as! String
+                self.delegate?.uploadDidFail(APIError.HTTPError(message: message))
+
+            // Server error
+            } else if response_code >= 500 {
+                self.delegate?.uploadDidFail(APIError.ServerError(message: "A server error occurred."))
+            }
+
+            
+        case .Failure(let error):
+            self.delegate?.uploadDidFail(error)
+        }
     }
 }
