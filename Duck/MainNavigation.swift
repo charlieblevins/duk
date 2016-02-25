@@ -31,3 +31,14 @@ class MainNavigation: UINavigationController {
         }
     }
 }
+
+// Explicitly override method to prevent following error:
+// "UIAlertController:supportedInterfaceOrientations was invoked recursively!"
+extension UIAlertController {
+    public override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.Portrait
+    }
+    public override func shouldAutorotate() -> Bool {
+        return false
+    }
+}

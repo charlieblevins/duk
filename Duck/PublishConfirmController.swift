@@ -18,6 +18,7 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
     
     var markerData: AnyObject? = nil
     var loginData: AnyObject? = nil
+    var timeFromDayPicker: String?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -61,6 +62,12 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         // Present PopOverDate in modal view
         let popOverDate = PopOverDate()
         
+        // If a future date has already been chosen
+        // send it back as the default
+        if timeFromDayPicker != nil {
+            popOverDate.choice = timeFromDayPicker
+        }
+        
         // Define delegate for my custom view within popover
         popOverDate.delegate = self
         
@@ -86,9 +93,11 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
     // Receive data message from PopOverDate controller
     func savePublishDate(chosenTime: String?) {
 
+        timeFromDayPicker = chosenTime
+        
         // Update UI to show newly chosen time
-        if let chosen = chosenTime {
-            dateLabel.text = chosen
+        if timeFromDayPicker != nil {
+            dateLabel.text = timeFromDayPicker
         }
     }
     
@@ -132,7 +141,6 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
     
     // Show progress
     func uploadDidProgress(progress: Float) {
-        print(progress)
         progressView.setProgress(progress, animated: true)
     }
     
@@ -141,10 +149,28 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         print("upload complete")
     }
     
-    func uploadDidFail(error: ErrorType) {
+    // Show alert on failure
+    func uploadDidFail(error: String) {
+        
         print("upload failure")
-        let err_msg = (error as NSError).userInfo["NSLocalizedDescription"] as! String
-        print(err_msg)
+        
+        // Reset publish button and progress bar
+        publishBtn.selected = false
+        progressView.setProgress(0.0, animated: false)
+        
+        // Pop alert with error message
+        popFailAlert(error)
+    }
+    
+    func popFailAlert(text:String) {
+        let alertController = UIAlertController(title: "Upload Failure",
+            message: text,
+            preferredStyle: .Alert)
+        
+        let cancelAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
     }
 }
 

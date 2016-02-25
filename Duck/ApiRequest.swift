@@ -18,14 +18,9 @@ protocol ApiRequestDelegate {
     
     func uploadDidComplete(data: NSDictionary)
     
-    func uploadDidFail(error: ErrorType)
+    func uploadDidFail(error: String)
 }
 
-enum APIError: ErrorType {
-    case NoInternet
-    case HTTPError(message: String)
-    case ServerError(message: String)
-}
 
 class ApiRequest {
     
@@ -168,16 +163,18 @@ class ApiRequest {
             } else if response_code >= 300 && response_code < 500 {
                 
                 let message = res_json_dictionary.objectForKey("message") as! String
-                self.delegate?.uploadDidFail(APIError.HTTPError(message: message))
+                self.delegate?.uploadDidFail(message)
 
             // Server error
             } else if response_code >= 500 {
-                self.delegate?.uploadDidFail(APIError.ServerError(message: "A server error occurred."))
+                self.delegate?.uploadDidFail("A server error occurred.")
             }
 
             
         case .Failure(let error):
-            self.delegate?.uploadDidFail(error)
+            
+            let error_descrip = error.localizedDescription
+            self.delegate?.uploadDidFail(error_descrip)
         }
     }
 }
