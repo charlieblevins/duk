@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import CoreData
 
 class PublishConfirmController: UIViewController, UIPopoverPresentationControllerDelegate, PopOverDateDelegate, ApiRequestDelegate {
 
@@ -101,17 +102,6 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         }
     }
     
-    func publishSuccess () {
-        print("successful publish")
-    }
-    
-    func publishFail (message: String?) {
-        print("publish failed")
-        if message != nil {
-            print(message)
-        }
-    }
-    
     @IBAction func publishMarker(sender: AnyObject) {
         guard self.markerData != nil else {
             print("marker data not present.")
@@ -128,7 +118,39 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         
         let request = ApiRequest()
         request.delegate = self
-        request.publishSingleMarker(credentials, marker: marker, successHandler: publishSuccess, failureHandler: publishFail)
+        request.publishSingleMarker(credentials, marker: marker)
+    }
+    
+    func updateMarkerEntity (localTimestamp: Double, publicID: String) {
+        
+        // Get managed object context
+        let appDel: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let context: NSManagedObjectContext = appDel.managedObjectContext
+        
+        // Construct fetch request with predicate
+        let fetchRequest = NSFetchRequest(entityName: "Marker")
+        fetchRequest.predicate = NSPredicate(format: "timestamp = %lf", localTimestamp)
+        
+        // Execute fetch
+        do {
+            let fetchResults = try appDel.managedObjectContext.executeFetchRequest(fetchRequest) as? [NSManagedObject]
+            
+            // Insert new public id
+            if  fetchResults != nil && fetchResults!.count > 0 {
+                let managedObject = fetchResults![0]
+                managedObject.setValue(publicID, forKey: "public_id")
+            }
+            
+        } catch let error as NSError {
+            print("Fetch failed: \(error.localizedDescription)")
+        }
+
+        // Save
+        do {
+            try context.save()
+        } catch let error as NSError {
+            print("marker save failed: \(error.localizedDescription)")
+        }
     }
     
     
@@ -144,9 +166,16 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         progressView.setProgress(progress, animated: true)
     }
     
-    // Save new data to core data
+    
     func uploadDidComplete(data: NSDictionary) {
         print("upload complete")
+        
+        // Save new data to core data
+        let timestamp: Double = self.markerData!.valueForKey("timestamp") as! Double
+        let publicID: String = data["data"]!["_id"] as! String
+        updateMarkerEntity(timestamp, publicID: publicID)
+        
+        // Alert that upload was successful
     }
     
     // Show alert on failure

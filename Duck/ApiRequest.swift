@@ -71,7 +71,7 @@ class ApiRequest {
             }
     }
     
-    func publishSingleMarker (credentials: Credentials, marker: Marker, successHandler: (() -> Void), failureHandler: ((message: String?) -> Void)) {
+    func publishSingleMarker (credentials: Credentials, marker: Marker) {
         
         progress = 0
         

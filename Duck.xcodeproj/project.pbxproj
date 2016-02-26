@@ -66,6 +66,7 @@
 		EC6DDCF81BAF329F00458B42 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = ../../../../Downloads/Settings.bundle; sourceTree = "<group>"; };
 		EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublishConfirmController.swift; sourceTree = "<group>"; };
 		EC7843721BE383CC003E3AE9 /* IconModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = IconModel.swift; sourceTree = "<group>"; };
+		EC8D91B91C7F2C2D00F78D25 /* MarkerModel2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MarkerModel2.xcdatamodel; sourceTree = "<group>"; };
 		EC9210D51C01FE9800814131 /* Autocomplete.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Autocomplete.swift; sourceTree = "<group>"; };
 		ECBB67711C5D5932002842E5 /* ApiRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
 		ECCF43721C0A664100EEEEF1 /* MarkerModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MarkerModel.xcdatamodel; sourceTree = "<group>"; };
@@ -606,9 +607,10 @@
 		ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				EC8D91B91C7F2C2D00F78D25 /* MarkerModel2.xcdatamodel */,
 				ECCF43721C0A664100EEEEF1 /* MarkerModel.xcdatamodel */,
 			);
-			currentVersion = ECCF43721C0A664100EEEEF1 /* MarkerModel.xcdatamodel */;
+			currentVersion = EC8D91B91C7F2C2D00F78D25 /* MarkerModel2.xcdatamodel */;
 			path = MarkerModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;
