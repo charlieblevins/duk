@@ -14,6 +14,9 @@ import UIKit
 
 class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, AutocompleteDelegate, CLLocationManagerDelegate {
 
+    @IBOutlet weak var accLabel: UILabel!
+    @IBOutlet weak var longitudeLabel: UILabel!
+    @IBOutlet weak var latitudeLabel: UILabel!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var containerViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var photoSectionTopConstraint: NSLayoutConstraint!
@@ -41,6 +44,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     var initialTextSectionHeight: CGFloat!
     var locationManager: CLLocationManager!
     var coords: CLLocationCoordinate2D!
+    var photoCoords: CLLocationCoordinate2D!
 
     
     override func viewDidLoad() {
@@ -51,6 +55,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         self.title = "Add Marker"
 
         print("AddPhotoMarkerController view loaded")
+        
+        // Receive gps coords
+        listenForCoords()
 
         // Store height pre-autocomplete
         initialTextSectionHeight = textSectionHeightConstraint.constant
@@ -126,24 +133,33 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             cameraPhoto.contentMode = .ScaleAspectFit
             cameraPhoto.image = pickedImage
             imageChosen = true
-            
-            // Grab location coords
-            if locationManager == nil {
-                locationManager = CLLocationManager()
-                
-                if CLLocationManager.locationServicesEnabled() {
-                    locationManager.delegate = self
-                    locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-                } else {
-                    print("location services not enabled. Could not get location!")
-                    return
-                }
-            }
-            
-            locationManager.startUpdatingLocation()
+
+            // Associate latest coords with this photo
+            photoCoords = coords
         }
         
         dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    // Start receiving GPS coordinates. First coordinates received can be innacurate
+    func listenForCoords () {
+        
+        if locationManager == nil {
+            locationManager = CLLocationManager()
+            
+            if CLLocationManager.locationServicesEnabled() {
+                locationManager.delegate = self
+                
+                // Highest possible level of accuracy. High power consumption
+                locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+                
+            } else {
+                print("location services not enabled. Could not get location!")
+                return
+            }
+        }
+        
+        locationManager.startUpdatingLocation()
     }
     
     func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
@@ -152,8 +168,15 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         coords = manager.location!.coordinate
         print("locations = \(coords.latitude) \(coords.longitude)")
         
-        // Location updates no longer needed. Ensures location is only captured at moment of photo capture
-        locationManager.stopUpdatingLocation()
+        // Update UI
+        latitudeLabel.text = "\(coords.latitude)"
+        longitudeLabel.text = "\(coords.longitude)"
+        
+        // Get location accuracy in meters and convert to feet
+        let meterAccuracy = manager.location!.horizontalAccuracy
+        let ftAccuracy = meterAccuracy * 3.28084
+        let ftAccRounded = Double(round(10 * ftAccuracy)/10)
+        accLabel.text = "\(ftAccRounded) ft."
     }
     
     // Handle Keyboard show/hide
@@ -325,10 +348,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         let timestamp = NSDate().timeIntervalSince1970
         marker.setValue(timestamp, forKey: "timestamp")
         
-        let latitude = Double(coords.latitude)
+        let latitude = Double(photoCoords.latitude)
         marker.setValue(latitude, forKey:"latitude")
         
-        let longitude = Double(coords.longitude)
+        let longitude = Double(photoCoords.longitude)
         marker.setValue(longitude, forKey:"longitude")
         
         // Create space separated string of tags
@@ -357,6 +380,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         mvc.markerToAdd.append(longitude)
         mvc.markerToAdd.append(timestamp)
         mvc.markerToAdd.append(tagString)
+        
+        // Location updates no longer needed. Ensures location is only captured at moment of photo capture
+        locationManager.stopUpdatingLocation()
         
         // Move back to map view
         navigationController?.popToRootViewControllerAnimated(true)

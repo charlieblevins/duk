@@ -37,6 +37,11 @@ class MyMarkersController: UITableViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
+    // Refresh data
+    override func viewWillAppear(animated: Bool) {
+        self.tableView.reloadData()
+    }
 
     // MARK: - Table view data source
 
@@ -55,11 +60,74 @@ class MyMarkersController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath)
+        let cell = UITableViewCell()
 
-        // Configure the cell...
+        // Get marker data
         let markerObj = savedMarkers[indexPath.row]
         cell.textLabel?.text = markerObj.valueForKey("tags") as? String
+        
+        // Public badge or publish btn
+        if markerObj.valueForKey("public_id") != nil {
+            appendPublicBadge(indexPath.row, cell: cell)
+        } else {
+            appendPublishBtn(indexPath.row, cell: cell)
+        }
+        
+        // Get thumbnail
+        let data: NSData = markerObj.valueForKey("photo") as! NSData
+        let image: UIImage! = UIImage(data: data)
+        cell.imageView!.image = image
+
+        return cell
+    }
+    
+    // Show a public badge for published markers
+    func appendPublicBadge (row: Int, cell: UITableViewCell) {
+        
+        // Add publish button
+        let publicBadge = UILabel()
+        publicBadge.frame.size = CGSizeMake(100, 50)
+        publicBadge.text = "Public"
+        publicBadge.textColor = UIColor.greenColor()
+        publicBadge.translatesAutoresizingMaskIntoConstraints = false
+        
+        cell.contentView.addSubview(publicBadge)
+        
+        // Position with constraints
+        let hrzC = NSLayoutConstraint(
+            item: publicBadge,
+            attribute: .Trailing,
+            relatedBy: .Equal,
+            toItem: cell.contentView,
+            attribute: .Trailing,
+            multiplier: 1.0,
+            constant: 0
+        )
+        let vrtC = NSLayoutConstraint(
+            item: publicBadge,
+            attribute: .CenterY,
+            relatedBy: .Equal,
+            toItem: cell.contentView,
+            attribute: .CenterY,
+            multiplier: 1.0,
+            constant: 0
+        )
+        let hgtC = NSLayoutConstraint(
+            item: publicBadge,
+            attribute: .Height,
+            relatedBy: .Equal,
+            toItem: cell.contentView,
+            attribute: .Height,
+            multiplier: 1.0,
+            constant: 0
+        )
+        
+        
+        // Activate all constraints
+        NSLayoutConstraint.activateConstraints([hrzC, vrtC, hgtC])
+    }
+    
+    func appendPublishBtn (row: Int, cell: UITableViewCell) {
         
         // Add publish button
         let pubBtn = UIButton()
@@ -69,13 +137,12 @@ class MyMarkersController: UITableViewController {
         pubBtn.backgroundColor = UIColor.blueColor()
         pubBtn.translatesAutoresizingMaskIntoConstraints = false
         
-        // Handle tap
-        pubBtn.tag = indexPath.row
+        pubBtn.tag = row
         pubBtn.addTarget(self, action: "publishAction:", forControlEvents: .TouchUpInside)
         
         cell.contentView.addSubview(pubBtn)
         
-
+        // Position with contraints
         let hrzC = NSLayoutConstraint(
             item: pubBtn,
             attribute: .Trailing,
@@ -107,13 +174,6 @@ class MyMarkersController: UITableViewController {
         
         // Activate all constraints
         NSLayoutConstraint.activateConstraints([hrzC, vrtC, hgtC])
-        
-        
-        let data: NSData = markerObj.valueForKey("photo") as! NSData
-        let image: UIImage! = UIImage(data: data)
-        cell.imageView!.image = image
-
-        return cell
     }
     
     func publishAction(sender: AnyObject) {
@@ -140,6 +200,7 @@ class MyMarkersController: UITableViewController {
             self.navigationController?.pushViewController(SignInView, animated: true)
         }
     }
+    
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         let loginAndMarker = sender as! NSArray

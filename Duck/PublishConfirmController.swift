@@ -176,6 +176,7 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         updateMarkerEntity(timestamp, publicID: publicID)
         
         // Alert that upload was successful
+        popSuccessAlert()
     }
     
     // Show alert on failure
@@ -200,6 +201,21 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         alertController.addAction(cancelAction)
         
         presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func popSuccessAlert() {
+        let alertController = UIAlertController(title: "Upload Successful!",
+            message: "Your marker was uploaded successfully.",
+            preferredStyle: .Alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .Cancel, handler: backToMyMarkers)
+        alertController.addAction(okAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func backToMyMarkers (action: UIAlertAction) {
+        self.navigationController?.popViewControllerAnimated(true)
     }
 }
 
