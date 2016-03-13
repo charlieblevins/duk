@@ -7,7 +7,10 @@
 //
 
 import UIKit
-import CoreData
+
+protocol PublishSuccessDelegate {
+    func publishDidBegin(timestamp: Double, request: ApiRequest)
+}
 
 class PublishConfirmController: UIViewController, UIPopoverPresentationControllerDelegate, PopOverDateDelegate, ApiRequestDelegate {
 
@@ -20,6 +23,9 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
     var markerData: AnyObject? = nil
     var loginData: AnyObject? = nil
     var timeFromDayPicker: String?
+    var request: ApiRequest? = nil
+    
+    var delegate: PublishSuccessDelegate? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -116,105 +122,48 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         let marker = Marker(fromCoreData: self.markerData!)
         let credentials = Credentials(fromCoreData: self.loginData!)
         
-        let request = ApiRequest()
-        request.delegate = self
-        request.publishSingleMarker(credentials, marker: marker)
+        // New request instance
+        request = ApiRequest()
+        request!.delegate = self
+        
+        // Initiate request
+        request!.publishSingleMarker(credentials, marker: marker)
     }
     
-    func updateMarkerEntity (localTimestamp: Double, publicID: String) {
-        
-        // Get managed object context
-        let appDel: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        let context: NSManagedObjectContext = appDel.managedObjectContext
-        
-        // Construct fetch request with predicate
-        let fetchRequest = NSFetchRequest(entityName: "Marker")
-        fetchRequest.predicate = NSPredicate(format: "timestamp = %lf", localTimestamp)
-        
-        // Execute fetch
-        do {
-            let fetchResults = try appDel.managedObjectContext.executeFetchRequest(fetchRequest) as? [NSManagedObject]
-            
-            // Insert new public id
-            if  fetchResults != nil && fetchResults!.count > 0 {
-                let managedObject = fetchResults![0]
-                managedObject.setValue(publicID, forKey: "public_id")
-            }
-            
-        } catch let error as NSError {
-            print("Fetch failed: \(error.localizedDescription)")
-        }
-
-        // Save
-        do {
-            try context.save()
-        } catch let error as NSError {
-            print("marker save failed: \(error.localizedDescription)")
-        }
-    }
-    
-    
-    // MARK: upload delegate method handlers
     
     // Show upload began
     func uploadDidStart() {
         publishBtn.selected = true
+        
+        if self.delegate != nil {
+            
+            guard markerData != nil else {
+                print("Could not get timestamp from marker data")
+                return
+            }
+            
+            let timestamp = markerData!.valueForKey("timestamp") as! Double
+            
+            // Pass timestamp and request instance back to my markers
+            self.delegate!.publishDidBegin(timestamp, request: request!)
+            
+            backToMyMarkers()
+        }
     }
     
-    // Show progress
     func uploadDidProgress(progress: Float) {
-        progressView.setProgress(progress, animated: true)
+        
     }
-    
     
     func uploadDidComplete(data: NSDictionary) {
-        print("upload complete")
         
-        // Save new data to core data
-        let timestamp: Double = self.markerData!.valueForKey("timestamp") as! Double
-        let publicID: String = data["data"]!["_id"] as! String
-        updateMarkerEntity(timestamp, publicID: publicID)
-        
-        // Alert that upload was successful
-        popSuccessAlert()
     }
     
-    // Show alert on failure
     func uploadDidFail(error: String) {
         
-        print("upload failure")
-        
-        // Reset publish button and progress bar
-        publishBtn.selected = false
-        progressView.setProgress(0.0, animated: false)
-        
-        // Pop alert with error message
-        popFailAlert(error)
     }
     
-    func popFailAlert(text:String) {
-        let alertController = UIAlertController(title: "Upload Failure",
-            message: text,
-            preferredStyle: .Alert)
-        
-        let cancelAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
-        alertController.addAction(cancelAction)
-        
-        presentViewController(alertController, animated: true, completion: nil)
-    }
-    
-    func popSuccessAlert() {
-        let alertController = UIAlertController(title: "Upload Successful!",
-            message: "Your marker was uploaded successfully.",
-            preferredStyle: .Alert)
-        
-        let okAction = UIAlertAction(title: "OK", style: .Cancel, handler: backToMyMarkers)
-        alertController.addAction(okAction)
-        
-        presentViewController(alertController, animated: true, completion: nil)
-    }
-    
-    func backToMyMarkers (action: UIAlertAction) {
+    func backToMyMarkers () {
         self.navigationController?.popViewControllerAnimated(true)
     }
 }

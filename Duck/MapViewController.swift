@@ -197,6 +197,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Moves user to add marker view
     func addMarker(sender:UIButton!) {
         
+        // Location services must be on to continue
+        if CLLocationManager.locationServicesEnabled() == false {
+            showLocationAcessDeniedAlert()
+            return
+        }
+        
         switch CLLocationManager.authorizationStatus() {
             
         case .AuthorizedWhenInUse:
@@ -214,10 +220,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         case .Restricted:
             showLocationAcessDeniedAlert()
         }
-
-
-        
-        //self.addMarker(51.505009, markerLng: -0.120699)
     }
     
     func showMyMarkersButton () {
@@ -293,13 +295,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
     // Help user adjust settings if accidentally denied
     func showLocationAcessDeniedAlert() {
-        let alertController = UIAlertController(title: "Sad Face Emoji!",
-            message: "Access to your location is required. Please enable it in Settings to continue.",
+        let alertController = UIAlertController(title: "Location Services",
+            message: "Adding a marker requires your location. Please enable it in Settings to continue.",
             preferredStyle: .Alert)
         
         let settingsAction = UIAlertAction(title: "Settings", style: .Default) { (alertAction) in
             
-            // THIS IS WHERE THE MAGIC HAPPENS!!!!
             if let appSettings = NSURL(string: UIApplicationOpenSettingsURLString) {
                 UIApplication.sharedApplication().openURL(appSettings)
             }

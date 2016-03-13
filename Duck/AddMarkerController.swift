@@ -13,6 +13,7 @@ import CoreLocation
 import UIKit
 
 class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, AutocompleteDelegate, CLLocationManagerDelegate {
+    
 
     @IBOutlet weak var accLabel: UILabel!
     @IBOutlet weak var longitudeLabel: UILabel!
@@ -50,7 +51,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     override func viewDidLoad() {
 
         super.viewDidLoad()
-
 
         self.title = "Add Marker"
 
@@ -296,6 +296,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         TagField.text = nil
     }
 
+
     func validateData () -> Bool {
         var errors: [String] = []
         
@@ -326,8 +327,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         presentViewController(alertController, animated: true, completion: nil)
     }
     
-    // Add Marker Done Action
-    @IBAction func DoneBuildingMarker(sender: UIButton) {
+    @IBAction func doneAddingMarker(sender: UIButton) {
         
         // Validate
         if validateData() == false {
@@ -389,6 +389,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         print("Done.")
     }
+
 
     /*
     // MARK: - Navigation

@@ -7,13 +7,17 @@
 //
 
 import UIKit
+import CoreData
 
-class MyMarkersController: UITableViewController {
+class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     
     var savedMarkers: [AnyObject]!
     var deleteMarkerIndexPath: NSIndexPath? = nil
     var deleteMarkerTimestamp: Double? = nil
     var deletedMarkers: [Double] = []
+    
+    var progressView: UIProgressView? = nil
+    var myMarkersView: MyMarkersController? = nil
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,10 +30,10 @@ class MyMarkersController: UITableViewController {
         // Register cell class
         self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
 
-        // Uncomment the following line to preserve selection between presentations
+        // preserve selection between presentations
          self.clearsSelectionOnViewWillAppear = false
 
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
+        // display an Edit button in the navigation bar for this view controller.
          self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
@@ -60,29 +64,35 @@ class MyMarkersController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = UITableViewCell()
+        let cell = DukCell()
 
         // Get marker data
-        let markerObj = savedMarkers[indexPath.row]
-        cell.textLabel?.text = markerObj.valueForKey("tags") as? String
+        cell.markerData = savedMarkers[indexPath.row]
+        
+        cell.master = self
+        
+        cell.textLabel?.text = cell.markerData!.valueForKey("tags") as? String
         
         // Public badge or publish btn
-        if markerObj.valueForKey("public_id") != nil {
+        if cell.markerData!.valueForKey("public_id") != nil {
             appendPublicBadge(indexPath.row, cell: cell)
         } else {
             appendPublishBtn(indexPath.row, cell: cell)
         }
         
         // Get thumbnail
-        let data: NSData = markerObj.valueForKey("photo") as! NSData
+        let data: NSData = cell.markerData!.valueForKey("photo") as! NSData
         let image: UIImage! = UIImage(data: data)
         cell.imageView!.image = image
+        
+        // TEST
+        //cell.appendStatusBar()
 
         return cell
     }
     
     // Show a public badge for published markers
-    func appendPublicBadge (row: Int, cell: UITableViewCell) {
+    func appendPublicBadge (row: Int, cell: DukCell) {
         
         // Add publish button
         let publicBadge = UILabel()
@@ -125,9 +135,12 @@ class MyMarkersController: UITableViewController {
         
         // Activate all constraints
         NSLayoutConstraint.activateConstraints([hrzC, vrtC, hgtC])
+        
+        // Store this view
+        cell.rightView = publicBadge
     }
     
-    func appendPublishBtn (row: Int, cell: UITableViewCell) {
+    func appendPublishBtn (row: Int, cell: DukCell) {
         
         // Add publish button
         let pubBtn = UIButton()
@@ -171,6 +184,7 @@ class MyMarkersController: UITableViewController {
             constant: 0
         )
         
+        cell.rightView = pubBtn
         
         // Activate all constraints
         NSLayoutConstraint.activateConstraints([hrzC, vrtC, hgtC])
@@ -211,6 +225,9 @@ class MyMarkersController: UITableViewController {
             let publishView = segue.destinationViewController as! PublishConfirmController
             publishView.markerData = loginAndMarker[0];
             publishView.loginData = loginAndMarker[1];
+            
+            // Set this view as delegate to receive future messages
+            publishView.delegate = self
         }
     }
     
@@ -275,6 +292,204 @@ class MyMarkersController: UITableViewController {
     }
     
 
+    
+    // MARK: Publish delegate method
+    
+    // Listen for publish begin
+    func publishDidBegin (timestamp: Double, request: ApiRequest) {
+        
+        // Get cell by timestamp and
+        // set cell as request delegate
+        for var index: Int = 0; index < tableView.numberOfRowsInSection(0); ++index {
+            
+            let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forItem: index, inSection: 0)) as! DukCell
+            
+            let cellTimestamp = cell.markerData!.valueForKey("timestamp") as! Double
+            if timestamp == cellTimestamp {
+                
+                // Set this cell as request delegate
+                request.delegate = cell
+                break;
+            }
+        }
+        
+    }
+    
+    
+    func updateMarkerEntity (localTimestamp: Double, publicID: String) {
+        
+        // Get managed object context
+        let appDel: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let context: NSManagedObjectContext = appDel.managedObjectContext
+        
+        // Construct fetch request with predicate
+        let fetchRequest = NSFetchRequest(entityName: "Marker")
+        fetchRequest.predicate = NSPredicate(format: "timestamp = %lf", localTimestamp)
+        
+        // Execute fetch
+        do {
+            let fetchResults = try appDel.managedObjectContext.executeFetchRequest(fetchRequest) as? [NSManagedObject]
+            
+            // Insert new public id
+            if  fetchResults != nil && fetchResults!.count > 0 {
+                let managedObject = fetchResults![0]
+                managedObject.setValue(publicID, forKey: "public_id")
+            }
+            
+        } catch let error as NSError {
+            print("Fetch failed: \(error.localizedDescription)")
+        }
+        
+        // Save
+        do {
+            try context.save()
+        } catch let error as NSError {
+            print("marker save failed: \(error.localizedDescription)")
+        }
+    }
+    
+    func popSuccessAlert() {
+        let alertController = UIAlertController(title: "Upload Successful!",
+            message: "Your marker was uploaded successfully.",
+            preferredStyle: .Alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
+        alertController.addAction(okAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    func popFailAlert(text:String) {
+        let alertController = UIAlertController(title: "Upload Failure",
+            message: text,
+            preferredStyle: .Alert)
+        
+        let cancelAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+
+    // MARK: Custom cell class
+    class DukCell: UITableViewCell, ApiRequestDelegate {
+        
+        var markerData: AnyObject? = nil
+        var statusBar: UILabel? = nil
+        var master: MyMarkersController? = nil
+
+        // Store reference to any view currently in right cell area
+        var rightView: UIView? = nil
+        
+        func updateStatus (content: String) {
+            
+            if self.statusBar == nil {
+                self.appendStatusBar()
+            }
+
+            self.statusBar!.text = content
+            
+            let iPath = master!.tableView.indexPathForRowAtPoint(self.center)
+            master!.tableView.reloadRowsAtIndexPaths([iPath!], withRowAnimation: UITableViewRowAnimation.None)
+        }
+        
+        // Append a status bar in this cell
+        func appendStatusBar () {
+            
+            // Increase table cell height
+            self.contentView.frame.size.height = self.contentView.frame.size.height + 30
+            
+            // Make a label to act as status bar
+            statusBar = UILabel()
+            statusBar!.frame.size = CGSizeMake(100, 30)
+            statusBar!.text = "Status Placeholder"
+            statusBar!.textColor = UIColor.redColor()
+            statusBar!.translatesAutoresizingMaskIntoConstraints = false
+            
+            // Clear right area
+            if self.rightView != nil {
+                self.rightView!.removeFromSuperview()
+            }
+            
+            // Append status bar
+            self.contentView.addSubview(statusBar!)
+            
+            
+            // Position with constraints
+            let hrzC = NSLayoutConstraint(
+                item: statusBar!,
+                attribute: .Trailing,
+                relatedBy: .Equal,
+                toItem: self.contentView,
+                attribute: .Trailing,
+                multiplier: 1.0,
+                constant: 0
+            )
+            let vrtC = NSLayoutConstraint(
+                item: statusBar!,
+                attribute: .CenterY,
+                relatedBy: .Equal,
+                toItem: self.contentView,
+                attribute: .CenterY,
+                multiplier: 1.0,
+                constant: 0
+            )
+            let hgtC = NSLayoutConstraint(
+                item: statusBar!,
+                attribute: .Height,
+                relatedBy: .Equal,
+                toItem: self.contentView,
+                attribute: .Height,
+                multiplier: 1.0,
+                constant: 0
+            )
+            
+            self.rightView = statusBar
+            
+            // Activate all constraints
+            NSLayoutConstraint.activateConstraints([hrzC, vrtC, hgtC])
+        }
+        
+        // MARK: upload delegate method handlers
+        func uploadDidStart() {
+            
+        }
+        
+        // Show progress
+        func uploadDidProgress(progress: Float) {
+            dispatch_async(dispatch_get_main_queue(), {
+                self.updateStatus("Uploading: \(progress)")
+            })
+        }
+        
+        
+        func uploadDidComplete(data: NSDictionary) {
+            print("upload complete")
+            
+            // Save new data to core data
+            let timestamp: Double = self.markerData!.valueForKey("timestamp") as! Double
+            let pubID: String = data["data"]!["_id"] as! String
+            master!.updateMarkerEntity(timestamp, publicID: pubID)
+            
+            // Alert that upload was successful
+            master!.popSuccessAlert()
+        }
+        
+        // Show alert on failure
+        func uploadDidFail(error: String) {
+            
+            print("upload failure")
+            
+            // Reset progress bar
+//            if progressView != nil {
+//                progressView!.setProgress(0.0, animated: false)
+//            }
+            
+            // Pop alert with error message
+            master!.popFailAlert(error)
+        }
+    }
+    
     /*
     // Override to support rearranging the table view.
     override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
