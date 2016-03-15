@@ -64,12 +64,21 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        
+        let existing_cell = self.tableView.cellForRowAtIndexPath(indexPath)
+        
+        if existing_cell != nil {
+            return existing_cell!
+        }
+
         let cell = DukCell()
 
         // Get marker data
         cell.markerData = savedMarkers[indexPath.row]
         
         cell.master = self
+        
+        cell.indexPath = indexPath
         
         cell.textLabel?.text = cell.markerData!.valueForKey("tags") as? String
         
@@ -87,8 +96,9 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         
         // TEST
         //cell.appendStatusBar()
-
+        
         return cell
+
     }
     
     // Show a public badge for published markers
@@ -191,6 +201,13 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     }
     
     func publishAction(sender: AnyObject) {
+        
+        let btn = sender as! UIButton
+        let point = btn.convertPoint(CGPointZero, toView : tableView)
+        let ind = self.tableView.indexPathForRowAtPoint(point)
+        let cell = self.tableView.cellForRowAtIndexPath(ind!) as! DukCell
+        cell.appendStatusBar()
+        return Void()
         
         let credentArr = Util.fetchCoreData("Login")
         
@@ -377,6 +394,8 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         var markerData: AnyObject? = nil
         var statusBar: UILabel? = nil
         var master: MyMarkersController? = nil
+        
+        var indexPath: NSIndexPath? = nil
 
         // Store reference to any view currently in right cell area
         var rightView: UIView? = nil
@@ -385,12 +404,15 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             
             if self.statusBar == nil {
                 self.appendStatusBar()
+                //self.contentView.setNeedsLayout()
+                master!.tableView.reloadRowsAtIndexPaths([self.indexPath!], withRowAnimation: UITableViewRowAnimation.None)
             }
 
             self.statusBar!.text = content
+            self.contentView.setNeedsLayout()
+            self.statusBar!.setNeedsDisplay()
             
-            let iPath = master!.tableView.indexPathForRowAtPoint(self.center)
-            master!.tableView.reloadRowsAtIndexPaths([iPath!], withRowAnimation: UITableViewRowAnimation.None)
+            
         }
         
         // Append a status bar in this cell
@@ -448,6 +470,8 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             
             // Activate all constraints
             NSLayoutConstraint.activateConstraints([hrzC, vrtC, hgtC])
+            
+            master!.tableView.reloadRowsAtIndexPaths([self.indexPath!], withRowAnimation: .Left)
         }
         
         // MARK: upload delegate method handlers
@@ -457,9 +481,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         
         // Show progress
         func uploadDidProgress(progress: Float) {
-            dispatch_async(dispatch_get_main_queue(), {
-                self.updateStatus("Uploading: \(progress)")
-            })
+            self.updateStatus("Uploading: \(progress)")
         }
         
         
