@@ -44,7 +44,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     
     // Refresh data
     override func viewWillAppear(animated: Bool) {
-        self.tableView.reloadData()
+        
     }
 
     // MARK: - Table view data source
@@ -64,12 +64,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        
-        let existing_cell = self.tableView.cellForRowAtIndexPath(indexPath)
-        
-        if existing_cell != nil {
-            return existing_cell!
-        }
 
         let cell = DukCell()
 
@@ -201,13 +195,13 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     }
     
     func publishAction(sender: AnyObject) {
-        
-        let btn = sender as! UIButton
-        let point = btn.convertPoint(CGPointZero, toView : tableView)
-        let ind = self.tableView.indexPathForRowAtPoint(point)
-        let cell = self.tableView.cellForRowAtIndexPath(ind!) as! DukCell
-        cell.appendStatusBar()
-        return Void()
+//        
+//        let btn = sender as! UIButton
+//        let point = btn.convertPoint(CGPointZero, toView : tableView)
+//        let ind = self.tableView.indexPathForRowAtPoint(point)
+//        let cell = self.tableView.cellForRowAtIndexPath(ind!) as! DukCell
+//        cell.appendStatusBar()
+//        return Void()
         
         let credentArr = Util.fetchCoreData("Login")
         
@@ -402,17 +396,15 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         
         func updateStatus (content: String) {
             
+            if (master!.isViewLoaded() == false) {
+                return Void()
+            }
+            
             if self.statusBar == nil {
                 self.appendStatusBar()
-                //self.contentView.setNeedsLayout()
-                master!.tableView.reloadRowsAtIndexPaths([self.indexPath!], withRowAnimation: UITableViewRowAnimation.None)
             }
 
             self.statusBar!.text = content
-            self.contentView.setNeedsLayout()
-            self.statusBar!.setNeedsDisplay()
-            
-            
         }
         
         // Append a status bar in this cell
@@ -445,7 +437,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
                 toItem: self.contentView,
                 attribute: .Trailing,
                 multiplier: 1.0,
-                constant: 0
+                constant: -10
             )
             let vrtC = NSLayoutConstraint(
                 item: statusBar!,
@@ -470,8 +462,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             
             // Activate all constraints
             NSLayoutConstraint.activateConstraints([hrzC, vrtC, hgtC])
-            
-            master!.tableView.reloadRowsAtIndexPaths([self.indexPath!], withRowAnimation: .Left)
         }
         
         // MARK: upload delegate method handlers
@@ -481,7 +471,8 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         
         // Show progress
         func uploadDidProgress(progress: Float) {
-            self.updateStatus("Uploading: \(progress)")
+            let percentage = Int(progress * 100)
+            self.updateStatus("\(percentage)% complete")
         }
         
         
@@ -502,10 +493,13 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             
             print("upload failure")
             
-            // Reset progress bar
-//            if progressView != nil {
-//                progressView!.setProgress(0.0, animated: false)
-//            }
+            // Reset status bar to publish btn
+            // Clear right area
+            if self.rightView != nil {
+                self.rightView!.removeFromSuperview()
+                self.statusBar = nil
+            }
+            master!.appendPublishBtn(self.indexPath!.row, cell: self)
             
             // Pop alert with error message
             master!.popFailAlert(error)
