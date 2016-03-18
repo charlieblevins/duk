@@ -13,6 +13,8 @@ struct Marker {
     let photo: NSData
     let tags: String
     
+    var public_id: String?
+    
     init(latitude: Double, longitude: Double, photo: NSData, tags: String, timestamp: Double) {
         self.latitude = latitude
         self.longitude = longitude
@@ -27,5 +29,6 @@ struct Marker {
         self.photo = data.valueForKey("photo") as! NSData
         self.tags = data.valueForKey("tags") as! String
         self.timestamp = data.timestamp
+        self.public_id = nil
     }
 }

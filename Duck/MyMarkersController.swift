@@ -24,6 +24,9 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         
         print("My Markers loaded")
         
+        // Temporary!! Removing public id's
+        //Util.updateCoreDataForEntity("Marker", fieldName: "public_id", newValue: nil)
+        
         // Get marker data
         savedMarkers = Util.fetchCoreData("Marker")
         
@@ -102,7 +105,10 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         let publicBadge = UILabel()
         publicBadge.frame.size = CGSizeMake(100, 50)
         publicBadge.text = "Public"
-        publicBadge.textColor = UIColor.greenColor()
+        
+        // Forest green
+        publicBadge.textColor = UIColor(red: 56, green: 150, blue: 57)
+        
         publicBadge.translatesAutoresizingMaskIntoConstraints = false
         
         cell.contentView.addSubview(publicBadge)
@@ -195,13 +201,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     }
     
     func publishAction(sender: AnyObject) {
-//        
-//        let btn = sender as! UIButton
-//        let point = btn.convertPoint(CGPointZero, toView : tableView)
-//        let ind = self.tableView.indexPathForRowAtPoint(point)
-//        let cell = self.tableView.cellForRowAtIndexPath(ind!) as! DukCell
-//        cell.appendStatusBar()
-//        return Void()
         
         let credentArr = Util.fetchCoreData("Login")
         
@@ -485,7 +484,9 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             master!.updateMarkerEntity(timestamp, publicID: pubID)
             
             // Alert that upload was successful
-            master!.popSuccessAlert()
+            //master!.popSuccessAlert()
+            
+            master!.tableView.reloadRowsAtIndexPaths([self.indexPath!], withRowAnimation: .Right)
         }
         
         // Show alert on failure

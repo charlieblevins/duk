@@ -31,6 +31,38 @@ class Util {
     }
     
     // Utility
+    // Update a single field value for all items of a particular entity type
+    class func updateCoreDataForEntity (entityName: String, fieldName: String, newValue: AnyObject?) {
+        
+        // Clear markers for now - NOT FOR PRODUCTION!
+        let allItems: NSFetchRequest = NSFetchRequest()
+        
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        allItems.entity = NSEntityDescription.entityForName(entityName, inManagedObjectContext: managedContext)
+        allItems.includesPropertyValues = false
+        //only fetch the managedObjectID
+        var items: [AnyObject]
+        
+        do {
+            items = try managedContext.executeFetchRequest(allItems)
+            
+            for item in items {
+                item.setValue(newValue, forKey: fieldName)
+            }
+            
+        } catch let error as NSError {
+            print("Fetch failed: \(error.localizedDescription)")
+        }
+        
+        do {
+            try managedContext.save()
+        } catch {
+            print("save failed")
+        }
+    }
+    
+    // Utility
     // Delete all objects of a certain entity type from core data
     class func deleteCoreDataForEntity (entityName: String) {
         
@@ -119,6 +151,21 @@ class Util {
         }
         
         return img
+    }
+    
+}
+
+
+extension UIColor {
+    
+    convenience init(red: Int, green: Int, blue: Int) {
+        
+        let newRed = CGFloat(red)/255
+        let newGreen = CGFloat(green)/255
+        let newBlue = CGFloat(blue)/255
+        
+        self.init(red: newRed, green: newGreen, blue: newBlue, alpha: 1.0)
+        
     }
     
 }
