@@ -54,6 +54,11 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             // Add marker
             self.addMarker(lat, markerLng: lng, timestamp: timestampString, pinImage: pinImage)
             
+            // Center on marker
+            if mapView != nil {
+                mapView!.animateToLocation(CLLocationCoordinate2DMake(lat, lng))
+            }
+            
             // Clear the array
             markerToAdd = []
         }
@@ -158,13 +163,37 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         let button = UIButton()
         
         // Build button
-        button.frame = CGRectMake(100, 100, 100, 50)
+        button.translatesAutoresizingMaskIntoConstraints = false
+        //button.frame = CGRectMake(100, 100, 225, 225)
+        
+        
+        button.layer.masksToBounds = true
+        button.backgroundColor = UIColor.whiteColor()
 
-        button.backgroundColor = UIColor.greenColor()
         button.setTitle("Add Marker", forState: UIControlState.Normal)
+        button.setTitleColor(UIColor(red: 56, green: 150, blue: 57), forState: UIControlState.Normal)
+        button.titleEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10)
         
         // Position
-        button.translatesAutoresizingMaskIntoConstraints = false
+        let widthConstraint = NSLayoutConstraint(
+            item: button,
+            attribute: .Width,
+            relatedBy: .Equal,
+            toItem: nil,
+            attribute: .NotAnAttribute,
+            multiplier: 1,
+            constant: 150)
+        
+        // Position
+        let heightConstraint = NSLayoutConstraint(
+            item: button,
+            attribute: .Height,
+            relatedBy: .Equal,
+            toItem: nil,
+            attribute: .NotAnAttribute,
+            multiplier: 1,
+            constant: 150)
+        
         let horizontalConstraint = NSLayoutConstraint(
             item: button,
             attribute: .CenterX,
@@ -181,7 +210,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             toItem: view,
             attribute: .Bottom,
             multiplier: 1,
-            constant: 0)
+            constant: -50)
         
         // Set action
         button.addTarget(self, action: "addMarker:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -190,8 +219,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         self.view.addSubview(button)
         
         // Activate constraints
+        heightConstraint.active = true
+        widthConstraint.active = true
         horizontalConstraint.active = true
         verticalConstraint.active = true
+        
+        button.layer.cornerRadius = 0.5 * button.bounds.size.width
     }
  
     // Moves user to add marker view
