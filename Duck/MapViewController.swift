@@ -168,11 +168,15 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         
         button.layer.masksToBounds = true
-        button.backgroundColor = UIColor.whiteColor()
+        button.backgroundColor = .whiteColor()
+        
+        
 
-        button.setTitle("Add Marker", forState: UIControlState.Normal)
-        button.setTitleColor(UIColor(red: 56, green: 150, blue: 57), forState: UIControlState.Normal)
-        button.titleEdgeInsets = UIEdgeInsetsMake(10, 10, 10, 10)
+        button.setTitle("Add Marker", forState: .Normal)
+        button.titleLabel!.lineBreakMode = .ByWordWrapping;
+        button.titleLabel!.textAlignment = .Center
+        
+        button.setTitleColor(UIColor(red: 56, green: 150, blue: 57), forState: .Normal)
         
         // Position
         let widthConstraint = NSLayoutConstraint(
@@ -182,7 +186,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             toItem: nil,
             attribute: .NotAnAttribute,
             multiplier: 1,
-            constant: 150)
+            constant: 90)
+        
+        button.layer.cornerRadius = 45
         
         // Position
         let heightConstraint = NSLayoutConstraint(
@@ -192,7 +198,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             toItem: nil,
             attribute: .NotAnAttribute,
             multiplier: 1,
-            constant: 150)
+            constant: 90)
         
         let horizontalConstraint = NSLayoutConstraint(
             item: button,
@@ -210,7 +216,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             toItem: view,
             attribute: .Bottom,
             multiplier: 1,
-            constant: -50)
+            constant: -25)
         
         // Set action
         button.addTarget(self, action: "addMarker:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -224,7 +230,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         horizontalConstraint.active = true
         verticalConstraint.active = true
         
-        button.layer.cornerRadius = 0.5 * button.bounds.size.width
+        
     }
  
     // Moves user to add marker view
