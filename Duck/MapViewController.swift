@@ -160,7 +160,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
     // Show Add Marker button
     func showAddMarkerButton() {
-        let button = UIButton()
+        let button = DukBtn()
         
         // Build button
         button.translatesAutoresizingMaskIntoConstraints = false
@@ -169,8 +169,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         button.layer.masksToBounds = true
         button.backgroundColor = .whiteColor()
-        
-        
 
         button.setTitle("Add Marker", forState: .Normal)
         button.titleLabel!.lineBreakMode = .ByWordWrapping;
@@ -229,8 +227,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         widthConstraint.active = true
         horizontalConstraint.active = true
         verticalConstraint.active = true
-        
-        
     }
  
     // Moves user to add marker view
@@ -262,7 +258,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     func showMyMarkersButton () {
-        let button = UIButton()
+        let button = DukBtn()
         
         // Build button
         button.frame = CGRectMake(100, 100, 100, 50)
@@ -302,6 +298,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     func goToMyMarkers (sender: UIButton) {
+        
         print("going to my markers...")
         let MyMarkersController = self.storyboard!.instantiateViewControllerWithIdentifier("MyMarkersController")
         self.navigationController?.pushViewController(MyMarkersController, animated: true)
@@ -368,5 +365,41 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         //deletedMarkers = []
     }
     
+}
+
+class DukBtn: UIButton {
+    
+    var orig_bg: UIColor? = nil
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+    }
+    
+    init() {
+        super.init(frame: CGRectZero)
+        
+        // Change BG on down press
+        self.addTarget(self, action: #selector(self.pressDown), forControlEvents: .TouchDown)
+        
+        // Reset bg on release
+        self.addTarget(self, action: #selector(self.resetBg), forControlEvents: .TouchUpInside)
+    }
+    
+    func pressDown () {
+        print("btn pressed down!")
+        
+        // Store orig bg for reset
+        self.orig_bg = self.backgroundColor
+        
+        // Set new bg
+        self.backgroundColor = UIColor(red: 222, green: 222, blue: 222)
+    }
+    
+    func resetBg () {
+        
+        if (self.orig_bg != nil) {
+            self.backgroundColor = self.orig_bg
+        }
+    }
 }
 
