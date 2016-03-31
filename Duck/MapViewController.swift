@@ -176,7 +176,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         button.setTitleColor(UIColor(red: 56, green: 150, blue: 57), forState: .Normal)
         
-        // Position
+        // Dimensions
         let widthConstraint = NSLayoutConstraint(
             item: button,
             attribute: .Width,
@@ -184,11 +184,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             toItem: nil,
             attribute: .NotAnAttribute,
             multiplier: 1,
-            constant: 90)
+            constant: 80)
+
         
-        button.layer.cornerRadius = 45
-        
-        // Position
         let heightConstraint = NSLayoutConstraint(
             item: button,
             attribute: .Height,
@@ -196,8 +194,13 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             toItem: nil,
             attribute: .NotAnAttribute,
             multiplier: 1,
-            constant: 90)
+            constant: 80)
         
+        
+        // Make Circle
+        button.layer.cornerRadius = 40
+        
+        // Position
         let horizontalConstraint = NSLayoutConstraint(
             item: button,
             attribute: .CenterX,
@@ -216,11 +219,21 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             multiplier: 1,
             constant: -25)
         
+
+        
         // Set action
         button.addTarget(self, action: "addMarker:", forControlEvents: UIControlEvents.TouchUpInside)
         
         // Add button to view
         self.view.addSubview(button)
+        
+        // Shadow
+        button.layer.shadowOpacity = 0.25
+        button.layer.shadowOffset = CGSize(width: 0, height: 0)
+        button.layer.shadowRadius = 4
+        
+        // Undo default clipping mask to make shadow visible
+        button.layer.masksToBounds = false
         
         // Activate constraints
         heightConstraint.active = true
