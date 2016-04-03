@@ -16,6 +16,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     var mapView: GMSMapView?
     var locationManager: CLLocationManager!
     var tryingToAddMarker: Bool = false
+    var tryingToShowMyLocation: Bool = false
     var savedMarkers: [AnyObject] = []
     var deletedMarkers: [Double] = []
     var curMapMarkers: [GMSMarker] = []
@@ -26,8 +27,14 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
 
         showGMap()
         addMarkersFromCore()
+        
+        // Get public markers
+        addPublicMarkers()
+        
+        // Add buttons
         showAddMarkerButton()
         showMyMarkersButton()
+        showMyLocationBtn()
     }
     
     // Hide nav bar for this view, but show for others
@@ -69,12 +76,20 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     func showGMap () {
+        // Position camera
         let camera = GMSCameraPosition.cameraWithLatitude(-33.86,
             longitude: 151.20, zoom: 6)
-        mapView = GMSMapView.mapWithFrame(CGRectZero, camera: camera)
-        mapView!.delegate = self
-        self.view = mapView
         
+        // Initialize map object
+        mapView = GMSMapView.mapWithFrame(CGRectZero, camera: camera)
+        
+        // Enable user's location
+        
+        // Set map delegate as this view controller class
+        mapView!.delegate = self
+        
+        // Set this view controllers view as the map view object
+        self.view = mapView
     }
     
     func addMarkersFromCore () {
@@ -164,8 +179,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         // Build button
         button.translatesAutoresizingMaskIntoConstraints = false
-        //button.frame = CGRectMake(100, 100, 225, 225)
-        
         
         button.layer.masksToBounds = true
         button.backgroundColor = .whiteColor()
@@ -217,9 +230,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             toItem: view,
             attribute: .Bottom,
             multiplier: 1,
-            constant: -25)
-        
-
+            constant: -15)
         
         // Set action
         button.addTarget(self, action: "addMarker:", forControlEvents: UIControlEvents.TouchUpInside)
@@ -317,6 +328,116 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         self.navigationController?.pushViewController(MyMarkersController, animated: true)
     }
     
+    // Show the my location (cross-hair) button
+    func showMyLocationBtn () {
+        let button = DukBtn()
+        
+        // Build button
+        button.translatesAutoresizingMaskIntoConstraints = false
+        
+        button.layer.masksToBounds = true
+        button.backgroundColor = .whiteColor()
+        
+        // Add crosshair image
+        guard let image = UIImage(named: "crosshair") else {
+            return
+        }
+        button.setImage(image, forState: .Normal)
+        
+        
+        // Dimensions
+        let widthConstraint = NSLayoutConstraint(
+            item: button,
+            attribute: .Width,
+            relatedBy: .Equal,
+            toItem: nil,
+            attribute: .NotAnAttribute,
+            multiplier: 1,
+            constant: 60)
+        
+        
+        let heightConstraint = NSLayoutConstraint(
+            item: button,
+            attribute: .Height,
+            relatedBy: .Equal,
+            toItem: nil,
+            attribute: .NotAnAttribute,
+            multiplier: 1,
+            constant: 60)
+        
+        
+        // Make Circle
+        button.layer.cornerRadius = 30
+        
+        // Position
+        let horizontalConstraint = NSLayoutConstraint(
+            item: button,
+            attribute: .Trailing,
+            relatedBy: .Equal,
+            toItem: view,
+            attribute: .Trailing,
+            multiplier: 1,
+            constant: -15)
+        
+        let verticalConstraint = NSLayoutConstraint(
+            item: button,
+            attribute: .Bottom,
+            relatedBy: .Equal,
+            toItem: view,
+            attribute: .Bottom,
+            multiplier: 1,
+            constant: -15)
+        
+        // Set action
+        button.addTarget(self, action: #selector(MapViewController.showMyLocation), forControlEvents: UIControlEvents.TouchUpInside)
+        
+        // Add button to view
+        self.view.addSubview(button)
+        
+        // Shadow
+        button.layer.shadowOpacity = 0.25
+        button.layer.shadowOffset = CGSize(width: 0, height: 0)
+        button.layer.shadowRadius = 4
+        
+        // Undo default clipping mask to make shadow visible
+        button.layer.masksToBounds = false
+        
+        // Activate constraints
+        heightConstraint.active = true
+        widthConstraint.active = true
+        horizontalConstraint.active = true
+        verticalConstraint.active = true
+    }
+    
+    func showMyLocation () {
+        
+        // Location services must be on to continue
+        if CLLocationManager.locationServicesEnabled() == false {
+            showLocationAcessDeniedAlert()
+            return
+        }
+        
+        switch CLLocationManager.authorizationStatus() {
+            
+        case .AuthorizedWhenInUse:
+            fallthrough
+        case .AuthorizedAlways:
+            
+            // Show user's location
+            mapView!.myLocationEnabled = true
+            
+        case .NotDetermined:
+            tryingToShowMyLocation = true
+            reqUserLocation()
+            return
+            
+        case .Denied:
+            fallthrough
+        case .Restricted:
+            showLocationAcessDeniedAlert()
+        }
+    }
+    
     func goToAddMarkerView () {
         let AddMarkerViewController = self.storyboard!.instantiateViewControllerWithIdentifier("AddMarkerViewController")
         self.navigationController?.pushViewController(AddMarkerViewController, animated: true)
@@ -337,7 +458,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             locationManager.startUpdatingLocation()
             
             if tryingToAddMarker == true {
+                tryingToAddMarker = false
                 goToAddMarkerView()
+                
+            } else if tryingToShowMyLocation == true {
+                tryingToShowMyLocation = false
+                showMyLocation()
             }
         }
     }
@@ -360,6 +486,17 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         alertController.addAction(cancelAction)
         
         presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    // Get public markers from api for the map's current
+    // latitude and longitude
+    func addPublicMarkers() {
+        // Get current coords
+        
+        // Send request to server
+        
+        // Add received markers to map
+        
     }
 
     func removeDeleted() {
