@@ -15,8 +15,14 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
     var mapView: GMSMapView?
     var locationManager: CLLocationManager!
+    
+    // Flags used by location update to determine next action
     var tryingToAddMarker: Bool = false
     var tryingToShowMyLocation: Bool = false
+    
+    // Flag used by location observer to animate to location
+    var didFindMyLocation: Bool = false
+    
     var savedMarkers: [AnyObject] = []
     var deletedMarkers: [Double] = []
     var curMapMarkers: [GMSMarker] = []
@@ -84,12 +90,34 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         mapView = GMSMapView.mapWithFrame(CGRectZero, camera: camera)
         
         // Enable user's location
+        tryingToShowMyLocation = true
+        reqUserLocation()
+        
+        // Observe changes to my location
+        mapView!.addObserver(self, forKeyPath: "myLocation", options: .New, context: nil)
         
         // Set map delegate as this view controller class
         mapView!.delegate = self
         
         // Set this view controllers view as the map view object
         self.view = mapView
+    }
+    
+    // Animate to current location on first update
+    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+        if !didFindMyLocation {
+            
+            // animate to location
+            animateToCurLocation()
+            
+            didFindMyLocation = true
+        }
+    }
+    
+    func animateToCurLocation () {
+        if let loc = mapView?.myLocation {
+            mapView!.animateToCameraPosition(GMSCameraPosition.cameraWithTarget(loc.coordinate, zoom: 10))
+        }
     }
     
     func addMarkersFromCore () {
@@ -322,8 +350,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     func goToMyMarkers (sender: UIButton) {
-        
-        print("going to my markers...")
         let MyMarkersController = self.storyboard!.instantiateViewControllerWithIdentifier("MyMarkersController")
         self.navigationController?.pushViewController(MyMarkersController, animated: true)
     }
@@ -409,6 +435,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         verticalConstraint.active = true
     }
     
+    // Check location permissions and either
+    // - show and animate to the user's current location
+    // - request the user's permission to access location
+    // - show an alert that tells user how to allow location permission
     func showMyLocation () {
         
         // Location services must be on to continue
@@ -423,9 +453,16 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             fallthrough
         case .AuthorizedAlways:
             
-            // Show user's location
-            mapView!.myLocationEnabled = true
-            
+            // Enable user location on Google Map and allow
+            // observer to show location on first update
+            if mapView!.myLocationEnabled != true {
+                didFindMyLocation = false
+                mapView!.myLocationEnabled = true
+                
+            // Location is already enabled: zoom to location
+            } else if mapView!.myLocation != nil {
+                animateToCurLocation()
+            }
         case .NotDetermined:
             tryingToShowMyLocation = true
             reqUserLocation()
@@ -443,7 +480,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         self.navigationController?.pushViewController(AddMarkerViewController, animated: true)
     }
     
-    // Request user location
+    // Request user location by initializing CLLocationManager
+    // This will promp the user to give the app location permission
+    // if not already allowed.
     func reqUserLocation () {
         locationManager = CLLocationManager()
         locationManager.delegate = self
@@ -457,6 +496,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         if status == .AuthorizedWhenInUse {
             locationManager.startUpdatingLocation()
             
+            // Check flags to determine next action
             if tryingToAddMarker == true {
                 tryingToAddMarker = false
                 goToAddMarkerView()
@@ -491,7 +531,20 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Get public markers from api for the map's current
     // latitude and longitude
     func addPublicMarkers() {
-        // Get current coords
+        
+        //** Get bottom-left and upper-right coords
+        
+        // Get projection
+        guard let projection = mapView!.projection else {
+            return
+        }
+        
+        // Get visible region (4 coords for each corner)
+        // can never be nil
+        let visibleRegion = projection.visibleRegion()
+        
+        let bleft = visibleRegion.nearLeft
+        let tright = visibleRegion.farRight
         
         // Send request to server
         
@@ -517,6 +570,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
 }
 
+// Custom button class used for 
+// addMarker button and my markers button
 class DukBtn: UIButton {
     
     var orig_bg: UIColor? = nil
