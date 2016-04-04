@@ -32,6 +32,13 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         super.viewDidLoad()
 
         showGMap()
+        
+        // Enable user's location
+        showMyLocation()
+        
+        // Observe changes to my location
+        mapView!.addObserver(self, forKeyPath: "myLocation", options: .New, context: nil)
+        
         addMarkersFromCore()
         
         // Get public markers
@@ -83,18 +90,11 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
     func showGMap () {
         // Position camera
-        let camera = GMSCameraPosition.cameraWithLatitude(-33.86,
-            longitude: 151.20, zoom: 6)
+        let camera = GMSCameraPosition.cameraWithLatitude(42.879070,
+            longitude: -97.381173, zoom: 3)
         
         // Initialize map object
         mapView = GMSMapView.mapWithFrame(CGRectZero, camera: camera)
-        
-        // Enable user's location
-        tryingToShowMyLocation = true
-        reqUserLocation()
-        
-        // Observe changes to my location
-        mapView!.addObserver(self, forKeyPath: "myLocation", options: .New, context: nil)
         
         // Set map delegate as this view controller class
         mapView!.delegate = self
@@ -511,7 +511,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Help user adjust settings if accidentally denied
     func showLocationAcessDeniedAlert() {
         let alertController = UIAlertController(title: "Location Services",
-            message: "Adding a marker requires your location. Please enable it in Settings to continue.",
+            message: "This action requires your location. Please allow access to location services in Settings to continue.",
             preferredStyle: .Alert)
         
         let settingsAction = UIAlertAction(title: "Settings", style: .Default) { (alertAction) in
