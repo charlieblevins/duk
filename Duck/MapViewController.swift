@@ -23,31 +23,43 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Flag used by location observer to animate to location
     var didFindMyLocation: Bool = false
     
+    // Handler to execute when map comes to rest
+    // Allows executing other tasks after map reaches new region
+    var mapAtRest:(()->Void)!
+    
     var savedMarkers: [AnyObject] = []
     var deletedMarkers: [Double] = []
     var curMapMarkers: [GMSMarker] = []
     var markerToAdd: [AnyObject] = []
     
+    
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        // Initialize and show google map
         showGMap()
+        
+        // Add buttons
+        showAddMarkerButton()
+        showMyMarkersButton()
+        showMyLocationBtn()
         
         // Enable user's location
         showMyLocation()
         
         // Observe changes to my location
         mapView!.addObserver(self, forKeyPath: "myLocation", options: .New, context: nil)
-        
-        addMarkersFromCore()
-        
-        // Get public markers
-        addPublicMarkers()
-        
-        // Add buttons
-        showAddMarkerButton()
-        showMyMarkersButton()
-        showMyLocationBtn()
+
+        // Closure to execute when map comes to rest at it's final 
+        // location
+        mapAtRest = {
+            
+            // Show locally stored markers
+            self.addMarkersFromCore()
+            
+            // Show public markers
+            self.addPublicMarkers()
+        }
     }
     
     // Hide nav bar for this view, but show for others
@@ -117,6 +129,15 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     func animateToCurLocation () {
         if let loc = mapView?.myLocation {
             mapView!.animateToCameraPosition(GMSCameraPosition.cameraWithTarget(loc.coordinate, zoom: 10))
+        }
+    }
+    
+    // Execute map at rest handler when map reaches idle state
+    func mapView(mapView: GMSMapView!, idleAtCameraPosition position: GMSCameraPosition!) {
+        print("map is idle")
+        if self.mapAtRest != nil {
+            self.mapAtRest();
+            self.mapAtRest = nil
         }
     }
     
@@ -286,7 +307,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         // Location services must be on to continue
         if CLLocationManager.locationServicesEnabled() == false {
-            showLocationAcessDeniedAlert()
+            showLocationAcessDeniedAlert(nil)
             return
         }
         
@@ -305,7 +326,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         case .Denied:
             fallthrough
         case .Restricted:
-            showLocationAcessDeniedAlert()
+            showLocationAcessDeniedAlert(nil)
         }
     }
     
@@ -443,7 +464,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         // Location services must be on to continue
         if CLLocationManager.locationServicesEnabled() == false {
-            showLocationAcessDeniedAlert()
+            showLocationAcessDeniedAlert("Location services are disabled. Location services are required to access your location.")
             return
         }
         
@@ -464,14 +485,17 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
                 animateToCurLocation()
             }
         case .NotDetermined:
+            
+            // Set flag for permission change handler
             tryingToShowMyLocation = true
+            
             reqUserLocation()
             return
             
         case .Denied:
             fallthrough
         case .Restricted:
-            showLocationAcessDeniedAlert()
+            showLocationAcessDeniedAlert(nil)
         }
     }
     
@@ -502,17 +526,28 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
                 goToAddMarkerView()
                 
             } else if tryingToShowMyLocation == true {
+                
+                // Unset flag
                 tryingToShowMyLocation = false
+                
                 showMyLocation()
             }
         }
     }
     
     // Help user adjust settings if accidentally denied
-    func showLocationAcessDeniedAlert() {
+    func showLocationAcessDeniedAlert(message: String?) {
+        var final_message: String?
+        
+        if message == nil {
+            final_message = "This action requires your location. Please allow access to location services in Settings."
+        } else {
+            final_message = message
+        }
+        
         let alertController = UIAlertController(title: "Location Services",
-            message: "This action requires your location. Please allow access to location services in Settings to continue.",
-            preferredStyle: .Alert)
+                                                message: final_message,
+                                                preferredStyle: .Alert)
         
         let settingsAction = UIAlertAction(title: "Settings", style: .Default) { (alertAction) in
             
@@ -522,7 +557,16 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
         alertController.addAction(settingsAction)
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: { (alertAction) in
+            
+            // If mapAtRest handler exists, execute it
+            // and remove
+            if self.mapAtRest != nil {
+                self.mapAtRest()
+                self.mapAtRest = nil
+            }
+        })
+        
         alertController.addAction(cancelAction)
         
         presentViewController(alertController, animated: true, completion: nil)
