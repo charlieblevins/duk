@@ -45,7 +45,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         showMyLocationBtn()
         
         // Enable user's location
-        showMyLocation()
+        showMyLocation(false)
         
         // Observe changes to my location
         mapView!.addObserver(self, forKeyPath: "myLocation", options: .New, context: nil)
@@ -141,6 +141,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
     }
     
+    // Add markers stored in Core Data
     func addMarkersFromCore () {
         
         // Show user's saved markers if they exist
@@ -160,11 +161,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
                 // Add marker
                 self.addMarker(marker.latitude, markerLng: marker.longitude, timestamp: timestampString, pinImage: pinImage)
             }
-            
-            // Set mapview to last marker
-            let lastMarker = savedMarkers.last
-            mapView!.animateToLocation(CLLocationCoordinate2DMake(lastMarker!.latitude, lastMarker!.longitude))
-            mapView!.animateToZoom(12)
         }
     }
     
@@ -436,7 +432,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             constant: -15)
         
         // Set action
-        button.addTarget(self, action: #selector(MapViewController.showMyLocation), forControlEvents: UIControlEvents.TouchUpInside)
+        button.addTarget(self, action: #selector(myLocationBtnTapped), forControlEvents: UIControlEvents.TouchUpInside)
         
         // Add button to view
         self.view.addSubview(button)
@@ -456,14 +452,20 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         verticalConstraint.active = true
     }
     
+    // Show users location OR alert
+    // the user about a permissions problem
+    func myLocationBtnTapped () {
+        showMyLocation(true)
+    }
+    
     // Check location permissions and either
     // - show and animate to the user's current location
     // - request the user's permission to access location
     // - show an alert that tells user how to allow location permission
-    func showMyLocation () {
+    func showMyLocation (alertFailure: Bool) {
         
         // Location services must be on to continue
-        if CLLocationManager.locationServicesEnabled() == false {
+        if CLLocationManager.locationServicesEnabled() == false && alertFailure {
             showLocationAcessDeniedAlert("Location services are disabled. Location services are required to access your location.")
             return
         }
@@ -495,7 +497,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         case .Denied:
             fallthrough
         case .Restricted:
-            showLocationAcessDeniedAlert(nil)
+            if alertFailure {
+                showLocationAcessDeniedAlert(nil)
+            }
         }
     }
     
@@ -530,7 +534,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
                 // Unset flag
                 tryingToShowMyLocation = false
                 
-                showMyLocation()
+                showMyLocation(true)
             }
         }
     }
