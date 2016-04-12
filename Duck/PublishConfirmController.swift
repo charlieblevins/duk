@@ -9,10 +9,12 @@
 import UIKit
 
 protocol PublishSuccessDelegate {
-    func publishDidBegin(timestamp: Double, request: ApiRequest)
+    
+    // Set details about a pending request
+    var pending_publish: Dictionary<String, Any>? { get set }
 }
 
-class PublishConfirmController: UIViewController, UIPopoverPresentationControllerDelegate, PopOverDateDelegate, ApiRequestDelegate {
+class PublishConfirmController: UIViewController, UIPopoverPresentationControllerDelegate, PopOverDateDelegate {
 
     @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var publishBtn: UIButton!
@@ -109,63 +111,57 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
     }
     
     @IBAction func publishMarker(sender: AnyObject) {
-        guard self.markerData != nil else {
-            print("marker data not present.")
-            return
+        
+        // Pass data to delegate
+        if self.delegate != nil && self.markerData != nil && self.loginData != nil {
+
+            self.delegate!.pending_publish = Dictionary()
+            self.delegate!.pending_publish!["marker"] = Marker(fromCoreData: self.markerData!)
+            self.delegate!.pending_publish!["credentials"] = Credentials(fromCoreData: self.loginData!)
         }
         
-        guard self.loginData != nil else {
-            print("credentials not present.")
-            return
-        }
-        
-        let marker = Marker(fromCoreData: self.markerData!)
-        let credentials = Credentials(fromCoreData: self.loginData!)
-        
-        // New request instance
-        request = ApiRequest()
-        request!.delegate = self
-        
-        // Initiate request
-        request!.publishSingleMarker(credentials, marker: marker)
-    }
-    
-    
-    // Show upload began
-    func uploadDidStart() {
-        publishBtn.selected = true
-        
-        if self.delegate != nil {
-            
-            guard markerData != nil else {
-                print("Could not get timestamp from marker data")
-                return
-            }
-            
-            let timestamp = markerData!.valueForKey("timestamp") as! Double
-            
-            // Pass timestamp and request instance back to my markers
-            self.delegate!.publishDidBegin(timestamp, request: request!)
-            
-            backToMyMarkers()
-        }
-    }
-    
-    func uploadDidProgress(progress: Float) {
-        
-    }
-    
-    func uploadDidComplete(data: NSDictionary) {
-        
-    }
-    
-    func uploadDidFail(error: String) {
-        
-    }
-    
-    func backToMyMarkers () {
+        // Back to my markers
         self.navigationController?.popViewControllerAnimated(true)
     }
+
+    
+//    
+//    // Show upload began
+//    func uploadDidStart() {
+//        publishBtn.selected = true
+//        
+//        if self.delegate != nil {
+//            
+//            guard markerData != nil else {
+//                print("Could not get timestamp from marker data")
+//                return
+//            }
+//            
+//            backToMyMarkers()
+//        
+//            let timestamp = self.markerData!.valueForKey("timestamp") as! Double
+//            
+//            // Pass timestamp and request instance back to my markers
+//            if self.delegate!.pending_publish != nil {
+//                self.delegate!.pending_publish!["request"] = self.request!
+//                self.delegate!.pending_publish!["timestamp"] = timestamp
+//            }
+//        }
+//    }
+    
+//    func uploadDidProgress(progress: Float) {
+//        
+//    }
+//    
+//    func uploadDidComplete(data: NSDictionary) {
+//        
+//    }
+//    
+//    func uploadDidFail(error: String) {
+//        
+//    }
+//    
+
 }
 
 

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Foundation
 import CoreData
 
 class MyMarkersController: UITableViewController, PublishSuccessDelegate {
@@ -18,6 +19,9 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     
     var progressView: UIProgressView? = nil
     var myMarkersView: MyMarkersController? = nil
+    
+    var request: ApiRequest?
+    var pending_publish: Dictionary<String, Any>?
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -45,9 +49,16 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    // Refresh data
+    // Listen for updates on any pending publish requests
     override func viewWillAppear(animated: Bool) {
         
+        // If a pending request exists, reload data
+        // which will trigger the request
+        if self.pending_publish != nil {
+            
+            // Reload data in order to set cell as delegate
+            self.tableView.reloadData()
+        }
     }
 
     // MARK: - Table view data source
@@ -91,11 +102,20 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         let image: UIImage! = UIImage(data: data)
         cell.imageView!.image = image
         
-        // TEST
-        //cell.appendStatusBar()
+        // Set cell as request delegate if pending publish
+        if self.pending_publish != nil {
+            
+            let marker = self.pending_publish!["marker"] as! Marker
+            let publish_timestamp = marker.timestamp
+            let cell_timestamp = cell.markerData!.valueForKey("timestamp") as! Double
+            
+            // If timestamps match, set this cell as request delegate
+            if cell_timestamp == publish_timestamp {
+                makePublishRequest(cell)
+            }
+        }
         
         return cell
-
     }
     
     // Show a public badge for published markers
@@ -302,26 +322,32 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     }
     
 
+    func makePublishRequest (cell: DukCell) {
+        
+        // New request instance
+        request = ApiRequest()
+        
+        // Get pending request timestamp
+        let marker = self.pending_publish!["marker"] as! Marker
+        
+        // Set this cell as request delegate
+        request!.delegate = cell
+
+        // Get credentials
+        let credentials = self.pending_publish!["credentials"] as! Credentials
+        
+        // Initiate request
+        request!.publishSingleMarker(credentials, marker: marker)
+        
+        // Clear pending request data
+        self.pending_publish = nil
+    }
     
     // MARK: Publish delegate method
     
     // Listen for publish begin
     func publishDidBegin (timestamp: Double, request: ApiRequest) {
-        
-        // Get cell by timestamp and
-        // set cell as request delegate
-        for var index: Int = 0; index < tableView.numberOfRowsInSection(0); ++index {
-            
-            let cell = tableView.cellForRowAtIndexPath(NSIndexPath(forItem: index, inSection: 0)) as! DukCell
-            
-            let cellTimestamp = cell.markerData!.valueForKey("timestamp") as! Double
-            if timestamp == cellTimestamp {
-                
-                // Set this cell as request delegate
-                request.delegate = cell
-                break;
-            }
-        }
+
         
     }
     

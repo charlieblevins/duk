@@ -8,6 +8,21 @@
 
 import UIKit
 
+extension UINavigationController {
+    func popViewControllerWithHandler(completion: ()->()) {
+        CATransaction.begin()
+        CATransaction.setCompletionBlock(completion)
+        self.popViewControllerAnimated(true)
+        CATransaction.commit()
+    }
+    func pushViewController(viewController: UIViewController, completion: ()->()) {
+        CATransaction.begin()
+        CATransaction.setCompletionBlock(completion)
+        self.pushViewController(viewController, animated: true)
+        CATransaction.commit()
+    }
+}
+
 class MainNavigation: UINavigationController {
     
     override func viewDidLoad() {
@@ -33,6 +48,8 @@ class MainNavigation: UINavigationController {
         }
     }
 }
+
+
 
 // Explicitly override method to prevent following error:
 // "UIAlertController:supportedInterfaceOrientations was invoked recursively!"
