@@ -113,9 +113,9 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
     @IBAction func publishMarker(sender: AnyObject) {
         
         // Pass data to delegate
-        if self.delegate != nil && self.markerData != nil && self.loginData != nil {
+        // pending_publish should already be a dictionary containing a table indexpath
+        if self.delegate != nil && self.markerData != nil && self.loginData != nil && self.delegate!.pending_publish != nil {
 
-            self.delegate!.pending_publish = Dictionary()
             self.delegate!.pending_publish!["marker"] = Marker(fromCoreData: self.markerData!)
             self.delegate!.pending_publish!["credentials"] = Credentials(fromCoreData: self.loginData!)
         }

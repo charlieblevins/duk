@@ -35,13 +35,15 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         savedMarkers = Util.fetchCoreData("Marker")
         
         // Register cell class
-        self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        self.tableView.registerClass(DukCell.self, forCellReuseIdentifier: "cell")
+        
+        self.tableView.rowHeight = UITableViewAutomaticDimension
 
         // preserve selection between presentations
-         self.clearsSelectionOnViewWillAppear = false
+        self.clearsSelectionOnViewWillAppear = false
 
         // display an Edit button in the navigation bar for this view controller.
-         self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
     override func didReceiveMemoryWarning() {
@@ -54,10 +56,10 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         
         // If a pending request exists, reload data
         // which will trigger the request
-        if self.pending_publish != nil {
+        if self.pending_publish != nil && self.pending_publish!["indexPath"] != nil {
             
             // Reload data in order to set cell as delegate
-            self.tableView.reloadData()
+            self.tableView.reloadRowsAtIndexPaths([self.pending_publish!["indexPath"] as! NSIndexPath], withRowAnimation: .Right)
         }
     }
 
@@ -79,7 +81,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
-        let cell = DukCell()
+        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! DukCell
 
         // Get marker data
         cell.markerData = savedMarkers[indexPath.row]
@@ -234,6 +236,16 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             // Create array with marker and login data
             let loginAndMarker: [AnyObject] = [savedMarkers[sender.tag], credentEntry!]
             
+            // Get and store indexpath
+            if self.pending_publish == nil {
+               self.pending_publish = Dictionary()
+            }
+            
+            let button = sender as! UIButton
+            let sview = button.superview!
+            let cell = sview.superview as! DukCell
+            self.pending_publish!["indexPath"] = self.tableView.indexPathForCell(cell)
+            
             // Load publish confirmation view
             performSegueWithIdentifier("GoToPublish", sender: loginAndMarker)
             
@@ -261,8 +273,12 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         }
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 84.0
+//    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+//        return 86.0
+//    }
+    
+    override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 86.0
     }
     
 
