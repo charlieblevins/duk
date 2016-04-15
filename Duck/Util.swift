@@ -153,6 +153,25 @@ class Util {
         return img
     }
     
+    
+    // Thumbnail size?
+    class func resizeImage(image: UIImage, scaledToFillSize size: CGSize) -> UIImage {
+        
+        let scale: CGFloat = max(size.width / image.size.width, size.height / image.size.height)
+        let width: CGFloat = image.size.width * scale
+        let height: CGFloat = image.size.height * scale
+        
+        let imageRect: CGRect = CGRectMake((size.width - width) / 2.0, (size.height - height) / 2.0, width, height)
+        
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        
+        image.drawInRect(imageRect)
+        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        
+        UIGraphicsEndImageContext()
+        return newImage
+    }
+    
 }
 
 

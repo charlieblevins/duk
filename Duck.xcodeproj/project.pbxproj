@@ -53,6 +53,7 @@
 		EC3255801C678BDC00A12A2E /* PopOverDate.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopOverDate.xib; sourceTree = "<group>"; };
 		EC3255851C678DAD00A12A2E /* PopOverDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopOverDate.swift; sourceTree = "<group>"; };
 		EC3C82541C4FB5A800B17D58 /* SignInController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInController.swift; sourceTree = "<group>"; };
+		EC47ACAE1CC116C0003148DE /* MarkerModel 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 3.xcdatamodel"; sourceTree = "<group>"; };
 		EC6DDCD31BAF31EE00458B42 /* Duck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Duck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC6DDCD71BAF31EE00458B42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -607,10 +608,11 @@
 		ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				EC47ACAE1CC116C0003148DE /* MarkerModel 3.xcdatamodel */,
 				EC8D91B91C7F2C2D00F78D25 /* MarkerModel2.xcdatamodel */,
 				ECCF43721C0A664100EEEEF1 /* MarkerModel.xcdatamodel */,
 			);
-			currentVersion = EC8D91B91C7F2C2D00F78D25 /* MarkerModel2.xcdatamodel */;
+			currentVersion = EC47ACAE1CC116C0003148DE /* MarkerModel 3.xcdatamodel */;
 			path = MarkerModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

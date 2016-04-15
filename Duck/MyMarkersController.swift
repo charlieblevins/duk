@@ -98,12 +98,13 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         } else {
             appendPublishBtn(indexPath.row, cell: cell)
         }
-        
+
         // Get thumbnail
-        let data: NSData = cell.markerData!.valueForKey("photo") as! NSData
-        let image: UIImage! = UIImage(data: data)
+        let data: NSData = cell.markerData!.valueForKey("photo_sm") as! NSData
+        let image: UIImage! = UIImage(data: data)!
         cell.imageView!.image = image
         
+
         // Set cell as request delegate if pending publish
         if self.pending_publish != nil {
             
@@ -273,14 +274,9 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         }
     }
     
-//    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-//        return 86.0
-//    }
-    
-    override func tableView(tableView: UITableView, estimatedHeightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-        return 86.0
+    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+        return 80
     }
-    
 
     /*
     // Override to support conditional editing of the table view.
@@ -422,6 +418,24 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         presentViewController(alertController, animated: true, completion: nil)
     }
     
+    
+    // Thumbnail size?
+    func resizeImage(image: UIImage, scaledToFillSize size: CGSize) -> UIImage {
+        
+        let scale: CGFloat = max(size.width / image.size.width, size.height / image.size.height)
+        let width: CGFloat = image.size.width * scale
+        let height: CGFloat = image.size.height * scale
+        
+        let imageRect: CGRect = CGRectMake((size.width - width) / 2.0, (size.height - height) / 2.0, width, height)
+        
+        UIGraphicsBeginImageContextWithOptions(size, false, 0)
+        
+        image.drawInRect(imageRect)
+        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        
+        UIGraphicsEndImageContext()
+        return newImage
+    }
 
     // MARK: Custom cell class
     class DukCell: UITableViewCell, ApiRequestDelegate {
@@ -548,6 +562,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             master!.popFailAlert(error)
         }
     }
+
     
     /*
     // Override to support rearranging the table view.
