@@ -20,7 +20,6 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
     @IBOutlet weak var publishBtn: UIButton!
     @IBOutlet weak var tagLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var progressView: UIProgressView!
     
     var markerData: AnyObject? = nil
     var loginData: AnyObject? = nil
@@ -36,8 +35,6 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         
         // Define uploading state for publish btn
         publishBtn.setTitle("Uploading...", forState: .Selected)
-        
-        progressView.setProgress(0.0, animated: true)
         
         // Populate marker data in view
         if markerData !== nil {
@@ -123,44 +120,6 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         // Back to my markers
         self.navigationController?.popViewControllerAnimated(true)
     }
-
-    
-//    
-//    // Show upload began
-//    func uploadDidStart() {
-//        publishBtn.selected = true
-//        
-//        if self.delegate != nil {
-//            
-//            guard markerData != nil else {
-//                print("Could not get timestamp from marker data")
-//                return
-//            }
-//            
-//            backToMyMarkers()
-//        
-//            let timestamp = self.markerData!.valueForKey("timestamp") as! Double
-//            
-//            // Pass timestamp and request instance back to my markers
-//            if self.delegate!.pending_publish != nil {
-//                self.delegate!.pending_publish!["request"] = self.request!
-//                self.delegate!.pending_publish!["timestamp"] = timestamp
-//            }
-//        }
-//    }
-    
-//    func uploadDidProgress(progress: Float) {
-//        
-//    }
-//    
-//    func uploadDidComplete(data: NSDictionary) {
-//        
-//    }
-//    
-//    func uploadDidFail(error: String) {
-//        
-//    }
-//    
 
 }
 

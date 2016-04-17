@@ -34,8 +34,8 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         // Get marker data
         savedMarkers = Util.fetchCoreData("Marker")
         
-        // Register cell class
-        self.tableView.registerClass(DukCell.self, forCellReuseIdentifier: "cell")
+//        // Register cell class
+//        self.tableView.registerClass(MarkerTableViewCell.self, forCellReuseIdentifier: "MarkerTableViewCell")
         
         self.tableView.rowHeight = UITableViewAutomaticDimension
 
@@ -81,7 +81,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
 
-        let cell = tableView.dequeueReusableCellWithIdentifier("cell", forIndexPath: indexPath) as! DukCell
+        let cell = tableView.dequeueReusableCellWithIdentifier("MarkerTableViewCell", forIndexPath: indexPath) as! MarkerTableViewCell
 
         // Get marker data
         cell.markerData = savedMarkers[indexPath.row]
@@ -90,7 +90,12 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         
         cell.indexPath = indexPath
         
-        cell.textLabel?.text = cell.markerData!.valueForKey("tags") as? String
+        cell.tagsLabel?.text = cell.markerData!.valueForKey("tags") as? String
+        cell.tagsLabel?.lineBreakMode = .ByWordWrapping
+        cell.tagsLabel?.numberOfLines = 3
+        
+        // Remove right side subviews
+        cell.resetRight()
         
         // Public badge or publish btn
         if cell.markerData!.valueForKey("public_id") != nil {
@@ -102,8 +107,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         // Get thumbnail
         let data: NSData = cell.markerData!.valueForKey("photo_sm") as! NSData
         let image: UIImage! = UIImage(data: data)!
-        cell.imageView!.image = image
-        
+        cell.markerImage.image = image
 
         // Set cell as request delegate if pending publish
         if self.pending_publish != nil {
@@ -122,7 +126,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     }
     
     // Show a public badge for published markers
-    func appendPublicBadge (row: Int, cell: DukCell) {
+    func appendPublicBadge (row: Int, cell: MarkerTableViewCell) {
         
         // Add publish button
         let publicBadge = UILabel()
@@ -168,12 +172,9 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         
         // Activate all constraints
         NSLayoutConstraint.activateConstraints([hrzC, vrtC, hgtC])
-        
-        // Store this view
-        cell.rightView = publicBadge
     }
     
-    func appendPublishBtn (row: Int, cell: DukCell) {
+    func appendPublishBtn (row: Int, cell: MarkerTableViewCell) {
         
         // Add publish button
         let pubBtn = UIButton()
@@ -217,8 +218,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             constant: 0
         )
         
-        cell.rightView = pubBtn
-        
         // Activate all constraints
         NSLayoutConstraint.activateConstraints([hrzC, vrtC, hgtC])
     }
@@ -244,7 +243,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             
             let button = sender as! UIButton
             let sview = button.superview!
-            let cell = sview.superview as! DukCell
+            let cell = sview.superview as! MarkerTableViewCell
             self.pending_publish!["indexPath"] = self.tableView.indexPathForCell(cell)
             
             // Load publish confirmation view
@@ -334,7 +333,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     }
     
 
-    func makePublishRequest (cell: DukCell) {
+    func makePublishRequest (cell: MarkerTableViewCell) {
         
         // New request instance
         request = ApiRequest()
@@ -435,132 +434,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         
         UIGraphicsEndImageContext()
         return newImage
-    }
-
-    // MARK: Custom cell class
-    class DukCell: UITableViewCell, ApiRequestDelegate {
-        
-        var markerData: AnyObject? = nil
-        var statusBar: UILabel? = nil
-        var master: MyMarkersController? = nil
-        
-        var indexPath: NSIndexPath? = nil
-
-        // Store reference to any view currently in right cell area
-        var rightView: UIView? = nil
-        
-        func updateStatus (content: String) {
-            
-            if (master!.isViewLoaded() == false) {
-                return Void()
-            }
-            
-            if self.statusBar == nil {
-                self.appendStatusBar()
-            }
-
-            self.statusBar!.text = content
-        }
-        
-        // Append a status bar in this cell
-        func appendStatusBar () {
-            
-            // Increase table cell height
-            self.contentView.frame.size.height = self.contentView.frame.size.height + 30
-            
-            // Make a label to act as status bar
-            statusBar = UILabel()
-            statusBar!.frame.size = CGSizeMake(100, 30)
-            statusBar!.text = "Status Placeholder"
-            statusBar!.textColor = UIColor.redColor()
-            statusBar!.translatesAutoresizingMaskIntoConstraints = false
-            
-            // Clear right area
-            if self.rightView != nil {
-                self.rightView!.removeFromSuperview()
-            }
-            
-            // Append status bar
-            self.contentView.addSubview(statusBar!)
-            
-            
-            // Position with constraints
-            let hrzC = NSLayoutConstraint(
-                item: statusBar!,
-                attribute: .Trailing,
-                relatedBy: .Equal,
-                toItem: self.contentView,
-                attribute: .Trailing,
-                multiplier: 1.0,
-                constant: -10
-            )
-            let vrtC = NSLayoutConstraint(
-                item: statusBar!,
-                attribute: .CenterY,
-                relatedBy: .Equal,
-                toItem: self.contentView,
-                attribute: .CenterY,
-                multiplier: 1.0,
-                constant: 0
-            )
-            let hgtC = NSLayoutConstraint(
-                item: statusBar!,
-                attribute: .Height,
-                relatedBy: .Equal,
-                toItem: self.contentView,
-                attribute: .Height,
-                multiplier: 1.0,
-                constant: 0
-            )
-            
-            self.rightView = statusBar
-            
-            // Activate all constraints
-            NSLayoutConstraint.activateConstraints([hrzC, vrtC, hgtC])
-        }
-        
-        // MARK: upload delegate method handlers
-        func uploadDidStart() {
-            
-        }
-        
-        // Show progress
-        func uploadDidProgress(progress: Float) {
-            let percentage = Int(progress * 100)
-            self.updateStatus("\(percentage)% complete")
-        }
-        
-        
-        func uploadDidComplete(data: NSDictionary) {
-            print("upload complete")
-            
-            // Save new data to core data
-            let timestamp: Double = self.markerData!.valueForKey("timestamp") as! Double
-            let pubID: String = data["data"]!["_id"] as! String
-            master!.updateMarkerEntity(timestamp, publicID: pubID)
-            
-            // Alert that upload was successful
-            //master!.popSuccessAlert()
-            
-            master!.tableView.reloadRowsAtIndexPaths([self.indexPath!], withRowAnimation: .Right)
-        }
-        
-        // Show alert on failure
-        func uploadDidFail(error: String) {
-            
-            print("upload failure")
-            
-            // Reset status bar to publish btn
-            // Clear right area
-            if self.rightView != nil {
-                self.rightView!.removeFromSuperview()
-                self.statusBar = nil
-            }
-            master!.appendPublishBtn(self.indexPath!.row, cell: self)
-            
-            // Pop alert with error message
-            master!.popFailAlert(error)
-        }
     }
 
     

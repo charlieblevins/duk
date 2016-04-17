@@ -22,29 +22,32 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // G Maps Api Key
         GMSServices.provideAPIKey("AIzaSyCx00Cy9jGzz0hIcv485TWytTq82sAQYaI")
         
-        /*
-        // Build thumbnails for existing images (one time only!)
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
         
-        var all_markers = Util.fetchCoreData("Marker")
-        for marker in all_markers {
-            let img_data = marker.valueForKey("photo") as! NSData
-            let full_image = UIImage(data: img_data)
-            
-            let sm = UIImageJPEGRepresentation(Util.resizeImage(full_image!, scaledToFillSize: CGSizeMake(80, 80)), 1)
-            marker.setValue(sm, forKey: "photo_sm")
-            
-            let md = UIImageJPEGRepresentation(Util.resizeImage(full_image!, scaledToFillSize: CGSizeMake(160, 160)), 1)
-            marker.setValue(md, forKey: "photo_md")
-        }
         
-        do {
-            try managedContext.save()
-        } catch {
-            print("save failed")
-        }
-        */
+        
+//
+//        // Build thumbnails for existing images (one time only!)
+//        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+//        let managedContext = appDelegate.managedObjectContext
+//        
+//        var all_markers = Util.fetchCoreData("Marker")
+//        for marker in all_markers {
+//            let img_data = marker.valueForKey("photo") as! NSData
+//            let full_image = UIImage(data: img_data)
+//            
+//            let sm = UIImageJPEGRepresentation(Util.resizeImage(full_image!, scaledToFillSize: CGSizeMake(80, 80)), 1)
+//            marker.setValue(sm, forKey: "photo_sm")
+//            
+//            let md = UIImageJPEGRepresentation(Util.resizeImage(full_image!, scaledToFillSize: CGSizeMake(160, 160)), 1)
+//            marker.setValue(md, forKey: "photo_md")
+//        }
+//        
+//        do {
+//            try managedContext.save()
+//        } catch {
+//            print("save failed")
+//        }
+ 
         
         return true
     }

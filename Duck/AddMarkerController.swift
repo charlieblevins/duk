@@ -367,6 +367,13 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         let imageData = UIImageJPEGRepresentation(cameraPhoto.image!, 1)
         marker.setValue(imageData, forKey: "photo")
         
+        // Make small and medium image versions
+        let sm = UIImageJPEGRepresentation(Util.resizeImage(cameraPhoto.image!, scaledToFillSize: CGSizeMake(80, 80)), 1)
+        marker.setValue(sm, forKey: "photo_sm")
+        
+        let md = UIImageJPEGRepresentation(Util.resizeImage(cameraPhoto.image!, scaledToFillSize: CGSizeMake(160, 160)), 1)
+        marker.setValue(md, forKey: "photo_md")
+        
         // 4. Save the marker object
         do {
             try managedContext.save()

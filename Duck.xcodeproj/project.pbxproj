@@ -13,6 +13,7 @@
 		EC3255811C678BDC00A12A2E /* PopOverDate.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC3255801C678BDC00A12A2E /* PopOverDate.xib */; };
 		EC3255861C678DAD00A12A2E /* PopOverDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3255851C678DAD00A12A2E /* PopOverDate.swift */; };
 		EC3C82551C4FB5A800B17D58 /* SignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3C82541C4FB5A800B17D58 /* SignInController.swift */; };
+		EC47ACB01CC3F24E003148DE /* MarkerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC47ACAF1CC3F24E003148DE /* MarkerTableViewCell.swift */; };
 		EC6DDCD91BAF31EE00458B42 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */; };
 		EC6DDCDB1BAF31EE00458B42 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */; };
 		EC6DDCDE1BAF31EE00458B42 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCDC1BAF31EE00458B42 /* Main.storyboard */; };
@@ -54,6 +55,7 @@
 		EC3255851C678DAD00A12A2E /* PopOverDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopOverDate.swift; sourceTree = "<group>"; };
 		EC3C82541C4FB5A800B17D58 /* SignInController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInController.swift; sourceTree = "<group>"; };
 		EC47ACAE1CC116C0003148DE /* MarkerModel 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 3.xcdatamodel"; sourceTree = "<group>"; };
+		EC47ACAF1CC3F24E003148DE /* MarkerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerTableViewCell.swift; sourceTree = "<group>"; };
 		EC6DDCD31BAF31EE00458B42 /* Duck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Duck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC6DDCD71BAF31EE00458B42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -147,6 +149,7 @@
 				ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */,
 				EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */,
 				ECFD74CA1C11BA8500124C9D /* MyMarkersController.swift */,
+				EC47ACAF1CC3F24E003148DE /* MarkerTableViewCell.swift */,
 				EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */,
 				EC3C82541C4FB5A800B17D58 /* SignInController.swift */,
 				ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */,
@@ -362,6 +365,7 @@
 				EC6DDCDB1BAF31EE00458B42 /* MapViewController.swift in Sources */,
 				ECD579201BBC82F30096FA1B /* AddMarkerViewController.swift in Sources */,
 				ECCF43731C0A664100EEEEF1 /* MarkerModel.xcdatamodeld in Sources */,
+				EC47ACB01CC3F24E003148DE /* MarkerTableViewCell.swift in Sources */,
 				EC6DDCD91BAF31EE00458B42 /* AppDelegate.swift in Sources */,
 				ECD579281BC01BC70096FA1B /* AddMarkerController.swift in Sources */,
 				EC1AD7F31C6E0ECB0051F9BE /* CredentialModel.swift in Sources */,
