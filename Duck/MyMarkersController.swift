@@ -54,12 +54,16 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     // Listen for updates on any pending publish requests
     override func viewWillAppear(animated: Bool) {
         
-        // If a pending request exists, reload data
+        // If a publish request is pending, reload data
         // which will trigger the request
-        if self.pending_publish != nil && self.pending_publish!["indexPath"] != nil {
+        if self.pending_publish != nil && self.pending_publish!["indexPath"] != nil && self.pending_publish!["marker"] != nil {
             
             // Reload data in order to set cell as delegate
             self.tableView.reloadRowsAtIndexPaths([self.pending_publish!["indexPath"] as! NSIndexPath], withRowAnimation: .Right)
+        
+        // Reset pending publish reference
+        } else {
+            self.pending_publish = nil
         }
     }
 

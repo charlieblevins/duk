@@ -25,13 +25,15 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
     // Handler to execute when map comes to rest
     // Allows executing other tasks after map reaches new region
-    var mapAtRest:(()->Void)!
+    var mapAtRestHandler:(()->Void)!
     
     var savedMarkers: [AnyObject] = []
     var deletedMarkers: [Double] = []
     var curMapMarkers: [GMSMarker] = []
     var markerToAdd: [AnyObject] = []
     
+    var mapIsAtRest: Bool = false
+    var mapTilesFinishedRendering: Bool = false
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +54,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
 
         // Closure to execute when map comes to rest at it's final 
         // location
-        mapAtRest = {
+        mapAtRestHandler = {
             
             // Show locally stored markers
             self.addMarkersFromCore()
@@ -89,6 +91,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             // Center on marker
             if mapView != nil {
                 mapView!.animateToLocation(CLLocationCoordinate2DMake(lat, lng))
+                self.mapIsAtRest = false
             }
             
             // Clear the array
@@ -129,15 +132,37 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     func animateToCurLocation () {
         if let loc = mapView?.myLocation {
             mapView!.animateToCameraPosition(GMSCameraPosition.cameraWithTarget(loc.coordinate, zoom: 10))
+            self.mapIsAtRest = false
         }
     }
     
-    // Execute map at rest handler when map reaches idle state
+    // map reaches idle state
     func mapView(mapView: GMSMapView!, idleAtCameraPosition position: GMSCameraPosition!) {
         print("map is idle")
-        if self.mapAtRest != nil {
-            self.mapAtRest();
-            self.mapAtRest = nil
+        self.mapIsAtRest = true;
+        if self.mapTilesFinishedRendering {
+            self.mapAtRest()
+        }
+    }
+    
+    func mapViewDidStartTileRendering(mapView: GMSMapView!) {
+        self.mapTilesFinishedRendering = false
+    }
+    
+    func mapViewDidFinishTileRendering(mapView: GMSMapView!) {
+        self.mapTilesFinishedRendering = true
+        if self.mapIsAtRest {
+            self.mapAtRest()
+        }
+    }
+    
+    // Called each time map:
+    // 1. Finishes animating AND
+    // 2. Finishes rendering tiles
+    func mapAtRest () {
+        if self.mapAtRestHandler != nil {
+            self.mapAtRestHandler();
+            self.mapAtRestHandler = nil
         }
     }
     
@@ -193,7 +218,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Info Window Pop Up
     func mapView(mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView! {
         print("marker is about to show")
-        let customInfoWindow = UIView(frame: CGRectMake(0, 0, 100, 100))
+        let customInfoWindow = UIView(frame: CGRectMake(0, 0, 160, 160))
         
         // Get latest core data
         savedMarkers = Util.fetchCoreData("Marker")
@@ -207,8 +232,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }.first
         
         // Add image to custom info window
-        let imageView = UIImageView(frame: CGRectMake(0, 0, 100, 100))
-        let data: NSData = matchingMarker!.valueForKey("photo") as! NSData
+        let imageView = UIImageView(frame: CGRectMake(0, 0, 160, 160))
+        let data: NSData = matchingMarker!.valueForKey("photo_md") as! NSData
         imageView.image = UIImage(data: data)
         
         customInfoWindow.addSubview(imageView)
@@ -565,10 +590,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             
             // If mapAtRest handler exists, execute it
             // and remove
-            if self.mapAtRest != nil {
-                self.mapAtRest()
-                self.mapAtRest = nil
-            }
+            self.mapAtRest()
         })
         
         alertController.addAction(cancelAction)
