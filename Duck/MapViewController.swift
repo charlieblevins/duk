@@ -303,7 +303,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             constant: -15)
         
         // Set action
-        button.addTarget(self, action: "addMarker:", forControlEvents: UIControlEvents.TouchUpInside)
+        button.addTarget(self, action: #selector(MapViewController.addMarker(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         
         // Add button to view
         self.view.addSubview(button)
@@ -381,7 +381,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             constant: 20)
         
         // Set action
-        button.addTarget(self, action: "goToMyMarkers:", forControlEvents: UIControlEvents.TouchUpInside)
+        button.addTarget(self, action: #selector(MapViewController.goToMyMarkers(_:)), forControlEvents: UIControlEvents.TouchUpInside)
         
         // Add button to view
         self.view.addSubview(button)
@@ -529,7 +529,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     func goToAddMarkerView () {
-        let AddMarkerViewController = self.storyboard!.instantiateViewControllerWithIdentifier("AddMarkerViewController")
+        let AddMarkerViewController = self.storyboard!.instantiateViewControllerWithIdentifier("AddMarkerController")
         self.navigationController?.pushViewController(AddMarkerViewController, animated: true)
     }
     

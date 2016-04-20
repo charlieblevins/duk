@@ -80,7 +80,7 @@ public class Autocomplete: NSObject {
         
         // Append suggestions (icon names)
         let limit = matchingIcons.count
-        for var i = 0; i < limit; ++i {
+        for i in 0 ..< limit {
             
             let icon = matchingIcons[i]
             
@@ -102,7 +102,7 @@ public class Autocomplete: NSObject {
             iconBtn.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
             
             // Listen for tap
-            iconBtn.addTarget(self, action: "willChooseTag:", forControlEvents: .TouchUpInside)
+            iconBtn.addTarget(self, action: #selector(Autocomplete.willChooseTag(_:)), forControlEvents: .TouchUpInside)
             
             // Add to super
             autocompleteView!.addSubview(iconBtn)

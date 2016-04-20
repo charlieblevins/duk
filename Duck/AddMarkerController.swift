@@ -12,7 +12,7 @@ import CoreData
 import CoreLocation
 import UIKit
 
-class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, AutocompleteDelegate, CLLocationManagerDelegate {
+class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, AutocompleteDelegate, CLLocationManagerDelegate, ZoomableImageDelegate {
     
 
     @IBOutlet weak var accLabel: UILabel!
@@ -28,7 +28,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBOutlet weak var TextSection: UIView!
     @IBOutlet weak var textSectionHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var addPhotoBtn: UIButton!
-    @IBOutlet weak var cameraPhoto: UIImageView!
+    @IBOutlet weak var cameraPhoto: ZoomableImageView!
     @IBOutlet weak var TagFieldYConstraint: NSLayoutConstraint!
     @IBOutlet weak var tagAddWrapView: UIView!
     @IBOutlet weak var tagAddBtn: UIButton!
@@ -66,17 +66,17 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         registerForKeyboardNotifications()
     
         // Respond to text change events
-        TagField.addTarget(self, action: "tagFieldDidChange:", forControlEvents: UIControlEvents.EditingChanged)
+        TagField.addTarget(self, action: #selector(AddMarkerController.tagFieldDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
         
         // Center text field content
         TagField.textAlignment = .Center
         
         // Handle tap on Add btn
-        tagAddBtn.addTarget(self, action: "suggestionChosen:", forControlEvents: .TouchUpInside)
+        tagAddBtn.addTarget(self, action: #selector(AddMarkerController.suggestionChosen(_:)), forControlEvents: .TouchUpInside)
         
         // Tap to dismiss keyboard
         //Looks for single or multiple taps.
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: "dismissKeyboard")
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(AddMarkerController.dismissKeyboard))
         view.addGestureRecognizer(tap)
     }
     
@@ -133,6 +133,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             cameraPhoto.contentMode = .ScaleAspectFit
             cameraPhoto.image = pickedImage
             imageChosen = true
+            
+            // Set delegate and allow zoom
+            cameraPhoto.delegate = self
+            cameraPhoto.allowZoom = true
 
             // Associate latest coords with this photo
             photoCoords = coords
@@ -181,9 +185,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     // Handle Keyboard show/hide
     func registerForKeyboardNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillShow:", name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWasShown:", name: UIKeyboardDidShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "keyboardWillBeHidden:", name: UIKeyboardWillHideNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AddMarkerController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AddMarkerController.keyboardWasShown(_:)), name: UIKeyboardDidShowNotification, object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AddMarkerController.keyboardWillBeHidden(_:)), name: UIKeyboardWillHideNotification, object: nil)
     }
     
     func keyboardWillShow(aNotification: NSNotification) {

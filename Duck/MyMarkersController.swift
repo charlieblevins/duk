@@ -189,7 +189,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         pubBtn.translatesAutoresizingMaskIntoConstraints = false
         
         pubBtn.tag = row
-        pubBtn.addTarget(self, action: "publishAction:", forControlEvents: .TouchUpInside)
+        pubBtn.addTarget(self, action: #selector(MyMarkersController.publishAction(_:)), forControlEvents: .TouchUpInside)
         
         cell.contentView.addSubview(pubBtn)
         

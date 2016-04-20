@@ -21,8 +21,7 @@
                     </view>
                     <navigationItem key="navigationItem" id="5bT-pm-eFx"/>
                     <connections>
-                        <segue destination="8V6-d6-3Ex" kind="showDetail" id="eiE-bV-4Fr"/>
-                        <segue destination="PRT-KV-WT9" kind="show" id="aHA-iD-u80"/>
+                        <segue destination="PRT-KV-WT9" kind="show" identifier="MapToMyMarkers" id="aHA-iD-u80"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
@@ -207,41 +206,6 @@
             </objects>
             <point key="canvasLocation" x="1189" y="2548"/>
         </scene>
-        <!--Add Marker View Controller-->
-        <scene sceneID="rLF-5F-bAA">
-            <objects>
-                <viewController storyboardIdentifier="AddMarkerViewController" id="8V6-d6-3Ex" customClass="AddMarkerViewController" customModule="Duck" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="gLB-5p-Ww6"/>
-                        <viewControllerLayoutGuide type="bottom" id="tRy-5x-KJv"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="LPx-15-nXl">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vUv-eU-xtP">
-                                <rect key="frame" x="224" y="152" width="152" height="87"/>
-                                <state key="normal" title="Marker"/>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="WXZ-y2-4Za">
-                                <rect key="frame" x="285" y="327" width="31" height="30"/>
-                                <state key="normal" title="Path"/>
-                            </button>
-                        </subviews>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                    <toolbarItems/>
-                    <navigationItem key="navigationItem" id="gi2-6q-HBT"/>
-                    <simulatedToolbarMetrics key="simulatedBottomBarMetrics"/>
-                    <connections>
-                        <outlet property="addMarker" destination="vUv-eU-xtP" id="OHc-cG-EgX"/>
-                        <outlet property="addPath" destination="WXZ-y2-4Za" id="btd-CQ-6hX"/>
-                    </connections>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="uc9-74-w09" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="1916" y="1052"/>
-        </scene>
         <!--Add Marker Controller-->
         <scene sceneID="yxI-kT-uQW">
             <objects>
@@ -302,7 +266,7 @@
                                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                         <nil key="highlightedColor"/>
                                                     </label>
-                                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="IVc-kA-wdL">
+                                                    <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="IVc-kA-wdL" customClass="ZoomableImageView" customModule="Duck" customModuleProvider="target">
                                                         <rect key="frame" x="0.0" y="45" width="600" height="210"/>
                                                     </imageView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uay-sv-EJ1">
@@ -478,25 +442,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Onf-eN-vGu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2546" y="866"/>
-        </scene>
-        <!--Add Path Controller-->
-        <scene sceneID="Bei-MM-g94">
-            <objects>
-                <viewController storyboardIdentifier="AddPathController" id="eog-3o-2Zk" customClass="AddPathController" customModule="Duck" customModuleProvider="target" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Wfl-AS-0Rq"/>
-                        <viewControllerLayoutGuide type="bottom" id="cN0-q3-uGO"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="y9r-O6-Har">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="lGQ-fR-jb1" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-            <point key="canvasLocation" x="2627" y="1579"/>
+            <point key="canvasLocation" x="1860" y="1052"/>
         </scene>
         <!--Sign In Controller-->
         <scene sceneID="BOG-J4-xDK">
@@ -584,6 +530,55 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yjg-VV-zdh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="486" y="349"/>
+        </scene>
+        <!--Image Zoom View Controller-->
+        <scene sceneID="gqz-eX-Hq2">
+            <objects>
+                <viewController storyboardIdentifier="ImageZoomView" id="9CL-zL-ikn" customClass="ImageZoomViewController" customModule="Duck" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="hzR-XW-IYI"/>
+                        <viewControllerLayoutGuide type="bottom" id="gLH-eN-rPA"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="snT-7a-8Rr">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WPN-7Q-Ini">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="gks-VG-f6V">
+                                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                    </imageView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="gks-VG-f6V" secondAttribute="bottom" id="OFX-X0-am9"/>
+                                    <constraint firstItem="gks-VG-f6V" firstAttribute="centerX" secondItem="WPN-7Q-Ini" secondAttribute="centerX" id="Svp-4y-ZTu"/>
+                                    <constraint firstItem="gks-VG-f6V" firstAttribute="leading" secondItem="WPN-7Q-Ini" secondAttribute="leading" id="hbX-Cc-zJ8"/>
+                                    <constraint firstItem="gks-VG-f6V" firstAttribute="centerY" secondItem="WPN-7Q-Ini" secondAttribute="centerY" id="kw3-UY-FIf"/>
+                                    <constraint firstItem="gks-VG-f6V" firstAttribute="top" secondItem="WPN-7Q-Ini" secondAttribute="top" id="tUv-Mo-lRh"/>
+                                    <constraint firstAttribute="trailing" secondItem="gks-VG-f6V" secondAttribute="trailing" id="wHk-9e-apa"/>
+                                </constraints>
+                                <connections>
+                                    <outlet property="delegate" destination="9CL-zL-ikn" id="FfT-rJ-5MU"/>
+                                </connections>
+                            </scrollView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="WPN-7Q-Ini" firstAttribute="bottom" secondItem="gLH-eN-rPA" secondAttribute="top" id="9ps-mS-776"/>
+                            <constraint firstItem="WPN-7Q-Ini" firstAttribute="top" secondItem="snT-7a-8Rr" secondAttribute="top" id="Eot-5I-OIa"/>
+                            <constraint firstAttribute="trailing" secondItem="WPN-7Q-Ini" secondAttribute="trailing" id="Pem-ih-UDM"/>
+                            <constraint firstItem="WPN-7Q-Ini" firstAttribute="leading" secondItem="snT-7a-8Rr" secondAttribute="leading" id="zoC-yG-xWQ"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="imageView" destination="gks-VG-f6V" id="Kn0-DM-Q2p"/>
+                        <outlet property="scrollView" destination="WPN-7Q-Ini" id="c1x-gh-Ogz"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="O0p-Dp-UU6" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1182" y="348"/>
         </scene>
         <!--Item-->
         <scene sceneID="XO1-Lb-6si">

@@ -26,10 +26,10 @@
 		EC9210D61C01FE9800814131 /* Autocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9210D51C01FE9800814131 /* Autocomplete.swift */; };
 		ECBB67721C5D5932002842E5 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBB67711C5D5932002842E5 /* ApiRequest.swift */; };
 		ECCF43731C0A664100EEEEF1 /* MarkerModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */; };
-		ECD579201BBC82F30096FA1B /* AddMarkerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD5791F1BBC82F30096FA1B /* AddMarkerViewController.swift */; };
+		ECD266F91CC50951009E1574 /* ImageZoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD266F81CC50951009E1574 /* ImageZoomViewController.swift */; };
+		ECD266FB1CC50DA0009E1574 /* UIZoomableImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD266FA1CC50DA0009E1574 /* UIZoomableImage.swift */; };
 		ECD579241BBDFBAD0096FA1B /* MainNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */; };
 		ECD579281BC01BC70096FA1B /* AddMarkerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579271BC01BC70096FA1B /* AddMarkerController.swift */; };
-		ECD5792A1BC01C0C0096FA1B /* AddPathController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579291BC01C0C0096FA1B /* AddPathController.swift */; };
 		ECDD61AB1C6FAF3F004063D2 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECDD61AA1C6FAF3F004063D2 /* SwiftyJSON.framework */; };
 		ECFD74CB1C11BA8500124C9D /* MyMarkersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFD74CA1C11BA8500124C9D /* MyMarkersController.swift */; };
 		ECFD74CD1C11BFC900124C9D /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFD74CC1C11BFC900124C9D /* Util.swift */; };
@@ -73,10 +73,10 @@
 		EC9210D51C01FE9800814131 /* Autocomplete.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Autocomplete.swift; sourceTree = "<group>"; };
 		ECBB67711C5D5932002842E5 /* ApiRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
 		ECCF43721C0A664100EEEEF1 /* MarkerModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MarkerModel.xcdatamodel; sourceTree = "<group>"; };
-		ECD5791F1BBC82F30096FA1B /* AddMarkerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMarkerViewController.swift; sourceTree = "<group>"; };
+		ECD266F81CC50951009E1574 /* ImageZoomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageZoomViewController.swift; sourceTree = "<group>"; };
+		ECD266FA1CC50DA0009E1574 /* UIZoomableImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIZoomableImage.swift; sourceTree = "<group>"; };
 		ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainNavigation.swift; sourceTree = "<group>"; };
 		ECD579271BC01BC70096FA1B /* AddMarkerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMarkerController.swift; sourceTree = "<group>"; };
-		ECD579291BC01C0C0096FA1B /* AddPathController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddPathController.swift; sourceTree = "<group>"; };
 		ECDD61AA1C6FAF3F004063D2 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = "Pods/../build/Debug-iphoneos/SwiftyJSON.framework"; sourceTree = "<group>"; };
 		ECFD74CA1C11BA8500124C9D /* MyMarkersController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyMarkersController.swift; sourceTree = "<group>"; };
 		ECFD74CC1C11BFC900124C9D /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
@@ -153,9 +153,9 @@
 				EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */,
 				EC3C82541C4FB5A800B17D58 /* SignInController.swift */,
 				ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */,
-				ECD5791F1BBC82F30096FA1B /* AddMarkerViewController.swift */,
 				ECD579271BC01BC70096FA1B /* AddMarkerController.swift */,
-				ECD579291BC01C0C0096FA1B /* AddPathController.swift */,
+				ECD266FA1CC50DA0009E1574 /* UIZoomableImage.swift */,
+				ECD266F81CC50951009E1574 /* ImageZoomViewController.swift */,
 				EC7843721BE383CC003E3AE9 /* IconModel.swift */,
 				EC9210D51C01FE9800814131 /* Autocomplete.swift */,
 				ECFD74CC1C11BFC900124C9D /* Util.swift */,
@@ -357,17 +357,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				ECFD74CD1C11BFC900124C9D /* Util.swift in Sources */,
-				ECD5792A1BC01C0C0096FA1B /* AddPathController.swift in Sources */,
 				EC7043891C60E0AE00EA0BE4 /* PublishConfirmController.swift in Sources */,
+				ECD266FB1CC50DA0009E1574 /* UIZoomableImage.swift in Sources */,
 				EC3C82551C4FB5A800B17D58 /* SignInController.swift in Sources */,
 				EC3255861C678DAD00A12A2E /* PopOverDate.swift in Sources */,
 				EC7843731BE383CC003E3AE9 /* IconModel.swift in Sources */,
 				EC6DDCDB1BAF31EE00458B42 /* MapViewController.swift in Sources */,
-				ECD579201BBC82F30096FA1B /* AddMarkerViewController.swift in Sources */,
 				ECCF43731C0A664100EEEEF1 /* MarkerModel.xcdatamodeld in Sources */,
 				EC47ACB01CC3F24E003148DE /* MarkerTableViewCell.swift in Sources */,
 				EC6DDCD91BAF31EE00458B42 /* AppDelegate.swift in Sources */,
 				ECD579281BC01BC70096FA1B /* AddMarkerController.swift in Sources */,
+				ECD266F91CC50951009E1574 /* ImageZoomViewController.swift in Sources */,
 				EC1AD7F31C6E0ECB0051F9BE /* CredentialModel.swift in Sources */,
 				ECFD74CB1C11BA8500124C9D /* MyMarkersController.swift in Sources */,
 				ECD579241BBDFBAD0096FA1B /* MainNavigation.swift in Sources */,
