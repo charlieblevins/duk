@@ -38,6 +38,11 @@ class ImageZoomViewController: UIViewController, UIScrollViewDelegate {
         
     }
     
+    // User tapped X button
+    @IBAction func CloseTapped(sender: UIButton) {
+        self.dismissViewControllerAnimated(true, completion: nil)
+    }
+    
 
     /*
     // MARK: - Navigation
