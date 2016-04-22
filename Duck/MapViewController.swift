@@ -189,6 +189,33 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
     }
     
+    // Add markers in current map view
+    func addMarkersInView () {
+        
+        // 0. Show status box
+        
+        // 1. Get map bounds as bottom left and upper-right coords (nearLeft and farRight)
+        let vis_region = self.mapView!.projection.visibleRegion()
+        
+        // - convert to GMSCoordinateBounds
+        let bounds = GMSCoordinateBounds(region: vis_region)
+        
+
+        
+        // 2. Get local markers within bounds
+        
+        // - use GMSCoordinateBounds.containsCoordinate(coordinate)
+        
+        // 3. Get public markers within bounds
+        
+        // 4. Render all markers to map
+    }
+    
+    func getCoreMarkersWithin (bounds: GMSCoordinateBounds) -> [Marker] {
+        
+    }
+    
+    
     // Add marker to map
     func addMarker (markerLat: CLLocationDegrees, markerLng: CLLocationDegrees, timestamp: String?, pinImage: UIImage?) {
         
