@@ -11,7 +11,7 @@ import CoreLocation
 import CoreData
 import GoogleMaps
 
-class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate {
+class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate, ApiRequestDelegate {
     
     var mapView: GMSMapView?
     var locationManager: CLLocationManager!
@@ -27,9 +27,16 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Allows executing other tasks after map reaches new region
     var mapAtRestHandler:(()->Void)!
     
-    var savedMarkers: [AnyObject] = []
+    // Array of all markers in view
+    var markersInView: [AnyObject] = []
+    
     var deletedMarkers: [Double] = []
     var curMapMarkers: [GMSMarker] = []
+    
+    
+    // Store a marker from the addMarker view to be 
+    // loaded when completing add marker task and viewing
+    // newly created marker
     var markerToAdd: [AnyObject] = []
     
     var mapIsAtRest: Bool = false
@@ -55,12 +62,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // Closure to execute when map comes to rest at it's final 
         // location
         mapAtRestHandler = {
-            
-            // Show locally stored markers
-            self.addMarkersFromCore()
-            
-            // Show public markers
-            self.addPublicMarkers()
+            self.addMarkersInView()
         }
     }
     
@@ -167,52 +169,92 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     // Add markers stored in Core Data
-    func addMarkersFromCore () {
-        
-        // Show user's saved markers if they exist
-        savedMarkers = Util.fetchCoreData("Marker")
-        
-        if savedMarkers.count > 0 {
-            for marker in savedMarkers {
-                
-                // Get timestamp
-                let timestamp = marker.valueForKey("timestamp") as! Double
-                let timestampString = String(format: "%.7f", timestamp)
-                
-                // Use icon matching first tag
-                let tags = marker.valueForKey("tags") as! String
-                let pinImage = Util.getIconForTags(tags)
-                
-                // Add marker
-                self.addMarker(marker.latitude, markerLng: marker.longitude, timestamp: timestampString, pinImage: pinImage)
-            }
-        }
-    }
+//    func addMarkersFromCore () {
+//        
+//        // Show user's saved markers if they exist
+//        savedMarkers = Util.fetchCoreData("Marker")
+//        
+//        if savedMarkers.count > 0 {
+//            for marker in savedMarkers {
+//                
+//                // Get timestamp
+//                let timestamp = marker.valueForKey("timestamp") as! Double
+//                let timestampString = String(format: "%.7f", timestamp)
+//                
+//                // Use icon matching first tag
+//                let tags = marker.valueForKey("tags") as! String
+//                let pinImage = Util.getIconForTags(tags)
+//                
+//                // Add marker
+//                self.addMarker(marker.latitude, markerLng: marker.longitude, timestamp: timestampString, pinImage: pinImage)
+//            }
+//        }
+//    }
     
     // Add markers in current map view
     func addMarkersInView () {
+        
+        // Clear curMapMarkers
+        curMapMarkers = []
         
         // 0. Show status box
         
         // 1. Get map bounds as bottom left and upper-right coords (nearLeft and farRight)
         let vis_region = self.mapView!.projection.visibleRegion()
         
-        // - convert to GMSCoordinateBounds
+        //    Convert to GMSCoordinateBounds
         let bounds = GMSCoordinateBounds(region: vis_region)
         
-
         
         // 2. Get local markers within bounds
-        
-        // - use GMSCoordinateBounds.containsCoordinate(coordinate)
+        let local_markers = self.getCoreMarkersWithin(bounds)
         
         // 3. Get public markers within bounds
+        let req = ApiRequest()
+        req.delegate = self
+        req.getMarkersWithinBounds(bounds)
         
-        // 4. Render all markers to map
+        // 4. Combine public and local markers
+        
+        // 5. Cluster markers if needed
+        
+        // 6. Render all markers on map
+
+        
+        // Add marker
+//        self.addMarker(marker.latitude, markerLng: marker.longitude, timestamp: timestampString, pinImage: pinImage)
     }
     
-    func getCoreMarkersWithin (bounds: GMSCoordinateBounds) -> [Marker] {
+    func getCoreMarkersWithin (bounds: GMSCoordinateBounds) -> [DukGMSMarker] {
+        var markers_in_bounds: [DukGMSMarker] = []
         
+        // Show user's saved markers if they exist
+        let markers_from_core = Util.fetchCoreData("Marker")
+        
+        if markers_from_core.count == 0 {
+            return markers_in_bounds
+        }
+        
+        // Find and return markers within provided bounds
+        for marker_data in markers_from_core {
+
+            let marker = Marker(fromCoreData: marker_data)
+            
+            // Get marker coords
+            let coords = CLLocationCoordinate2D(latitude: marker.latitude, longitude: marker.longitude)
+            
+            if bounds.containsCoordinate(coords) {
+                
+                // Get map marker and store
+                if let map_marker = marker.getMapMarker() {
+                    markers_in_bounds.append(map_marker)
+                } else {
+                    print("marker from core had no timestamp: \(marker)")
+                }
+            }
+        }
+        
+        return markers_in_bounds
     }
     
     
@@ -243,32 +285,32 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     // Info Window Pop Up
-    func mapView(mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView! {
-        print("marker is about to show")
-        let customInfoWindow = UIView(frame: CGRectMake(0, 0, 160, 160))
-        
-        // Get latest core data
-        savedMarkers = Util.fetchCoreData("Marker")
-        
-        // Find marker that matches timestamp
-        let timestamp = Double(marker.title)
-        
-        let matchingMarker = savedMarkers.filter{
-            let t = $0.valueForKey("timestamp") as! Double
-            return t == timestamp
-        }.first
-        
-        // Add image to custom info window
-        let imageView = UIImageView(frame: CGRectMake(0, 0, 160, 160))
-        let data: NSData = matchingMarker!.valueForKey("photo_md") as! NSData
-        imageView.image = UIImage(data: data)
-        
-        customInfoWindow.addSubview(imageView)
-        
-        customInfoWindow.backgroundColor = UIColor.whiteColor()
-        
-        return customInfoWindow
-    }
+//    func mapView(mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView! {
+//        print("marker is about to show")
+//        let customInfoWindow = UIView(frame: CGRectMake(0, 0, 160, 160))
+//        
+//        // Get latest core data
+//        savedMarkers = Util.fetchCoreData("Marker")
+//        
+//        // Find marker that matches timestamp
+//        let timestamp = Double(marker.title)
+//        
+//        let matchingMarker = savedMarkers.filter{
+//            let t = $0.valueForKey("timestamp") as! Double
+//            return t == timestamp
+//        }.first
+//        
+//        // Add image to custom info window
+//        let imageView = UIImageView(frame: CGRectMake(0, 0, 160, 160))
+//        let data: NSData = matchingMarker!.valueForKey("photo_md") as! NSData
+//        imageView.image = UIImage(data: data)
+//        
+//        customInfoWindow.addSubview(imageView)
+//        
+//        customInfoWindow.backgroundColor = UIColor.whiteColor()
+//        
+//        return customInfoWindow
+//    }
     
     // Show Add Marker button
     func showAddMarkerButton() {
@@ -624,30 +666,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         presentViewController(alertController, animated: true, completion: nil)
     }
-    
-    // Get public markers from api for the map's current
-    // latitude and longitude
-    func addPublicMarkers() {
-        
-        //** Get bottom-left and upper-right coords
-        
-        // Get projection
-        guard let projection = mapView!.projection else {
-            return
-        }
-        
-        // Get visible region (4 coords for each corner)
-        // can never be nil
-        let visibleRegion = projection.visibleRegion()
-        
-        let bleft = visibleRegion.nearLeft
-        let tright = visibleRegion.farRight
-        
-        // Send request to server
-        
-        // Add received markers to map
-        
-    }
 
     func removeDeleted() {
         
@@ -664,7 +682,54 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // Clear deleted markers
         //deletedMarkers = []
     }
+
     
+    // ApiRequestDelegate methods
+    func reqDidComplete(data: NSDictionary) {
+        
+        if data["data"] == nil {
+            return Void()
+        }
+        
+        // Loop over received marker data
+        let marker_array = data["data"] as! [AnyObject]
+        for marker_data in marker_array {
+            
+            // Convert data to DukGMSMarker
+            let marker = Marker(fromPublicData: marker_data as! [String: String])
+            
+            // Add map marker to curMapMarkers array
+            if let map_marker = marker.getMapMarker() {
+                curMapMarkers.append(map_marker)
+            } else {
+                print("could not get map marker from marker data: \(marker)")
+            }
+        }
+    }
+    
+    func reqDidFail(error: String) {
+        print(error)
+    }
+    
+    
+}
+
+// Extend GMSMarker to have
+// public/local data reference
+// and an id/timestamp for data lookup
+class DukGMSMarker: GMSMarker {
+    
+    // Indicate where marker data is stored
+    var dataLocation: DataLocation? = nil
+    
+    // One of these will contain a reference
+    // used for looking up info window data
+    var timestamp: Double? = nil
+    var public_id: String? = nil
+}
+
+enum DataLocation {
+    case Local, Public
 }
 
 // Custom button class used for 

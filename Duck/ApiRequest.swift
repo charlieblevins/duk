@@ -9,16 +9,17 @@
 import Foundation
 import Alamofire
 import SwiftyJSON
+import GoogleMaps
 
-protocol ApiRequestDelegate {
+@objc protocol ApiRequestDelegate {
     
-    func uploadDidStart()
+    optional func reqDidStart()
     
-    func uploadDidProgress(progress: Float)
+    optional func uploadDidProgress(progress: Float)
     
-    func uploadDidComplete(data: NSDictionary)
+    func reqDidComplete(data: NSDictionary)
     
-    func uploadDidFail(error: String)
+    func reqDidFail(error: String)
 }
 
 
@@ -104,7 +105,7 @@ class ApiRequest {
                     print("upload START SUCCESS")
                     
                     // Notify delegates upload begin
-                    self.delegate?.uploadDidStart()
+                    self.delegate?.reqDidStart?()
                     
                     // Track progress
                     upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
@@ -117,7 +118,7 @@ class ApiRequest {
                             // If next percent reached: notify delegates
                             if percentage > self.progress {
                                 self.progress = percentage
-                                self.delegate?.uploadDidProgress(percentage)
+                                self.delegate?.uploadDidProgress?(percentage)
                             }
                         }
 
@@ -139,6 +140,26 @@ class ApiRequest {
         )
     }
     
+    // Get marker data within geographic bounds
+    func getMarkersWithinBounds (bounds: GMSCoordinateBounds) {
+        
+        // Build request params
+        let params: [String: String] = [
+            "bottom_left_lat": String(format: "%f", bounds.southWest.latitude),
+            "bottom_left_lng": String(format: "%f", bounds.southWest.longitude),
+            "upper_right_lat": String(format: "%f", bounds.northEast.latitude),
+            "upper_right_lng": String(format: "%f", bounds.northEast.longitude)
+        ]
+        
+        self.delegate?.reqDidStart?()
+        
+        // Exec request
+        Alamofire.request(.GET, "\(baseURL)/markersWithin", parameters: params)
+            .responseJSON { response in
+                self.handleResponse(response)
+            }
+    }
+    
     // Handles an alamofire response object and calls associated delegate methods
     func handleResponse (response: Response<AnyObject, NSError>) {
         print("handling response")
@@ -157,24 +178,36 @@ class ApiRequest {
             if response_code >= 200 && response_code < 300 {
                 
                 // Notify delegates of upload complete
-                self.delegate?.uploadDidComplete(res_json_dictionary)
+                self.delegate?.reqDidComplete(res_json_dictionary)
             
             // 400 status code. message prop should exist
             } else if response_code >= 300 && response_code < 500 {
                 
                 let message = res_json_dictionary.objectForKey("message") as! String
-                self.delegate?.uploadDidFail(message)
+                self.delegate?.reqDidFail(message)
 
             // Server error
             } else if response_code >= 500 {
-                self.delegate?.uploadDidFail("A server error occurred.")
+                self.delegate?.reqDidFail("A server error occurred.")
             }
 
             
         case .Failure(let error):
             
             let error_descrip = error.localizedDescription
-            self.delegate?.uploadDidFail(error_descrip)
+            self.delegate?.reqDidFail(error_descrip)
         }
+    }
+    
+    // ** Utils
+    
+    // Build http basic auth header from credentials
+    func buildAuthHeader (credentials: Credentials) -> [String: String] {
+        
+        // Add basic auth to request header
+        let loginData = "\(credentials.email):\(credentials.password)".dataUsingEncoding(NSUTF8StringEncoding)!
+        let base64LoginString = loginData.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
+        
+        return ["Authorization": "Basic \(base64LoginString)"]
     }
 }
