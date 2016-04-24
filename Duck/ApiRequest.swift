@@ -93,7 +93,7 @@ class ApiRequest {
                 multipartFormData.appendBodyPart(data: "\(marker.latitude)".dataUsingEncoding(NSUTF8StringEncoding)!, name: "latitude")
                 multipartFormData.appendBodyPart(data: "\(marker.longitude)".dataUsingEncoding(NSUTF8StringEncoding)!, name: "longitude")
                 multipartFormData.appendBodyPart(data: "\(marker.tags)".dataUsingEncoding(NSUTF8StringEncoding)!, name: "tags")
-                multipartFormData.appendBodyPart(data: marker.photo, name: "photo", fileName: "TestFile", mimeType: "image/jpeg")
+                multipartFormData.appendBodyPart(data: marker.photo!, name: "photo", fileName: "TestFile", mimeType: "image/jpeg")
                 
             },
             encodingCompletion: { encodingResult in

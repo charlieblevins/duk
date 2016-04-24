@@ -31,7 +31,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     var markersInView: [AnyObject] = []
     
     var deletedMarkers: [Double] = []
-    var curMapMarkers: [GMSMarker] = []
+    var curMapMarkers: [DukGMSMarker] = []
     
     
     // Store a marker from the addMarker view to be 
@@ -207,7 +207,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         
         // 2. Get local markers within bounds
-        let local_markers = self.getCoreMarkersWithin(bounds)
+        curMapMarkers = self.getCoreMarkersWithin(bounds)
         
         // 3. Get public markers within bounds
         let req = ApiRequest()
@@ -261,7 +261,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Add marker to map
     func addMarker (markerLat: CLLocationDegrees, markerLng: CLLocationDegrees, timestamp: String?, pinImage: UIImage?) {
         
-        let marker = GMSMarker()
+        let marker = DukGMSMarker()
         marker.position = CLLocationCoordinate2DMake(markerLat, markerLng)
         
         // Store timestamp as title for id
@@ -285,10 +285,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     // Info Window Pop Up
-//    func mapView(mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView! {
-//        print("marker is about to show")
-//        let customInfoWindow = UIView(frame: CGRectMake(0, 0, 160, 160))
-//        
+    func mapView(mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView! {
+        print("marker is about to show")
+        let customInfoWindow = UIView(frame: CGRectMake(0, 0, 160, 160))
+        
+        let custom_marker = marker as! DukGMSMarker
+        
 //        // Get latest core data
 //        savedMarkers = Util.fetchCoreData("Marker")
 //        
@@ -308,9 +310,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
 //        customInfoWindow.addSubview(imageView)
 //        
 //        customInfoWindow.backgroundColor = UIColor.whiteColor()
-//        
-//        return customInfoWindow
-//    }
+        
+        return customInfoWindow
+    }
     
     // Show Add Marker button
     func showAddMarkerButton() {
@@ -682,10 +684,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // Clear deleted markers
         //deletedMarkers = []
     }
-
     
     // ApiRequestDelegate methods
     func reqDidComplete(data: NSDictionary) {
+        var pubMarkersById: [String: AnyObject] = [:]
         
         if data["data"] == nil {
             return Void()
@@ -696,15 +698,38 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         for marker_data in marker_array {
             
             // Convert data to DukGMSMarker
-            let marker = Marker(fromPublicData: marker_data as! [String: String])
+            let marker = Marker(fromPublicData: marker_data as! [String: AnyObject])
             
-            // Add map marker to curMapMarkers array
-            if let map_marker = marker.getMapMarker() {
-                curMapMarkers.append(map_marker)
+            // Store map marker by public id
+            if let map_marker = marker!.getMapMarker() {
+                pubMarkersById[map_marker.public_id!] = map_marker
+                
             } else {
                 print("could not get map marker from marker data: \(marker)")
             }
         }
+        
+        // Remove duplicates
+        let local_public = curMapMarkers.filter({
+            return $0.public_id != nil
+        })
+        
+        for marker in local_public {
+            pubMarkersById.removeValueForKey(marker.public_id!)
+        }
+        
+        // Make array from remaining values
+        let cleaned_public_markers = Array(pubMarkersById.values) as! [DukGMSMarker]
+        
+        // Append public markers to local markers
+        curMapMarkers += cleaned_public_markers
+        
+        for marker in curMapMarkers {
+            marker.map = self.mapView
+        }
+        
+        // Clear array
+        curMapMarkers = []
     }
     
     func reqDidFail(error: String) {
