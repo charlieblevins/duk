@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		4A44319079F6CFF318AE9BCA /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2BEB3346C0FB62E777A85B9B /* Pods.framework */; };
+		EC14494B1CD5330700496E07 /* InfoWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC14494A1CD5330700496E07 /* InfoWindow.xib */; };
+		EC14494D1CD5385400496E07 /* InfoWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC14494C1CD5385400496E07 /* InfoWindowView.swift */; };
 		EC1AD7F11C6E08530051F9BE /* MarkerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1AD7F01C6E08530051F9BE /* MarkerModel.swift */; };
 		EC1AD7F31C6E0ECB0051F9BE /* CredentialModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1AD7F21C6E0ECB0051F9BE /* CredentialModel.swift */; };
 		EC3255811C678BDC00A12A2E /* PopOverDate.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC3255801C678BDC00A12A2E /* PopOverDate.xib */; };
@@ -49,6 +51,8 @@
 		1E3235C2EC6C88894FAEFA6A /* Pods.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.release.xcconfig; path = "Pods/Target Support Files/Pods/Pods.release.xcconfig"; sourceTree = "<group>"; };
 		2BEB3346C0FB62E777A85B9B /* Pods.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		C74B69403AD094A8120F45EA /* Pods.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = Pods.debug.xcconfig; path = "Pods/Target Support Files/Pods/Pods.debug.xcconfig"; sourceTree = "<group>"; };
+		EC14494A1CD5330700496E07 /* InfoWindow.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = InfoWindow.xib; sourceTree = "<group>"; };
+		EC14494C1CD5385400496E07 /* InfoWindowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoWindowView.swift; sourceTree = "<group>"; };
 		EC1AD7F01C6E08530051F9BE /* MarkerModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MarkerModel.swift; path = ../MarkerModel.swift; sourceTree = "<group>"; };
 		EC1AD7F21C6E0ECB0051F9BE /* CredentialModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredentialModel.swift; sourceTree = "<group>"; };
 		EC3255801C678BDC00A12A2E /* PopOverDate.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopOverDate.xib; sourceTree = "<group>"; };
@@ -148,6 +152,8 @@
 				EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */,
 				ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */,
 				EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */,
+				EC14494A1CD5330700496E07 /* InfoWindow.xib */,
+				EC14494C1CD5385400496E07 /* InfoWindowView.swift */,
 				ECFD74CA1C11BA8500124C9D /* MyMarkersController.swift */,
 				EC47ACAF1CC3F24E003148DE /* MarkerTableViewCell.swift */,
 				EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */,
@@ -291,6 +297,7 @@
 				EC6DDCDE1BAF31EE00458B42 /* Main.storyboard in Resources */,
 				EC6DDCE31BAF31EE00458B42 /* LaunchScreen.xib in Resources */,
 				EC6DDCE01BAF31EE00458B42 /* Images.xcassets in Resources */,
+				EC14494B1CD5330700496E07 /* InfoWindow.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -370,6 +377,7 @@
 				ECD266F91CC50951009E1574 /* ImageZoomViewController.swift in Sources */,
 				EC1AD7F31C6E0ECB0051F9BE /* CredentialModel.swift in Sources */,
 				ECFD74CB1C11BA8500124C9D /* MyMarkersController.swift in Sources */,
+				EC14494D1CD5385400496E07 /* InfoWindowView.swift in Sources */,
 				ECD579241BBDFBAD0096FA1B /* MainNavigation.swift in Sources */,
 				ECBB67721C5D5932002842E5 /* ApiRequest.swift in Sources */,
 				EC9210D61C01FE9800814131 /* Autocomplete.swift in Sources */,

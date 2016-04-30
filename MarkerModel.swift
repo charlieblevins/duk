@@ -102,4 +102,48 @@ struct Marker {
         
         return map_marker
     }
+    
+    // Find and return marker with provided timestamp
+    static func getLocalByTimestamp (timestamp: Double) -> Marker? {
+        let markers_from_core = Util.fetchCoreData("Marker")
+        
+        if markers_from_core.count == 0 {
+            return nil
+        }
+        
+        for marker_data in markers_from_core {
+            
+            let marker = Marker(fromCoreData: marker_data)
+            
+            if marker.timestamp == timestamp {
+                return marker
+            }
+        }
+        
+        // Nothing found
+        return nil
+    }
+    
+    // Get an array of local markers that have been published (made public)
+    static func getLocalPublicIds () -> [String] {
+        var public_ids: [String] = []
+        
+        let markers_from_core = Util.fetchCoreData("Marker")
+        
+        if markers_from_core.count == 0 {
+            return public_ids
+        }
+        
+        for marker_data in markers_from_core {
+            
+            let marker = Marker(fromCoreData: marker_data)
+            
+            if marker.public_id != nil {
+                public_ids.append(marker.public_id!)
+            }
+        }
+        
+        // Nothing found
+        return public_ids
+    }
 }

@@ -18,10 +18,49 @@
                     <view key="view" contentMode="scaleToFill" id="kh9-bI-dsS">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9jn-w6-iJj" userLabel="MapView" customClass="GMSMapView">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="Status" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsLetterSpacingToFitWidth="YES" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2Pt-D9-Smn" userLabel="Status">
+                                <rect key="frame" x="275" y="94" width="50" height="21"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                                <color key="shadowColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.shadowRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.shadowOpacity">
+                                        <real key="value" value="0.25"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="layer.masksToBounds" value="NO"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="9jn-w6-iJj" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="1uc-pq-Gu2"/>
+                            <constraint firstItem="9jn-w6-iJj" firstAttribute="width" secondItem="kh9-bI-dsS" secondAttribute="width" id="WdY-mY-Usb"/>
+                            <constraint firstItem="9jn-w6-iJj" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="-64" id="iPv-kM-W48"/>
+                            <constraint firstItem="2Pt-D9-Smn" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="qIh-Yg-6zb"/>
+                            <constraint firstItem="2Pt-D9-Smn" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="30" id="tdm-dx-2Zy"/>
+                            <constraint firstAttribute="trailing" secondItem="9jn-w6-iJj" secondAttribute="trailing" constant="-20" id="thh-6s-rfP"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="9jn-w6-iJj" secondAttribute="bottom" id="zZt-A3-220"/>
+                        </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="thh-6s-rfP"/>
+                            </mask>
+                        </variation>
                     </view>
                     <navigationItem key="navigationItem" id="5bT-pm-eFx"/>
                     <connections>
+                        <outlet property="StatusLabel" destination="2Pt-D9-Smn" id="3uV-uI-YKo"/>
+                        <outlet property="mapView" destination="9jn-w6-iJj" id="488-63-ej2"/>
                         <segue destination="PRT-KV-WT9" kind="show" identifier="MapToMyMarkers" id="aHA-iD-u80"/>
                     </connections>
                 </viewController>

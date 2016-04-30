@@ -13,7 +13,11 @@ import GoogleMaps
 
 class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate, ApiRequestDelegate {
     
-    var mapView: GMSMapView?
+    @IBOutlet weak var mapView: GMSMapView!
+    // Label displayed to user to give status updates
+    // as app downloads or performs other tasks
+    @IBOutlet weak var StatusLabel: UILabel!
+
     var locationManager: CLLocationManager!
     
     // Flags used by location update to determine next action
@@ -44,6 +48,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        // Hide status initially
+        StatusLabel.hidden = true
 
         // Initialize and show google map
         showGMap()
@@ -56,10 +63,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // Enable user's location
         showMyLocation(false)
         
+
+        
         // Observe changes to my location
         mapView!.addObserver(self, forKeyPath: "myLocation", options: .New, context: nil)
-
-        // Closure to execute when map comes to rest at it's final 
+        
+        // Closure to execute when map comes to rest at it's final
         // location
         mapAtRestHandler = {
             self.addMarkersInView()
@@ -111,13 +120,13 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             longitude: -97.381173, zoom: 3)
         
         // Initialize map object
-        mapView = GMSMapView.mapWithFrame(CGRectZero, camera: camera)
+        //mapContainer = GMSMapView.mapWithFrame(CGRectZero, camera: camera)
+
+        // Set this map object as the MapView
+        //mapContainer = mapView
         
         // Set map delegate as this view controller class
         mapView!.delegate = self
-        
-        // Set this view controllers view as the map view object
-        self.view = mapView
     }
     
     // Animate to current location on first update
@@ -194,9 +203,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Add markers in current map view
     func addMarkersInView () {
         
-        // Clear curMapMarkers
-        curMapMarkers = []
-        
         // 0. Show status box
         
         // 1. Get map bounds as bottom left and upper-right coords (nearLeft and farRight)
@@ -207,7 +213,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         
         // 2. Get local markers within bounds
-        curMapMarkers = self.getCoreMarkersWithin(bounds)
+        self.showCoreMarkersWithin(bounds)
         
         // 3. Get public markers within bounds
         let req = ApiRequest()
@@ -225,14 +231,13 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
 //        self.addMarker(marker.latitude, markerLng: marker.longitude, timestamp: timestampString, pinImage: pinImage)
     }
     
-    func getCoreMarkersWithin (bounds: GMSCoordinateBounds) -> [DukGMSMarker] {
-        var markers_in_bounds: [DukGMSMarker] = []
+    func showCoreMarkersWithin (bounds: GMSCoordinateBounds) {
         
         // Show user's saved markers if they exist
         let markers_from_core = Util.fetchCoreData("Marker")
         
         if markers_from_core.count == 0 {
-            return markers_in_bounds
+            return
         }
         
         // Find and return markers within provided bounds
@@ -247,14 +252,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
                 
                 // Get map marker and store
                 if let map_marker = marker.getMapMarker() {
-                    markers_in_bounds.append(map_marker)
+                    map_marker.map = self.mapView
                 } else {
                     print("marker from core had no timestamp: \(marker)")
                 }
             }
         }
-        
-        return markers_in_bounds
     }
     
     
@@ -287,9 +290,29 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Info Window Pop Up
     func mapView(mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView! {
         print("marker is about to show")
-        let customInfoWindow = UIView(frame: CGRectMake(0, 0, 160, 160))
+        
+        // Allow view to update dynamically (only in v 1.13 which is broken!
+        //marker.tracksInfoWindowChanges = true
+        
+        // Get info window view
+        let customInfoWindow = NSBundle.mainBundle().loadNibNamed("InfoWindow", owner: self, options: nil)[0] as! InfoWindowView
         
         let custom_marker = marker as! DukGMSMarker
+        
+        // Get data for local marker
+        if custom_marker.dataLocation == .Local {
+            
+            let marker_data = Marker.getLocalByTimestamp(custom_marker.timestamp!)
+            
+            // Get image
+            if marker_data != nil {
+                customInfoWindow.image.image = UIImage(data: marker_data!.photo_md!)
+            }
+        
+        // Show data for public marker
+        } else {
+            
+        }
         
 //        // Get latest core data
 //        savedMarkers = Util.fetchCoreData("Marker")
@@ -560,6 +583,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // - show an alert that tells user how to allow location permission
     func showMyLocation (alertFailure: Bool) {
         
+        // Update user
+        StatusLabel.text = "Moving map to your location"
+        StatusLabel.hidden = false
+        
         // Location services must be on to continue
         if CLLocationManager.locationServicesEnabled() == false && alertFailure {
             showLocationAcessDeniedAlert("Location services are disabled. Location services are required to access your location.")
@@ -710,26 +737,20 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
         
         // Remove duplicates
-        let local_public = curMapMarkers.filter({
-            return $0.public_id != nil
-        })
+        let local_public = Marker.getLocalPublicIds()
         
-        for marker in local_public {
-            pubMarkersById.removeValueForKey(marker.public_id!)
+        // Remove markers with a matching public id
+        for public_id in local_public {
+            pubMarkersById.removeValueForKey(public_id)
         }
         
         // Make array from remaining values
         let cleaned_public_markers = Array(pubMarkersById.values) as! [DukGMSMarker]
         
-        // Append public markers to local markers
-        curMapMarkers += cleaned_public_markers
-        
-        for marker in curMapMarkers {
+        // Set marker's map property to show in view
+        for marker in cleaned_public_markers {
             marker.map = self.mapView
         }
-        
-        // Clear array
-        curMapMarkers = []
     }
     
     func reqDidFail(error: String) {
@@ -751,6 +772,11 @@ class DukGMSMarker: GMSMarker {
     // used for looking up info window data
     var timestamp: Double? = nil
     var public_id: String? = nil
+    
+    // Get medium image for this marker
+//    func getMedImage () -> UIImage {
+//        
+//    }
 }
 
 enum DataLocation {
