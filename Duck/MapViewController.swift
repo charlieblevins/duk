@@ -71,6 +71,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // Closure to execute when map comes to rest at it's final
         // location
         mapAtRestHandler = {
+            self.StatusLabel.text = "Loading local markers"
             self.addMarkersInView()
         }
     }
@@ -220,6 +221,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         req.delegate = self
         req.getMarkersWithinBounds(bounds)
         
+        self.StatusLabel.text = "Loading local markers"
+        
         // 4. Combine public and local markers
         
         // 5. Cluster markers if needed
@@ -307,6 +310,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             // Get image
             if marker_data != nil {
                 customInfoWindow.image.image = UIImage(data: marker_data!.photo_md!)
+                customInfoWindow.tags.text = marker_data!.tags
             }
         
         // Show data for public marker
@@ -751,9 +755,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         for marker in cleaned_public_markers {
             marker.map = self.mapView
         }
+        
+        self.StatusLabel.hidden = true
     }
     
     func reqDidFail(error: String) {
+        self.StatusLabel.hidden = true
         print(error)
     }
     
