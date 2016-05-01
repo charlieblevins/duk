@@ -295,7 +295,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         print("marker is about to show")
         
         // Allow view to update dynamically (only in v 1.13 which is broken!
-        //marker.tracksInfoWindowChanges = true
+        marker.tracksInfoWindowChanges = true
         
         // Get info window view
         let customInfoWindow = NSBundle.mainBundle().loadNibNamed("InfoWindow", owner: self, options: nil)[0] as! InfoWindowView

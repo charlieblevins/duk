@@ -1,13 +1,13 @@
 PODS:
   - Alamofire (3.1.5)
   - Gloss (0.6.2)
-  - GoogleMaps (1.12.3)
+  - GoogleMaps (1.13.0)
   - SwiftyJSON (2.3.2)
 
 DEPENDENCIES:
   - Alamofire (~> 3.0)
   - Gloss (~> 0.6)
-  - GoogleMaps (= 1.12.3)
+  - GoogleMaps
   - SwiftyJSON (from `https://github.com/SwiftyJSON/SwiftyJSON.git`)
 
 EXTERNAL SOURCES:
@@ -22,7 +22,7 @@ CHECKOUT OPTIONS:
 SPEC CHECKSUMS:
   Alamofire: 5f730ba29fd113b7ddd71c1e65d0c630acf5d7b0
   Gloss: 22fd970682b5449e08e2f41c5087eefe7d7d084b
-  GoogleMaps: a4ac67918d0b5ba5f6b9893ac80487e357779e6c
+  GoogleMaps: 7a6caeb8336d7cb42982e969fc9b1b20a889fe79
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
 
 COCOAPODS: 0.39.0
