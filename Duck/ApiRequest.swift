@@ -17,9 +17,11 @@ import GoogleMaps
     
     optional func uploadDidProgress(progress: Float)
     
-    func reqDidComplete(data: NSDictionary)
+    func reqDidComplete(data: NSDictionary, method: ApiMethod)
     
-    func reqDidFail(error: String)
+    optional func reqDidComplete(withImage image: UIImage)
+    
+    func reqDidFail(error: String, method: ApiMethod)
 }
 
 
@@ -132,7 +134,7 @@ class ApiRequest {
                     // TODO: Handle failure response codes
                     upload.responseJSON { response in
 
-                        self.handleResponse(response)
+                        self.handleResponse(response, method: .PublishMarker)
 
                     }
                 case .Failure(let encodingError):
@@ -159,12 +161,60 @@ class ApiRequest {
         // Exec request
         Alamofire.request(.GET, "\(baseURL)/markersWithin", parameters: params)
             .responseJSON { response in
-                self.handleResponse(response)
+                self.handleResponse(response, method: .MarkersWithinBounds)
             }
     }
     
+    
+    // Get Marker Image
+    func getMarkerImage (fileName: String) {
+        
+        self.delegate?.reqDidStart?()
+        
+        // Exec request
+        Alamofire.request(.GET, "http://dukapp.io/photos/\(fileName)")
+        
+        .responseData { response in
+            print("handling response")
+            
+            switch response.result {
+                
+            case .Success(let imageData):
+                
+                // Get json as dictionary
+                let image: UIImage = UIImage(data: imageData)!
+                
+                // Get http status code
+                let response_code = response.response!.statusCode
+                
+                // Success: code between 200 and 300
+                if response_code >= 200 && response_code < 300 {
+                    
+                    // Notify delegates of upload complete
+                    self.delegate?.reqDidComplete!(withImage: image)
+                    
+                    // 400 status code. message prop should exist
+                } else if response_code >= 300 && response_code < 500 {
+                    
+                    let message = "Server responded with http error response code \(response_code)"
+                    self.delegate?.reqDidFail(message, method: .Image)
+                    
+                    // Server error
+                } else if response_code >= 500 {
+                    self.delegate?.reqDidFail("A server error occurred.", method: .Image)
+                }
+                
+                
+            case .Failure(let error):
+                
+                let error_descrip = error.localizedDescription
+                self.delegate?.reqDidFail(error_descrip, method: .Image)
+            }
+        }
+    }
+    
     // Handles an alamofire response object and calls associated delegate methods
-    func handleResponse (response: Response<AnyObject, NSError>) {
+    func handleResponse (response: Response<AnyObject, NSError>, method: ApiMethod) {
         print("handling response")
         
         switch response.result {
@@ -181,24 +231,24 @@ class ApiRequest {
             if response_code >= 200 && response_code < 300 {
                 
                 // Notify delegates of upload complete
-                self.delegate?.reqDidComplete(res_json_dictionary)
+                self.delegate?.reqDidComplete(res_json_dictionary, method: method)
             
             // 400 status code. message prop should exist
             } else if response_code >= 300 && response_code < 500 {
                 
                 let message = res_json_dictionary.objectForKey("message") as! String
-                self.delegate?.reqDidFail(message)
+                self.delegate?.reqDidFail(message, method: method)
 
             // Server error
             } else if response_code >= 500 {
-                self.delegate?.reqDidFail("A server error occurred.")
+                self.delegate?.reqDidFail("A server error occurred.", method: method)
             }
 
             
         case .Failure(let error):
             
             let error_descrip = error.localizedDescription
-            self.delegate?.reqDidFail(error_descrip)
+            self.delegate?.reqDidFail(error_descrip, method: method)
         }
     }
     
@@ -213,4 +263,9 @@ class ApiRequest {
         
         return ["Authorization": "Basic \(base64LoginString)"]
     }
+}
+
+// Classify api method types for easier response handling
+@objc enum ApiMethod: Int {
+    case MarkersWithinBounds, Image, PublishMarker
 }

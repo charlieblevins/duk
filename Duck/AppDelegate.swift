@@ -25,7 +25,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         
         
-//
+
 //        // Build thumbnails for existing images (one time only!)
 //        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
 //        let managedContext = appDelegate.managedObjectContext
@@ -38,8 +38,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            let sm = UIImageJPEGRepresentation(Util.resizeImage(full_image!, scaledToFillSize: CGSizeMake(80, 80)), 1)
 //            marker.setValue(sm, forKey: "photo_sm")
 //            
-//            let md = UIImageJPEGRepresentation(Util.resizeImage(full_image!, scaledToFillSize: CGSizeMake(160, 160)), 1)
+//            let md = UIImageJPEGRepresentation(Util.resizeImage(full_image!, scaledToFillSize: CGSizeMake(240, 240)), 1)
 //            marker.setValue(md, forKey: "photo_md")
+//            
+//            marker.setValue(nil, forKey: "public_id")
 //        }
 //        
 //        do {

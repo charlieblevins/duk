@@ -119,7 +119,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     }
     
     
-    func reqDidComplete(data: NSDictionary) {
+    func reqDidComplete(data: NSDictionary, method: ApiMethod) {
         print("upload complete")
         
         // Save new data to core data
@@ -134,7 +134,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     }
     
     // Show alert on failure
-    func reqDidFail(error: String) {
+    func reqDidFail(error: String, method: ApiMethod) {
         
         print("upload failure")
         

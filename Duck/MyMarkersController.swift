@@ -32,7 +32,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         //Util.updateCoreDataForEntity("Marker", fieldName: "public_id", newValue: nil)
         
         // Get marker data
-        savedMarkers = Util.fetchCoreData("Marker")
+        savedMarkers = Util.fetchCoreData("Marker", predicate: nil)
         
 //        // Register cell class
 //        self.tableView.registerClass(MarkerTableViewCell.self, forCellReuseIdentifier: "MarkerTableViewCell")
@@ -228,7 +228,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     
     func publishAction(sender: AnyObject) {
         
-        let credentArr = Util.fetchCoreData("Login")
+        let credentArr = Util.fetchCoreData("Login", predicate: nil)
         
         // Sign in credentials exist
         if  credentArr.count != 0 {

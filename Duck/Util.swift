@@ -13,7 +13,7 @@ import CoreData
 class Util {
     
     // Fetch any entity from core data
-    class func fetchCoreData (entityName: String) -> [AnyObject]! {
+    class func fetchCoreData (entityName: String, predicate: NSPredicate?) -> [AnyObject]! {
         //1
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
@@ -22,6 +22,11 @@ class Util {
         let fetchRequest = NSFetchRequest(entityName: entityName)
         
         //3
+        if predicate != nil {
+            fetchRequest.predicate = predicate
+        }
+        
+        //4
         do {
             return try managedContext.executeFetchRequest(fetchRequest)
         } catch let error as NSError {

@@ -100,35 +100,30 @@ struct Marker {
             map_marker.public_id = public_id
         }
         
+        // Add tags for info window display
+        map_marker.tags = self.tags
+        
         return map_marker
     }
     
     // Find and return marker with provided timestamp
     static func getLocalByTimestamp (timestamp: Double) -> Marker? {
-        let markers_from_core = Util.fetchCoreData("Marker")
+        
+        let pred = NSPredicate(format: "timestamp == %lf", timestamp)
+        let markers_from_core = Util.fetchCoreData("Marker", predicate: pred)
         
         if markers_from_core.count == 0 {
             return nil
+        } else {
+            return Marker(fromCoreData: markers_from_core[0])
         }
-        
-        for marker_data in markers_from_core {
-            
-            let marker = Marker(fromCoreData: marker_data)
-            
-            if marker.timestamp == timestamp {
-                return marker
-            }
-        }
-        
-        // Nothing found
-        return nil
     }
     
     // Get an array of local markers that have been published (made public)
     static func getLocalPublicIds () -> [String] {
         var public_ids: [String] = []
         
-        let markers_from_core = Util.fetchCoreData("Marker")
+        let markers_from_core = Util.fetchCoreData("Marker", predicate: nil)
         
         if markers_from_core.count == 0 {
             return public_ids

@@ -18,6 +18,7 @@ class InfoWindowView: UIView {
         return UINib(nibName: "InfoWindow", bundle: nil).instantiateWithOwner(nil, options: nil)[0] as! InfoWindowView
     }
     
+    // Bug fix: without this infowindow freezes
     override func didMoveToSuperview() {
         superview?.autoresizesSubviews = false;
     }

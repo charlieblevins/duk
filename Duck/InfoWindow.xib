@@ -8,24 +8,24 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="InfoWindowView" customModule="Duck" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="162" height="241"/>
+            <rect key="frame" x="0.0" y="0.0" width="221" height="321"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#tag1, #tag2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2gM-iB-MWf" userLabel="Tags">
-                    <rect key="frame" x="33" y="175" width="97" height="21"/>
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" text="#tag1, #tag2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2gM-iB-MWf" userLabel="Tags">
+                    <rect key="frame" x="52" y="255" width="97" height="21"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
-                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EXZ-wg-Ysb">
-                    <rect key="frame" x="40" y="211" width="83" height="30"/>
+                <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EXZ-wg-Ysb">
+                    <rect key="frame" x="59" y="291" width="83" height="30"/>
                     <state key="normal" title="More Detail "/>
                 </button>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0Wk-YV-DG5" userLabel="Image">
-                    <rect key="frame" x="1" y="0.0" width="160" height="160"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Wk-YV-DG5" userLabel="Image">
+                    <rect key="frame" x="-20" y="0.0" width="241" height="240"/>
                     <constraints>
-                        <constraint firstAttribute="width" constant="160" id="6Oz-Z0-V9J"/>
-                        <constraint firstAttribute="height" constant="160" id="zu6-nQ-csQ"/>
+                        <constraint firstAttribute="width" constant="240" id="6Oz-Z0-V9J"/>
+                        <constraint firstAttribute="height" constant="240" id="zu6-nQ-csQ"/>
                     </constraints>
                 </imageView>
             </subviews>
@@ -44,7 +44,7 @@
                 <outlet property="moreDetailBtn" destination="EXZ-wg-Ysb" id="Iqg-X8-cwC"/>
                 <outlet property="tags" destination="2gM-iB-MWf" id="45u-nq-e9C"/>
             </connections>
-            <point key="canvasLocation" x="348" y="245.5"/>
+            <point key="canvasLocation" x="377.5" y="285.5"/>
         </view>
     </objects>
 </document>

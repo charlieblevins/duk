@@ -46,6 +46,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     var mapIsAtRest: Bool = false
     var mapTilesFinishedRendering: Bool = false
     
+    // Current infowindow
+    var curInfoWindow: InfoWindowView? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -237,7 +240,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     func showCoreMarkersWithin (bounds: GMSCoordinateBounds) {
         
         // Show user's saved markers if they exist
-        let markers_from_core = Util.fetchCoreData("Marker")
+        let markers_from_core = Util.fetchCoreData("Marker", predicate: nil)
         
         if markers_from_core.count == 0 {
             return
@@ -256,6 +259,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
                 // Get map marker and store
                 if let map_marker = marker.getMapMarker() {
                     map_marker.map = self.mapView
+                    
+                    // Save reference to active markers
+                    curMapMarkers.append(map_marker)
                 } else {
                     print("marker from core had no timestamp: \(marker)")
                 }
@@ -291,7 +297,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     // Info Window Pop Up
-    func mapView(mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView! {
+    func mapView(mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView? {
         print("marker is about to show")
         
         // Allow view to update dynamically (only in v 1.13 which is broken!
@@ -302,7 +308,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         let custom_marker = marker as! DukGMSMarker
         
-        // Get data for local marker
+        // Set tags (stored in map marker obj)
+        customInfoWindow.tags.text = custom_marker.tags!
+        
+        // Get image for local marker
         if custom_marker.dataLocation == .Local {
             
             let marker_data = Marker.getLocalByTimestamp(custom_marker.timestamp!)
@@ -310,34 +319,20 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             // Get image
             if marker_data != nil {
                 customInfoWindow.image.image = UIImage(data: marker_data!.photo_md!)
-                customInfoWindow.tags.text = marker_data!.tags
             }
         
-        // Show data for public marker
+        // Get image for public marker
         } else {
             
+            // Get request for image file
+            let req = ApiRequest()
+            req.delegate = self
+            req.getMarkerImage("\(custom_marker.public_id!)_md.jpg")
+            
+            // Store reference for use when image download completes
+            curInfoWindow = customInfoWindow
         }
-        
-//        // Get latest core data
-//        savedMarkers = Util.fetchCoreData("Marker")
-//        
-//        // Find marker that matches timestamp
-//        let timestamp = Double(marker.title)
-//        
-//        let matchingMarker = savedMarkers.filter{
-//            let t = $0.valueForKey("timestamp") as! Double
-//            return t == timestamp
-//        }.first
-//        
-//        // Add image to custom info window
-//        let imageView = UIImageView(frame: CGRectMake(0, 0, 160, 160))
-//        let data: NSData = matchingMarker!.valueForKey("photo_md") as! NSData
-//        imageView.image = UIImage(data: data)
-//        
-//        customInfoWindow.addSubview(imageView)
-//        
-//        customInfoWindow.backgroundColor = UIColor.whiteColor()
-        
+
         return customInfoWindow
     }
     
@@ -706,10 +701,13 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         for timestamp in deletedMarkers {
             
             // Get marker by timestamp
-            let marker = curMapMarkers.filter{ $0.title == String(format: "%.7f", timestamp) }.first! as GMSMarker
-            
-            // Remove from map
-            marker.map = nil
+            if let marker_ind = curMapMarkers.indexOf({ $0.timestamp == timestamp }) {
+                
+                // Remove from map
+                curMapMarkers[marker_ind].map = nil
+                
+                curMapMarkers.removeAtIndex(marker_ind)
+            }
         }
         
         // Clear deleted markers
@@ -717,7 +715,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     // ApiRequestDelegate methods
-    func reqDidComplete(data: NSDictionary) {
+    func reqDidComplete(data: NSDictionary, method: ApiMethod) {
         var pubMarkersById: [String: AnyObject] = [:]
         
         if data["data"] == nil {
@@ -753,13 +751,21 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         // Set marker's map property to show in view
         for marker in cleaned_public_markers {
+            
             marker.map = self.mapView
+            
+            // Save reference to active markers
+            curMapMarkers.append(marker)
         }
         
         self.StatusLabel.hidden = true
     }
     
-    func reqDidFail(error: String) {
+    func reqDidComplete(withImage image:UIImage) {
+        curInfoWindow!.image.image = image
+    }
+    
+    func reqDidFail(error: String, method: ApiMethod) {
         self.StatusLabel.hidden = true
         print(error)
     }
@@ -779,6 +785,9 @@ class DukGMSMarker: GMSMarker {
     // used for looking up info window data
     var timestamp: Double? = nil
     var public_id: String? = nil
+    
+    // Store tags for info window
+    var tags: String? = nil
     
     // Get medium image for this marker
 //    func getMedImage () -> UIImage {
