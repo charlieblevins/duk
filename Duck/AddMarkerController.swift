@@ -14,10 +14,9 @@ import UIKit
 
 class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, AutocompleteDelegate, CLLocationManagerDelegate, ZoomableImageDelegate {
     
-
     @IBOutlet weak var accLabel: UILabel!
-    @IBOutlet weak var longitudeLabel: UILabel!
-    @IBOutlet weak var latitudeLabel: UILabel!
+    @IBOutlet weak var lngLabel: UILabel!
+    @IBOutlet weak var latLabel: UILabel!
     @IBOutlet weak var containerView: UIView!
     @IBOutlet weak var containerViewHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var photoSectionTopConstraint: NSLayoutConstraint!
@@ -90,10 +89,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     }
     
     override func viewDidAppear(animated: Bool) {
-        // Add styles
-        self.stylePhotoSection()
-        self.addBottomBorder(PhotoSection)
-        //self.addBottomBorder(TextSection)
         
 
     }
@@ -103,18 +98,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         // Dispose of any resources that can be recreated.
     }
 
-    func stylePhotoSection () {
-        //PhotoSection.layer.borderColor = UIColor.darkGrayColor().CGColor
-        //PhotoSection.layer.borderWidth = 2
-    }
-    
-    // Adds a bottom border element at position of element
-    func addBottomBorder (section: UIView) {
-        let bottomBorder = CALayer()
-        bottomBorder.frame = CGRect(x: 0.0, y: section.frame.height - 1, width: section.frame.size.width, height: 1.0)
-        bottomBorder.backgroundColor = UIColor.blackColor().CGColor
-        section.layer.addSublayer(bottomBorder)
-    }
     
     // Load camera to take photo
     @IBAction func addPhoto(sender: UIButton) {
@@ -173,8 +156,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         print("locations = \(coords.latitude) \(coords.longitude)")
         
         // Update UI
-        latitudeLabel.text = "\(coords.latitude)"
-        longitudeLabel.text = "\(coords.longitude)"
+        latLabel.text = "\(coords.latitude)"
+        lngLabel.text = "\(coords.longitude)"
         
         // Get location accuracy in meters and convert to feet
         let meterAccuracy = manager.location!.horizontalAccuracy

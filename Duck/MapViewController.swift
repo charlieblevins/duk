@@ -224,7 +224,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         req.delegate = self
         req.getMarkersWithinBounds(bounds)
         
-        self.StatusLabel.text = "Loading local markers"
+        self.StatusLabel.text = "Loading public markers"
         
         // 4. Combine public and local markers
         
@@ -313,6 +313,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         // Get image for local marker
         if custom_marker.dataLocation == .Local {
+            
+            // Hide loading
+            customInfoWindow.loading.hidden = true
             
             let marker_data = Marker.getLocalByTimestamp(custom_marker.timestamp!)
             
@@ -761,12 +764,26 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         self.StatusLabel.hidden = true
     }
     
-    func reqDidComplete(withImage image:UIImage) {
+    func imageDownloadDidProgress (progress: Float) {
+        let percentage = Int(progress * 100)
+        curInfoWindow!.loading.text = "Loading: \(percentage)%"
+    }
+    
+    func reqDidComplete(withImage image: UIImage) {
+        
+        // Hide loading
+        curInfoWindow!.loading.hidden = true
+        
         curInfoWindow!.image.image = image
     }
     
     func reqDidFail(error: String, method: ApiMethod) {
         self.StatusLabel.hidden = true
+        
+        if method == .Image {
+            curInfoWindow!.loading.text = "Image failed to load"
+        }
+        
         print(error)
     }
     

@@ -10,6 +10,7 @@ import UIKit
 
 class InfoWindowView: UIView {
     
+    @IBOutlet weak var loading: UILabel!
     @IBOutlet weak var image: UIImageView!
     @IBOutlet weak var moreDetailBtn: UIButton!
     @IBOutlet weak var tags: UILabel!

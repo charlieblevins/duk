@@ -17,6 +17,8 @@ import GoogleMaps
     
     optional func uploadDidProgress(progress: Float)
     
+    optional func imageDownloadDidProgress(progress: Float)
+    
     func reqDidComplete(data: NSDictionary, method: ApiMethod)
     
     optional func reqDidComplete(withImage image: UIImage)
@@ -171,46 +173,86 @@ class ApiRequest {
         
         self.delegate?.reqDidStart?()
         
-        // Exec request
-        Alamofire.request(.GET, "http://dukapp.io/photos/\(fileName)")
+        // Set download destination path
+        let destination = Alamofire.Request.suggestedDownloadDestination(directory: .DocumentDirectory, domain: .UserDomainMask)
         
-        .responseData { response in
-            print("handling response")
-            
-            switch response.result {
-                
-            case .Success(let imageData):
-                
-                // Get json as dictionary
-                let image: UIImage = UIImage(data: imageData)!
-                
-                // Get http status code
-                let response_code = response.response!.statusCode
-                
-                // Success: code between 200 and 300
-                if response_code >= 200 && response_code < 300 {
-                    
-                    // Notify delegates of upload complete
-                    self.delegate?.reqDidComplete!(withImage: image)
-                    
-                    // 400 status code. message prop should exist
-                } else if response_code >= 300 && response_code < 500 {
-                    
-                    let message = "Server responded with http error response code \(response_code)"
-                    self.delegate?.reqDidFail(message, method: .Image)
-                    
-                    // Server error
-                } else if response_code >= 500 {
-                    self.delegate?.reqDidFail("A server error occurred.", method: .Image)
-                }
-                
-                
-            case .Failure(let error):
-                
-                let error_descrip = error.localizedDescription
-                self.delegate?.reqDidFail(error_descrip, method: .Image)
-            }
+        // Create file path
+        let fm = NSFileManager.defaultManager()
+        let path: [NSURL] = fm.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
+        let imgPath: NSURL = path[0].URLByAppendingPathComponent(fileName)
+        
+        // Ensure this image file does not already exist (should never happen)
+        if fm.fileExistsAtPath(imgPath.path!) {
+            print("SHOULD NEVER HAPPEN: Image existed after info window display")
+            try! NSFileManager.defaultManager().removeItemAtURL(imgPath)
         }
+        
+        // Exec request
+        Alamofire.download(.GET, "http://dukapp.io/photos/\(fileName)", destination: destination)
+            
+            .progress { bytesRead, totalBytesRead, totalBytesExpectedToRead in
+                print(totalBytesRead)
+                
+                // This closure is NOT called on the main queue for performance
+                // reasons. To update your ui, dispatch to the main queue.
+                dispatch_async(dispatch_get_main_queue()) {
+                    print("Total bytes read on main queue: \(totalBytesRead)")
+                    
+                    // Get percentage of downloaded bytes
+                    let percentage: Float = Float(totalBytesRead) / Float(totalBytesExpectedToRead)
+                    
+                    // If next percent reached: notify delegates
+                    if percentage > self.progress {
+                        self.progress = percentage
+                        self.delegate?.imageDownloadDidProgress?(percentage)
+                    }
+                }
+            }
+        
+            .response { _, response, _, error in
+                print("handling response")
+                
+                if let error = error {
+                    
+                    print("Failed with error: \(error)")
+                    let error_descrip = error.localizedDescription
+                    self.delegate?.reqDidFail(error_descrip, method: .Image)
+                    
+                } else {
+                    print("Downloaded file successfully")
+                    
+                    // Get http status code
+                    let response_code = response!.statusCode
+                    
+                    // Success: code between 200 and 300
+                    if response_code >= 200 && response_code < 300 {
+                        
+                        // Convert data to UIImage
+                        let imgData: NSData = NSData(contentsOfFile: imgPath.path!)!
+                        
+                        let image: UIImage = UIImage(data: imgData)!
+                        
+                        // Notify delegates of upload complete
+                        self.delegate?.reqDidComplete!(withImage: image)
+                        
+                        // Delete downloaded image
+                        if fm.fileExistsAtPath(imgPath.path!) {
+                            try! NSFileManager.defaultManager().removeItemAtURL(imgPath)
+                        }
+                        
+                        // 400 status code. message prop should exist
+                    } else if response_code >= 300 && response_code < 500 {
+                        
+                        let message = "Server responded with http error response code \(response_code)"
+                        self.delegate?.reqDidFail(message, method: .Image)
+                        
+                        // Server error
+                    } else if response_code >= 500 {
+                        self.delegate?.reqDidFail("A server error occurred.", method: .Image)
+                    }
+                }
+
+            }
     }
     
     // Handles an alamofire response object and calls associated delegate methods

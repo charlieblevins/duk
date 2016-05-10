@@ -22,7 +22,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // G Maps Api Key
         GMSServices.provideAPIKey("AIzaSyCx00Cy9jGzz0hIcv485TWytTq82sAQYaI")
         
+        // Clear downloaded files
+        let fm = NSFileManager.defaultManager()
+        let path: [NSURL] = fm.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
         
+        do {
+            let contents: [String] = try fm.contentsOfDirectoryAtPath(path[0].absoluteString)
+            print(contents)
+        } catch {
+            print("error getting contents")
+        }
         
         
 
