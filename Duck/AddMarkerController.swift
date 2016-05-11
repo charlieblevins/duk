@@ -14,6 +14,9 @@ import UIKit
 
 class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, AutocompleteDelegate, CLLocationManagerDelegate, ZoomableImageDelegate {
     
+    @IBOutlet weak var LatContainer: UIView!
+    @IBOutlet weak var LngContainer: UIView!
+    @IBOutlet weak var AccContainer: UIView!
     @IBOutlet weak var accLabel: UILabel!
     @IBOutlet weak var lngLabel: UILabel!
     @IBOutlet weak var latLabel: UILabel!
@@ -55,6 +58,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
 
         print("AddPhotoMarkerController view loaded")
         
+        // Last minute styles
+        addStyles()
+        
         // Receive gps coords
         listenForCoords()
 
@@ -84,8 +90,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
 
         // Adjust height of container and scroll views according to subview height
         let heightOfSubviews = PhotoSection.frame.size.height + TextSection.frame.size.height + DoneView.frame.size.height
-        containerViewHeightConstraint.constant = heightOfSubviews
-        scrollView.contentSize = CGSize(width: containerView.frame.size.width, height: containerView.frame.size.height)
+        //containerViewHeightConstraint.constant = heightOfSubviews
+        //scrollView.contentSize = CGSize(width: containerView.frame.size.width, height: containerView.frame.size.height)
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -126,6 +132,14 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         }
         
         dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    // Add styles that can't easily be added in IB
+    func addStyles () {
+        let lightGray = UIColor(red: 207, green: 207, blue: 207).CGColor
+        LatContainer.layer.borderColor = lightGray
+        LngContainer.layer.borderColor = lightGray
+        AccContainer.layer.borderColor = lightGray
     }
     
     // Start receiving GPS coordinates. First coordinates received can be innacurate
@@ -180,6 +194,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     }
     
     func keyboardWasShown(aNotification: NSNotification) {
+        return Void()
         var info = aNotification.userInfo
         let kbSize: CGSize = info![UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
         let contentInsets: UIEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0)
@@ -203,6 +218,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     func dismissKeyboard() {
         //Causes the view (or one of its embedded text fields) to resign the first responder status.
         view.endEditing(true)
+        
+        let scrollPoint: CGPoint = CGPointMake(0.0, 0.0)
+        self.scrollView.setContentOffset(scrollPoint, animated: true)
     }
     
     func tagFieldDidChange (sender: UITextField) {
@@ -218,7 +236,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         }
         
         autocompleteView = autocomplete.suggest(sender.text!)
-        
+
         if (autocompleteView != nil) {
             
             // Make room in text container
