@@ -12,7 +12,7 @@ import CoreData
 import CoreLocation
 import UIKit
 
-class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, AutocompleteDelegate, CLLocationManagerDelegate, ZoomableImageDelegate {
+class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, ZoomableImageDelegate {
     
     @IBOutlet weak var LatContainer: UIView!
     @IBOutlet weak var LngContainer: UIView!
@@ -26,14 +26,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var PhotoSection: UIView!
     @IBOutlet weak var DoneBtn: UIButton!
-    @IBOutlet weak var TagField: UITextField!
-    @IBOutlet weak var TextSection: UIView!
-    @IBOutlet weak var textSectionHeightConstraint: NSLayoutConstraint!
     @IBOutlet weak var addPhotoBtn: UIButton!
     @IBOutlet weak var cameraPhoto: ZoomableImageView!
-    @IBOutlet weak var TagFieldYConstraint: NSLayoutConstraint!
-    @IBOutlet weak var tagAddWrapView: UIView!
-    @IBOutlet weak var tagAddBtn: UIButton!
+    @IBOutlet weak var EditNoun: UIButton!
+    @IBOutlet weak var MarkerIcon: UIImageView!
 
     @IBOutlet weak var DoneView: UIView!
     
@@ -44,12 +40,13 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     var autocomplete: Autocomplete!
 
     var tagBubbles: UIView! = nil
-    var initialTextSectionHeight: CGFloat!
     var locationManager: CLLocationManager!
     var coords: CLLocationCoordinate2D!
     var photoCoords: CLLocationCoordinate2D!
 
     
+
+
     override func viewDidLoad() {
 
         super.viewDidLoad()
@@ -63,38 +60,14 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         // Receive gps coords
         listenForCoords()
-
-        // Store height pre-autocomplete
-        initialTextSectionHeight = textSectionHeightConstraint.constant
-
-        // Add event handler for keyboard display
-        registerForKeyboardNotifications()
-    
-        // Respond to text change events
-        TagField.addTarget(self, action: #selector(AddMarkerController.tagFieldDidChange(_:)), forControlEvents: UIControlEvents.EditingChanged)
-        
-        // Center text field content
-        TagField.textAlignment = .Center
-        
-        // Handle tap on Add btn
-        tagAddBtn.addTarget(self, action: #selector(AddMarkerController.suggestionChosen(_:)), forControlEvents: .TouchUpInside)
-        
-        // Tap to dismiss keyboard
-        //Looks for single or multiple taps.
-        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(AddMarkerController.dismissKeyboard))
-        view.addGestureRecognizer(tap)
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-
-        // Adjust height of container and scroll views according to subview height
-        let heightOfSubviews = PhotoSection.frame.size.height + TextSection.frame.size.height + DoneView.frame.size.height
-        //containerViewHeightConstraint.constant = heightOfSubviews
-        //scrollView.contentSize = CGSize(width: containerView.frame.size.width, height: containerView.frame.size.height)
     }
     
     override func viewDidAppear(animated: Bool) {
+        
         
 
     }
@@ -132,6 +105,14 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         }
         
         dismissViewControllerAnimated(true, completion: nil)
+    }
+    
+    // Edit Noun action - Loads noun editor view (NounViewController)
+    @IBAction func EditNoun(sender: AnyObject) {
+        print("Loading NounViewController")
+        
+        let NounViewController = self.storyboard!.instantiateViewControllerWithIdentifier("NounViewController")
+        self.navigationController?.pushViewController(NounViewController, animated: true)
     }
     
     // Add styles that can't easily be added in IB
@@ -179,128 +160,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         let ftAccRounded = Double(round(10 * ftAccuracy)/10)
         accLabel.text = "\(ftAccRounded) ft."
     }
-    
-    // Handle Keyboard show/hide
-    func registerForKeyboardNotifications() {
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AddMarkerController.keyboardWillShow(_:)), name: UIKeyboardWillShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AddMarkerController.keyboardWasShown(_:)), name: UIKeyboardDidShowNotification, object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(AddMarkerController.keyboardWillBeHidden(_:)), name: UIKeyboardWillHideNotification, object: nil)
-    }
-    
-    func keyboardWillShow(aNotification: NSNotification) {
-        let scrollPoint: CGPoint = CGPointMake(0.0, self.TextSection.frame.origin.y)
-                    print(scrollPoint)
-        self.scrollView.setContentOffset(scrollPoint, animated: false)
-    }
-    
-    func keyboardWasShown(aNotification: NSNotification) {
-        return Void()
-        var info = aNotification.userInfo
-        let kbSize: CGSize = info![UIKeyboardFrameBeginUserInfoKey]!.CGRectValue.size
-        let contentInsets: UIEdgeInsets = UIEdgeInsetsMake(0.0, 0.0, kbSize.height, 0.0)
-
-        var aRect: CGRect = self.view.frame
-        aRect.size.height -= kbSize.height
-        if !CGRectContainsPoint(aRect, TagField.frame.origin) {
-            
-            // NEED to wait until contentoffset animation is complete before doing these
-            self.scrollView.contentInset = contentInsets
-            scrollView.scrollIndicatorInsets = contentInsets
-        }
-    }
-    
-    func keyboardWillBeHidden(aNotification: NSNotification) {
-        let contentInsets: UIEdgeInsets = UIEdgeInsetsZero
-        scrollView.contentInset = contentInsets
-        scrollView.scrollIndicatorInsets = contentInsets
-    }
-    
-    func dismissKeyboard() {
-        //Causes the view (or one of its embedded text fields) to resign the first responder status.
-        view.endEditing(true)
-        
-        let scrollPoint: CGPoint = CGPointMake(0.0, 0.0)
-        self.scrollView.setContentOffset(scrollPoint, animated: true)
-    }
-    
-    func tagFieldDidChange (sender: UITextField) {
-        
-        // Get autocomplete suggestions
-        if (autocomplete == nil) {
-            autocomplete = Autocomplete()
-            autocomplete.delegate = self
-            
-            // Set autocomplete item sizes to match text field
-            autocomplete.itemWidth = sender.frame.size.width
-            autocomplete.itemHeight = sender.frame.size.height
-        }
-        
-        autocompleteView = autocomplete.suggest(sender.text!)
-
-        if (autocompleteView != nil) {
-            
-            // Make room in text container
-            textSectionHeightConstraint.constant = initialTextSectionHeight + autocompleteView.frame.height
-            
-            TextSection.addSubview(autocompleteView)
-
-            autocompleteView!.frame.origin.x = sender.superview!.frame.origin.x
-            autocompleteView!.frame.origin.y = sender.superview!.frame.origin.y + sender.frame.size.height
-        }
-    }
-    
-    func willChooseTag(autocomplete: Autocomplete, tag: UIButton) {
-        suggestionChosen(tag)
-    }
-    
-    // Autocomplete suggestion tapped
-    func suggestionChosen(sender:UIButton!) {
-        
-        print("suggestion chosen")
-        // Hide autocomplete
-        if autocompleteView != nil {
-            autocompleteView!.removeFromSuperview()
-            autocompleteView = nil
-        }
-        
-        // Create tag bubble view
-        let tagHeight = 30
-        if tagBubbles === nil {
-            let tbFrame = CGRect(x: tagAddWrapView.frame.origin.x, y: tagAddWrapView.frame.origin.y + 50, width: tagAddWrapView.frame.size.width, height: CGFloat(tagHeight))
-            tagBubbles = UIView(frame: tbFrame)
-            
-            // Display new tag bubble
-            TextSection.addSubview(tagBubbles)
-        }
-        
-        // If Add was tapped, use text field value, otherwise use the autocomplete button's title
-        let tagBubble = UIButton(frame: CGRect(x: 0, y: tagBubbles.subviews.count * tagHeight, width: Int(tagAddWrapView.frame.size.width), height: tagHeight))
-        
-        // Custom tag
-        if sender.currentTitle! == "Add +" {
-            
-            tagBubble.setTitle("#" + TagField.text!, forState: .Normal)
-            
-        // Autocomplete tag
-        } else {
-            
-            tagBubble.setTitle("#" + sender.currentTitle!, forState: .Normal)
-            tagBubble.setTitleColor(UIColor.blackColor(), forState: .Normal)
-            tagBubble.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
-            tagBubble.imageView?.contentMode = UIViewContentMode.ScaleAspectFit
-            tagBubble.setImage(sender.imageView?.image, forState: .Normal)
-            
-        }
-
-        tagBubbles.addSubview(tagBubble)
-        
-        // Update height of text section
-        textSectionHeightConstraint.constant = 150 + CGFloat(tagBubbles.subviews.count * tagHeight)
-        
-        // Clear text field
-        TagField.text = nil
-    }
-
 
     func validateData () -> Bool {
         var errors: [String] = []
