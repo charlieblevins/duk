@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Kingfisher
 
 class NounTableViewCell: UITableViewCell {
 
@@ -26,4 +27,32 @@ class NounTableViewCell: UITableViewCell {
         // Configure the view for the selected state
     }
 
+    // Load an icon image from the server
+    func loadIconImage (noun: String) {
+        
+        self.NounRowActivity.startAnimating()
+        
+        // Detect this iphone's resolution requirement
+        let scale: Int = Int(UIScreen.mainScreen().scale)
+        
+        let file: String = "\(noun)@\(scale)x.png"
+        
+        NounRowImage.kf_setImageWithURL(NSURL(string: "http://dukapp.io/icon/\(file)")!,
+                                        placeholderImage: nil,
+                                        optionsInfo: nil,
+                                        progressBlock: nil,
+                                        completionHandler: { (image, error, cacheType, imageURL) -> () in
+                                            
+                                            self.NounRowActivity.stopAnimating()
+                                            self.NounRowActivity.hidden = true
+                                            
+                                            if error !== nil {
+                                                print("image GET failed: \(error)")
+                                                return Void()
+                                            }
+                                            
+                                            self.NounRowImage.image = image
+                                        })
+        
+    }
 }

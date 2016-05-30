@@ -44,14 +44,18 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     
     // Handle return tap
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        textField.resignFirstResponder()
+        //textField.resignFirstResponder()
         
         // Get noun
         if textField.text != nil {
-            allNouns.append(NounData(name: textField.text!))
+            let noun_name = applyNounFormat(textField.text!)
+            allNouns.append(NounData(name: noun_name))
             NounList.beginUpdates()
             NounList.insertRowsAtIndexPaths([NSIndexPath(forRow: allNouns.count - 1, inSection: 0)], withRowAnimation: .Automatic)
             NounList.endUpdates()
+            
+            // Clear field
+            textField.text = ""
         }
         
         return true
@@ -67,7 +71,7 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         let cell = tableView.dequeueReusableCellWithIdentifier("NounRow", forIndexPath: indexPath) as! NounTableViewCell
         
         cell.NounRowLabel.text = allNouns[indexPath.row].name
-        cell.NounRowActivity.startAnimating()
+        cell.loadIconImage(allNouns[indexPath.row].name)
         
         return cell
     }
@@ -82,8 +86,10 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         return allNouns.count
     }
     
-    
-
+    // Applies lower-case and dashes to incoming nouns
+    func applyNounFormat (noun: String) -> String {
+        return noun.lowercaseString.stringByReplacingOccurrencesOfString(" ", withString: "-")
+    }
 }
 
 
