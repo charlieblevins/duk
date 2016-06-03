@@ -28,6 +28,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBOutlet weak var DoneBtn: UIButton!
     @IBOutlet weak var addPhotoBtn: UIButton!
     @IBOutlet weak var cameraPhoto: ZoomableImageView!
+    @IBOutlet weak var NounText: UILabel!
     @IBOutlet weak var EditNoun: UIButton!
     @IBOutlet weak var MarkerIcon: UIImageView!
 
@@ -44,32 +45,40 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     var coords: CLLocationCoordinate2D!
     var photoCoords: CLLocationCoordinate2D!
 
-    
+    // Marker data passed in from 
+    // other view
+    var editMarker: Marker? = nil
+
 
 
     override func viewDidLoad() {
 
         super.viewDidLoad()
 
-        self.title = "Add Marker"
-
-        print("AddPhotoMarkerController view loaded")
+        
         
         // Last minute styles
         addStyles()
         
         // Receive gps coords
-        listenForCoords()
+        // only if not editing already existing marker
+        if editMarker == nil {
+            
+            self.title = "Add Marker"
+            
+            listenForCoords()
+            
+        // Insert existing marker data into view
+        } else {
+            
+            self.title = "Edit Marker"
+            
+            insertExistingData(editMarker!)
+        }
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        
-        
-
     }
 
     override func didReceiveMemoryWarning() {
@@ -85,6 +94,63 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         imagePicker.sourceType = .Camera
         
         presentViewController(imagePicker, animated: true, completion: nil)
+    }
+    
+    // Update this view with existing data
+    // (for editing existing marker - not for adding new marker)
+    func insertExistingData (marker: Marker) {
+        
+        // Add photo
+        cameraPhoto.contentMode = .ScaleAspectFit
+        cameraPhoto.image = UIImage(data: marker.photo!)
+        imageChosen = true
+        
+        // Set delegate and allow zoom
+        cameraPhoto.delegate = self
+        cameraPhoto.allowZoom = true
+        
+        // Hide "Add Photo" button
+        addPhotoBtn.hidden = true
+        
+        // Add lat/lng data
+        latLabel.text = "\(marker.latitude)"
+        lngLabel.text = "\(marker.longitude)"
+        accLabel.text = "N/A"
+        
+        // Add Nouns
+        //NounText.text = marker.tags
+        
+        
+        // Create bold style attr
+        let dynamic_size = UIFont.preferredFontForTextStyle(UIFontTextStyleBody).pointSize
+        let bold_attrs = [NSFontAttributeName: UIFont.boldSystemFontOfSize(dynamic_size)]
+        var attributedString = NSMutableAttributedString(string: "")
+        
+        // More than one noun - bold the first
+        if let space_range = marker.tags.rangeOfString(" ") {
+            
+            let first_noun = marker.tags.substringToIndex((space_range.startIndex))
+            
+            attributedString = NSMutableAttributedString(string: first_noun, attributes: bold_attrs)
+            
+            // Make attr string from remaining string
+            let remaining_nouns = NSMutableAttributedString(string: " \(marker.tags.substringFromIndex((space_range.endIndex)))")
+            
+            // Concat first noun with remaining nouns
+            attributedString.appendAttributedString(remaining_nouns)
+            
+        // No space - assume single tag
+        } else {
+            attributedString = NSMutableAttributedString(string: marker.tags, attributes: bold_attrs)
+        }
+
+        
+        NounText.attributedText = attributedString
+        
+        // replace spaces with ", "
+        // remove "#"
+        
+        
     }
     
     // Display taken photo AND

@@ -263,9 +263,9 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        let loginAndMarker = sender as! NSArray
 
         if segue.identifier == "GoToPublish" {
+            let loginAndMarker = sender as! NSArray
             print(segue.identifier)
             print(segue.destinationViewController)
             let publishView = segue.destinationViewController as! PublishConfirmController
@@ -274,6 +274,10 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             
             // Set this view as delegate to receive future messages
             publishView.delegate = self
+        } else if segue.identifier == "EditMarker" {
+            
+            let editView = segue.destinationViewController as! AddMarkerController
+            editView.editMarker = Marker(fromCoreData: sender!)
         }
     }
     
@@ -299,6 +303,13 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             deleteMarkerTimestamp = savedMarkers[indexPath.row].valueForKey("timestamp") as? Double
             popAlert("Are you sure you want to delete this marker?")
         }
+    }
+    
+    // On Row Select load
+    // marker edit view
+    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        let core_marker_data = savedMarkers[indexPath.row]
+        performSegueWithIdentifier("EditMarker", sender: core_marker_data)
     }
     
     func popAlert(text:String) {
