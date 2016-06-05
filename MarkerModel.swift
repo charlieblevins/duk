@@ -15,7 +15,7 @@ struct Marker {
     let photo: NSData?
     let photo_md: NSData?
     let photo_sm: NSData?
-    let tags: String
+    var tags: String
     
     var public_id: String?
     

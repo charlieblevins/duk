@@ -8,39 +8,86 @@
 
 import UIKit
 
+
+protocol EditNounDelegate {
+    var editMarker: Marker? {get set}
+    var updateNounsOnAppear: Bool {get set}
+}
+
 class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
 
     @IBOutlet weak var NounList: UITableView!
     @IBOutlet weak var NounEntryField: UITextField!
     @IBOutlet weak var CellNounLabel: UILabel!
     
+    // Raw data from AddMarkerController
+    var nounsRaw: String? = nil
+    
+    // Primary data for table
     var allNouns: [NounData] = []
-
+    
+    // Possible delegate (AddMarkerController)
+    var delegate: EditNounDelegate? = nil
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if nounsRaw != nil {
+            allNouns = nounsRaw!.componentsSeparatedByString(" ").map({
+                return NounData(name: $0)
+            })
+        }
 
         // Do any additional setup after loading the view.
         NounEntryField.delegate = self
         NounList.delegate = self
         NounList.dataSource = self
+        
+        // display an Edit button in the navigation bar for this view controller.
+        self.navigationItem.rightBarButtonItem = self.editButtonItem()
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
+        
         // Dispose of any resources that can be recreated.
+        print("mem warning")
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    // Called when "Edit" btn is tapped
+    override func setEditing(editing: Bool, animated: Bool) {
+        
+        // Toggles the edit button state
+        super.setEditing(editing, animated: animated)
+        
+        // Toggles the actual editing actions appearing on a table view
+        NounList.setEditing(editing, animated: true)
+        
+        // Refresh delegate nouns on editing complete
+        if editing == false {
+            updateDelegateNouns()
+        }
     }
-    */
+    
+    // Handle edit actions
+    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+        
+        if editingStyle == .Delete {
+            allNouns.removeAtIndex(indexPath.row)
+            NounList.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        }
+    }
+    
+    // Allow row re-order
+    func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+        return true
+    }
+    
+    func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
+        let itemToMove = allNouns[sourceIndexPath.row]
+        allNouns.removeAtIndex(sourceIndexPath.row)
+        allNouns.insert(itemToMove, atIndex: destinationIndexPath.row)
+    }
     
     // Handle return tap
     func textFieldShouldReturn(textField: UITextField) -> Bool {
@@ -48,17 +95,38 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         
         // Get noun
         if textField.text != nil {
+            
             let noun_name = applyNounFormat(textField.text!)
+            
             allNouns.append(NounData(name: noun_name))
+            
             NounList.beginUpdates()
             NounList.insertRowsAtIndexPaths([NSIndexPath(forRow: allNouns.count - 1, inSection: 0)], withRowAnimation: .Automatic)
             NounList.endUpdates()
+            
+            // Update delegate data
+            updateDelegateNouns()
             
             // Clear field
             textField.text = ""
         }
         
         return true
+    }
+    
+    func updateDelegateNouns () {
+        
+        // Ensure that delegate exists and has a Marker
+        if self.delegate != nil && self.delegate!.editMarker != nil {
+            
+            let nouns_arr = allNouns.map({
+                return $0.name
+            })
+            
+            self.delegate?.editMarker!.tags = nouns_arr.joinWithSeparator(" ")
+            
+            self.delegate?.updateNounsOnAppear = true
+        }
     }
     
     // Height for row
@@ -88,7 +156,12 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     
     // Applies lower-case and dashes to incoming nouns
     func applyNounFormat (noun: String) -> String {
-        return noun.lowercaseString.stringByReplacingOccurrencesOfString(" ", withString: "-")
+        
+        // lowercase and dashes for spaces
+        let lowercase_dashes = noun.lowercaseString.stringByReplacingOccurrencesOfString(" ", withString: "-")
+        
+        // Add # to beginning
+        return "#\(lowercase_dashes)"
     }
 }
 

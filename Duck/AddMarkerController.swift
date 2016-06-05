@@ -12,7 +12,7 @@ import CoreData
 import CoreLocation
 import UIKit
 
-class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, ZoomableImageDelegate {
+class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, ZoomableImageDelegate, EditNounDelegate {
     
     @IBOutlet weak var LatContainer: UIView!
     @IBOutlet weak var LngContainer: UIView!
@@ -44,6 +44,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     var locationManager: CLLocationManager!
     var coords: CLLocationCoordinate2D!
     var photoCoords: CLLocationCoordinate2D!
+    
+    var updateNounsOnAppear: Bool = false
 
     // Marker data passed in from 
     // other view
@@ -77,6 +79,13 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         }
     }
     
+    override func viewWillAppear(animated: Bool) {
+        
+        if self.updateNounsOnAppear && editMarker != nil {
+            updateNouns(editMarker!.tags)
+        }
+    }
+    
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
     }
@@ -94,6 +103,41 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         imagePicker.sourceType = .Camera
         
         presentViewController(imagePicker, animated: true, completion: nil)
+    }
+    
+    // Refresh UI display of Nouns
+    // including icon
+    func updateNouns (nounString: String) {
+        
+        // Reset flag
+        updateNounsOnAppear = false
+        
+        // Add Nouns
+        
+        // Create bold style attr
+        let dynamic_size = UIFont.preferredFontForTextStyle(UIFontTextStyleBody).pointSize
+        let bold_attrs = [NSFontAttributeName: UIFont.boldSystemFontOfSize(dynamic_size)]
+        var attributedString = NSMutableAttributedString(string: "")
+        
+        // More than one noun - bold the first
+        if let space_range = nounString.rangeOfString(" ") {
+            
+            let first_noun = nounString.substringToIndex((space_range.startIndex))
+            
+            attributedString = NSMutableAttributedString(string: first_noun, attributes: bold_attrs)
+            
+            // Make attr string from remaining string
+            let remaining_nouns = NSMutableAttributedString(string: " \(nounString.substringFromIndex((space_range.endIndex)))")
+            
+            // Concat first noun with remaining nouns
+            attributedString.appendAttributedString(remaining_nouns)
+            
+        // No space - assume single tag
+        } else {
+            attributedString = NSMutableAttributedString(string: nounString, attributes: bold_attrs)
+        }
+        
+        NounText.attributedText = attributedString
     }
     
     // Update this view with existing data
@@ -117,40 +161,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         lngLabel.text = "\(marker.longitude)"
         accLabel.text = "N/A"
         
-        // Add Nouns
-        //NounText.text = marker.tags
-        
-        
-        // Create bold style attr
-        let dynamic_size = UIFont.preferredFontForTextStyle(UIFontTextStyleBody).pointSize
-        let bold_attrs = [NSFontAttributeName: UIFont.boldSystemFontOfSize(dynamic_size)]
-        var attributedString = NSMutableAttributedString(string: "")
-        
-        // More than one noun - bold the first
-        if let space_range = marker.tags.rangeOfString(" ") {
-            
-            let first_noun = marker.tags.substringToIndex((space_range.startIndex))
-            
-            attributedString = NSMutableAttributedString(string: first_noun, attributes: bold_attrs)
-            
-            // Make attr string from remaining string
-            let remaining_nouns = NSMutableAttributedString(string: " \(marker.tags.substringFromIndex((space_range.endIndex)))")
-            
-            // Concat first noun with remaining nouns
-            attributedString.appendAttributedString(remaining_nouns)
-            
-        // No space - assume single tag
-        } else {
-            attributedString = NSMutableAttributedString(string: marker.tags, attributes: bold_attrs)
-        }
-
-        
-        NounText.attributedText = attributedString
-        
-        // replace spaces with ", "
-        // remove "#"
-        
-        
+        // Update noun display and icon
+        updateNouns(marker.tags)
     }
     
     // Display taken photo AND
@@ -177,8 +189,14 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBAction func EditNoun(sender: AnyObject) {
         print("Loading NounViewController")
         
-        let NounViewController = self.storyboard!.instantiateViewControllerWithIdentifier("NounViewController")
-        self.navigationController?.pushViewController(NounViewController, animated: true)
+        let nounViewController = self.storyboard!.instantiateViewControllerWithIdentifier("NounViewController") as! NounViewController
+        nounViewController.delegate = self
+        
+        if editMarker != nil {
+            nounViewController.nounsRaw = editMarker!.tags
+        }
+        
+        self.navigationController?.pushViewController(nounViewController, animated: true)
     }
     
     // Add styles that can't easily be added in IB

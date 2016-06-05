@@ -32,10 +32,17 @@ class NounTableViewCell: UITableViewCell {
         
         self.NounRowActivity.startAnimating()
         
+        
+        // Remove first char if it is a "#"
+        var noun_no_hash = noun
+        if noun[noun.startIndex] == "#" {
+            noun_no_hash = noun.substringFromIndex(noun.startIndex.successor())
+        }
+        
         // Detect this iphone's resolution requirement
         let scale: Int = Int(UIScreen.mainScreen().scale)
         
-        let file: String = "\(noun)@\(scale)x.png"
+        let file: String = "\(noun_no_hash)@\(scale)x.png"
         
         NounRowImage.kf_setImageWithURL(NSURL(string: "http://dukapp.io/icon/\(file)")!,
                                         placeholderImage: nil,

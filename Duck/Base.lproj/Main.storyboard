@@ -257,10 +257,10 @@
                         <viewControllerLayoutGuide type="bottom" id="eOw-u5-xdc"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="BCu-JJ-30K">
-                        <rect key="frame" x="0.0" y="64" width="600" height="536"/>
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WT4-hc-neF">
+                            <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="WT4-hc-neF">
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="536"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JkQ-0E-2WQ" userLabel="ContainerView">
@@ -437,7 +437,7 @@
                                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nFA-7t-3et" userLabel="noun-text">
                                                                 <rect key="frame" x="5" y="5" width="460" height="40"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                                <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                                                 <nil key="highlightedColor"/>
                                                             </label>
                                                         </subviews>
@@ -563,6 +563,7 @@
                         <outlet property="lngLabel" destination="c10-XJ-L4u" id="Cnd-ld-Ta6"/>
                         <outlet property="photoSectionTopConstraint" destination="HyY-7Q-Hr9" id="Ve0-mV-HfQ"/>
                         <outlet property="scrollView" destination="WT4-hc-neF" id="gCJ-eT-D5j"/>
+                        <segue destination="79i-NT-QxV" kind="show" identifier="AddMarkerEditNouns" id="pdW-Qk-CqA"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Onf-eN-vGu" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -674,11 +675,12 @@
                     <connections>
                         <outlet property="NounEntryField" destination="x8U-9K-D13" id="y5s-kL-ey6"/>
                         <outlet property="NounList" destination="rL2-Ed-eex" id="Kas-9L-miK"/>
+                        <segue destination="qwp-Vw-ANI" kind="show" identifier="NounsToEditMarker" id="mO3-IZ-UfX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="UK3-1k-88V" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2523" y="1052"/>
+            <point key="canvasLocation" x="2595" y="1052"/>
         </scene>
         <!--Sign In Controller-->
         <scene sceneID="BOG-J4-xDK">
@@ -853,4 +855,7 @@
         <image name="close-x" width="35" height="35"/>
         <image name="photoMarker" width="40" height="53"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="mO3-IZ-UfX"/>
+    </inferredMetricsTieBreakers>
 </document>
