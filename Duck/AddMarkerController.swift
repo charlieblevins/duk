@@ -31,6 +31,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBOutlet weak var NounText: UILabel!
     @IBOutlet weak var EditNoun: UIButton!
     @IBOutlet weak var MarkerIcon: UIImageView!
+    @IBOutlet weak var IconIndicator: UIActivityIndicatorView!
 
     @IBOutlet weak var DoneView: UIView!
     
@@ -109,10 +110,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     // including icon
     func updateNouns (nounString: String) {
         
+        var primaryNoun: String? = nil
+        
         // Reset flag
         updateNounsOnAppear = false
-        
-        // Add Nouns
         
         // Create bold style attr
         let dynamic_size = UIFont.preferredFontForTextStyle(UIFontTextStyleBody).pointSize
@@ -122,9 +123,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         // More than one noun - bold the first
         if let space_range = nounString.rangeOfString(" ") {
             
-            let first_noun = nounString.substringToIndex((space_range.startIndex))
+            primaryNoun = nounString.substringToIndex((space_range.startIndex))
             
-            attributedString = NSMutableAttributedString(string: first_noun, attributes: bold_attrs)
+            attributedString = NSMutableAttributedString(string: primaryNoun!, attributes: bold_attrs)
             
             // Make attr string from remaining string
             let remaining_nouns = NSMutableAttributedString(string: " \(nounString.substringFromIndex((space_range.endIndex)))")
@@ -134,10 +135,18 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             
         // No space - assume single tag
         } else {
+            primaryNoun = nounString
             attributedString = NSMutableAttributedString(string: nounString, attributes: bold_attrs)
         }
         
         NounText.attributedText = attributedString
+        
+        setIconForNoun(primaryNoun!)
+    }
+    
+    // Get icon for primary noun
+    func setIconForNoun (noun: String) {
+        Util.loadIconImage(noun, imageView: self.MarkerIcon, activitIndicator: self.IconIndicator)
     }
     
     // Update this view with existing data

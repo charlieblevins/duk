@@ -177,6 +177,40 @@ class Util {
         return newImage
     }
     
+    // Load an icon image from the server
+    class func loadIconImage (noun: String, imageView: UIImageView, activitIndicator: UIActivityIndicatorView) {
+        
+        activitIndicator.startAnimating()
+        
+        // Remove first char if it is a "#"
+        var noun_no_hash = noun
+        if noun[noun.startIndex] == "#" {
+            noun_no_hash = noun.substringFromIndex(noun.startIndex.successor())
+        }
+        
+        // Detect this iphone's resolution requirement
+        let scale: Int = Int(UIScreen.mainScreen().scale)
+        
+        let file: String = "\(noun_no_hash)@\(scale)x.png"
+        
+        imageView.kf_setImageWithURL(NSURL(string: "http://dukapp.io/icon/\(file)")!,
+                                        placeholderImage: nil,
+                                        optionsInfo: nil,
+                                        progressBlock: nil,
+                                        completionHandler: { (image, error, cacheType, imageURL) -> () in
+                                            
+                                            activitIndicator.stopAnimating()
+                                            activitIndicator.hidden = true
+                                            
+                                            if error !== nil {
+                                                print("image GET failed: \(error)")
+                                                return Void()
+                                            }
+                                            
+                                            imageView.image = image
+        })
+        
+    }
 }
 
 

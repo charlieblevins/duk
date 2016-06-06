@@ -28,38 +28,7 @@ class NounTableViewCell: UITableViewCell {
     }
 
     // Load an icon image from the server
-    func loadIconImage (noun: String) {
-        
-        self.NounRowActivity.startAnimating()
-        
-        
-        // Remove first char if it is a "#"
-        var noun_no_hash = noun
-        if noun[noun.startIndex] == "#" {
-            noun_no_hash = noun.substringFromIndex(noun.startIndex.successor())
-        }
-        
-        // Detect this iphone's resolution requirement
-        let scale: Int = Int(UIScreen.mainScreen().scale)
-        
-        let file: String = "\(noun_no_hash)@\(scale)x.png"
-        
-        NounRowImage.kf_setImageWithURL(NSURL(string: "http://dukapp.io/icon/\(file)")!,
-                                        placeholderImage: nil,
-                                        optionsInfo: nil,
-                                        progressBlock: nil,
-                                        completionHandler: { (image, error, cacheType, imageURL) -> () in
-                                            
-                                            self.NounRowActivity.stopAnimating()
-                                            self.NounRowActivity.hidden = true
-                                            
-                                            if error !== nil {
-                                                print("image GET failed: \(error)")
-                                                return Void()
-                                            }
-                                            
-                                            self.NounRowImage.image = image
-                                        })
-        
+    func loadIconImage (noun: String) { 
+        Util.loadIconImage(noun, imageView: self.NounRowImage, activitIndicator: self.NounRowActivity)
     }
 }
