@@ -131,31 +131,41 @@ class Util {
         }
     }
     
-    // searches tags until it finds one that matches a marker icon.
-    // If none are found, return photo icon
-    class func getIconForTags (tags: String) -> UIImage? {
+    class func loadMarkerIcon (marker: DukGMSMarker, noun_tags: String) {
+        
+        // Set placeholder for interim
+        let placeholder = UIImage(named: "photoMarker")
+        marker.icon = placeholder
         
         // Split string into array
-        let tagArr = tags.characters.split{ $0 == "," }.map {
+        let tagArr = noun_tags.characters.split{ $0 == " " }.map {
             item in
             String(item).stringByReplacingOccurrencesOfString("#", withString: "")
         }
         
-        //check each item for matching icon
-        var img: UIImage? = nil
-        for tag in tagArr {
-            img = UIImage(named: tag + "Marker")
-            if img != nil {
-                break
+        // Load image from server
+        let imgView: UIImageView = UIImageView()
+        
+        let file = filenameFromNoun(tagArr[0])
+        
+        imgView.kf_setImageWithURL(
+            NSURL(string: "http://dukapp.io/icon/\(file)")!,
+            placeholderImage: nil,
+            optionsInfo: nil,
+            progressBlock: nil,
+            completionHandler: { (image, error, cacheType, imageURL) -> () in
+                
+                if error !== nil {
+                    print("image GET failed: \(error)")
+                    return Void()
+                }
+                
+                let imgView = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0))
+                imgView.image = image
+                
+                marker.iconView = imgView
             }
-        }
-        
-        // Default: photoMarker
-        if img == nil {
-            img = UIImage(named: "photoMarker")
-        }
-        
-        return img
+        )
     }
     
     
@@ -182,16 +192,7 @@ class Util {
         
         activitIndicator.startAnimating()
         
-        // Remove first char if it is a "#"
-        var noun_no_hash = noun
-        if noun[noun.startIndex] == "#" {
-            noun_no_hash = noun.substringFromIndex(noun.startIndex.successor())
-        }
-        
-        // Detect this iphone's resolution requirement
-        let scale: Int = Int(UIScreen.mainScreen().scale)
-        
-        let file: String = "\(noun_no_hash)@\(scale)x.png"
+        let file = filenameFromNoun(noun)
         
         imageView.kf_setImageWithURL(NSURL(string: "http://dukapp.io/icon/\(file)")!,
                                         placeholderImage: nil,
@@ -210,6 +211,24 @@ class Util {
                                             imageView.image = image
         })
         
+    }
+    
+    // Create filename string from noun
+    // for use with image creation api
+    class func filenameFromNoun (noun: String) -> String {
+        
+        // Remove first char if it is a "#"
+        var noun_no_hash = noun
+        if noun[noun.startIndex] == "#" {
+            noun_no_hash = noun.substringFromIndex(noun.startIndex.successor())
+        }
+        
+        // Detect this iphone's resolution requirement
+        let scale: Int = Int(UIScreen.mainScreen().scale)
+        
+        let file: String = "\(noun_no_hash)@\(scale)x.png"
+        
+        return file
     }
 }
 

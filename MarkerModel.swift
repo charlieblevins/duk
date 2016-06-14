@@ -72,12 +72,12 @@ struct Marker {
         self.public_id = data.valueForKey("_id") as? String
     }
     
+    // Get an object that can be directly displayed on the google map
     func getMapMarker () -> DukGMSMarker? {
         let map_marker = DukGMSMarker()
         
         // Set icon
-        let pinImage = Util.getIconForTags(self.tags)
-        map_marker.icon = pinImage
+        Util.loadMarkerIcon(map_marker, noun_tags: self.tags)
         
         // Set position
         map_marker.position = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)

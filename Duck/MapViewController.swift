@@ -65,7 +65,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         // Enable user's location
         showMyLocation(false)
-        
 
         
         // Observe changes to my location
@@ -93,15 +92,11 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             let timestamp = markerToAdd[2] as! Double
             let timestampString = String(format: "%.7f", timestamp)
             
-            // Use icon matching first tag
-            let tags = markerToAdd[3] as! String
-            let pinImage = Util.getIconForTags(tags)
-            
             let lat = markerToAdd[0] as! Double
             let lng = markerToAdd[1] as! Double
             
             // Add marker
-            self.addMarker(lat, markerLng: lng, timestamp: timestampString, pinImage: pinImage)
+            self.addMarker(lat, markerLng: lng, timestamp: timestampString, pinImage: nil)
             
             // Center on marker
             if mapView != nil {
@@ -119,9 +114,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     func showGMap () {
-        // Position camera
-        let camera = GMSCameraPosition.cameraWithLatitude(42.879070,
-            longitude: -97.381173, zoom: 3)
         
         // Initialize map object
         //mapContainer = GMSMapView.mapWithFrame(CGRectZero, camera: camera)
@@ -152,7 +144,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     // map reaches idle state
-    func mapView(mapView: GMSMapView!, idleAtCameraPosition position: GMSCameraPosition!) {
+    func mapView(mapView: GMSMapView, idleAtCameraPosition position: GMSCameraPosition) {
         print("map is idle")
         self.mapIsAtRest = true;
         if self.mapTilesFinishedRendering {
@@ -160,11 +152,11 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
     }
     
-    func mapViewDidStartTileRendering(mapView: GMSMapView!) {
+    func mapViewDidStartTileRendering(mapView: GMSMapView) {
         self.mapTilesFinishedRendering = false
     }
     
-    func mapViewDidFinishTileRendering(mapView: GMSMapView!) {
+    func mapViewDidFinishTileRendering(mapView: GMSMapView) {
         self.mapTilesFinishedRendering = true
         if self.mapIsAtRest {
             self.mapAtRest()
@@ -181,33 +173,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
     }
     
-    // Add markers stored in Core Data
-//    func addMarkersFromCore () {
-//        
-//        // Show user's saved markers if they exist
-//        savedMarkers = Util.fetchCoreData("Marker")
-//        
-//        if savedMarkers.count > 0 {
-//            for marker in savedMarkers {
-//                
-//                // Get timestamp
-//                let timestamp = marker.valueForKey("timestamp") as! Double
-//                let timestampString = String(format: "%.7f", timestamp)
-//                
-//                // Use icon matching first tag
-//                let tags = marker.valueForKey("tags") as! String
-//                let pinImage = Util.getIconForTags(tags)
-//                
-//                // Add marker
-//                self.addMarker(marker.latitude, markerLng: marker.longitude, timestamp: timestampString, pinImage: pinImage)
-//            }
-//        }
-//    }
-    
     // Add markers in current map view
     func addMarkersInView () {
-        
-        // 0. Show status box
         
         // 1. Get map bounds as bottom left and upper-right coords (nearLeft and farRight)
         let vis_region = self.mapView!.projection.visibleRegion()
@@ -225,16 +192,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         req.getMarkersWithinBounds(bounds)
         
         self.StatusLabel.text = "Loading public markers"
-        
-        // 4. Combine public and local markers
-        
-        // 5. Cluster markers if needed
-        
-        // 6. Render all markers on map
-
-        
-        // Add marker
-//        self.addMarker(marker.latitude, markerLng: marker.longitude, timestamp: timestampString, pinImage: pinImage)
     }
     
     func showCoreMarkersWithin (bounds: GMSCoordinateBounds) {
@@ -268,7 +225,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             }
         }
     }
-    
     
     // Add marker to map
     func addMarker (markerLat: CLLocationDegrees, markerLng: CLLocationDegrees, timestamp: String?, pinImage: UIImage?) {
