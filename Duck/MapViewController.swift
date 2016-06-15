@@ -41,7 +41,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Store a marker from the addMarker view to be 
     // loaded when completing add marker task and viewing
     // newly created marker
-    var markerToAdd: [AnyObject] = []
+    var markerToAdd: Marker?
     
     var mapIsAtRest: Bool = false
     var mapTilesFinishedRendering: Bool = false
@@ -88,24 +88,19 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
         
         // Add new markers to map
-        if (markerToAdd.count > 0) {
-            let timestamp = markerToAdd[2] as! Double
-            let timestampString = String(format: "%.7f", timestamp)
-            
-            let lat = markerToAdd[0] as! Double
-            let lng = markerToAdd[1] as! Double
+        if (markerToAdd != nil) {
             
             // Add marker
-            self.addMarker(lat, markerLng: lng, timestamp: timestampString, pinImage: nil)
+            self.addMarkerToMap(markerToAdd!)
             
             // Center on marker
             if mapView != nil {
-                mapView!.animateToLocation(CLLocationCoordinate2DMake(lat, lng))
+                mapView!.animateToLocation(CLLocationCoordinate2DMake(markerToAdd!.latitude!, markerToAdd!.longitude!))
                 self.mapIsAtRest = false
             }
             
             // Clear the array
-            markerToAdd = []
+            markerToAdd = nil
         }
     }
     
@@ -209,7 +204,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             let marker = Marker(fromCoreData: marker_data)
             
             // Get marker coords
-            let coords = CLLocationCoordinate2D(latitude: marker.latitude, longitude: marker.longitude)
+            let coords = CLLocationCoordinate2D(latitude: marker.latitude!, longitude: marker.longitude!)
             
             if bounds.containsCoordinate(coords) {
                 
@@ -227,29 +222,15 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     // Add marker to map
-    func addMarker (markerLat: CLLocationDegrees, markerLng: CLLocationDegrees, timestamp: String?, pinImage: UIImage?) {
+    func addMarkerToMap (marker: Marker) {
         
-        let marker = DukGMSMarker()
-        marker.position = CLLocationCoordinate2DMake(markerLat, markerLng)
-        
-        // Store timestamp as title for id
-        if timestamp != nil {
-            marker.title = timestamp
-        } else {
-            marker.title = "Hello world!"
-        }
-        
-        marker.snippet = "Test snippet"
-        
-        if pinImage != nil {
-            marker.icon = pinImage
-        }
+        let mapMarker = marker.getMapMarker()
         
         // Add marker to the map
-        marker.map = mapView
+        mapMarker!.assignMap(mapView)
         
         // Store all map markers
-        curMapMarkers.append(marker)
+        curMapMarkers.append(mapMarker!)
     }
     
     // Info Window Pop Up
@@ -762,10 +743,9 @@ class DukGMSMarker: GMSMarker {
     // Store tags for info window
     var tags: String? = nil
     
-    // Get medium image for this marker
-//    func getMedImage () -> UIImage {
-//        
-//    }
+    func assignMap (map: GMSMapView) {
+        self.map = map
+    }
 }
 
 enum DataLocation {

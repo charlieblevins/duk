@@ -10,14 +10,25 @@ import Foundation
 import GoogleMaps
 
 struct Marker {
-    let latitude, longitude: Double
+    let latitude, longitude: Double?
     let timestamp: Double?
     let photo: NSData?
     let photo_md: NSData?
     let photo_sm: NSData?
-    var tags: String
+    var tags: String?
     
     var public_id: String?
+    
+    init() {
+        self.latitude = nil
+        self.longitude = nil
+        self.timestamp = nil
+        
+        self.photo = nil
+        self.photo_md = nil
+        self.photo_sm = nil
+        self.tags = nil
+    }
     
     init(fromCoreData data: AnyObject) {
         self.latitude = data.valueForKey("latitude") as! Double
@@ -74,13 +85,13 @@ struct Marker {
     
     // Get an object that can be directly displayed on the google map
     func getMapMarker () -> DukGMSMarker? {
-        let map_marker = DukGMSMarker()
+        var map_marker = DukGMSMarker()
         
         // Set icon
-        Util.loadMarkerIcon(map_marker, noun_tags: self.tags)
+        Util.loadMarkerIcon(map_marker, noun_tags: self.tags!)
         
         // Set position
-        map_marker.position = CLLocationCoordinate2D(latitude: latitude, longitude: longitude)
+        map_marker.position = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
         
         // No timestamp or public id
         if timestamp == nil && public_id == nil {

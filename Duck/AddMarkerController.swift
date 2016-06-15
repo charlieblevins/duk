@@ -71,6 +71,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             
             listenForCoords()
             
+            // New empty marker
+            editMarker = Marker()
+            
         // Insert existing marker data into view
         } else {
             
@@ -83,7 +86,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     override func viewWillAppear(animated: Bool) {
         
         if self.updateNounsOnAppear && editMarker != nil {
-            updateNouns(editMarker!.tags)
+            updateNouns(editMarker!.tags!)
         }
     }
     
@@ -166,12 +169,12 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         addPhotoBtn.hidden = true
         
         // Add lat/lng data
-        latLabel.text = "\(marker.latitude)"
-        lngLabel.text = "\(marker.longitude)"
+        latLabel.text = "\(marker.latitude!)"
+        lngLabel.text = "\(marker.longitude!)"
         accLabel.text = "N/A"
         
         // Update noun display and icon
-        updateNouns(marker.tags)
+        updateNouns(marker.tags!)
     }
     
     // Display taken photo AND
@@ -201,7 +204,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         let nounViewController = self.storyboard!.instantiateViewControllerWithIdentifier("NounViewController") as! NounViewController
         nounViewController.delegate = self
         
-        if editMarker != nil {
+        if editMarker!.tags != nil {
             nounViewController.nounsRaw = editMarker!.tags
         }
         
@@ -261,7 +264,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             errors.append("Please add a photo (required).")
         }
         
-        if tagBubbles == nil || tagBubbles.subviews.count < 1 {
+        if editMarker!.tags == nil {
             errors.append("Please add at least one tag (required).")
         }
         
@@ -312,12 +315,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         marker.setValue(longitude, forKey:"longitude")
         
         // Create space separated string of tags
-        var tagString: String = ""
-        for tagButton in tagBubbles.subviews {
-            let casted = tagButton as! UIButton
-            tagString += casted.titleLabel!.text! + " "
-        }
-        tagString = tagString.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceCharacterSet())
+        let tagString: String = NounText.text!
         marker.setValue(tagString, forKey: "tags")
         
         // Save image as binary
@@ -340,10 +338,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         // Add marker to map view
         let mvc = navigationController?.viewControllers.first as! MapViewController
-        mvc.markerToAdd.append(latitude)
-        mvc.markerToAdd.append(longitude)
-        mvc.markerToAdd.append(timestamp)
-        mvc.markerToAdd.append(tagString)
+        mvc.markerToAdd = editMarker
         
         // Location updates no longer needed. Ensures location is only captured at moment of photo capture
         locationManager.stopUpdatingLocation()
