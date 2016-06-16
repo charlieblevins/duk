@@ -32,6 +32,10 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Put focus on text field
+        NounEntryField.becomeFirstResponder()
+        
+        // Convert string of nouns to array
         if nounsRaw != nil {
             allNouns = nounsRaw!.componentsSeparatedByString(" ").map({
                 return NounData(name: $0)

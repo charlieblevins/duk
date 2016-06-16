@@ -6,7 +6,7 @@
 //  Copyright © 2015 Charlie Blevins. All rights reserved.
 //
 // This is the marker builder page.
-// This page is used to build a marker including an icon and photo
+// This page is used to build vararker including an icon and photo
 
 import CoreData
 import CoreLocation
@@ -44,7 +44,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     var tagBubbles: UIView! = nil
     var locationManager: CLLocationManager!
     var coords: CLLocationCoordinate2D!
-    var photoCoords: CLLocationCoordinate2D!
     
     var updateNounsOnAppear: Bool = false
 
@@ -58,19 +57,18 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
 
         super.viewDidLoad()
 
-        
-        
         // Last minute styles
         addStyles()
+        
+        // Start receiving location data
+        listenForCoords()
         
         // Receive gps coords
         // only if not editing already existing marker
         if editMarker == nil {
             
             self.title = "Add Marker"
-            
-            listenForCoords()
-            
+
             // New empty marker
             editMarker = Marker()
             
@@ -144,6 +142,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         NounText.attributedText = attributedString
         
+        // Update marker data
+        editMarker!.tags = NounText.text!
+        
         setIconForNoun(primaryNoun!)
     }
     
@@ -189,9 +190,13 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             // Set delegate and allow zoom
             cameraPhoto.delegate = self
             cameraPhoto.allowZoom = true
+            
+            // Update photo data
+            editMarker!.updateImage(pickedImage)
 
             // Associate latest coords with this photo
-            photoCoords = coords
+            editMarker!.latitude = coords.latitude
+            editMarker!.longitude = coords.longitude
         }
         
         dismissViewControllerAnimated(true, completion: nil)
@@ -260,7 +265,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     func validateData () -> Bool {
         var errors: [String] = []
         
-        if imageChosen == false {
+        if editMarker!.photo == nil {
             errors.append("Please add a photo (required).")
         }
         
@@ -294,54 +299,15 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             return
         }
         
-        // Save in core data
+        // Save marker in core data
+        editMarker!.saveInCore()
         
-        // 1. Get managed object context
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
-        
-        // 2. Create new object as marker entity
-        let entity = NSEntityDescription.entityForName("Marker", inManagedObjectContext:managedContext)
-        let marker = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
-        
-        // 3. Add data to marker object (and validate)
-        let timestamp = NSDate().timeIntervalSince1970
-        marker.setValue(timestamp, forKey: "timestamp")
-        
-        let latitude = Double(photoCoords.latitude)
-        marker.setValue(latitude, forKey:"latitude")
-        
-        let longitude = Double(photoCoords.longitude)
-        marker.setValue(longitude, forKey:"longitude")
-        
-        // Create space separated string of tags
-        let tagString: String = NounText.text!
-        marker.setValue(tagString, forKey: "tags")
-        
-        // Save image as binary
-        let imageData = UIImageJPEGRepresentation(cameraPhoto.image!, 1)
-        marker.setValue(imageData, forKey: "photo")
-        
-        // Make small and medium image versions
-        let sm = UIImageJPEGRepresentation(Util.resizeImage(cameraPhoto.image!, scaledToFillSize: CGSizeMake(80, 80)), 1)
-        marker.setValue(sm, forKey: "photo_sm")
-        
-        let md = UIImageJPEGRepresentation(Util.resizeImage(cameraPhoto.image!, scaledToFillSize: CGSizeMake(240, 240)), 1)
-        marker.setValue(md, forKey: "photo_md")
-        
-        // 4. Save the marker object
-        do {
-            try managedContext.save()
-        } catch let error as NSError {
-            print("Could not save \(error), \(error.userInfo)")
-        }
+        // Stop location data
+        locationManager.stopUpdatingLocation()
         
         // Add marker to map view
         let mvc = navigationController?.viewControllers.first as! MapViewController
         mvc.markerToAdd = editMarker
-        
-        // Location updates no longer needed. Ensures location is only captured at moment of photo capture
-        locationManager.stopUpdatingLocation()
         
         // Move back to map view
         navigationController?.popToRootViewControllerAnimated(true)

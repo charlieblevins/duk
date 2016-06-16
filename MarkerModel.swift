@@ -7,14 +7,15 @@
 //
 
 import Foundation
+import CoreData
 import GoogleMaps
 
 struct Marker {
-    let latitude, longitude: Double?
-    let timestamp: Double?
-    let photo: NSData?
-    let photo_md: NSData?
-    let photo_sm: NSData?
+    var latitude, longitude: Double?
+    var timestamp: Double?
+    var photo: NSData?
+    var photo_md: NSData?
+    var photo_sm: NSData?
     var tags: String?
     
     var public_id: String?
@@ -83,6 +84,46 @@ struct Marker {
         self.public_id = data.valueForKey("_id") as? String
     }
     
+    // Save this marker's data in core data
+    func saveInCore() -> Bool {
+        
+        // 1. Get managed object context
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        
+        // 2. Create new object as marker entity
+        let entity = NSEntityDescription.entityForName("Marker", inManagedObjectContext:managedContext)
+        let marker_data = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+        
+        // 3. Add data to marker object (and validate)
+        let timestamp = NSDate().timeIntervalSince1970
+        marker_data.setValue(timestamp, forKey: "timestamp")
+        
+        marker_data.setValue(latitude, forKey:"latitude")
+
+        marker_data.setValue(longitude, forKey:"longitude")
+        
+        // Create space separated string of tags
+        marker_data.setValue(tags, forKey: "tags")
+        
+        // Save image as binary
+        marker_data.setValue(photo, forKey: "photo")
+        
+        // Make small and medium image versions
+        marker_data.setValue(photo_sm, forKey: "photo_sm")
+        marker_data.setValue(photo_md, forKey: "photo_md")
+        
+        // 4. Save the marker object
+        do {
+            try managedContext.save()
+        } catch let error as NSError {
+            print("Could not save \(error), \(error.userInfo)")
+            return false
+        }
+        
+        return true
+    }
+    
     // Get an object that can be directly displayed on the google map
     func getMapMarker () -> DukGMSMarker? {
         var map_marker = DukGMSMarker()
@@ -115,6 +156,17 @@ struct Marker {
         map_marker.tags = self.tags
         
         return map_marker
+    }
+    
+    // Update image data
+    mutating func updateImage (image: UIImage) {
+        
+        // Save image as binary
+        self.photo = UIImageJPEGRepresentation(image, 1)
+
+        // Make small and medium image versions
+        self.photo_sm = UIImageJPEGRepresentation(Util.resizeImage(image, scaledToFillSize: CGSizeMake(80, 80)), 1)
+        self.photo_md = UIImageJPEGRepresentation(Util.resizeImage(image, scaledToFillSize: CGSizeMake(240, 240)), 1)
     }
     
     // Find and return marker with provided timestamp
@@ -152,4 +204,5 @@ struct Marker {
         // Nothing found
         return public_ids
     }
+    
 }
