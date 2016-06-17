@@ -32,8 +32,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBOutlet weak var EditNoun: UIButton!
     @IBOutlet weak var MarkerIcon: UIImageView!
     @IBOutlet weak var IconIndicator: UIActivityIndicatorView!
-
-    @IBOutlet weak var DoneView: UIView!
     
     var imagePicker: UIImagePickerController!
     var imageChosen: Bool = false
@@ -292,12 +290,15 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         presentViewController(alertController, animated: true, completion: nil)
     }
     
-    @IBAction func doneAddingMarker(sender: UIButton) {
+    // User tapped save button
+    @IBAction func saveButtonTapped(sender: AnyObject) {
         
         // Validate
         if validateData() == false {
             return
         }
+        
+        
         
         // Save marker in core data
         editMarker!.saveInCore()
@@ -312,7 +313,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         // Move back to map view
         navigationController?.popToRootViewControllerAnimated(true)
         
-        print("Done.")
+        print("Saved.")
     }
 
 

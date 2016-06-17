@@ -79,6 +79,9 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         if editingStyle == .Delete {
             allNouns.removeAtIndex(indexPath.row)
             NounList.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+            
+            // Update delegate nouns
+            updateDelegateNouns()
         }
     }
     

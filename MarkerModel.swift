@@ -23,7 +23,9 @@ struct Marker {
     init() {
         self.latitude = nil
         self.longitude = nil
-        self.timestamp = nil
+        
+        let timestamp = NSDate().timeIntervalSince1970
+        self.timestamp = timestamp
         
         self.photo = nil
         self.photo_md = nil
@@ -85,7 +87,7 @@ struct Marker {
     }
     
     // Save this marker's data in core data
-    func saveInCore() -> Bool {
+    mutating func saveInCore() -> Bool {
         
         // 1. Get managed object context
         let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
@@ -96,7 +98,6 @@ struct Marker {
         let marker_data = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
         
         // 3. Add data to marker object (and validate)
-        let timestamp = NSDate().timeIntervalSince1970
         marker_data.setValue(timestamp, forKey: "timestamp")
         
         marker_data.setValue(latitude, forKey:"latitude")

@@ -9,7 +9,7 @@
 import UIKit
 
 class InfoWindowView: UIView {
-    
+
     @IBOutlet weak var loading: UILabel!
     @IBOutlet weak var image: UIImageView!
     @IBOutlet weak var moreDetailBtn: UIButton!
@@ -24,11 +24,8 @@ class InfoWindowView: UIView {
         superview?.autoresizesSubviews = false;
     }
     
-    /*
-     // Only override drawRect: if you perform custom drawing.
-     // An empty implementation adversely affects performance during animation.
-     override func drawRect(rect: CGRect) {
-     // Drawing code
-     }
-     */
+    
+    @IBAction func didTapMoreDetail(sender: AnyObject) {
+        print("more detail tapped")
+    }
 }
