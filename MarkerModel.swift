@@ -34,14 +34,14 @@ struct Marker {
     }
     
     init(fromCoreData data: AnyObject) {
-        self.latitude = data.valueForKey("latitude") as! Double
-        self.longitude = data.valueForKey("longitude") as! Double
+        self.latitude = data.valueForKey("latitude") as? Double
+        self.longitude = data.valueForKey("longitude") as? Double
         self.timestamp = data.valueForKey("timestamp") as? Double
         
         self.photo = data.valueForKey("photo") as? NSData
         self.photo_md = data.valueForKey("photo_md") as? NSData
         self.photo_sm = data.valueForKey("photo_sm") as? NSData
-        self.tags = data.valueForKey("tags") as! String
+        self.tags = data.valueForKey("tags") as? String
 
         
         // Store public id if available

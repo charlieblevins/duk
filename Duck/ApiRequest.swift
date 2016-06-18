@@ -147,6 +147,18 @@ class ApiRequest {
         )
     }
     
+    // Get a single marker's data from API
+    func getMarkerDataById (public_id: String) {
+        
+        let param = ["marker_id": public_id]
+        
+        // Exec request
+        Alamofire.request(.GET, "\(baseURL)/markers", parameters: param)
+            .responseJSON { response in
+                self.handleResponse(response, method: .GetMarkerDataById)
+        }
+    }
+    
     // Get marker data within geographic bounds
     func getMarkersWithinBounds (bounds: GMSCoordinateBounds) {
         
@@ -309,5 +321,5 @@ class ApiRequest {
 
 // Classify api method types for easier response handling
 @objc enum ApiMethod: Int {
-    case MarkersWithinBounds, Image, PublishMarker
+    case MarkersWithinBounds, Image, PublishMarker, GetMarkerDataById
 }

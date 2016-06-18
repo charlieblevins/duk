@@ -38,32 +38,32 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Duck/ApiRequest.swift"
-            timestampString = "484417044.102788"
+            filePath = "Duck/MapViewController.swift"
+            timestampString = "487957177.558739"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "186"
-            endingLineNumber = "186"
-            landmarkName = "getMarkerImage(_:)"
+            startingLineNumber = "718"
+            endingLineNumber = "718"
+            landmarkName = "imageDownloadDidProgress(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duck/MapViewController.swift"
-            timestampString = "487860596.315954"
+            timestampString = "487957177.558739"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "705"
-            endingLineNumber = "705"
-            landmarkName = "reqDidComplete(_:method:)"
+            startingLineNumber = "785"
+            endingLineNumber = "785"
+            landmarkName = "handleGetMarkerDataByIdResponse(_:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

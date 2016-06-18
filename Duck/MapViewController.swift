@@ -276,6 +276,41 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         return customInfoWindow
     }
     
+    // Tapped info window
+    func mapView(mapView: GMSMapView, didTapInfoWindowOfMarker marker: GMSMarker) {
+        print("info window tapped")
+        performSegueWithIdentifier("MapToMarkerDetail", sender: marker)
+    }
+    
+    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        
+        // Pass marker data to edit view
+        if segue.identifier == "MapToMarkerDetail" {
+            
+            // Get next view controller
+            let detailView = segue.destinationViewController as! AddMarkerController
+            
+            let marker = sender as! DukGMSMarker
+            
+            // If marker is local, create marker from core data
+            if marker.dataLocation == .Local {
+                let data = Util.fetchCoreData("Marker", predicate: NSPredicate(format: "timestamp = %lf", marker.timestamp!))
+                if data.count > 0 {
+                    detailView.editMarker = Marker(fromCoreData: data[0])
+                } else {
+                    print("No markers found matching timestmap")
+                }
+                
+            // marker is public - get data from server
+            } else {
+                let request = ApiRequest()
+                request.delegate = self
+                request.getMarkerDataById(marker.public_id!)
+            }
+            
+        }
+    }
+    
     // Show Add Marker button
     func showAddMarkerButton() {
         let button = DukBtn()
@@ -655,12 +690,56 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     // ApiRequestDelegate methods
+    
+    // Route data received from api to corresponding handler function
     func reqDidComplete(data: NSDictionary, method: ApiMethod) {
-        var pubMarkersById: [String: AnyObject] = [:]
         
         if data["data"] == nil {
+            print("Api server returned no data")
             return Void()
         }
+        
+        switch method {
+        
+        case .MarkersWithinBounds:
+            handleMarkersWithinBoundsResponse(data)
+            break
+        
+        case .GetMarkerDataById:
+            handleGetMarkerDataByIdResponse(data)
+            break
+            
+        default:
+            print("Unknown api method")
+        }
+    }
+    
+    func imageDownloadDidProgress (progress: Float) {
+        let percentage = Int(progress * 100)
+        curInfoWindow!.loading.text = "Loading: \(percentage)%"
+    }
+    
+    func reqDidComplete(withImage image: UIImage) {
+        
+        // Hide loading
+        curInfoWindow!.loading.hidden = true
+        
+        curInfoWindow!.image.image = image
+    }
+    
+    func reqDidFail(error: String, method: ApiMethod) {
+        self.StatusLabel.hidden = true
+        
+        if method == .Image {
+            curInfoWindow!.loading.text = "Image failed to load"
+        }
+        
+        print(error)
+    }
+    
+    // Handle data returned from a markersWithinBounds api request
+    func handleMarkersWithinBoundsResponse (data: NSDictionary) {
+        var pubMarkersById: [String: AnyObject] = [:]
         
         // Loop over received marker data
         let marker_array = data["data"] as! [AnyObject]
@@ -701,29 +780,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         self.StatusLabel.hidden = true
     }
     
-    func imageDownloadDidProgress (progress: Float) {
-        let percentage = Int(progress * 100)
-        curInfoWindow!.loading.text = "Loading: \(percentage)%"
+    // Handle data returned from a getMArkerDataById request
+    func handleGetMarkerDataByIdResponse (data: NSDictionary) {
+        print(data["data"])
     }
-    
-    func reqDidComplete(withImage image: UIImage) {
-        
-        // Hide loading
-        curInfoWindow!.loading.hidden = true
-        
-        curInfoWindow!.image.image = image
-    }
-    
-    func reqDidFail(error: String, method: ApiMethod) {
-        self.StatusLabel.hidden = true
-        
-        if method == .Image {
-            curInfoWindow!.loading.text = "Image failed to load"
-        }
-        
-        print(error)
-    }
-    
     
 }
 
