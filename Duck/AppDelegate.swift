@@ -22,6 +22,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // G Maps Api Key
         GMSServices.provideAPIKey("AIzaSyCx00Cy9jGzz0hIcv485TWytTq82sAQYaI")
         
+        // Clear login data
+        //Util.deleteCoreDataForEntity("Login")
+        
         // Clear downloaded files
         let fm = NSFileManager.defaultManager()
         let path: [NSURL] = fm.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)

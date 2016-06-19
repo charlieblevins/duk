@@ -19,6 +19,9 @@ struct Marker {
     var tags: String?
     
     var public_id: String?
+    var user: String?
+    
+    var editable: Bool
     
     init() {
         self.latitude = nil
@@ -31,6 +34,8 @@ struct Marker {
         self.photo_md = nil
         self.photo_sm = nil
         self.tags = nil
+        
+        self.editable = false
     }
     
     init(fromCoreData data: AnyObject) {
@@ -42,7 +47,9 @@ struct Marker {
         self.photo_md = data.valueForKey("photo_md") as? NSData
         self.photo_sm = data.valueForKey("photo_sm") as? NSData
         self.tags = data.valueForKey("tags") as? String
-
+        
+        // If from core data, this marker is editable
+        self.editable = true
         
         // Store public id if available
         if let pid = data.valueForKey("public_id") as? String {
@@ -52,6 +59,8 @@ struct Marker {
     
     // Initialize from public (server) data
     init?(fromPublicData data: NSDictionary) {
+        
+        self.editable = false
         
         let geometry = data.valueForKey("geometry")
         if geometry == nil {
@@ -84,6 +93,27 @@ struct Marker {
         self.tags = data.valueForKey("tags") as! String
         
         self.public_id = data.valueForKey("_id") as? String
+        
+        // Get username
+        guard let user_info_array = data.valueForKey("user_info") else {
+            return
+        }
+        
+        if user_info_array.count == 0 {
+            return
+        }
+        
+        let user_info = (user_info_array as! NSArray)[0]
+        
+        let username = user_info.valueForKey("username")
+        
+        if username != nil {
+
+            self.user = username as? String
+            
+            // Determine if this user can edit
+            self.editable = self.canEdit()
+        }
     }
     
     // Save this marker's data in core data
@@ -157,6 +187,26 @@ struct Marker {
         map_marker.tags = self.tags
         
         return map_marker
+    }
+    
+    mutating func canEdit () -> Bool {
+        
+        let cred = Credentials()
+        
+        // Access login data
+        if cred == nil {
+            
+            // No login data
+            return false
+            
+        }
+        
+        // Compare with this markers username
+        if cred!.email == self.user {
+            return true
+        } else {
+            return false
+        }
     }
     
     // Update image data

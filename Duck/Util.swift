@@ -230,6 +230,24 @@ class Util {
         
         return file
     }
+    
+    // Show an alert overlay for long running tasks
+    // Call <return_value>.dismissviewControllerAnimated(... to close
+    class func showLoadingOverlay (viewController: UIViewController, message: String) -> UIAlertController {
+        
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .Alert)
+        
+        alert.view.tintColor = UIColor.blackColor()
+        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        loadingIndicator.startAnimating();
+        
+        alert.view.addSubview(loadingIndicator)
+        viewController.presentViewController(alert, animated: true, completion: nil)
+        
+        return alert
+    }
 }
 
 

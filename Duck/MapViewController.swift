@@ -49,6 +49,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Current infowindow
     var curInfoWindow: InfoWindowView? = nil
     
+    // Loader overlay
+    var loaderOverlay: UIAlertController? = nil
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -279,7 +282,42 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Tapped info window
     func mapView(mapView: GMSMapView, didTapInfoWindowOfMarker marker: GMSMarker) {
         print("info window tapped")
-        performSegueWithIdentifier("MapToMarkerDetail", sender: marker)
+        
+        // 1. Get marker data
+        
+        let marker_d = marker as! DukGMSMarker
+        
+        // If marker is local, create marker from core data
+        if marker_d.dataLocation == .Local {
+            
+            let data = Util.fetchCoreData("Marker", predicate: NSPredicate(format: "timestamp = %lf", marker_d.timestamp!))
+            
+            if data.count > 0 {
+                performSegueWithIdentifier("MapToMarkerDetail", sender: Marker(fromCoreData: data[0]) as? AnyObject)
+            } else {
+                print("No markers found matching timestmap")
+            }
+            
+        // marker is public
+        } else {
+            loaderOverlay = Util.showLoadingOverlay(self, message: "Loading Marker Data...")
+            
+            // Get marker data
+            let request = ApiRequest()
+            request.delegate = self
+            request.getMarkerDataById(marker_d.public_id!)
+            
+            // Get marker photo (and cancel any outstanding image requests)
+            
+        }
+        
+        
+        // 2. Get marker permissions (detect if editable)
+        
+        // 3. Load detail view
+
+
+        
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -289,25 +327,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             
             // Get next view controller
             let detailView = segue.destinationViewController as! AddMarkerController
-            
-            let marker = sender as! DukGMSMarker
-            
-            // If marker is local, create marker from core data
-            if marker.dataLocation == .Local {
-                let data = Util.fetchCoreData("Marker", predicate: NSPredicate(format: "timestamp = %lf", marker.timestamp!))
-                if data.count > 0 {
-                    detailView.editMarker = Marker(fromCoreData: data[0])
-                } else {
-                    print("No markers found matching timestmap")
-                }
-                
-            // marker is public - get data from server
-            } else {
-                let request = ApiRequest()
-                request.delegate = self
-                request.getMarkerDataById(marker.public_id!)
-            }
-            
+            detailView.editMarker = sender as? Marker
         }
     }
     
@@ -782,7 +802,22 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
     // Handle data returned from a getMArkerDataById request
     func handleGetMarkerDataByIdResponse (data: NSDictionary) {
-        print(data["data"])
+        
+        print("received marker data")
+        
+        
+        // Get marker instance from public data
+        let marker = Marker(fromPublicData: data["data"]! as! [String: AnyObject])
+
+        // Load marker detail
+        if loaderOverlay != nil {
+            
+            // Hide loader
+            loaderOverlay?.dismissViewControllerAnimated(false, completion: { self.performSegueWithIdentifier("MapToMarkerDetail", sender: marker as? AnyObject) })
+        
+        } else {
+            self.performSegueWithIdentifier("MapToMarkerDetail", sender: marker as? AnyObject)
+        }
     }
     
 }

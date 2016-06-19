@@ -95,9 +95,9 @@ class ApiRequest {
             multipartFormData: { multipartFormData in
                 
                 // Add marker data to multipart form
-                multipartFormData.appendBodyPart(data: "\(marker.latitude)".dataUsingEncoding(NSUTF8StringEncoding)!, name: "latitude")
-                multipartFormData.appendBodyPart(data: "\(marker.longitude)".dataUsingEncoding(NSUTF8StringEncoding)!, name: "longitude")
-                multipartFormData.appendBodyPart(data: "\(marker.tags)".dataUsingEncoding(NSUTF8StringEncoding)!, name: "tags")
+                multipartFormData.appendBodyPart(data: "\(marker.latitude!)".dataUsingEncoding(NSUTF8StringEncoding)!, name: "latitude")
+                multipartFormData.appendBodyPart(data: "\(marker.longitude!)".dataUsingEncoding(NSUTF8StringEncoding)!, name: "longitude")
+                multipartFormData.appendBodyPart(data: "\(marker.tags!)".dataUsingEncoding(NSUTF8StringEncoding)!, name: "tags")
                 multipartFormData.appendBodyPart(data: marker.photo!, name: "photo", fileName: "photo", mimeType: "image/jpeg")
                 multipartFormData.appendBodyPart(data: marker.photo_md!, name: "photo_md", fileName: "photo_md", mimeType: "image/jpeg")
                 multipartFormData.appendBodyPart(data: marker.photo_sm!, name: "photo_sm", fileName: "photo_sm", mimeType: "image/jpeg")
