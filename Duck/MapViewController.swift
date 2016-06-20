@@ -305,7 +305,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             // Get marker data
             let request = ApiRequest()
             request.delegate = self
-            request.getMarkerDataById(marker_d.public_id!)
+            request.getMarkerDataById(marker_d.public_id!, photo_size: "full")
             
             // Get marker photo (and cancel any outstanding image requests)
             
@@ -739,6 +739,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         curInfoWindow!.loading.text = "Loading: \(percentage)%"
     }
     
+    // Image request handler
     func reqDidComplete(withImage image: UIImage) {
         
         // Hide loading

@@ -148,12 +148,17 @@ class ApiRequest {
     }
     
     // Get a single marker's data from API
-    func getMarkerDataById (public_id: String) {
+    // Optionally request base 64 photo data by size
+    func getMarkerDataById (public_id: String, photo_size: String?) {
         
-        let param = ["marker_id": public_id]
+        var params = ["marker_id": public_id]
+        
+        if photo_size != nil {
+            params["photo"] = photo_size!
+        }
         
         // Exec request
-        Alamofire.request(.GET, "\(baseURL)/markers", parameters: param)
+        Alamofire.request(.GET, "\(baseURL)/markers", parameters: params)
             .responseJSON { response in
                 self.handleResponse(response, method: .GetMarkerDataById)
         }

@@ -47,7 +47,7 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "734"
             endingLineNumber = "734"
-            landmarkName = "imageDownloadDidProgress(_:)"
+            landmarkName = "reqDidComplete(_:method:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>

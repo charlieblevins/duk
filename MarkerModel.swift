@@ -87,6 +87,9 @@ struct Marker {
         // public markers don't have a timestamp
         self.timestamp = nil
         
+        if let photo_data = data.valueForKey("photo") {
+            
+        }
         self.photo = nil
         self.photo_md = nil
         self.photo_sm = nil
@@ -95,25 +98,10 @@ struct Marker {
         self.public_id = data.valueForKey("_id") as? String
         
         // Get username
-        guard let user_info_array = data.valueForKey("user_info") else {
-            return
-        }
+        self.user = data.valueForKey("username") as? String
         
-        if user_info_array.count == 0 {
-            return
-        }
-        
-        let user_info = (user_info_array as! NSArray)[0]
-        
-        let username = user_info.valueForKey("username")
-        
-        if username != nil {
-
-            self.user = username as? String
-            
-            // Determine if this user can edit
-            self.editable = self.canEdit()
-        }
+        // Determine if this user can edit
+        self.editable = self.canEdit()
     }
     
     // Save this marker's data in core data
