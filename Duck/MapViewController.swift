@@ -327,7 +327,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             
             // Get next view controller
             let detailView = segue.destinationViewController as! AddMarkerController
-            detailView.editMarker = sender as? Marker
+            
+            // Create marker instance from data and reference in next view
+            detailView.editMarker = Marker(fromPublicData: sender as! NSDictionary)
         }
     }
     
@@ -806,18 +808,19 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         print("received marker data")
         
-        
-        // Get marker instance from public data
-        let marker = Marker(fromPublicData: data["data"]! as! [String: AnyObject])
+        // Send marker data as dictionary
+        let sender = data["data"]! as! [String: AnyObject]
 
         // Load marker detail
         if loaderOverlay != nil {
             
             // Hide loader
-            loaderOverlay?.dismissViewControllerAnimated(false, completion: { self.performSegueWithIdentifier("MapToMarkerDetail", sender: marker as? AnyObject) })
+            loaderOverlay?.dismissViewControllerAnimated(false, completion: {
+                self.performSegueWithIdentifier("MapToMarkerDetail", sender: sender)
+            })
         
         } else {
-            self.performSegueWithIdentifier("MapToMarkerDetail", sender: marker as? AnyObject)
+            self.performSegueWithIdentifier("MapToMarkerDetail", sender: sender)
         }
     }
     

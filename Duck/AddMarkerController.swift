@@ -17,6 +17,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBOutlet weak var LatContainer: UIView!
     @IBOutlet weak var LngContainer: UIView!
     @IBOutlet weak var AccContainer: UIView!
+    @IBOutlet weak var SaveBtn: UIButton!
     @IBOutlet weak var accLabel: UILabel!
     @IBOutlet weak var lngLabel: UILabel!
     @IBOutlet weak var latLabel: UILabel!
@@ -25,7 +26,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBOutlet weak var photoSectionTopConstraint: NSLayoutConstraint!
     @IBOutlet weak var scrollView: UIScrollView!
     @IBOutlet weak var PhotoSection: UIView!
-    @IBOutlet weak var DoneBtn: UIButton!
     @IBOutlet weak var addPhotoBtn: UIButton!
     @IBOutlet weak var cameraPhoto: ZoomableImageView!
     @IBOutlet weak var NounText: UILabel!
@@ -39,7 +39,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     var autocompleteView: UIView! = nil
     var autocomplete: Autocomplete!
 
-    var tagBubbles: UIView! = nil
     var locationManager: CLLocationManager!
     var coords: CLLocationCoordinate2D!
     
@@ -77,6 +76,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             
             insertExistingData(editMarker!)
         }
+        
+        // Prevent editing
+        if editMarker!.editable == false {
+            preventEditing()
+        }
     }
     
     override func viewWillAppear(animated: Bool) {
@@ -103,6 +107,13 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         imagePicker.sourceType = .Camera
         
         presentViewController(imagePicker, animated: true, completion: nil)
+    }
+    
+    func preventEditing () {
+        addPhotoBtn.hidden = true
+        EditNoun.hidden = true
+        SaveBtn.hidden = true
+        AccContainer.hidden = true
     }
     
     // Refresh UI display of Nouns

@@ -87,12 +87,15 @@ struct Marker {
         // public markers don't have a timestamp
         self.timestamp = nil
         
-        if let photo_data = data.valueForKey("photo") {
-            
-        }
         self.photo = nil
         self.photo_md = nil
         self.photo_sm = nil
+        
+        if let photoJson = data.valueForKey("photo") {
+            let b64_photo = photoJson.valueForKey("data") as? String
+            self.photo = NSData(base64EncodedString: b64_photo!, options: [])
+        }
+
         self.tags = data.valueForKey("tags") as! String
         
         self.public_id = data.valueForKey("_id") as? String

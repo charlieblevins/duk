@@ -570,6 +570,7 @@
                         <outlet property="MarkerIcon" destination="ppf-ah-Lni" id="ZFq-0S-ANY"/>
                         <outlet property="NounText" destination="nFA-7t-3et" id="ehU-pc-8sW"/>
                         <outlet property="PhotoSection" destination="CCt-3F-3ql" id="oxe-mx-QxV"/>
+                        <outlet property="SaveBtn" destination="HUM-2v-u5E" id="1bo-Py-oN8"/>
                         <outlet property="accLabel" destination="GAw-hC-cyd" id="CBR-Fq-G2K"/>
                         <outlet property="addPhotoBtn" destination="uay-sv-EJ1" id="uno-v0-EJr"/>
                         <outlet property="cameraPhoto" destination="IVc-kA-wdL" id="2FV-Lz-i04"/>
