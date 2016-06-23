@@ -77,7 +77,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             insertExistingData(editMarker!)
         }
         
-        // Prevent editing
+        // If marker not editable, hide edit buttons
         if editMarker!.editable == false {
             preventEditing()
         }

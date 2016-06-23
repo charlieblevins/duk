@@ -248,6 +248,11 @@ class Util {
         
         return alert
     }
+    
+    class func coreToDictionary (managedObj: NSManagedObject) -> NSDictionary {
+        let keys = Array(managedObj.entity.attributesByName.keys)
+        return managedObj.dictionaryWithValuesForKeys(keys)
+    }
 }
 
 

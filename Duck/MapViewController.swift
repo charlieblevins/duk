@@ -292,8 +292,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             
             let data = Util.fetchCoreData("Marker", predicate: NSPredicate(format: "timestamp = %lf", marker_d.timestamp!))
             
+            let data_as_dictionary = Util.coreToDictionary(data[0] as! NSManagedObject)
+            
             if data.count > 0 {
-                performSegueWithIdentifier("MapToMarkerDetail", sender: Marker(fromCoreData: data[0]) as? AnyObject)
+                performSegueWithIdentifier("MapToMarkerDetail", sender: data_as_dictionary)
             } else {
                 print("No markers found matching timestmap")
             }
@@ -306,18 +308,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             let request = ApiRequest()
             request.delegate = self
             request.getMarkerDataById(marker_d.public_id!, photo_size: "full")
-            
-            // Get marker photo (and cancel any outstanding image requests)
-            
         }
-        
-        
-        // 2. Get marker permissions (detect if editable)
-        
-        // 3. Load detail view
-
-
-        
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -329,7 +320,15 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             let detailView = segue.destinationViewController as! AddMarkerController
             
             // Create marker instance from data and reference in next view
-            detailView.editMarker = Marker(fromPublicData: sender as! NSDictionary)
+            let data = sender as! NSDictionary
+            
+            // if _id exists this data is from the server
+            if data["_id"] != nil {
+                detailView.editMarker = Marker(fromPublicData: data)
+            } else {
+                detailView.editMarker = Marker(fromCoreData: data)
+            }
+            
         }
     }
     
