@@ -236,9 +236,27 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         curMapMarkers.append(mapMarker!)
     }
     
+    func mapView(mapView: GMSMapView, didTapMarker marker: GMSMarker) -> Bool {
+        print("marker tapped")
+        mapView.selectedMarker = marker
+        
+        var cg_point = mapView.projection.pointForCoordinate(marker.position)
+        cg_point.y = cg_point.y - 100
+        
+        let camPos = GMSCameraPosition(
+            target: mapView.projection.coordinateForPoint(cg_point),
+            zoom: mapView.camera.zoom,
+            bearing: mapView.camera.bearing,
+            viewingAngle: mapView.camera.viewingAngle
+        )
+        
+        mapView.animateToCameraPosition(camPos)
+        return true
+    }
+    
     // Info Window Pop Up
     func mapView(mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView? {
-        print("marker is about to show")
+        print("info window is about to show")
         
         // Allow view to update dynamically (only in v 1.13 which is broken!
         marker.tracksInfoWindowChanges = true
