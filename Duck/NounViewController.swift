@@ -14,7 +14,7 @@ protocol EditNounDelegate {
     var updateNounsOnAppear: Bool {get set}
 }
 
-class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource {
+class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate {
 
     @IBOutlet weak var NounList: UITableView!
     @IBOutlet weak var NounEntryField: UITextField!
@@ -34,6 +34,8 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         
         // Put focus on text field
         NounEntryField.becomeFirstResponder()
+        
+        self.hideKeyboardWhenTappedAround()
         
         // Convert string of nouns to array
         if nounsRaw != nil {
@@ -57,6 +59,24 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         // Dispose of any resources that can be recreated.
         print("mem warning")
     }
+    
+    func hideKeyboardWhenTappedAround() {
+        let tap: UITapGestureRecognizer = UITapGestureRecognizer(target: self, action: #selector(NounViewController.dismissKeyboard))
+        tap.delegate = self
+        view.addGestureRecognizer(tap)
+    }
+    
+    func dismissKeyboard() {
+        view.endEditing(true)
+    }
+    
+    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
+        if NounEntryField.isFirstResponder() {
+            return true
+        }
+        return false
+    }
+
     
     // Called when "Edit" btn is tapped
     override func setEditing(editing: Bool, animated: Bool) {

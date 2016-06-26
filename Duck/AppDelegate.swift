@@ -23,7 +23,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         GMSServices.provideAPIKey("AIzaSyCx00Cy9jGzz0hIcv485TWytTq82sAQYaI")
         
         // Clear login data
-        //Util.deleteCoreDataForEntity("Login")
+        Util.deleteCoreDataForEntity("Login")
         
         // Clear downloaded files
         let fm = NSFileManager.defaultManager()

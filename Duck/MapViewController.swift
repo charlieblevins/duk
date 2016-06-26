@@ -14,10 +14,8 @@ import GoogleMaps
 class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate, ApiRequestDelegate {
     
     @IBOutlet weak var mapView: GMSMapView!
-    // Label displayed to user to give status updates
-    // as app downloads or performs other tasks
-    @IBOutlet weak var StatusLabel: UILabel!
 
+    
     var locationManager: CLLocationManager!
     
     // Flags used by location update to determine next action
@@ -54,16 +52,13 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // Hide status initially
-        StatusLabel.hidden = true
 
         // Initialize and show google map
         showGMap()
         
         // Add buttons
         showAddMarkerButton()
-        showMyMarkersButton()
+        //showMyMarkersButton()
         showMyLocationBtn()
         
         // Enable user's location
@@ -76,7 +71,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // Closure to execute when map comes to rest at it's final
         // location
         mapAtRestHandler = {
-            self.StatusLabel.text = "Loading local markers"
             self.addMarkersInView()
         }
     }
@@ -188,8 +182,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         let req = ApiRequest()
         req.delegate = self
         req.getMarkersWithinBounds(bounds)
-        
-        self.StatusLabel.text = "Loading public markers"
     }
     
     func showCoreMarkersWithin (bounds: GMSCoordinateBounds) {
@@ -320,7 +312,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             
         // marker is public
         } else {
-            loaderOverlay = Util.showLoadingOverlay(self, message: "Loading Marker Data...")
             
             // Get marker data
             let request = ApiRequest()
@@ -498,8 +489,16 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         verticalConstraint.active = true
     }
     
+    @IBAction func MenuButton(sender: AnyObject) {
+        goToView("MenuViewController")
+    }
+    
     func goToMyMarkers (sender: UIButton) {
-        let MyMarkersController = self.storyboard!.instantiateViewControllerWithIdentifier("MyMarkersController")
+        goToView("MyMarkersController")
+    }
+    
+    func goToView(controllerName: String) {
+        let MyMarkersController = self.storyboard!.instantiateViewControllerWithIdentifier(controllerName)
         self.navigationController?.pushViewController(MyMarkersController, animated: true)
     }
     
@@ -595,10 +594,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // - request the user's permission to access location
     // - show an alert that tells user how to allow location permission
     func showMyLocation (alertFailure: Bool) {
-        
-        // Update user
-        StatusLabel.text = "Moving map to your location"
-        StatusLabel.hidden = false
+
         
         // Location services must be on to continue
         if CLLocationManager.locationServicesEnabled() == false && alertFailure {
@@ -768,7 +764,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     func reqDidFail(error: String, method: ApiMethod) {
-        self.StatusLabel.hidden = true
+        
+        loaderOverlay?.dismissViewControllerAnimated(false, completion: nil)
         
         if method == .Image {
             curInfoWindow!.loading.text = "Image failed to load"
@@ -816,8 +813,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             // Save reference to active markers
             curMapMarkers.append(marker)
         }
-        
-        self.StatusLabel.hidden = true
     }
     
     // Handle data returned from a getMArkerDataById request

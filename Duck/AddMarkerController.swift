@@ -68,6 +68,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
 
             // New empty marker
             editMarker = Marker()
+            editMarker!.editable = true
             
         // Insert existing marker data into view
         } else {
