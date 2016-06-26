@@ -301,7 +301,7 @@
                                                     <constraint firstItem="5ng-Mz-PhY" firstAttribute="centerX" secondItem="CCt-3F-3ql" secondAttribute="centerX" id="wqy-73-JXp"/>
                                                 </constraints>
                                             </view>
-                                            <view contentMode="scaleToFill" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JoL-QU-Pnj" userLabel="TextSection">
+                                            <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="JoL-QU-Pnj" userLabel="TextSection">
                                                 <rect key="frame" x="-8" y="300" width="600" height="50"/>
                                                 <subviews>
                                                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" ambiguous="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="JkS-tJ-gw0" userLabel="activIndicator">
@@ -808,22 +808,10 @@
                     <view key="view" contentMode="scaleToFill" id="xcr-et-7j0">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <subviews>
-                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8pj-N0-yty">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
-                            </webView>
-                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                        <constraints>
-                            <constraint firstItem="8pj-N0-yty" firstAttribute="width" secondItem="xcr-et-7j0" secondAttribute="width" id="Bac-IE-DCv"/>
-                            <constraint firstItem="8pj-N0-yty" firstAttribute="top" secondItem="xcr-et-7j0" secondAttribute="topMargin" id="L5r-3g-hpx"/>
-                            <constraint firstItem="8pj-N0-yty" firstAttribute="leading" secondItem="xcr-et-7j0" secondAttribute="leading" id="LD5-Lu-wmQ"/>
-                            <constraint firstItem="8pj-N0-yty" firstAttribute="height" secondItem="xcr-et-7j0" secondAttribute="height" id="WmX-IQ-kUj"/>
-                        </constraints>
                     </view>
                     <connections>
-                        <outlet property="webView" destination="8pj-N0-yty" id="eL3-b4-T84"/>
+                        <outlet property="containerView" destination="xcr-et-7j0" id="ne7-ao-FWw"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5qW-60-fq1" userLabel="First Responder" sceneMemberID="firstResponder"/>
