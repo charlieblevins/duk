@@ -795,7 +795,40 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="yjg-VV-zdh" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="486" y="349"/>
+            <point key="canvasLocation" x="507" y="272"/>
+        </scene>
+        <!--Account View Controller-->
+        <scene sceneID="2iH-LN-SxY">
+            <objects>
+                <viewController storyboardIdentifier="AccountViewController" id="zfG-BB-3b8" customClass="AccountViewController" customModule="Duck" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="daT-Zw-uCA"/>
+                        <viewControllerLayoutGuide type="bottom" id="cr7-tR-zRt"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="xcr-et-7j0">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <webView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="8pj-N0-yty">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" red="0.36078431370000003" green="0.38823529410000002" blue="0.4039215686" alpha="1" colorSpace="deviceRGB"/>
+                            </webView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="8pj-N0-yty" firstAttribute="width" secondItem="xcr-et-7j0" secondAttribute="width" id="Bac-IE-DCv"/>
+                            <constraint firstItem="8pj-N0-yty" firstAttribute="top" secondItem="xcr-et-7j0" secondAttribute="topMargin" id="L5r-3g-hpx"/>
+                            <constraint firstItem="8pj-N0-yty" firstAttribute="leading" secondItem="xcr-et-7j0" secondAttribute="leading" id="LD5-Lu-wmQ"/>
+                            <constraint firstItem="8pj-N0-yty" firstAttribute="height" secondItem="xcr-et-7j0" secondAttribute="height" id="WmX-IQ-kUj"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="webView" destination="8pj-N0-yty" id="eL3-b4-T84"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5qW-60-fq1" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1195" y="303"/>
         </scene>
         <!--Image Zoom View Controller-->
         <scene sceneID="gqz-eX-Hq2">
@@ -889,8 +922,25 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jtq-wL-p4o" userLabel="MyMarkers">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Ih9-C2-tX8" userLabel="MyAccount">
                                 <rect key="frame" x="0.0" y="20" width="600" height="60"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Account" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g6K-Kt-8vb" userLabel="MyAccountLabel">
+                                        <rect key="frame" x="25" y="19" width="64" height="21"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstItem="g6K-Kt-8vb" firstAttribute="centerY" secondItem="Ih9-C2-tX8" secondAttribute="centerY" id="Y89-5h-Zap"/>
+                                    <constraint firstItem="g6K-Kt-8vb" firstAttribute="leading" secondItem="Ih9-C2-tX8" secondAttribute="leading" constant="25" id="gGp-TJ-yZp"/>
+                                    <constraint firstAttribute="height" constant="60" id="nVl-gi-WUx"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Jtq-wL-p4o" userLabel="MyMarkers">
+                                <rect key="frame" x="0.0" y="80" width="600" height="60"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Markers" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XyY-9R-ieR" userLabel="My Markers Label">
                                         <rect key="frame" x="25" y="19" width="90" height="21"/>
@@ -913,55 +963,30 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="Jtq-wL-p4o" firstAttribute="top" secondItem="Ih9-C2-tX8" secondAttribute="bottom" id="4ub-yJ-Rsw"/>
+                            <constraint firstItem="Ih9-C2-tX8" firstAttribute="width" secondItem="YjZ-oP-2j3" secondAttribute="width" id="5mZ-HC-M3H"/>
+                            <constraint firstItem="Ih9-C2-tX8" firstAttribute="leading" secondItem="YjZ-oP-2j3" secondAttribute="leading" id="AJR-mp-N9E"/>
                             <constraint firstItem="Jtq-wL-p4o" firstAttribute="width" secondItem="YjZ-oP-2j3" secondAttribute="width" id="Gau-Ht-qFy"/>
                             <constraint firstItem="Jtq-wL-p4o" firstAttribute="top" secondItem="YjZ-oP-2j3" secondAttribute="topMargin" id="Ig5-54-5zW"/>
                             <constraint firstItem="Jtq-wL-p4o" firstAttribute="top" secondItem="BA7-kM-Q5k" secondAttribute="bottom" id="hQi-1j-E0A"/>
+                            <constraint firstItem="Ih9-C2-tX8" firstAttribute="top" secondItem="BA7-kM-Q5k" secondAttribute="bottom" id="heH-UQ-wZ2"/>
                             <constraint firstItem="Jtq-wL-p4o" firstAttribute="leading" secondItem="YjZ-oP-2j3" secondAttribute="leading" id="qcd-QZ-f2X"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="Ig5-54-5zW"/>
+                                <exclude reference="hQi-1j-E0A"/>
                             </mask>
                         </variation>
                     </view>
+                    <connections>
+                        <outlet property="MyMarkersView" destination="Jtq-wL-p4o" id="aco-Pf-J61"/>
+                        <outlet property="myAccountView" destination="Ih9-C2-tX8" id="d11-qA-YPC"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5GH-6H-gc0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="486" y="1799"/>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="Lzw-jx-lo8">
-            <objects>
-                <viewController id="Jjr-u8-Iml" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="Gao-A1-Y5h"/>
-                        <viewControllerLayoutGuide type="bottom" id="HOM-Dm-KKB"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="BXl-D2-uGw">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="4hZ-jI-GHh" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
-        </scene>
-        <!--View Controller-->
-        <scene sceneID="xZs-ug-scX">
-            <objects>
-                <viewController id="26g-yt-JYV" sceneMemberID="viewController">
-                    <layoutGuides>
-                        <viewControllerLayoutGuide type="top" id="5zF-az-mhv"/>
-                        <viewControllerLayoutGuide type="bottom" id="HXl-9x-oiS"/>
-                    </layoutGuides>
-                    <view key="view" contentMode="scaleToFill" id="4XH-aJ-0qY">
-                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
-                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                    </view>
-                </viewController>
-                <placeholder placeholderIdentifier="IBFirstResponder" id="iHj-mi-I4e" userLabel="First Responder" sceneMemberID="firstResponder"/>
-            </objects>
         </scene>
     </scenes>
     <resources>
