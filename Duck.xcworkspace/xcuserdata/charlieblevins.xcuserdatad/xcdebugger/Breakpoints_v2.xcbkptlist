@@ -90,12 +90,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duck/AccountViewController.swift"
-            timestampString = "488663970.341585"
+            timestampString = "488724663.099271"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "42"
-            endingLineNumber = "42"
-            landmarkName = "userContentController(_:didReceiveScriptMessage:)"
+            startingLineNumber = "77"
+            endingLineNumber = "77"
+            landmarkName = "webView(_:decidePolicyForNavigationResponse:decisionHandler:)"
             landmarkType = "5">
          </BreakpointContent>
       </BreakpointProxy>
