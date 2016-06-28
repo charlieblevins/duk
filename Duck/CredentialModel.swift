@@ -62,6 +62,22 @@ struct Credentials {
             print("Could not save login: \(error), \(error.userInfo)")
         }
     }
+    
+    // Remove credentials from core data (sign out)
+    func remove () {
+        Util.deleteCoreDataForEntity("Login")
+    }
+    
+    // Load latest login credentials from core data
+    static func fromCore () -> Credentials? {
+        let query_res = Util.fetchCoreData("Login", predicate: nil)
+        
+        if  query_res.count == 0 {
+            return nil
+        }
+        
+        return Credentials(fromCoreData: query_res[0])
+    }
 }
 
 enum CredentialError: ErrorType {
