@@ -256,8 +256,8 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         // If not signed in, send to account page
         } else {
             print("no credentials found")
-            let SignInView = self.storyboard!.instantiateViewControllerWithIdentifier("SignInController")
-            self.navigationController?.pushViewController(SignInView, animated: true)
+            let accountView = self.storyboard!.instantiateViewControllerWithIdentifier("AccountViewController")
+            self.navigationController?.pushViewController(accountView, animated: true)
         }
     }
     

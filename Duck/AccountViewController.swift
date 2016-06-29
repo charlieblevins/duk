@@ -148,6 +148,52 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
         decisionHandler(.Allow)
     }
 
+    /**
+     * Catch failed load
+     */
+    func webView(webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: NSError) {
+        print("terminated")
+        
+        alertLoadFailed(error)
+    }
+    
+    func alertLoadFailed(error: NSError) {
+        
+        var message = error.localizedDescription
+        
+        // newline
+        message = "\(message) \n\n"
+        
+        message = "\(message) Your feedback makes Duk better. Tap \"Feedback\" to let us know about problems with the app."
+        
+        let alertController = UIAlertController(title: "Something went wrong...",
+                                                message: message,
+                                                preferredStyle: .Alert)
+        
+        // Allow back navigation
+        let backAction = UIAlertAction(title: "Back", style: .Default, handler: {
+            alertAction in
+            self.previousView()
+        })
+        
+        alertController.addAction(backAction)
+        
+        // Allow feedback
+        let fbAction = UIAlertAction(title: "Feedback", style: .Default, handler: {
+            alertAction in
+            UIApplication.sharedApplication().openURL(NSURL(string:"http://dukapp.io/feedback")!)
+        })
+        
+        alertController.addAction(fbAction)
+        
+        presentViewController(alertController, animated: true, completion: nil)
+    }
+    
+    // Return to previous view
+    func previousView () {
+        navigationController?.popViewControllerAnimated(true)
+    }
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.

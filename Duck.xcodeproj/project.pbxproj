@@ -14,7 +14,6 @@
 		EC1AD7F31C6E0ECB0051F9BE /* CredentialModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1AD7F21C6E0ECB0051F9BE /* CredentialModel.swift */; };
 		EC3255811C678BDC00A12A2E /* PopOverDate.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC3255801C678BDC00A12A2E /* PopOverDate.xib */; };
 		EC3255861C678DAD00A12A2E /* PopOverDate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3255851C678DAD00A12A2E /* PopOverDate.swift */; };
-		EC3C82551C4FB5A800B17D58 /* SignInController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC3C82541C4FB5A800B17D58 /* SignInController.swift */; };
 		EC47ACB01CC3F24E003148DE /* MarkerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC47ACAF1CC3F24E003148DE /* MarkerTableViewCell.swift */; };
 		EC6DDCD91BAF31EE00458B42 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */; };
 		EC6DDCDB1BAF31EE00458B42 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */; };
@@ -61,7 +60,6 @@
 		EC1AD7F21C6E0ECB0051F9BE /* CredentialModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredentialModel.swift; sourceTree = "<group>"; };
 		EC3255801C678BDC00A12A2E /* PopOverDate.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopOverDate.xib; sourceTree = "<group>"; };
 		EC3255851C678DAD00A12A2E /* PopOverDate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PopOverDate.swift; sourceTree = "<group>"; };
-		EC3C82541C4FB5A800B17D58 /* SignInController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignInController.swift; sourceTree = "<group>"; };
 		EC47ACAE1CC116C0003148DE /* MarkerModel 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 3.xcdatamodel"; sourceTree = "<group>"; };
 		EC47ACAF1CC3F24E003148DE /* MarkerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerTableViewCell.swift; sourceTree = "<group>"; };
 		EC6DDCD31BAF31EE00458B42 /* Duck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Duck.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -167,7 +165,6 @@
 				ECFD74CA1C11BA8500124C9D /* MyMarkersController.swift */,
 				EC47ACAF1CC3F24E003148DE /* MarkerTableViewCell.swift */,
 				EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */,
-				EC3C82541C4FB5A800B17D58 /* SignInController.swift */,
 				ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */,
 				ECD579271BC01BC70096FA1B /* AddMarkerController.swift */,
 				EC9EE2CC1CFB3E8D00DC9060 /* NounViewController.swift */,
@@ -379,7 +376,6 @@
 				EC7043891C60E0AE00EA0BE4 /* PublishConfirmController.swift in Sources */,
 				EC9EE2CD1CFB3E8D00DC9060 /* NounViewController.swift in Sources */,
 				ECD266FB1CC50DA0009E1574 /* UIZoomableImage.swift in Sources */,
-				EC3C82551C4FB5A800B17D58 /* SignInController.swift in Sources */,
 				EC3255861C678DAD00A12A2E /* PopOverDate.swift in Sources */,
 				EC7843731BE383CC003E3AE9 /* IconModel.swift in Sources */,
 				EC6DDCDB1BAF31EE00458B42 /* MapViewController.swift in Sources */,
