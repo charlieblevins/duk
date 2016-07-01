@@ -21,7 +21,12 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
     // Store successful credentials
     var credentials: Credentials? = nil
     
+    // Flag if sign out reguested. If true, successful 
+    // load of root (/) page means logout was successful
     var didReqSignOut: Bool = false
+    
+    // If true, pop to previous view on sign in success
+    var signInSuccessHandler: (()->Void)? = nil
     
     override func loadView() {
         super.loadView()
@@ -132,7 +137,13 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
             
             // Save as permanenet
             self.credentials = self.tempCredentials
-
+            
+            // Remove this view and call success handler
+            if self.signInSuccessHandler != nil {
+                //navigationController?.popViewControllerAnimated(false)
+                self.signInSuccessHandler!()
+                self.signInSuccessHandler = nil
+            }
             
         // If loading home page and last request was signout: remove credentials
         } else if url!.rangeOfString("dukapp.io") != nil && self.didReqSignOut {

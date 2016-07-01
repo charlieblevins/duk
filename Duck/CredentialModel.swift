@@ -10,9 +10,11 @@ import Foundation
 import CoreData
 import UIKit
 
-struct Credentials {
+class Credentials {
     let email: String
     let password: String
+    
+    static var sharedInstance: Credentials? = nil
     
     init (email: String, password: String) {
         self.email = email
@@ -27,11 +29,21 @@ struct Credentials {
     // Load from core data
     init?() {
         
+        // Cached
+        if Credentials.sharedInstance != nil {
+            self.email = Credentials.sharedInstance!.email
+            self.password = Credentials.sharedInstance!.password
+            return
+        }
+        
+        // Core Data lookup
         let data = Util.fetchCoreData("Login", predicate: nil)
         
         if data.count > 0 {
             self.email = data[0].valueForKey("email") as! String
             self.password = data[0].valueForKey("password") as! String
+            
+            Credentials.sharedInstance = self
         } else {
             return nil
         }

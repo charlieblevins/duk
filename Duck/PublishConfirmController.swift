@@ -22,7 +22,6 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
     @IBOutlet weak var imageView: UIImageView!
     
     var markerData: AnyObject? = nil
-    var loginData: AnyObject? = nil
     var timeFromDayPicker: String?
     var request: ApiRequest? = nil
     
@@ -111,14 +110,19 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         
         // Pass data to delegate
         // pending_publish should already be a dictionary containing a table indexpath
-        if self.delegate != nil && self.markerData != nil && self.loginData != nil && self.delegate!.pending_publish != nil {
+        if self.delegate != nil && self.markerData != nil && self.delegate!.pending_publish != nil {
 
             self.delegate!.pending_publish!["marker"] = Marker(fromCoreData: self.markerData!)
-            self.delegate!.pending_publish!["credentials"] = Credentials(fromCoreData: self.loginData!)
         }
         
         // Back to my markers
-        self.navigationController?.popViewControllerAnimated(true)
+        for controller in (self.navigationController?.viewControllers)! {
+            if controller.isKindOfClass(MyMarkersController) {
+                self.navigationController?.popToViewController(controller, animated: true)
+                break;
+            }
+        }
+        //self.navigationController?.popViewControllerAnimated(true)
     }
 
 }

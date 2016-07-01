@@ -233,32 +233,37 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         // Sign in credentials exist
         if  credentArr.count != 0 {
             
-            print("credentials found")
-            
-            let credentEntry: AnyObject? = credentArr[0]
-            
-            // Create array with marker and login data
-            let loginAndMarker: [AnyObject] = [savedMarkers[sender.tag], credentEntry!]
-            
-            // Get and store indexpath
-            if self.pending_publish == nil {
-               self.pending_publish = Dictionary()
-            }
-            
-            let button = sender as! UIButton
-            let sview = button.superview!
-            let cell = sview.superview as! MarkerTableViewCell
-            self.pending_publish!["indexPath"] = self.tableView.indexPathForCell(cell)
-            
-            // Load publish confirmation view
-            performSegueWithIdentifier("GoToPublish", sender: loginAndMarker)
+            self.loadPublishConfirm(sender)
             
         // If not signed in, send to account page
         } else {
             print("no credentials found")
-            let accountView = self.storyboard!.instantiateViewControllerWithIdentifier("AccountViewController")
+            let accountView = self.storyboard!.instantiateViewControllerWithIdentifier("AccountViewController") as! AccountViewController
+            accountView.signInSuccessHandler = {
+                self.loadPublishConfirm(sender)
+            }
             self.navigationController?.pushViewController(accountView, animated: true)
         }
+    }
+    
+    func loadPublishConfirm (sender: AnyObject) {
+        print("credentials found")
+        
+        // Create array with marker and login data
+        let loginAndMarker: [AnyObject] = [savedMarkers[sender.tag]]
+        
+        // Get and store indexpath
+        if self.pending_publish == nil {
+            self.pending_publish = Dictionary()
+        }
+        
+        let button = sender as! UIButton
+        let sview = button.superview!
+        let cell = sview.superview as! MarkerTableViewCell
+        self.pending_publish!["indexPath"] = self.tableView.indexPathForCell(cell)
+        
+        // Load publish confirmation view
+        performSegueWithIdentifier("GoToPublish", sender: loginAndMarker)
     }
     
     
@@ -270,7 +275,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             print(segue.destinationViewController)
             let publishView = segue.destinationViewController as! PublishConfirmController
             publishView.markerData = loginAndMarker[0];
-            publishView.loginData = loginAndMarker[1];
             
             // Set this view as delegate to receive future messages
             publishView.delegate = self
@@ -360,10 +364,15 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         request!.delegate = cell
 
         // Get credentials
-        let credentials = self.pending_publish!["credentials"] as! Credentials
+        //let credentials = self.pending_publish!["credentials"] as! Credentials
         
         // Initiate request
-        request!.publishSingleMarker(credentials, marker: marker)
+        if let credentials = Credentials() {
+           request!.publishSingleMarker(credentials, marker: marker)
+        } else {
+            print("Error: Credentials nil in makePublishRequest")
+            return
+        }
         
         // Clear pending request data
         self.pending_publish = nil
