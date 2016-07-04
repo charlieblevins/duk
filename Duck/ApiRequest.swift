@@ -165,15 +165,19 @@ class ApiRequest {
     }
     
     // Get marker data within geographic bounds
-    func getMarkersWithinBounds (bounds: GMSCoordinateBounds) {
+    func getMarkersWithinBounds (bounds: GMSCoordinateBounds, page: Int?) {
         
         // Build request params
-        let params: [String: String] = [
+        var params: [String: String] = [
             "bottom_left_lat": String(format: "%f", bounds.southWest.latitude),
             "bottom_left_lng": String(format: "%f", bounds.southWest.longitude),
             "upper_right_lat": String(format: "%f", bounds.northEast.latitude),
             "upper_right_lng": String(format: "%f", bounds.northEast.longitude)
         ]
+        
+        if page != nil {
+            params["page"] = "\(page)"
+        }
         
         self.delegate?.reqDidStart?()
         
@@ -184,6 +188,24 @@ class ApiRequest {
             }
     }
     
+    // Get marker data near lat/lng point
+    func getMarkersNear (point: CLLocationCoordinate2D) {
+        
+        // Build request params
+        let params: [String: String] = [
+            "lat": String(format: "%f", point.latitude),
+            "lng": String(format: "%f", point.longitude)
+        ]
+        
+        self.delegate?.reqDidStart?()
+        
+        // Exec request
+        Alamofire.request(.GET, "\(baseURL)/markersNear", parameters: params)
+            
+            .responseJSON { response in
+                self.handleResponse(response, method: .MarkersNearPoint)
+            }
+    }
     
     // Get Marker Image
     func getMarkerImage (fileName: String) {
@@ -326,5 +348,5 @@ class ApiRequest {
 
 // Classify api method types for easier response handling
 @objc enum ApiMethod: Int {
-    case MarkersWithinBounds, Image, PublishMarker, GetMarkerDataById
+    case MarkersWithinBounds, MarkersNearPoint, Image, PublishMarker, GetMarkerDataById
 }

@@ -23,6 +23,8 @@ struct Marker {
     
     var editable: Bool
     
+    var distance_from_me: Double?
+    
     init() {
         self.latitude = nil
         self.longitude = nil
@@ -36,6 +38,7 @@ struct Marker {
         self.tags = nil
         
         self.editable = false
+        self.distance_from_me = nil
     }
     
     init(fromCoreData data: AnyObject) {
@@ -55,12 +58,15 @@ struct Marker {
         if let pid = data.valueForKey("public_id") as? String {
             self.public_id = pid
         }
+        
+        self.distance_from_me = nil
     }
     
     // Initialize from public (server) data
     init?(fromPublicData data: NSDictionary) {
         
         self.editable = false
+
         
         let geometry = data.valueForKey("geometry")
         if geometry == nil {
@@ -83,6 +89,11 @@ struct Marker {
         
         self.latitude = coords_array[1] as! Double
         self.longitude = coords_array[0] as! Double
+        
+        // if server returns distance
+        if let distance = data.valueForKey("distance") {
+            self.distance_from_me = distance as? Double
+        }
         
         // public markers don't have a timestamp
         self.timestamp = nil
@@ -148,7 +159,7 @@ struct Marker {
     
     // Get an object that can be directly displayed on the google map
     func getMapMarker () -> DukGMSMarker? {
-        var map_marker = DukGMSMarker()
+        let map_marker = DukGMSMarker()
         
         // Set icon
         Util.loadMarkerIcon(map_marker, noun_tags: self.tags!)
@@ -246,5 +257,6 @@ struct Marker {
         // Nothing found
         return public_ids
     }
+
     
 }

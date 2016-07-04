@@ -11,7 +11,7 @@ import CoreLocation
 import CoreData
 import GoogleMaps
 
-class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate, ApiRequestDelegate {
+class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate, ApiRequestDelegate, MarkerAggregatorDelegate {
     
     @IBOutlet weak var mapView: GMSMapView!
 
@@ -58,21 +58,37 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         // Add buttons
         showAddMarkerButton()
-        //showMyMarkersButton()
         showMyLocationBtn()
         
-        // Enable user's location
-        showMyLocation(false)
-
+        // This kicks off all initial loading.
+        self.showNearbyMarkers()
         
-        // Observe changes to my location
+        // Observe changes in user location OR
+        if DistanceTracker.sharedInstance.locationManager.location == nil {
+            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.enableMapLocation), name: LocationNotifKey, object: nil)
+        } else {
+            enableMapLocation()
+        }
+        
+
+        // Observe changes to myLocation prop of mapView
         mapView!.addObserver(self, forKeyPath: "myLocation", options: .New, context: nil)
         
         // Closure to execute when map comes to rest at it's final
         // location
-        mapAtRestHandler = {
-            self.addMarkersInView()
-        }
+//        mapAtRestHandler = {
+//            
+//            if let userLoc = self.mapView?.myLocation {
+//
+//                MarkerAggregator.sharedInstance.loadNearPoint(userLoc.coordinate);
+//            } else {
+//                
+//                let vis_region = self.mapView!.projection.visibleRegion()
+//                let bounds = GMSCoordinateBounds(region: vis_region)
+//                MarkerAggregator.sharedInstance.loadWithinBounds()
+//            }
+//            
+//        }
     }
     
     // Hide nav bar for this view, but show for others
@@ -107,24 +123,88 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
     func showGMap () {
         
-        // Initialize map object
-        //mapContainer = GMSMapView.mapWithFrame(CGRectZero, camera: camera)
-
-        // Set this map object as the MapView
-        //mapContainer = mapView
-        
         // Set map delegate as this view controller class
         mapView!.delegate = self
     }
     
-    // Animate to current location on first update
+    
+    // Check location permissions and either
+    // - show and animate to the user's current location
+    // - request the user's permission to access location
+    // - show an alert that tells user how to allow location permission
+    func checkUserLocation (alertFailure: Bool, authHandler: (()->Void)?) {
+        
+        
+        // Location services must be on to continue
+        if CLLocationManager.locationServicesEnabled() == false && alertFailure {
+            showLocationAcessDeniedAlert("Location services are disabled. Location services are required to access your location.")
+            return
+        }
+        
+        switch CLLocationManager.authorizationStatus() {
+            
+        case .AuthorizedWhenInUse:
+            fallthrough
+        case .AuthorizedAlways:
+            reqUserLocation()
+            if authHandler != nil {
+                authHandler!()
+            }
+
+        case .NotDetermined:
+            
+            // Set flag for permission change handler
+            tryingToShowMyLocation = true
+            
+            reqUserLocation()
+            return
+            
+        case .Denied:
+            fallthrough
+        case .Restricted:
+            if alertFailure {
+                showLocationAcessDeniedAlert(nil)
+            }
+        }
+    }
+    
+    func showNearbyMarkers () {
+        
+        // Enable user location on Google Map and allow
+        // observer to show location on first update
+        if mapView!.myLocationEnabled != true {
+            didFindMyLocation = false
+            mapView!.myLocationEnabled = true
+            
+            // Location is already enabled: zoom to location
+        } else if mapView!.myLocation != nil {
+            
+            let marker_aggregator = MarkerAggregator()
+            marker_aggregator.delegate = self
+            marker_aggregator.loadNearPoint(mapView!.myLocation!.coordinate);
+        }
+    }
+    
+    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        print("lcoation update")
+        print(locations)
+    }
+    
+    // Begin loading nearby markers on first update
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         if !didFindMyLocation {
             
-            // animate to location
-            animateToCurLocation()
+            let marker_aggregator = MarkerAggregator()
+            marker_aggregator.delegate = self
+            marker_aggregator.loadNearPoint(mapView!.myLocation!.coordinate);
             
             didFindMyLocation = true
+        }
+    }
+    
+    func enableMapLocation () {
+        if mapView!.myLocationEnabled != true {
+            mapView!.myLocationEnabled = true
         }
     }
     
@@ -165,6 +245,27 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
     }
     
+    // Add markers near the user's current location
+    func addMarkersNearby (curLocation: CLLocationCoordinate2D) {
+        
+        // 1. Get 20 nearest from server
+        let req = ApiRequest()
+        req.delegate = self
+        req.getMarkersNear(curLocation)
+        
+        // 2. get 20 nearest from local
+        //let nearest_loc = self.getNearbyLocal(curLocation)
+        
+        // 3. Aggregate and get 20 closest
+        
+        
+        // 2. Get local markers within bounds
+        //self.showCoreMarkersWithin(bounds)
+        
+        // 3. Get public markers within bounds
+
+    }
+    
     // Add markers in current map view
     func addMarkersInView () {
         
@@ -181,7 +282,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // 3. Get public markers within bounds
         let req = ApiRequest()
         req.delegate = self
-        req.getMarkersWithinBounds(bounds)
+        req.getMarkersWithinBounds(bounds, page: nil)
     }
     
     func showCoreMarkersWithin (bounds: GMSCoordinateBounds) {
@@ -583,57 +684,15 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         verticalConstraint.active = true
     }
     
-    // Show users location OR alert
+    // Animate to users location OR alert
     // the user about a permissions problem
     func myLocationBtnTapped () {
-        showMyLocation(true)
+        
+        checkUserLocation(true) {
+            self.animateToCurLocation()
+        }
     }
-    
-    // Check location permissions and either
-    // - show and animate to the user's current location
-    // - request the user's permission to access location
-    // - show an alert that tells user how to allow location permission
-    func showMyLocation (alertFailure: Bool) {
 
-        
-        // Location services must be on to continue
-        if CLLocationManager.locationServicesEnabled() == false && alertFailure {
-            showLocationAcessDeniedAlert("Location services are disabled. Location services are required to access your location.")
-            return
-        }
-        
-        switch CLLocationManager.authorizationStatus() {
-            
-        case .AuthorizedWhenInUse:
-            fallthrough
-        case .AuthorizedAlways:
-            
-            // Enable user location on Google Map and allow
-            // observer to show location on first update
-            if mapView!.myLocationEnabled != true {
-                didFindMyLocation = false
-                mapView!.myLocationEnabled = true
-                
-            // Location is already enabled: zoom to location
-            } else if mapView!.myLocation != nil {
-                animateToCurLocation()
-            }
-        case .NotDetermined:
-            
-            // Set flag for permission change handler
-            tryingToShowMyLocation = true
-            
-            reqUserLocation()
-            return
-            
-        case .Denied:
-            fallthrough
-        case .Restricted:
-            if alertFailure {
-                showLocationAcessDeniedAlert(nil)
-            }
-        }
-    }
     
     func goToAddMarkerView () {
         let AddMarkerViewController = self.storyboard!.instantiateViewControllerWithIdentifier("AddMarkerController")
@@ -651,7 +710,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         mapView!.myLocationEnabled = true
     }
     
-    // Callback for user location permissions
+    // Change of user location permissions
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
         if status == .AuthorizedWhenInUse {
             locationManager.startUpdatingLocation()
@@ -666,7 +725,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
                 // Unset flag
                 tryingToShowMyLocation = false
                 
-                showMyLocation(true)
+                // Load nearby markers
+                let marker_aggregator = MarkerAggregator()
+                marker_aggregator.delegate = self
+                marker_aggregator.loadNearPoint(mapView!.myLocation!.coordinate);
             }
         }
     }
@@ -735,6 +797,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
         
         switch method {
+            
+        case .MarkersNearPoint:
+            handleMarkersWithinBoundsResponse(data)
         
         case .MarkersWithinBounds:
             handleMarkersWithinBoundsResponse(data)
@@ -773,6 +838,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         print(error)
     }
+
     
     // Handle data returned from a markersWithinBounds api request
     func handleMarkersWithinBoundsResponse (data: NSDictionary) {
@@ -836,6 +902,20 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
     }
     
+    func markerAggregator(loadDidFail error: String, method: LoadMethod) {
+        print("Marker load failed")
+    }
+    
+    func markerAggregator(loadDidComplete data: [Marker], method: LoadMethod) {
+        print("Marker load complete")
+        
+        for marker in data {
+            if let mm = marker.getMapMarker() {
+                mm.map = self.mapView
+            }
+            
+        }
+    }
 }
 
 // Extend GMSMarker to have

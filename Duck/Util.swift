@@ -9,6 +9,7 @@
 import Foundation
 import UIKit
 import CoreData
+import CoreLocation
 
 class Util {
     
@@ -252,6 +253,11 @@ class Util {
     class func coreToDictionary (managedObj: NSManagedObject) -> NSDictionary {
         let keys = Array(managedObj.entity.attributesByName.keys)
         return managedObj.dictionaryWithValuesForKeys(keys)
+    }
+    
+    // Calculate distance between two points
+    class func distanceFromHereTo (point: CLLocationCoordinate2D) {
+        
     }
 }
 
