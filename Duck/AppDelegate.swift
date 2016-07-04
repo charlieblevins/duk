@@ -38,6 +38,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             print("error getting contents")
         }
         
+        //Util.updateCoreDataForEntity("Marker", fieldName: "distance_from_me", newValue: nil)
+        
         
 
 //        // Build thumbnails for existing images (one time only!)
