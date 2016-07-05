@@ -909,12 +909,26 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     func markerAggregator(loadDidComplete data: [Marker], method: LoadMethod) {
         print("Marker load complete")
         
+        // Iterate through markers, adding them to the map
+        // and creating a bounding box for the group
+        var groupBounds: GMSCoordinateBounds? = nil
         for marker in data {
+            
             if let mm = marker.getMapMarker() {
                 mm.map = self.mapView
+                
+                if groupBounds == nil {
+                    groupBounds = GMSCoordinateBounds(coordinate: mm.position, coordinate: mm.position)
+                } else {
+                    groupBounds = groupBounds!.includingCoordinate(mm.position)
+                }
             }
             
         }
+        
+        // Animate camera to markers
+        let cameraUpdate = GMSCameraUpdate.fitBounds(groupBounds!)
+        mapView!.animateWithCameraUpdate(cameraUpdate)
     }
 }
 
