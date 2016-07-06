@@ -18,16 +18,14 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
     var locationManager: CLLocationManager!
     
-    // Flags used by location update to determine next action
-    var tryingToAddMarker: Bool = false
-    var tryingToShowMyLocation: Bool = false
-    
     // Flag used by location observer to animate to location
     var didFindMyLocation: Bool = false
     
     // Handler to execute when map comes to rest
     // Allows executing other tasks after map reaches new region
     var mapAtRestHandler:(()->Void)!
+    
+    var locationAuthHandler:(()->Void)!
     
     // Array of all markers in view
     var markersInView: [AnyObject] = []
@@ -61,7 +59,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         showMyLocationBtn()
         
         // This kicks off all initial loading.
-        self.showNearbyMarkers()
+        checkUserLocation(false) {
+            self.showNearbyMarkers()
+        }
         
         // Observe changes in user location OR
         if DistanceTracker.sharedInstance.locationManager.location == nil {
@@ -134,6 +134,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // - show an alert that tells user how to allow location permission
     func checkUserLocation (alertFailure: Bool, authHandler: (()->Void)?) {
         
+        if authHandler != nil {
+            self.locationAuthHandler = authHandler
+        }
         
         // Location services must be on to continue
         if CLLocationManager.locationServicesEnabled() == false && alertFailure {
@@ -146,18 +149,20 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         case .AuthorizedWhenInUse:
             fallthrough
         case .AuthorizedAlways:
-            reqUserLocation()
-            if authHandler != nil {
-                authHandler!()
+            
+            // Location use is authorized, execute auth handler
+            if self.locationAuthHandler != nil {
+                self.locationAuthHandler!()
+                self.locationAuthHandler = nil
             }
 
         case .NotDetermined:
             
-            // Set flag for permission change handler
-            tryingToShowMyLocation = true
-            
+            // Request location auth. If user approves
+            // delegate method will handler authHandler execution
             reqUserLocation()
-            return
+            
+            break
             
         case .Denied:
             fallthrough
@@ -525,28 +530,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Moves user to add marker view
     func addMarker(sender:UIButton!) {
         
-        // Location services must be on to continue
-        if CLLocationManager.locationServicesEnabled() == false {
-            showLocationAcessDeniedAlert(nil)
-            return
-        }
-        
-        switch CLLocationManager.authorizationStatus() {
-            
-        case .AuthorizedWhenInUse:
-            fallthrough
-        case .AuthorizedAlways:
-            goToAddMarkerView()
-            
-        case .NotDetermined:
-            tryingToAddMarker = true
-            reqUserLocation()
-            return
-        
-        case .Denied:
-            fallthrough
-        case .Restricted:
-            showLocationAcessDeniedAlert(nil)
+        // Ensure we have location authorization
+        // then move to add marker view
+        self.checkUserLocation(true) {
+            self.goToAddMarkerView()
         }
     }
     
@@ -689,7 +676,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     func myLocationBtnTapped () {
         
         checkUserLocation(true) {
-            self.animateToCurLocation()
+            self.showNearbyMarkers()
         }
     }
 
@@ -710,25 +697,13 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         mapView!.myLocationEnabled = true
     }
     
-    // Change of user location permissions
+    // Change of user location permissions. If authorized, exec auth handler
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        if status == .AuthorizedWhenInUse {
-            locationManager.startUpdatingLocation()
+        if status == .AuthorizedWhenInUse || status == .AuthorizedAlways {
             
-            // Check flags to determine next action
-            if tryingToAddMarker == true {
-                tryingToAddMarker = false
-                goToAddMarkerView()
-                
-            } else if tryingToShowMyLocation == true {
-                
-                // Unset flag
-                tryingToShowMyLocation = false
-                
-                // Load nearby markers
-                let marker_aggregator = MarkerAggregator()
-                marker_aggregator.delegate = self
-                marker_aggregator.loadNearPoint(mapView!.myLocation!.coordinate);
+            if self.locationAuthHandler != nil {
+                self.locationAuthHandler!()
+                self.locationAuthHandler = nil
             }
         }
     }

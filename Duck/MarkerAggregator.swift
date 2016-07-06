@@ -221,27 +221,21 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         switch method {
             
         case .MarkersNearPoint:
-            print("MarkersNearPoint failed")
-            
-            self.cancelled = true
-            
-            if self.delegate != nil {
-                self.delegate!.markerAggregator(loadDidFail: error, method: .MarkersNearPoint)
-            }
+            print("MarkersNearPoint api request failed")
             break
             
         case .MarkersWithinBounds:
-            print("MarkersWithinBounds failed")
-            
-            self.cancelled = true
-            
-            if self.delegate != nil {
-                self.delegate!.markerAggregator(loadDidFail: error, method: .MarkersWithinBounds)
-            }
+            print("MarkersWithinBounds api request failed")
             break
             
         default:
             print("Unknown api method failed")
+        }
+        
+        self.serverLoading = false
+        
+        if self.coreAndServerComplete() {
+            self.aggregate(.MarkersNearPoint)
         }
     }
     

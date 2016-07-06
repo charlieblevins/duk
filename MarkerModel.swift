@@ -87,8 +87,8 @@ struct Marker {
             return nil
         }
         
-        self.latitude = coords_array[1] as! Double
-        self.longitude = coords_array[0] as! Double
+        self.latitude = coords_array[1] as? Double
+        self.longitude = coords_array[0] as? Double
         
         // if server returns distance
         if let distance = data.valueForKey("distance") {
@@ -107,7 +107,7 @@ struct Marker {
             self.photo = NSData(base64EncodedString: b64_photo!, options: [])
         }
 
-        self.tags = data.valueForKey("tags") as! String
+        self.tags = data.valueForKey("tags") as? String
         
         self.public_id = data.valueForKey("_id") as? String
         

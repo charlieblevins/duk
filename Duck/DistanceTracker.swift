@@ -45,7 +45,7 @@ class DistanceTracker: NSObject, CLLocationManagerDelegate {
     
     // Change of user location permissions
     func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        if status == .AuthorizedWhenInUse {
+        if status == .AuthorizedWhenInUse || status == .AuthorizedAlways {
             // Receive updates for location change
             self.locationManager.startUpdatingLocation()
         }
