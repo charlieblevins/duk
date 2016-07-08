@@ -12,7 +12,7 @@ import CoreData
 
 class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     
-    var savedMarkers: [AnyObject]!
+    var savedMarkers: [Marker] = [Marker]()
     var deleteMarkerIndexPath: NSIndexPath? = nil
     var deleteMarkerTimestamp: Double? = nil
     var deletedMarkers: [Double] = []
@@ -32,7 +32,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         //Util.updateCoreDataForEntity("Marker", fieldName: "public_id", newValue: nil)
         
         // Get marker data
-        savedMarkers = Util.fetchCoreData("Marker", predicate: nil)
+        savedMarkers = self.loadMarkerData()
         
 //        // Register cell class
 //        self.tableView.registerClass(MarkerTableViewCell.self, forCellReuseIdentifier: "MarkerTableViewCell")
@@ -66,6 +66,43 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             self.pending_publish = nil
         }
     }
+    
+    func loadMarkerData () -> [Marker] {
+        var data = [Marker]()
+        
+        // Context
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        
+        // Fetch request
+        let fetchReq: NSFetchRequest = NSFetchRequest()
+        fetchReq.entity = NSEntityDescription.entityForName("Marker", inManagedObjectContext: managedContext)
+        
+        fetchReq.resultType = .DictionaryResultType
+        fetchReq.propertiesToFetch = ["timestamp", "public_id", "tags", "photo_sm"]
+        
+        
+        do {
+            let markers = try managedContext.executeFetchRequest(fetchReq)
+            
+            for marker in markers {
+                
+                var new_marker = Marker()
+                new_marker.timestamp = marker.valueForKey("timestamp") as? Double
+                new_marker.public_id = marker.valueForKey("public_id") as? String
+                new_marker.tags = marker.valueForKey("tags") as? String
+                new_marker.photo_sm = marker.valueForKey("photo_sm") as? NSData
+                
+                data.append(new_marker)
+            }
+
+            
+        } catch let error as NSError {
+            print("Fetch failed: \(error.localizedDescription)")
+        }
+        
+        return data
+    }
 
     // MARK: - Table view data source
 
@@ -76,11 +113,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
-        if savedMarkers != nil {
-            return savedMarkers.count
-        } else {
-            return 0
-        }
+        return savedMarkers.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
@@ -94,7 +127,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         
         cell.indexPath = indexPath
         
-        cell.tagsLabel?.text = cell.markerData!.valueForKey("tags") as? String
+        cell.tagsLabel?.text = cell.markerData!.tags
         cell.tagsLabel?.lineBreakMode = .ByWordWrapping
         cell.tagsLabel?.numberOfLines = 3
         
@@ -102,14 +135,14 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         cell.resetRight()
         
         // Public badge or publish btn
-        if cell.markerData!.valueForKey("public_id") != nil {
+        if cell.markerData!.public_id != nil {
             appendPublicBadge(indexPath.row, cell: cell)
         } else {
             appendPublishBtn(indexPath.row, cell: cell)
         }
 
         // Get thumbnail
-        let data: NSData = cell.markerData!.valueForKey("photo_sm") as! NSData
+        let data: NSData = cell.markerData!.photo_sm!
         let image: UIImage! = UIImage(data: data)!
         cell.markerImage.image = image
 
@@ -118,7 +151,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             
             let marker = self.pending_publish!["marker"] as! Marker
             let publish_timestamp = marker.timestamp
-            let cell_timestamp = cell.markerData!.valueForKey("timestamp") as! Double
+            let cell_timestamp = cell.markerData!.timestamp!
             
             // If timestamps match, set this cell as request delegate
             if cell_timestamp == publish_timestamp {
@@ -249,9 +282,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     func loadPublishConfirm (sender: AnyObject) {
         print("credentials found")
         
-        // Create array with marker and login data
-        let loginAndMarker: [AnyObject] = [savedMarkers[sender.tag]]
-        
         // Get and store indexpath
         if self.pending_publish == nil {
             self.pending_publish = Dictionary()
@@ -260,21 +290,21 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         let button = sender as! UIButton
         let sview = button.superview!
         let cell = sview.superview as! MarkerTableViewCell
-        self.pending_publish!["indexPath"] = self.tableView.indexPathForCell(cell)
+        let marker_index_path = self.tableView.indexPathForCell(cell)
+        self.pending_publish!["indexPath"] = marker_index_path
         
         // Load publish confirmation view
-        performSegueWithIdentifier("GoToPublish", sender: loginAndMarker)
+        performSegueWithIdentifier("GoToPublish", sender: marker_index_path)
     }
     
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
 
         if segue.identifier == "GoToPublish" {
-            let loginAndMarker = sender as! NSArray
             print(segue.identifier)
             print(segue.destinationViewController)
             let publishView = segue.destinationViewController as! PublishConfirmController
-            publishView.markerData = loginAndMarker[0];
+            publishView.markerData = savedMarkers[(sender as! NSIndexPath).row];
             
             // Set this view as delegate to receive future messages
             publishView.delegate = self
@@ -304,7 +334,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             //Util.deleteCoreDataForEntity()
             //tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             deleteMarkerIndexPath = indexPath
-            deleteMarkerTimestamp = savedMarkers[indexPath.row].valueForKey("timestamp") as? Double
+            deleteMarkerTimestamp = savedMarkers[indexPath.row].timestamp
             popAlert("Are you sure you want to delete this marker?")
         }
     }
@@ -312,8 +342,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     // On Row Select load
     // marker edit view
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        let core_marker_data = savedMarkers[indexPath.row]
-        performSegueWithIdentifier("EditMarker", sender: core_marker_data)
+        performSegueWithIdentifier("EditMarker", sender: indexPath)
     }
     
     func popAlert(text:String) {
@@ -382,8 +411,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     
     // Listen for publish begin
     func publishDidBegin (timestamp: Double, request: ApiRequest) {
-
-        
     }
     
     

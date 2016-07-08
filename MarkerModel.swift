@@ -117,6 +117,7 @@ struct Marker {
         // Determine if this user can edit
         self.editable = self.canEdit()
     }
+
     
     // Save this marker's data in core data
     mutating func saveInCore() -> Bool {

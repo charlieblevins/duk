@@ -21,7 +21,7 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
     @IBOutlet weak var tagLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     
-    var markerData: AnyObject? = nil
+    var markerData: Marker? = nil
     var timeFromDayPicker: String?
     var request: ApiRequest? = nil
     
@@ -36,12 +36,12 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         publishBtn.setTitle("Uploading...", forState: .Selected)
         
         // Populate marker data in view
-        if markerData !== nil {
+        if markerData != nil {
             
-            let tags = markerData!.valueForKey("tags") as! String
+            let tags = markerData!.tags
             tagLabel.text = tags
             
-            let imageData: NSData = markerData!.valueForKey("photo") as! NSData
+            let imageData: NSData = markerData!.photo!
             imageView.contentMode = .ScaleAspectFit
             imageView.image = UIImage(data: imageData)
         }
@@ -112,7 +112,7 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         // pending_publish should already be a dictionary containing a table indexpath
         if self.delegate != nil && self.markerData != nil && self.delegate!.pending_publish != nil {
 
-            self.delegate!.pending_publish!["marker"] = Marker(fromCoreData: self.markerData!)
+            self.delegate!.pending_publish!["marker"] = self.markerData!
         }
         
         // Back to my markers

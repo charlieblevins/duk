@@ -13,7 +13,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     @IBOutlet weak var markerImage: UIImageView!
     @IBOutlet weak var tagsLabel: UILabel!
     
-    var markerData: AnyObject? = nil
+    var markerData: Marker? = nil
     var statusBar: UILabel? = nil
     var master: MyMarkersController? = nil
     
@@ -123,7 +123,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         print("upload complete")
         
         // Save new data to core data
-        let timestamp: Double = self.markerData!.valueForKey("timestamp") as! Double
+        let timestamp: Double = self.markerData!.timestamp!
         let pubID: String = data["data"]!["_id"] as! String
         master!.updateMarkerEntity(timestamp, publicID: pubID)
         

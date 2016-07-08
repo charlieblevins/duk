@@ -86,8 +86,7 @@ class DistanceTracker: NSObject, CLLocationManagerDelegate {
         // Fetch request
         let fetchReq: NSFetchRequest = NSFetchRequest()
         fetchReq.entity = NSEntityDescription.entityForName("Marker", inManagedObjectContext: managedContext)
-        //fetchReq.fetchBatchSize = 5
-        //fetchReq.fetchLimit = result_limit
+
         fetchReq.resultType = .DictionaryResultType
         fetchReq.propertiesToFetch = ["latitude", "longitude", "timestamp", "public_id", "tags"]
 
@@ -122,13 +121,6 @@ class DistanceTracker: NSObject, CLLocationManagerDelegate {
             
         } catch let error as NSError {
             print("Fetch failed: \(error.localizedDescription)")
-        }
-5
-        // Save
-        do {
-            //try managedContext.save()
-        } catch {
-            print("save failed")
         }
     }
 }
