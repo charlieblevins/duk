@@ -223,6 +223,10 @@ struct Marker {
         self.photo_md = UIImageJPEGRepresentation(Util.resizeImage(image, scaledToFillSize: CGSizeMake(240, 240)), 1)
     }
     
+    mutating func loadPhotoFromCore () {
+        
+    }
+    
     // Find and return marker with provided timestamp
     static func getLocalByTimestamp (timestamp: Double) -> Marker? {
         

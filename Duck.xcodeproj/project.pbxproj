@@ -35,6 +35,8 @@
 		ECCF43731C0A664100EEEEF1 /* MarkerModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */; };
 		ECD266F91CC50951009E1574 /* ImageZoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD266F81CC50951009E1574 /* ImageZoomViewController.swift */; };
 		ECD266FB1CC50DA0009E1574 /* UIZoomableImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD266FA1CC50DA0009E1574 /* UIZoomableImage.swift */; };
+		ECD31B211D4424AB00494DCD /* SearchBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD31B1F1D4424AB00494DCD /* SearchBox.swift */; };
+		ECD31B221D4424AB00494DCD /* SearchBox.xib in Resources */ = {isa = PBXBuildFile; fileRef = ECD31B201D4424AB00494DCD /* SearchBox.xib */; };
 		ECD579241BBDFBAD0096FA1B /* MainNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */; };
 		ECD579281BC01BC70096FA1B /* AddMarkerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579271BC01BC70096FA1B /* AddMarkerController.swift */; };
 		ECDD61AB1C6FAF3F004063D2 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECDD61AA1C6FAF3F004063D2 /* SwiftyJSON.framework */; };
@@ -90,6 +92,8 @@
 		ECCF43721C0A664100EEEEF1 /* MarkerModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MarkerModel.xcdatamodel; sourceTree = "<group>"; };
 		ECD266F81CC50951009E1574 /* ImageZoomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageZoomViewController.swift; sourceTree = "<group>"; };
 		ECD266FA1CC50DA0009E1574 /* UIZoomableImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIZoomableImage.swift; sourceTree = "<group>"; };
+		ECD31B1F1D4424AB00494DCD /* SearchBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchBox.swift; sourceTree = "<group>"; };
+		ECD31B201D4424AB00494DCD /* SearchBox.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchBox.xib; sourceTree = "<group>"; };
 		ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainNavigation.swift; sourceTree = "<group>"; };
 		ECD579271BC01BC70096FA1B /* AddMarkerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMarkerController.swift; sourceTree = "<group>"; };
 		ECDD61AA1C6FAF3F004063D2 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = "Pods/../build/Debug-iphoneos/SwiftyJSON.framework"; sourceTree = "<group>"; };
@@ -163,8 +167,10 @@
 				EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */,
 				ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */,
 				EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */,
-				EC14494A1CD5330700496E07 /* InfoWindow.xib */,
+				ECD31B1F1D4424AB00494DCD /* SearchBox.swift */,
+				ECD31B201D4424AB00494DCD /* SearchBox.xib */,
 				EC14494C1CD5385400496E07 /* InfoWindowView.swift */,
+				EC14494A1CD5330700496E07 /* InfoWindow.xib */,
 				EC85CDC81D1F5F2D001F707D /* MenuViewController.swift */,
 				ECA9BAA91D20469A009BCBCD /* AccountViewController.swift */,
 				ECFD74CA1C11BA8500124C9D /* MyMarkersController.swift */,
@@ -314,6 +320,7 @@
 				EC6DDCE31BAF31EE00458B42 /* LaunchScreen.xib in Resources */,
 				EC6DDCE01BAF31EE00458B42 /* Images.xcassets in Resources */,
 				EC14494B1CD5330700496E07 /* InfoWindow.xib in Resources */,
+				ECD31B221D4424AB00494DCD /* SearchBox.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -394,6 +401,7 @@
 				ECD266F91CC50951009E1574 /* ImageZoomViewController.swift in Sources */,
 				EC1AD7F31C6E0ECB0051F9BE /* CredentialModel.swift in Sources */,
 				EC9EE2CF1CFBB8FA00DC9060 /* NounTableViewCell.swift in Sources */,
+				ECD31B211D4424AB00494DCD /* SearchBox.swift in Sources */,
 				EC85CDC91D1F5F2D001F707D /* MenuViewController.swift in Sources */,
 				ECA9BAAA1D20469A009BCBCD /* AccountViewController.swift in Sources */,
 				ECFD74CB1C11BA8500124C9D /* MyMarkersController.swift in Sources */,

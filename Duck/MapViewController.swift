@@ -17,6 +17,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
 
     
     var locationManager: CLLocationManager!
+
     
     // Flag used by location observer to animate to location
     var didFindMyLocation: Bool = false
@@ -679,7 +680,63 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             self.showNearbyMarkers()
         }
     }
+    
+    // Search Btn Tapped
+    @IBAction func searchTapped(sender: AnyObject) {
+        appendSearchBox()
+    }
+    
+    func appendSearchBox () {
+        if let searchBox = NSBundle.mainBundle().loadNibNamed("SearchBox", owner: self.view, options: nil)[0] as? SearchBox {
+          
+            // Add view but hide until constraints are in place
+            self.view.addSubview(searchBox)
+            searchBox.hidden = true
+            
+            // Turn off conclicting automatic constraints
+            searchBox.translatesAutoresizingMaskIntoConstraints = false
+            
+            // Full width
+            let width_constraint = NSLayoutConstraint(
+                item: searchBox,
+                attribute: .Width,
+                relatedBy: .Equal,
+                toItem: self.view,
+                attribute: .Width,
+                multiplier: 1,
+                constant: 0
+            )
+            width_constraint.active = true
+            
+            // Top
+            let top_constraint = NSLayoutConstraint(
+                item: searchBox,
+                attribute: .Top,
+                relatedBy: .Equal,
+                toItem: self.view,
+                attribute: .Top,
+                multiplier: 1,
+                constant: 0
+            )
+            top_constraint.active = true
+            
+            // Left
+            let left_constraint = NSLayoutConstraint(
+                item: searchBox,
+                attribute: .Leading,
+                relatedBy: .Equal,
+                toItem: self.view,
+                attribute: .Leading,
+                multiplier: 1,
+                constant: 0
+            )
+            left_constraint.active = true
+            
 
+            // Show
+            searchBox.hidden = false
+        }
+    }
     
     func goToAddMarkerView () {
         let AddMarkerViewController = self.storyboard!.instantiateViewControllerWithIdentifier("AddMarkerController")

@@ -25,39 +25,59 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ZP-gs-S2W" userLabel="Search">
+                                <rect key="frame" x="20" y="79" width="60" height="60"/>
+                                <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="Nei-AC-Ft8"/>
+                                    <constraint firstAttribute="width" constant="60" id="Xpi-3k-AN5"/>
+                                </constraints>
+                                <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <state key="normal" title="Search"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="30"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="searchTapped:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="KWd-mN-chd"/>
+                                </connections>
+                            </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="n5q-zQ-7Ge" userLabel="Menu">
-                                <rect key="frame" x="20" y="74" width="39" height="30"/>
+                                <rect key="frame" x="20" y="525" width="60" height="60"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="F2i-3n-Ulz"/>
+                                    <constraint firstAttribute="width" constant="60" id="r3F-Xf-msZ"/>
+                                </constraints>
                                 <state key="normal" title="Menu"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="30"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                                 <connections>
                                     <action selector="MenuButton:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="Lnk-Tq-QMV"/>
                                 </connections>
                             </button>
-                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Ufc-UP-NGT" userLabel="Search">
-                                <rect key="frame" x="70" y="74" width="510" height="30"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
-                            </textField>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="9jn-w6-iJj" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="1uc-pq-Gu2"/>
-                            <constraint firstItem="Ufc-UP-NGT" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="20" id="QPV-95-0VB"/>
-                            <constraint firstItem="Ufc-UP-NGT" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="10" id="UBM-VZ-suT"/>
+                            <constraint firstItem="0ZP-gs-S2W" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="7cr-Gk-JPd"/>
                             <constraint firstItem="9jn-w6-iJj" firstAttribute="width" secondItem="kh9-bI-dsS" secondAttribute="width" id="WdY-mY-Usb"/>
                             <constraint firstItem="n5q-zQ-7Ge" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" id="YoL-kz-4wJ"/>
-                            <constraint firstAttribute="trailingMargin" secondItem="Ufc-UP-NGT" secondAttribute="trailing" id="bFa-ZM-5KP"/>
                             <constraint firstItem="n5q-zQ-7Ge" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="10" id="ce3-Cf-K3B"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="n5q-zQ-7Ge" secondAttribute="bottom" constant="15" id="i5a-Ey-jVU"/>
                             <constraint firstItem="9jn-w6-iJj" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="-64" id="iPv-kM-W48"/>
-                            <constraint firstItem="Ufc-UP-NGT" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leadingMargin" constant="15" id="lUF-Zc-vU4"/>
-                            <constraint firstItem="Ufc-UP-NGT" firstAttribute="width" secondItem="kh9-bI-dsS" secondAttribute="width" constant="-90" id="tQ8-s8-Reu"/>
                             <constraint firstAttribute="trailing" secondItem="9jn-w6-iJj" secondAttribute="trailing" constant="-20" id="thh-6s-rfP"/>
+                            <constraint firstItem="0ZP-gs-S2W" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="15" id="xqM-4K-Zff"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="9jn-w6-iJj" secondAttribute="bottom" id="zZt-A3-220"/>
                         </constraints>
                         <variation key="default">
                             <mask key="constraints">
                                 <exclude reference="thh-6s-rfP"/>
-                                <exclude reference="QPV-95-0VB"/>
-                                <exclude reference="lUF-Zc-vU4"/>
+                                <exclude reference="ce3-Cf-K3B"/>
                             </mask>
                         </variation>
                     </view>

@@ -311,7 +311,11 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         } else if segue.identifier == "EditMarker" {
             
             let editView = segue.destinationViewController as! AddMarkerController
-            editView.editMarker = Marker(fromCoreData: sender!)
+            let indexPath = sender as! NSIndexPath
+            
+            // Get all data for this marker
+            let marker = Marker.getLocalByTimestamp(savedMarkers[indexPath.row].timestamp!)
+            editView.editMarker = marker
         }
     }
     
