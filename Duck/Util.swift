@@ -157,7 +157,7 @@ class Util {
             completionHandler: { (image, error, cacheType, imageURL) -> () in
                 
                 if error !== nil {
-                    print("image GET failed: \(error)")
+                    print("loadMarkerIcon Failed: \(error!.localizedDescription)")
                     return Void()
                 }
                 

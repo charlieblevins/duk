@@ -74,22 +74,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
 
         // Observe changes to myLocation prop of mapView
         mapView!.addObserver(self, forKeyPath: "myLocation", options: .New, context: nil)
-        
-        // Closure to execute when map comes to rest at it's final
-        // location
-//        mapAtRestHandler = {
-//            
-//            if let userLoc = self.mapView?.myLocation {
-//
-//                MarkerAggregator.sharedInstance.loadNearPoint(userLoc.coordinate);
-//            } else {
-//                
-//                let vis_region = self.mapView!.projection.visibleRegion()
-//                let bounds = GMSCoordinateBounds(region: vis_region)
-//                MarkerAggregator.sharedInstance.loadWithinBounds()
-//            }
-//            
-//        }
     }
     
     // Hide nav bar for this view, but show for others
@@ -691,7 +675,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
           
             // Add view but hide until constraints are in place
             self.view.addSubview(searchBox)
-            searchBox.hidden = true
             
             // Turn off conclicting automatic constraints
             searchBox.translatesAutoresizingMaskIntoConstraints = false
@@ -707,6 +690,18 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
                 constant: 0
             )
             width_constraint.active = true
+            
+            // Constant height
+            let height_constraint = NSLayoutConstraint(
+                item: searchBox,
+                attribute: .Height,
+                relatedBy: .Equal,
+                toItem: nil,
+                attribute: .NotAnAttribute,
+                multiplier: 1,
+                constant: 170
+            )
+            height_constraint.active = true
             
             // Top
             let top_constraint = NSLayoutConstraint(
@@ -732,9 +727,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             )
             left_constraint.active = true
             
-
-            // Show
-            searchBox.hidden = false
+            searchBox.addTapRecognizers()
         }
     }
     
