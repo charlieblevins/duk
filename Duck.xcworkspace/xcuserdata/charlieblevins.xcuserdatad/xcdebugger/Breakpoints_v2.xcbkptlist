@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duck/MapViewController.swift"
-            timestampString = "491400468.336622"
+            timestampString = "491487976.48155"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "793"
-            endingLineNumber = "793"
+            startingLineNumber = "791"
+            endingLineNumber = "791"
             landmarkName = "showLocationAcessDeniedAlert(_:)"
             landmarkType = "5">
          </BreakpointContent>

@@ -726,8 +726,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
                 constant: 0
             )
             left_constraint.active = true
-            
-            searchBox.addTapRecognizers()
         }
     }
     
