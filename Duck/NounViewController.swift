@@ -10,8 +10,7 @@ import UIKit
 
 
 protocol EditNounDelegate {
-    var editMarker: Marker? {get set}
-    var updateNounsOnAppear: Bool {get set}
+    func nounsDidUpdate (nouns: String?)
 }
 
 class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate {
@@ -144,15 +143,19 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     func updateDelegateNouns () {
         
         // Ensure that delegate exists and has a Marker
-        if self.delegate != nil && self.delegate!.editMarker != nil {
+        if self.delegate != nil {
             
             let nouns_arr = allNouns.map({
                 return $0.name
             })
             
-            self.delegate?.editMarker!.tags = nouns_arr.joinWithSeparator(" ")
+            let nounString = nouns_arr.joinWithSeparator(" ")
             
-            self.delegate?.updateNounsOnAppear = true
+            if nounString == "" {
+                self.delegate?.nounsDidUpdate(nil)
+            } else {
+                self.delegate?.nounsDidUpdate(nounString)
+            }
         }
     }
     

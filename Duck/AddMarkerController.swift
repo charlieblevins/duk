@@ -41,13 +41,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
 
     var locationManager: CLLocationManager!
     var coords: CLLocationCoordinate2D!
-    
-    var updateNounsOnAppear: Bool = false
 
     // Marker data passed in from 
     // other view
     var editMarker: Marker? = nil
-
 
 
     override func viewDidLoad() {
@@ -59,6 +56,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         // Start receiving location data
         listenForCoords()
+        
+        // Initialize Nouns
+        updateNouns(nil)
         
         // Receive gps coords
         // only if not editing already existing marker
@@ -81,13 +81,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         // If marker not editable, hide edit buttons
         if editMarker!.editable == false {
             preventEditing()
-        }
-    }
-    
-    override func viewWillAppear(animated: Bool) {
-        
-        if self.updateNounsOnAppear && editMarker != nil {
-            updateNouns(editMarker!.tags!)
         }
     }
     
@@ -117,37 +110,49 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         AccContainer.hidden = true
     }
     
+    // Method called by noun view
+    func nounsDidUpdate (nouns: String?) {
+        updateNouns(nouns)
+    }
+    
     // Refresh UI display of Nouns
     // including icon
-    func updateNouns (nounString: String) {
+    func updateNouns(nouns: String?) {
         
         var primaryNoun: String? = nil
-        
-        // Reset flag
-        updateNounsOnAppear = false
         
         // Create bold style attr
         let dynamic_size = UIFont.preferredFontForTextStyle(UIFontTextStyleBody).pointSize
         let bold_attrs = [NSFontAttributeName: UIFont.boldSystemFontOfSize(dynamic_size)]
         var attributedString = NSMutableAttributedString(string: "")
         
-        // More than one noun - bold the first
-        if let space_range = nounString.rangeOfString(" ") {
+        if nouns == nil {
+            NounText.attributedText = NSMutableAttributedString(string: "Add Nouns Here", attributes: nil)
             
-            primaryNoun = nounString.substringToIndex((space_range.startIndex))
+            if editMarker != nil {
+                editMarker!.tags = nil
+            }
+            
+            setIconForNoun(nil)
+            return
+        
+        // More than one noun - bold the first
+        } else if let space_range = nouns!.rangeOfString(" ") {
+            
+            primaryNoun = nouns!.substringToIndex((space_range.startIndex))
             
             attributedString = NSMutableAttributedString(string: primaryNoun!, attributes: bold_attrs)
             
             // Make attr string from remaining string
-            let remaining_nouns = NSMutableAttributedString(string: " \(nounString.substringFromIndex((space_range.endIndex)))")
+            let remaining_nouns = NSMutableAttributedString(string: " \(nouns!.substringFromIndex((space_range.endIndex)))")
             
             // Concat first noun with remaining nouns
             attributedString.appendAttributedString(remaining_nouns)
             
         // No space - assume single tag
         } else {
-            primaryNoun = nounString
-            attributedString = NSMutableAttributedString(string: nounString, attributes: bold_attrs)
+            primaryNoun = nouns
+            attributedString = NSMutableAttributedString(string: nouns!, attributes: bold_attrs)
         }
         
         NounText.attributedText = attributedString
@@ -159,8 +164,16 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     }
     
     // Get icon for primary noun
-    func setIconForNoun (noun: String) {
-        Util.loadIconImage(noun, imageView: self.MarkerIcon, activitIndicator: self.IconIndicator)
+    func setIconForNoun (noun: String?) {
+        
+        // If nil, set to placeholder
+        if noun == nil {
+            self.MarkerIcon.image = UIImage(named: "photoMarker")
+        
+        // Load image from noun project
+        } else {
+            Util.loadIconImage(noun!, imageView: self.MarkerIcon, activitIndicator: self.IconIndicator)
+        }
     }
     
     // Update this view with existing data

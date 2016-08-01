@@ -522,6 +522,11 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
     }
     
+    func goToAddMarkerView () {
+        let AddMarkerViewController = self.storyboard!.instantiateViewControllerWithIdentifier("AddMarkerController")
+        self.navigationController?.pushViewController(AddMarkerViewController, animated: true)
+    }
+    
     func showMyMarkersButton () {
         let button = DukBtn()
         
@@ -672,6 +677,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
     func appendSearchBox () {
         if let searchBox = NSBundle.mainBundle().loadNibNamed("SearchBox", owner: self.view, options: nil)[0] as? SearchBox {
+            
+            // Create reference to this controller
+            searchBox.parentController = self
           
             // Add view but hide until constraints are in place
             self.view.addSubview(searchBox)
@@ -728,11 +736,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             left_constraint.active = true
         }
     }
-    
-    func goToAddMarkerView () {
-        let AddMarkerViewController = self.storyboard!.instantiateViewControllerWithIdentifier("AddMarkerController")
-        self.navigationController?.pushViewController(AddMarkerViewController, animated: true)
-    }
+
     
     // Request user location by initializing CLLocationManager
     // This will promp the user to give the app location permission
