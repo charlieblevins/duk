@@ -275,3 +275,34 @@ extension UIColor {
     }
     
 }
+
+// Label class with placeholder
+class UILabelPl: UILabel {
+    private var _placeholder: String = ""
+
+    var placeholder: String {
+        
+        get {
+            return _placeholder
+        }
+        
+        // Update placeholder value
+        set (newVal) {
+            _placeholder = newVal
+            
+            if self.text == _placeholder || self.text == "" {
+                self.text = _placeholder
+            }
+        }
+    }
+    
+    // If text is cleared, set placeholder value
+    override var text: String? {
+        didSet {
+            if text == nil || text == "" {
+                text = _placeholder
+            }
+        }
+    }
+    
+}
