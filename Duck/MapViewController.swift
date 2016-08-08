@@ -423,12 +423,13 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             let data = sender as! NSDictionary
             
             // if _id exists this data is from the server
+            var marker: Marker?
             if data["_id"] != nil {
-                detailView.editMarker = Marker(fromPublicData: data)
+                marker = Marker(fromPublicData: data)
             } else {
-                detailView.editMarker = Marker(fromCoreData: data)
+                marker = Marker(fromCoreData: data)
             }
-            
+            detailView.editMarker = marker
         }
     }
     
@@ -676,65 +677,66 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     func appendSearchBox () {
-        if let searchBox = NSBundle.mainBundle().loadNibNamed("SearchBox", owner: self.view, options: nil)[0] as? SearchBox {
+        let searchBox = SearchBox()
             
-            // Create reference to this controller
-            searchBox.parentController = self
-          
-            // Add view but hide until constraints are in place
-            self.view.addSubview(searchBox)
-            
-            // Turn off conclicting automatic constraints
-            searchBox.translatesAutoresizingMaskIntoConstraints = false
-            
-            // Full width
-            let width_constraint = NSLayoutConstraint(
-                item: searchBox,
-                attribute: .Width,
-                relatedBy: .Equal,
-                toItem: self.view,
-                attribute: .Width,
-                multiplier: 1,
-                constant: 0
-            )
-            width_constraint.active = true
-            
-            // Constant height
-            let height_constraint = NSLayoutConstraint(
-                item: searchBox,
-                attribute: .Height,
-                relatedBy: .Equal,
-                toItem: nil,
-                attribute: .NotAnAttribute,
-                multiplier: 1,
-                constant: 170
-            )
-            height_constraint.active = true
-            
-            // Top
-            let top_constraint = NSLayoutConstraint(
-                item: searchBox,
-                attribute: .Top,
-                relatedBy: .Equal,
-                toItem: self.view,
-                attribute: .Top,
-                multiplier: 1,
-                constant: 0
-            )
-            top_constraint.active = true
-            
-            // Left
-            let left_constraint = NSLayoutConstraint(
-                item: searchBox,
-                attribute: .Leading,
-                relatedBy: .Equal,
-                toItem: self.view,
-                attribute: .Leading,
-                multiplier: 1,
-                constant: 0
-            )
-            left_constraint.active = true
-        }
+        // Create reference to this controller
+        searchBox.parentController = self
+        
+        self.addChildViewController(searchBox)
+      
+        // Add view but hide until constraints are in place
+        self.view.addSubview(searchBox.view)
+        
+        // Turn off conclicting automatic constraints
+        searchBox.view.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Full width
+        let width_constraint = NSLayoutConstraint(
+            item: searchBox.view,
+            attribute: .Width,
+            relatedBy: .Equal,
+            toItem: self.view,
+            attribute: .Width,
+            multiplier: 1,
+            constant: 0
+        )
+        width_constraint.active = true
+        
+        // Constant height
+        let height_constraint = NSLayoutConstraint(
+            item: searchBox.view,
+            attribute: .Height,
+            relatedBy: .Equal,
+            toItem: nil,
+            attribute: .NotAnAttribute,
+            multiplier: 1,
+            constant: 170
+        )
+        height_constraint.active = true
+        
+        // Top
+        let top_constraint = NSLayoutConstraint(
+            item: searchBox.view,
+            attribute: .Top,
+            relatedBy: .Equal,
+            toItem: self.view,
+            attribute: .Top,
+            multiplier: 1,
+            constant: 0
+        )
+        top_constraint.active = true
+        
+        // Left
+        let left_constraint = NSLayoutConstraint(
+            item: searchBox.view,
+            attribute: .Leading,
+            relatedBy: .Equal,
+            toItem: self.view,
+            attribute: .Leading,
+            multiplier: 1,
+            constant: 0
+        )
+        left_constraint.active = true
     }
 
     

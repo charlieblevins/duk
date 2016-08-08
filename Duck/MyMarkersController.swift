@@ -313,9 +313,17 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             let editView = segue.destinationViewController as! AddMarkerController
             let indexPath = sender as! NSIndexPath
             
+            guard let timestamp = savedMarkers[indexPath.row].timestamp else {
+                print("Could not get timestamp for row: ", indexPath.row)
+                return
+            }
+            
             // Get all data for this marker
-            let marker = Marker.getLocalByTimestamp(savedMarkers[indexPath.row].timestamp!)
-            editView.editMarker = marker
+            if let marker = Marker.getLocalByTimestamp(timestamp) {
+                editView.editMarker = marker
+            } else {
+                print("Could not load marker with timestamp: ", timestamp)
+            }
         }
     }
     

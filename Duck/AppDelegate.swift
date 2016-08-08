@@ -9,6 +9,7 @@
 import UIKit
 import CoreData
 import GoogleMaps
+import GooglePlaces
 import Kingfisher
 
 @UIApplicationMain
@@ -22,6 +23,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // G Maps Api Key
         GMSServices.provideAPIKey("AIzaSyCx00Cy9jGzz0hIcv485TWytTq82sAQYaI")
+        
+        // G Places Api Key
+        GMSPlacesClient.provideAPIKey("AIzaSyCx00Cy9jGzz0hIcv485TWytTq82sAQYaI")
         
         // Clear KF Image cache (disk)
         //KingfisherManager.sharedManager.cache.clearDiskCache()

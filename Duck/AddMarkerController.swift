@@ -112,6 +112,13 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     // Method called by noun view
     func nounsDidUpdate (nouns: String?) {
+
+        if editMarker != nil {
+            
+            // Update marker data
+            editMarker!.tags = nouns
+        }
+        
         updateNouns(nouns)
     }
     
@@ -128,11 +135,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         if nouns == nil {
             NounText.attributedText = NSMutableAttributedString(string: "Add Nouns Here", attributes: nil)
-            
-            if editMarker != nil {
-                editMarker!.tags = nil
-            }
-            
+
             setIconForNoun(nil)
             return
         
@@ -156,9 +159,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         }
         
         NounText.attributedText = attributedString
-        
-        // Update marker data
-        editMarker!.tags = NounText.text!
         
         setIconForNoun(primaryNoun!)
     }
