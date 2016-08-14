@@ -169,9 +169,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             // Location is already enabled: zoom to location
         } else if mapView!.myLocation != nil {
             
-            let marker_aggregator = MarkerAggregator()
-            marker_aggregator.delegate = self
-            marker_aggregator.loadNearPoint(mapView!.myLocation!.coordinate);
+            loadNearbyMarkers()
         }
     }
     
@@ -184,11 +182,34 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
         if !didFindMyLocation {
             
-            let marker_aggregator = MarkerAggregator()
-            marker_aggregator.delegate = self
-            marker_aggregator.loadNearPoint(mapView!.myLocation!.coordinate);
+            loadNearbyMarkers()
             
             didFindMyLocation = true
+        }
+    }
+    
+    // Loads all makers near the users current location, as
+    // determined by the DistanceTracker
+    func loadNearbyMarkers () {
+        
+        let marker_aggregator = MarkerAggregator()
+        marker_aggregator.delegate = self
+        
+        // Start tracking distance for core data if not already
+        if !DistanceTracker.sharedInstance.firstUpdateComplete {
+            
+            DistanceTracker.sharedInstance.start()
+            
+            // Re-call this function when data updates
+            DistanceTracker.sharedInstance.delegate = marker_aggregator
+            
+            marker_aggregator.distanceDataCallback = {
+                marker_aggregator.loadNearPoint(self.mapView!.myLocation!.coordinate, nouns: nil)
+            }
+            return
+        } else {
+
+            marker_aggregator.loadNearPoint(mapView!.myLocation!.coordinate, nouns: nil);
         }
     }
     
@@ -241,7 +262,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // 1. Get 20 nearest from server
         let req = ApiRequest()
         req.delegate = self
-        req.getMarkersNear(curLocation)
+        req.getMarkersNear(curLocation, nouns: nil)
         
         // 2. get 20 nearest from local
         //let nearest_loc = self.getNearbyLocal(curLocation)

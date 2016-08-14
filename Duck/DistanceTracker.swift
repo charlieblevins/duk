@@ -28,6 +28,8 @@ class DistanceTracker: NSObject, CLLocationManagerDelegate {
     
     var locationManager: CLLocationManager
     
+    var latestCoord: CLLocationCoordinate2D? = nil
+    
     var markersByDistance = [Marker]()
     
     override init () {
@@ -63,8 +65,12 @@ class DistanceTracker: NSObject, CLLocationManagerDelegate {
         self.updating = true
             
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+            
+            // Store latest coord
+            self.latestCoord = locations[locations.count - 1].coordinate
+            
             // Update with latest coordinate
-            self.update(locations[locations.count - 1].coordinate)
+            self.update(self.latestCoord!)
             
             dispatch_async(dispatch_get_main_queue()) {
                 self.updating = false
@@ -114,10 +120,10 @@ class DistanceTracker: NSObject, CLLocationManagerDelegate {
                 markers_with_distance.append(new_marker)
             }
             
+            // Sort by distance nearest to furthest
             self.markersByDistance = markers_with_distance.sort({
                 $0.distance_from_me < $1.distance_from_me
             })
-            
             
         } catch let error as NSError {
             print("Fetch failed: \(error.localizedDescription)")

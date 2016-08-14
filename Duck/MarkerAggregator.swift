@@ -39,34 +39,22 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         super.init()
     }
     
-    func loadNearPoint (point: CLLocationCoordinate2D) {
+    func loadNearPoint (point: CLLocationCoordinate2D, nouns: [String]?) {
         self.isLoading = true
         
         self.coreLoading = true
-        
-        // Start tracking distance for core data if not already
-        if !DistanceTracker.sharedInstance.firstUpdateComplete {
-            
-            DistanceTracker.sharedInstance.start()
-            
-            // Re-call this function when data updates
-            DistanceTracker.sharedInstance.delegate = self
-            self.distanceDataCallback = {
-                self.loadNearPoint(point)
-            }
-            return
-        }
         
         // Get from server
         self.serverLoading = true
         let apiRequest = ApiRequest()
         apiRequest.delegate = self
-        apiRequest.getMarkersNear(point)
+        apiRequest.getMarkersNear(point, nouns: nouns)
         
         // Get from core
         self.coreLoading = true
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
-            let found_markers = self.getCoreMarkersNear(point, limit: 30)
+            
+            let found_markers = self.getCoreMarkersNear(point, nouns: nouns, limit: 30)
             
             // Add found_markers to aggregate in main thread
             dispatch_async(dispatch_get_main_queue()) {
@@ -87,6 +75,7 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         // Core markers within
         self.coreLoading = true
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
+            
             let found_markers = self.getCoreMarkersWithin(bounds, page: page)
             self.coreLoading = false
             
@@ -140,9 +129,42 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         return ret
     }
     
-    // Get local markers sorted by distance_to_me, limit 10
-    func getCoreMarkersNear (point: CLLocationCoordinate2D, limit: Int) -> [Marker]? {
-        return DistanceTracker.sharedInstance.markersByDistance
+    // Get local markers sorted by distance_to_me. Optionally filtered by tags. Limit 30
+    func getCoreMarkersNear (point: CLLocationCoordinate2D, nouns: [String]?, limit: Int) -> [Marker]? {
+        
+        // No nouns: return markersByDistance
+        if nouns == nil {
+            return Array(DistanceTracker.sharedInstance.markersByDistance[0..<30])
+        
+        } else {
+            
+            // Use sets to test if search nouns exist within these tags
+            let search_noun_set = Set(nouns!)
+            
+            var matched_markers = [Marker]()
+            
+            // Check each marker for matching tags
+            for marker in DistanceTracker.sharedInstance.markersByDistance {
+                
+                // If this marker has tags
+                if let tags = marker.tags {
+                    
+                    let marker_noun_set = Set(tags.componentsSeparatedByString(" "))
+                    
+                    // If true, marker is kept
+                    if search_noun_set.isSubsetOf(marker_noun_set) {
+                        matched_markers.append(marker)
+                        
+                        // End after 30 (limit)
+                        if matched_markers.count >= 30 {
+                            break
+                        }
+                    }
+                }
+            }
+            
+            return matched_markers
+        }
     }
     
     // Aggregate core and server data according to load method

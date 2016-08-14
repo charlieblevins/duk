@@ -14,7 +14,10 @@ class SearchBox: UIViewController, EditNounDelegate, GMSAutocompleteViewControll
     @IBOutlet weak var nounsField: UILabelPl!
     @IBOutlet weak var locationField: UILabelPl!
 
-    var parentController: UIViewController? = nil
+    var parentController: MapViewController? = nil
+    
+    var nouns: String? = nil
+    var coord: CLLocationCoordinate2D? = nil
     
     // Add gestures when this view is added to it's parent
     override func viewDidLoad() {
@@ -75,6 +78,29 @@ class SearchBox: UIViewController, EditNounDelegate, GMSAutocompleteViewControll
     
     @IBAction func searchTapped(sender: AnyObject) {
         print("search tapped")
+        
+        var nouns: [String]? = nil
+        if self.nouns != nil {
+            nouns = self.nouns!.componentsSeparatedByString(", ")
+        }
+        
+        var point: CLLocationCoordinate2D? = nil
+        
+        // Get coord from entered location or current location
+        if self.coord != nil {
+            point = self.coord
+            
+        } else if DistanceTracker.sharedInstance.latestCoord != nil {
+            point = DistanceTracker.sharedInstance.latestCoord
+            
+        } else {
+            print("No location is available. Please add one to search")
+            return
+        }
+        
+        let marker_aggregator = MarkerAggregator()
+        marker_aggregator.delegate = self.parentController!
+        marker_aggregator.loadNearPoint(point!, nouns: nouns);
     }
     
     func nounsDidUpdate (nouns: String?) {
@@ -87,6 +113,8 @@ class SearchBox: UIViewController, EditNounDelegate, GMSAutocompleteViewControll
         print("Place address: ", place.formattedAddress)
         
         self.locationField.text = place.formattedAddress
+        
+        self.coord = place.coordinate
         
         self.dismissViewControllerAnimated(true, completion: nil)
     }
