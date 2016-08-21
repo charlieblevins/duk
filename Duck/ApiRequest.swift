@@ -189,7 +189,7 @@ class ApiRequest {
     }
     
     // Get marker data near lat/lng point
-    func getMarkersNear (point: CLLocationCoordinate2D, nouns: [String]?) {
+    func getMarkersNear (point: CLLocationCoordinate2D, noun: String?) {
         
         // Build request params
         var params: [String: String] = [
@@ -197,9 +197,8 @@ class ApiRequest {
             "lng": String(format: "%f", point.longitude)
         ]
         
-        if nouns != nil {
-            let nounsAsParam = nouns!.joinWithSeparator("|")
-            params["nouns"] = nounsAsParam
+        if noun != nil {
+            params["noun"] = noun
         }
         
         self.delegate?.reqDidStart?()

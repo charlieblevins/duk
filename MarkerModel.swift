@@ -107,7 +107,9 @@ struct Marker {
             self.photo = NSData(base64EncodedString: b64_photo!, options: [])
         }
 
-        self.tags = data.valueForKey("tags") as? String
+        if let nouns_arr = data.valueForKey("tags") as? Array<String> {
+            self.tags = nouns_arr.joinWithSeparator(" ")
+        }
         
         self.public_id = data.valueForKey("_id") as? String
         
@@ -158,12 +160,21 @@ struct Marker {
         return true
     }
     
-    // Get an object that can be directly displayed on the google map
     func getMapMarker () -> DukGMSMarker? {
+        return _getMapMarker(nil)
+    }
+    
+    func getMapMarker (iconOverride icon: String?) -> DukGMSMarker? {
+        return _getMapMarker(icon)
+    }
+    
+    // Get an object that can be directly displayed on the google map
+    private func _getMapMarker (iconOverride: String?) -> DukGMSMarker? {
         let map_marker = DukGMSMarker()
         
         // Set icon
-        Util.loadMarkerIcon(map_marker, noun_tags: self.tags!)
+        let icon_name = (iconOverride != nil) ? iconOverride : self.tags!
+        Util.loadMarkerIcon(map_marker, noun_tags: icon_name!)
         
         // Set position
         map_marker.position = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)

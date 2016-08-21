@@ -9,14 +9,15 @@
 import UIKit
 import GooglePlaces
 
-class SearchBox: UIViewController, EditNounDelegate, GMSAutocompleteViewControllerDelegate {
+class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate {
 
-    @IBOutlet weak var nounsField: UILabelPl!
+
+    @IBOutlet weak var nounsField: UITextField!
     @IBOutlet weak var locationField: UILabelPl!
 
     var parentController: MapViewController? = nil
     
-    var nouns: String? = nil
+    var noun: String? = nil
     var coord: CLLocationCoordinate2D? = nil
     
     // Add gestures when this view is added to it's parent
@@ -52,16 +53,7 @@ class SearchBox: UIViewController, EditNounDelegate, GMSAutocompleteViewControll
     // Load Noun Picker
     func nounsTapped () {
         print("nouns tapped")
-        
-        let nounViewController = self.parentController!.storyboard!.instantiateViewControllerWithIdentifier("NounViewController") as! NounViewController
-        
-        // Pass existing nouns if they are no the placeholder
-        nounViewController.nounsRaw = (self.nounsField.text != self.nounsField.placeholder) ? self.nounsField.text : nil
-        
-        nounViewController.delegate = self
-        
-        // Push view onto stack
-        self.parentController!.navigationController?.pushViewController(nounViewController, animated: true)
+        self.nounsField.becomeFirstResponder()
     }
 
     func locationTapped () {
@@ -79,10 +71,7 @@ class SearchBox: UIViewController, EditNounDelegate, GMSAutocompleteViewControll
     @IBAction func searchTapped(sender: AnyObject) {
         print("search tapped")
         
-        var nouns: [String]? = nil
-        if self.nouns != nil {
-            nouns = self.nouns!.componentsSeparatedByString(", ")
-        }
+        self.noun = self.nounsField.text
         
         var point: CLLocationCoordinate2D? = nil
         
@@ -100,11 +89,7 @@ class SearchBox: UIViewController, EditNounDelegate, GMSAutocompleteViewControll
         
         let marker_aggregator = MarkerAggregator()
         marker_aggregator.delegate = self.parentController!
-        marker_aggregator.loadNearPoint(point!, nouns: nouns);
-    }
-    
-    func nounsDidUpdate (nouns: String?) {
-        self.nounsField.text = (nouns == nil ? "Anything" : nouns)
+        marker_aggregator.loadNearPoint(point!, noun: self.noun);
     }
     
     // Handle the user's selection.

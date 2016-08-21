@@ -13,7 +13,7 @@ import GoogleMaps
 
 protocol MarkerAggregatorDelegate {
     
-    func markerAggregator(loadDidComplete data: [Marker], method: LoadMethod)
+    func markerAggregator(loadDidComplete data: [Marker], method: LoadMethod, noun: String?)
     
     func markerAggregator(loadDidFail error: String, method: LoadMethod)
 }
@@ -29,6 +29,8 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
     
     var cancelled: Bool = false
     
+    var noun: String? = nil
+    
     var distanceDataCallback: (()->Void)? = nil
     
     var aggregateStore: [Marker]? = []
@@ -39,22 +41,24 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         super.init()
     }
     
-    func loadNearPoint (point: CLLocationCoordinate2D, nouns: [String]?) {
+    func loadNearPoint (point: CLLocationCoordinate2D, noun: String?) {
         self.isLoading = true
         
         self.coreLoading = true
+        
+        self.noun = noun
         
         // Get from server
         self.serverLoading = true
         let apiRequest = ApiRequest()
         apiRequest.delegate = self
-        apiRequest.getMarkersNear(point, nouns: nouns)
+        apiRequest.getMarkersNear(point, noun: noun)
         
         // Get from core
         self.coreLoading = true
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
             
-            let found_markers = self.getCoreMarkersNear(point, nouns: nouns, limit: 30)
+            let found_markers = self.getCoreMarkersNear(point, noun: noun, limit: 30)
             
             // Add found_markers to aggregate in main thread
             dispatch_async(dispatch_get_main_queue()) {
@@ -68,12 +72,15 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         }
     }
     
-    func loadWithinBounds (bounds: GMSCoordinateBounds, page: Int) {
+    func loadWithinBounds (bounds: GMSCoordinateBounds, page: Int, noun: String?) {
         
         self.isLoading = true
         
         // Core markers within
         self.coreLoading = true
+        
+        self.noun = noun
+        
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
             
             let found_markers = self.getCoreMarkersWithin(bounds, page: page)
@@ -130,16 +137,17 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
     }
     
     // Get local markers sorted by distance_to_me. Optionally filtered by tags. Limit 30
-    func getCoreMarkersNear (point: CLLocationCoordinate2D, nouns: [String]?, limit: Int) -> [Marker]? {
+    func getCoreMarkersNear (point: CLLocationCoordinate2D, noun: String?, limit: Int) -> [Marker]? {
         
         // No nouns: return markersByDistance
-        if nouns == nil {
-            return Array(DistanceTracker.sharedInstance.markersByDistance[0..<30])
+        if noun == nil {
+            if DistanceTracker.sharedInstance.markersByDistance.count < 30 {
+                return Array(DistanceTracker.sharedInstance.markersByDistance)
+            } else {
+                return Array(DistanceTracker.sharedInstance.markersByDistance[0..<30])
+            }
         
         } else {
-            
-            // Use sets to test if search nouns exist within these tags
-            let search_noun_set = Set(nouns!)
             
             var matched_markers = [Marker]()
             
@@ -149,10 +157,10 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
                 // If this marker has tags
                 if let tags = marker.tags {
                     
-                    let marker_noun_set = Set(tags.componentsSeparatedByString(" "))
+                    let marker_noun_arr = tags.componentsSeparatedByString(" ")
                     
                     // If true, marker is kept
-                    if search_noun_set.isSubsetOf(marker_noun_set) {
+                    if marker_noun_arr.contains(noun!) {
                         matched_markers.append(marker)
                         
                         // End after 30 (limit)
@@ -182,7 +190,7 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
                     
                     // If a delegate is assigned and this request has not been cancelled
                     if self.delegate != nil && self.cancelled == false {
-                        self.delegate!.markerAggregator(loadDidComplete: self.aggregateStore!, method: .MarkersWithinBounds)
+                        self.delegate!.markerAggregator(loadDidComplete: self.aggregateStore!, method: .MarkersWithinBounds, noun: self.noun)
                     }
                 }
             }
@@ -202,7 +210,7 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
                     
                     // If a delegate is assigned and this request has not been cancelled
                     if self.delegate != nil && self.cancelled == false {
-                        self.delegate!.markerAggregator(loadDidComplete: self.aggregateStore!, method: .MarkersNearPoint)
+                        self.delegate!.markerAggregator(loadDidComplete: self.aggregateStore!, method: .MarkersNearPoint, noun: self.noun)
                     }
                 }
             }

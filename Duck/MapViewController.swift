@@ -204,12 +204,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             DistanceTracker.sharedInstance.delegate = marker_aggregator
             
             marker_aggregator.distanceDataCallback = {
-                marker_aggregator.loadNearPoint(self.mapView!.myLocation!.coordinate, nouns: nil)
+                marker_aggregator.loadNearPoint(self.mapView!.myLocation!.coordinate, noun: nil)
             }
             return
         } else {
 
-            marker_aggregator.loadNearPoint(mapView!.myLocation!.coordinate, nouns: nil);
+            marker_aggregator.loadNearPoint(mapView!.myLocation!.coordinate, noun: nil);
         }
     }
     
@@ -262,7 +262,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // 1. Get 20 nearest from server
         let req = ApiRequest()
         req.delegate = self
-        req.getMarkersNear(curLocation, nouns: nil)
+        req.getMarkersNear(curLocation, noun: nil)
         
         // 2. get 20 nearest from local
         //let nearest_loc = self.getNearbyLocal(curLocation)
@@ -956,15 +956,20 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         print("Marker load failed")
     }
     
-    func markerAggregator(loadDidComplete data: [Marker], method: LoadMethod) {
+    func markerAggregator(loadDidComplete data: [Marker], method: LoadMethod, noun: String?) {
         print("Marker load complete")
+        
+        // Clear all existing markers
+        mapView.clear()
         
         // Iterate through markers, adding them to the map
         // and creating a bounding box for the group
         var groupBounds: GMSCoordinateBounds? = nil
         for marker in data {
             
-            if let mm = marker.getMapMarker() {
+            let map_marker: DukGMSMarker? = (noun != nil) ? marker.getMapMarker(iconOverride: noun) : marker.getMapMarker()
+            
+            if let mm = map_marker {
                 mm.map = self.mapView
                 
                 if groupBounds == nil {
@@ -973,7 +978,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
                     groupBounds = groupBounds!.includingCoordinate(mm.position)
                 }
             }
-            
         }
         
         // Animate camera to markers
