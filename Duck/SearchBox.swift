@@ -9,11 +9,11 @@
 import UIKit
 import GooglePlaces
 
-class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate {
+class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UITextFieldDelegate {
 
 
-    @IBOutlet weak var nounsField: UITextField!
-    @IBOutlet weak var locationField: UILabelPl!
+    @IBOutlet weak var nounsField: UISearchField!
+    @IBOutlet weak var locationField: UISearchField!
 
     var parentController: MapViewController? = nil
     
@@ -28,8 +28,11 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate {
         
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(nounsTapped)))
         
-        self.nounsField.placeholder = "Anything"
-        self.locationField.placeholder = "Anywhere"
+        nounsField.text = "Anything"
+        nounsField.delegate = self
+        
+        locationField.text = "My Location"
+        locationField.delegate = self
     }
     
     override func viewDidLayoutSubviews() {
@@ -62,6 +65,22 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate {
         let autocompleteController = GMSAutocompleteViewController()
         autocompleteController.delegate = self
         self.presentViewController(autocompleteController, animated: true, completion: nil)
+    }
+    
+    func textFieldDidEndEditing(textField: UITextField) {
+        
+        if textField == nounsField {
+            
+            if textField.text == "" {
+                textField.text = "Anything"
+            }
+            
+        } else if textField == locationField {
+            
+            if textField.text == "" {
+                textField.text = "My Location"
+            }
+        }
     }
     
     @IBAction func backTapped(sender: AnyObject) {
@@ -124,4 +143,21 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate {
     }
 }
 
+// Subclass with 5 left/right padding
+class UISearchField: UITextField {
+    
+    let padding = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
+    
+    override func textRectForBounds(bounds: CGRect) -> CGRect {
+        return UIEdgeInsetsInsetRect(bounds, padding)
+    }
+    
+    override func placeholderRectForBounds(bounds: CGRect) -> CGRect {
+        return UIEdgeInsetsInsetRect(bounds, padding)
+    }
+    
+    override func editingRectForBounds(bounds: CGRect) -> CGRect {
+        return UIEdgeInsetsInsetRect(bounds, padding)
+    }
+}
 

@@ -7,7 +7,7 @@
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="SearchBox" customModule="Duck" customModuleProvider="target">
             <connections>
-                <outlet property="locationField" destination="b2z-PJ-wFH" id="Rco-aJ-1kN"/>
+                <outlet property="locationField" destination="G2y-Nl-koO" id="KCo-Wo-R82"/>
                 <outlet property="nounsField" destination="NdB-XM-uwJ" id="BOO-Jz-Zuy"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="iDW-44-a8G"/>
             </connections>
@@ -26,7 +26,7 @@
                             <color key="textColor" red="0.921875" green="0.91017091149999996" blue="0.91491980689999997" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="Anything" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="NdB-XM-uwJ" userLabel="Nouns Field">
+                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="NdB-XM-uwJ" userLabel="Nouns Field" customClass="UISearchField" customModule="Duck" customModuleProvider="target">
                             <rect key="frame" x="55" y="25" width="530" height="32"/>
                             <color key="backgroundColor" red="0.34127622349999998" green="0.56324506539999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <constraints>
@@ -47,13 +47,13 @@
                             <color key="textColor" red="0.921875" green="0.91017091149999996" blue="0.91491980689999997" alpha="1" colorSpace="calibratedRGB"/>
                             <nil key="highlightedColor"/>
                         </label>
-                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="My Location" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="b2z-PJ-wFH" userLabel="Location" customClass="UILabelPl" customModule="Duck" customModuleProvider="target">
+                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="G2y-Nl-koO" userLabel="Location Field" customClass="UISearchField" customModule="Duck" customModuleProvider="target">
                             <rect key="frame" x="55" y="67" width="530" height="32"/>
                             <color key="backgroundColor" red="0.34127622349999998" green="0.56324506539999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                            <nil key="highlightedColor"/>
-                        </label>
+                            <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                            <textInputTraits key="textInputTraits"/>
+                        </textField>
                         <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0Cc-rG-g0O" userLabel="Back">
                             <rect key="frame" x="10" y="105" width="34" height="30"/>
                             <state key="normal" title="Back">
@@ -68,29 +68,25 @@
                     <constraints>
                         <constraint firstItem="NdB-XM-uwJ" firstAttribute="width" secondItem="2Ae-Ia-96X" secondAttribute="width" constant="-70" id="3K0-7V-jMV"/>
                         <constraint firstItem="0Cc-rG-g0O" firstAttribute="leading" secondItem="2Ae-Ia-96X" secondAttribute="leading" constant="10" id="4Wf-jB-Ru9"/>
-                        <constraint firstItem="b2z-PJ-wFH" firstAttribute="width" secondItem="NdB-XM-uwJ" secondAttribute="width" id="4wO-HJ-jhj"/>
                         <constraint firstAttribute="height" constant="140" id="5wH-OD-dBT"/>
                         <constraint firstAttribute="trailing" secondItem="NdB-XM-uwJ" secondAttribute="trailing" constant="15" id="BeU-v4-9Rb"/>
-                        <constraint firstItem="B7I-2c-WJA" firstAttribute="top" secondItem="b2z-PJ-wFH" secondAttribute="top" id="FX2-We-JPE"/>
+                        <constraint firstItem="G2y-Nl-koO" firstAttribute="top" secondItem="NdB-XM-uwJ" secondAttribute="bottom" constant="10" id="Ep8-Pf-wrj"/>
                         <constraint firstAttribute="bottom" secondItem="0Cc-rG-g0O" secondAttribute="bottom" constant="5" id="G0F-JY-JXN"/>
-                        <constraint firstItem="B7I-2c-WJA" firstAttribute="top" secondItem="b2z-PJ-wFH" secondAttribute="top" constant="4" id="HVe-7T-2U5"/>
-                        <constraint firstItem="B7I-2c-WJA" firstAttribute="height" secondItem="b2z-PJ-wFH" secondAttribute="height" id="IIR-ep-grr"/>
-                        <constraint firstItem="0Cc-rG-g0O" firstAttribute="top" secondItem="b2z-PJ-wFH" secondAttribute="bottom" constant="10" id="Qmk-MQ-Xho"/>
-                        <constraint firstItem="b2z-PJ-wFH" firstAttribute="height" secondItem="NdB-XM-uwJ" secondAttribute="height" id="TcH-g1-LCM"/>
+                        <constraint firstItem="B7I-2c-WJA" firstAttribute="top" secondItem="G2y-Nl-koO" secondAttribute="top" id="K11-9N-u7q"/>
+                        <constraint firstItem="G2y-Nl-koO" firstAttribute="width" secondItem="NdB-XM-uwJ" secondAttribute="width" id="KSl-Ml-vha"/>
+                        <constraint firstItem="B7I-2c-WJA" firstAttribute="height" secondItem="zxX-cq-rZy" secondAttribute="height" id="R4g-rL-zWf"/>
                         <constraint firstItem="NdB-XM-uwJ" firstAttribute="top" secondItem="2Ae-Ia-96X" secondAttribute="top" constant="25" id="UzK-eS-p9P"/>
                         <constraint firstItem="zxX-cq-rZy" firstAttribute="leading" secondItem="2Ae-Ia-96X" secondAttribute="leading" constant="5" id="ZrV-g6-q8L"/>
-                        <constraint firstItem="B7I-2c-WJA" firstAttribute="trailing" secondItem="b2z-PJ-wFH" secondAttribute="leading" constant="-10" id="g8p-f5-meF"/>
-                        <constraint firstItem="b2z-PJ-wFH" firstAttribute="trailing" secondItem="NdB-XM-uwJ" secondAttribute="trailing" id="hwo-La-e3S"/>
-                        <constraint firstItem="b2z-PJ-wFH" firstAttribute="top" secondItem="NdB-XM-uwJ" secondAttribute="bottom" constant="10" id="pyt-Cy-vfV"/>
+                        <constraint firstItem="G2y-Nl-koO" firstAttribute="bottom" secondItem="NdB-XM-uwJ" secondAttribute="bottom" id="f0X-OL-tCS"/>
+                        <constraint firstItem="G2y-Nl-koO" firstAttribute="height" secondItem="NdB-XM-uwJ" secondAttribute="height" id="kDj-P3-Olb"/>
                         <constraint firstItem="B7I-2c-WJA" firstAttribute="leading" secondItem="zxX-cq-rZy" secondAttribute="leading" id="ti7-oQ-0Tp"/>
                         <constraint firstItem="zxX-cq-rZy" firstAttribute="height" secondItem="NdB-XM-uwJ" secondAttribute="height" id="vjC-BZ-3c3"/>
+                        <constraint firstItem="G2y-Nl-koO" firstAttribute="leading" secondItem="NdB-XM-uwJ" secondAttribute="leading" id="vjJ-j0-lyk"/>
                         <constraint firstItem="zxX-cq-rZy" firstAttribute="top" secondItem="NdB-XM-uwJ" secondAttribute="top" id="zxO-tD-poe"/>
                     </constraints>
                     <variation key="default">
                         <mask key="constraints">
-                            <exclude reference="Qmk-MQ-Xho"/>
-                            <exclude reference="HVe-7T-2U5"/>
-                            <exclude reference="g8p-f5-meF"/>
+                            <exclude reference="f0X-OL-tCS"/>
                         </mask>
                     </variation>
                 </view>
