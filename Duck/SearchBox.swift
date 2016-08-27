@@ -20,6 +20,9 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
     var noun: String? = nil
     var coord: CLLocationCoordinate2D? = nil
     
+    var nounPL: String? = "(Anything)"
+    var locationPL: String? = "(My Location)"
+
     // Add gestures when this view is added to it's parent
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,10 +31,10 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(nounsTapped)))
         
-        nounsField.text = "Anything"
+        nounsField.placeholder = nounPL
         nounsField.delegate = self
         
-        locationField.text = "My Location"
+        locationField.placeholder = locationPL
         locationField.delegate = self
     }
     
@@ -57,6 +60,9 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
     func nounsTapped () {
         print("nouns tapped")
         self.nounsField.becomeFirstResponder()
+        
+        // Clear placeholder while editing
+        self.nounsField.placeholder = ""
     }
 
     func locationTapped () {
@@ -72,25 +78,26 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         if textField == nounsField {
             
             if textField.text == "" {
-                textField.text = "Anything"
+                textField.placeholder = nounPL
             }
             
         } else if textField == locationField {
             
             if textField.text == "" {
-                textField.text = "My Location"
+                textField.text = locationPL
             }
         }
     }
     
-    @IBAction func backTapped(sender: AnyObject) {
+    @IBAction func closeTapped(sender: UIButton) {
+        self.view.removeFromSuperview()
         self.removeFromParentViewController()
     }
     
     @IBAction func searchTapped(sender: AnyObject) {
         print("search tapped")
         
-        self.noun = self.nounsField.text
+        self.noun = (self.nounsField.text != "") ? self.nounsField.text : nil
         
         var point: CLLocationCoordinate2D? = nil
         
@@ -105,6 +112,9 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
             print("No location is available. Please add one to search")
             return
         }
+        
+        // Remove focus from nouns field
+        self.nounsField.resignFirstResponder()
         
         let marker_aggregator = MarkerAggregator()
         marker_aggregator.delegate = self.parentController!

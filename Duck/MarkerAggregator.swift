@@ -202,8 +202,12 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
             
             // Get 30 nearest markers
             dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
-                self.aggregateStore = self.removeDuplicates(self.aggregateStore!)
-                self.aggregateStore = self.filterClosest(self.aggregateStore!, limit: 30)
+                
+                // Prune and filter markers (if any were found)
+                if (self.aggregateStore!.count > 0) {
+                    self.aggregateStore = self.removeDuplicates(self.aggregateStore!)
+                    self.aggregateStore = self.filterClosest(self.aggregateStore!, limit: 30)
+                }
                 
                 // Load complete - notify delegate
                 dispatch_async(dispatch_get_main_queue()) {

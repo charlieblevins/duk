@@ -69,6 +69,25 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //        } catch {
 //            print("save failed")
 //        }
+        
+        // Build thumbnails for existing images (one time only!)
+//        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+//        let managedContext = appDelegate.managedObjectContext
+//
+//        var all_markers = Util.fetchCoreData("Marker", predicate: nil)
+//        for marker in all_markers {
+//            if let tags = marker.valueForKey("tags") as? String {
+//                let new_tags = tags.stringByReplacingOccurrencesOfString("#", withString: "")
+//
+//                marker.setValue(new_tags, forKey: "tags")
+//            }
+//        }
+//
+//        do {
+//            try managedContext.save()
+//        } catch {
+//            print("save failed")
+//        }
  
         
         return true

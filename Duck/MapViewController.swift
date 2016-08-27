@@ -962,6 +962,11 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // Clear all existing markers
         mapView.clear()
         
+        // If no markers, stop here
+        if data.count == 0 {
+            return
+        }
+        
         // Iterate through markers, adding them to the map
         // and creating a bounding box for the group
         var groupBounds: GMSCoordinateBounds? = nil
