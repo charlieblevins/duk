@@ -13,7 +13,11 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
 
 
     @IBOutlet weak var nounsField: UISearchField!
-    @IBOutlet weak var locationField: UISearchField!
+    @IBOutlet weak var myLocation: UIButtonTab!
+    @IBOutlet weak var thisArea: UIButtonTab!
+    @IBOutlet weak var address: UIButtonTab!
+    @IBOutlet weak var addressField: UISearchField!
+    @IBOutlet weak var containerHeight: NSLayoutConstraint!
 
     var parentController: MapViewController? = nil
     
@@ -22,6 +26,8 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
     
     var nounPL: String? = "(Anything)"
     var locationPL: String? = "(My Location)"
+    
+    var tabGroup = [UIButtonTab]()
 
     // Add gestures when this view is added to it's parent
     override func viewDidLoad() {
@@ -34,13 +40,19 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         nounsField.placeholder = nounPL
         nounsField.delegate = self
         
-        locationField.placeholder = locationPL
-        locationField.delegate = self
+        // Register tab buttons as a group
+        tabGroup = [myLocation, thisArea, address]
+        
+        // Set underline as selected state for tabs
+        setTabUnderline()
+        
+        
+        // Hide address field
+        hideAddressField()
     }
     
     override func viewDidLayoutSubviews() {
         addTap(self.nounsField, action: #selector(nounsTapped))
-        addTap(self.locationField, action: #selector(locationTapped))
         
         let location = CGPoint(x: CGFloat(40), y: CGFloat(80))
         let touched = self.view.hitTest(location, withEvent: nil)
@@ -72,6 +84,52 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         autocompleteController.delegate = self
         self.presentViewController(autocompleteController, animated: true, completion: nil)
     }
+
+    // Handle taps on near tabs
+    @IBAction func myLocationTapped(sender: UIButton) {
+        nearTabTapped(sender)
+    }
+    
+    @IBAction func thisAreaTapped(sender: UIButton) {
+        nearTabTapped(sender)
+    }
+    
+    @IBAction func addressTapped(sender: UIButton) {
+        nearTabTapped(sender)
+    }
+    
+    func nearTabTapped (button: UIButton) {
+        print("\(button.currentTitle) tapped")
+        
+        guard let tappedBtn = button as? UIButtonTab else {
+            print("Could not convert button to UIButtonTab")
+            return
+        }
+        
+        // Set highlighted state for all tabs
+        for tab in tabGroup {
+            tab.selected = (tab == tappedBtn) ? true : false
+        }
+    }
+    
+    func setTabUnderline() {
+        for tab in tabGroup {
+            let attributes = [
+                NSForegroundColorAttributeName : UIColor.whiteColor(),
+                NSUnderlineStyleAttributeName : NSUnderlineStyle.StyleSingle.rawValue
+            ]
+            
+            tab.setAttributedTitle(NSAttributedString(string: tab.currentAttributedTitle!.string, attributes: attributes), forState: UIControlState.Selected)
+        }
+    }
+    
+    // Hide address field and resize container to fit
+    func hideAddressField () {
+        self.addressField.hidden = true
+        
+        // Subtract address field height from container
+        containerHeight.constant -= addressField.frame.height
+    }
     
     func textFieldDidEndEditing(textField: UITextField) {
         
@@ -81,11 +139,6 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
                 textField.placeholder = nounPL
             }
             
-        } else if textField == locationField {
-            
-            if textField.text == "" {
-                textField.text = locationPL
-            }
         }
     }
     
@@ -126,7 +179,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         print("Place name: ", place.name)
         print("Place address: ", place.formattedAddress)
         
-        self.locationField.text = place.formattedAddress
+        self.addressField.text = place.formattedAddress
         
         self.coord = place.coordinate
         
@@ -168,6 +221,27 @@ class UISearchField: UITextField {
     
     override func editingRectForBounds(bounds: CGRect) -> CGRect {
         return UIEdgeInsetsInsetRect(bounds, padding)
+    }
+}
+
+class UIButtonTab: UIButton {
+    
+    // Set state and corresponding styles
+    func setHighlight(highlight: Bool) {
+        
+        if highlight {
+            self.selected = true
+
+            
+        } else {
+            
+            // remove underline
+//            let title = NSMutableAttributedString()
+//            title.appendAttributedString(NSAttributedString(string: self.currentAttributedTitle!.string, attributes: nil))
+//            self.setAttributedTitle(title, forState: .Normal)
+        }
+        
+        //self.selected = highlight
     }
 }
 
