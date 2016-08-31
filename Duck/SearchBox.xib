@@ -135,7 +135,7 @@
                                 <action selector="addressTapped:" destination="-1" eventType="touchUpInside" id="CR4-DX-dKb"/>
                             </connections>
                         </button>
-                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" textAlignment="natural" minimumFontSize="17" clearButtonMode="always" translatesAutoresizingMaskIntoConstraints="NO" id="G2y-Nl-koO" userLabel="Address Field" customClass="UISearchField" customModule="Duck" customModuleProvider="target">
+                        <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" placeholder="No Address Selected" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="G2y-Nl-koO" userLabel="Address Field" customClass="UISearchField" customModule="Duck" customModuleProvider="target">
                             <rect key="frame" x="50" y="109" width="470" height="32"/>
                             <color key="backgroundColor" red="0.34127622349999998" green="0.56324506539999997" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="textColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -223,12 +223,12 @@
                     </constraints>
                     <variation key="default">
                         <mask key="constraints">
+                            <exclude reference="K11-9N-u7q"/>
                             <exclude reference="Ep8-Pf-wrj"/>
                             <exclude reference="KSl-Ml-vha"/>
                             <exclude reference="f0X-OL-tCS"/>
                             <exclude reference="kDj-P3-Olb"/>
                             <exclude reference="vjJ-j0-lyk"/>
-                            <exclude reference="K11-9N-u7q"/>
                         </mask>
                     </variation>
                 </view>

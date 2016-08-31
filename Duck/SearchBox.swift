@@ -46,17 +46,13 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         // Set underline as selected state for tabs
         setTabUnderline()
         
-        
         // Hide address field
         hideAddressField()
     }
     
     override func viewDidLayoutSubviews() {
         addTap(self.nounsField, action: #selector(nounsTapped))
-        
-        let location = CGPoint(x: CGFloat(40), y: CGFloat(80))
-        let touched = self.view.hitTest(location, withEvent: nil)
-        print(touched)
+        addTap(self.addressField, action: #selector(loadPlacesPicker))
     }
     
     // Add tap recognizer to a subview
@@ -77,25 +73,26 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         self.nounsField.placeholder = ""
     }
 
-    func locationTapped () {
-        print("location tapped")
-        
-        let autocompleteController = GMSAutocompleteViewController()
-        autocompleteController.delegate = self
-        self.presentViewController(autocompleteController, animated: true, completion: nil)
-    }
-
     // Handle taps on near tabs
     @IBAction func myLocationTapped(sender: UIButton) {
         nearTabTapped(sender)
+        hideAddressField()
     }
     
     @IBAction func thisAreaTapped(sender: UIButton) {
         nearTabTapped(sender)
+        hideAddressField()
     }
     
     @IBAction func addressTapped(sender: UIButton) {
         nearTabTapped(sender)
+        loadPlacesPicker()
+    }
+    
+    func loadPlacesPicker () {
+        let autocompleteController = GMSAutocompleteViewController()
+        autocompleteController.delegate = self
+        self.presentViewController(autocompleteController, animated: true, completion: nil)
     }
     
     func nearTabTapped (button: UIButton) {
@@ -125,10 +122,13 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
     
     // Hide address field and resize container to fit
     func hideAddressField () {
-        self.addressField.hidden = true
         
-        // Subtract address field height from container
-        containerHeight.constant -= addressField.frame.height
+        if (!self.addressField.hidden) {
+            self.addressField.hidden = true
+            
+            // Subtract address field height from container
+            containerHeight.constant -= addressField.frame.height
+        }
     }
     
     func textFieldDidEndEditing(textField: UITextField) {
@@ -182,6 +182,12 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         self.addressField.text = place.formattedAddress
         
         self.coord = place.coordinate
+        
+        // Show address field
+        if (self.addressField.hidden) {
+            self.addressField.hidden = false
+            containerHeight.constant += addressField.frame.height
+        }
         
         self.dismissViewControllerAnimated(true, completion: nil)
     }
