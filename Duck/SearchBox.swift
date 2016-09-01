@@ -35,6 +35,12 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         
         self.view.userInteractionEnabled = true
         
+        // Name tabs
+        myLocation.name = "my_location"
+        thisArea.name = "this_area"
+        address.name = "address"
+        
+        // Respond to taps
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(nounsTapped)))
         
         nounsField.placeholder = nounPL
@@ -154,6 +160,31 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         
         var point: CLLocationCoordinate2D? = nil
         
+        // Get tab name
+        guard let tab_index = tabGroup.indexOf({ $0.selected }) else {
+            print("selected tab not found")
+            return
+        }
+        
+        guard let tab_name = tabGroup[tab_index].name else {
+            print("could not find name of tab")
+            return
+        }
+        
+        if tab_name == "my_location" {
+            
+            guard let point = DistanceTracker.sharedInstance.latestCoord else {
+                print("could not get point from distance tracker")
+                return
+            }
+        
+        // get bounds for this_area
+        } else if tab_name == "this_area" {
+            
+            // get bounds
+        }
+        
+        
         // Get coord from entered location or current location
         if self.coord != nil {
             point = self.coord
@@ -232,22 +263,6 @@ class UISearchField: UITextField {
 
 class UIButtonTab: UIButton {
     
-    // Set state and corresponding styles
-    func setHighlight(highlight: Bool) {
-        
-        if highlight {
-            self.selected = true
-
-            
-        } else {
-            
-            // remove underline
-//            let title = NSMutableAttributedString()
-//            title.appendAttributedString(NSAttributedString(string: self.currentAttributedTitle!.string, attributes: nil))
-//            self.setAttributedTitle(title, forState: .Normal)
-        }
-        
-        //self.selected = highlight
-    }
+    var name: String? = nil
 }
 
