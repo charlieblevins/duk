@@ -81,6 +81,12 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         
         self.noun = noun
         
+        // Get from server
+        self.serverLoading = true
+        let req = ApiRequest()
+        req.delegate = self
+        req.getMarkersWithinBounds(bounds, page: page)
+        
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
             
             let found_markers = self.getCoreMarkersWithin(bounds, page: page)
@@ -96,12 +102,7 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
                 }
             }
         }
-        
-        // Public markers within
-        self.serverLoading = true
-        let req = ApiRequest()
-        req.delegate = self
-        req.getMarkersWithinBounds(bounds, page: page)
+
     }
     
     // Show user's saved markers if they exist

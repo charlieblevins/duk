@@ -19,7 +19,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
     @IBOutlet weak var addressField: UISearchField!
     @IBOutlet weak var containerHeight: NSLayoutConstraint!
 
-    var parentController: MapViewController? = nil
+    var parentController: MapViewController
     
     var noun: String? = nil
     var coord: CLLocationCoordinate2D? = nil
@@ -28,6 +28,16 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
     var locationPL: String? = "(My Location)"
     
     var tabGroup = [UIButtonTab]()
+    
+    init(_ parent: MapViewController) {
+        self.parentController = parent
+        
+        super.init(nibName: nil, bundle: nil)
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) is not allowed")
+    }
 
     // Add gestures when this view is added to it's parent
     override func viewDidLoad() {
@@ -165,45 +175,59 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
             print("selected tab not found")
             return
         }
-        
         guard let tab_name = tabGroup[tab_index].name else {
             print("could not find name of tab")
             return
         }
         
-        if tab_name == "my_location" {
-            
-            guard let point = DistanceTracker.sharedInstance.latestCoord else {
-                print("could not get point from distance tracker")
-                return
-            }
-        
-        // get bounds for this_area
-        } else if tab_name == "this_area" {
-            
-            // get bounds
-        }
-        
-        
-        // Get coord from entered location or current location
-        if self.coord != nil {
-            point = self.coord
-            
-        } else if DistanceTracker.sharedInstance.latestCoord != nil {
-            point = DistanceTracker.sharedInstance.latestCoord
-            
-        } else {
-            print("No location is available. Please add one to search")
-            return
-        }
+        // Create aggregator
+        let marker_aggregator = MarkerAggregator()
+        marker_aggregator.delegate = self.parentController
         
         // Remove focus from nouns field
         self.nounsField.resignFirstResponder()
         
-        let marker_aggregator = MarkerAggregator()
-        marker_aggregator.delegate = self.parentController!
+        // Get bounds for this_area
+        if tab_name == "this_area" {
+            
+            // get map current bounds
+            let vis_region = self.parentController.mapView.projection.visibleRegion()
+            let NE = vis_region.farRight
+            let SW = vis_region.nearLeft
+            let bounds = GMSCoordinateBounds(coordinate: NE, coordinate: SW)
+            marker_aggregator.loadWithinBounds(bounds, page: 0, noun: self.noun)
+            return
+        }
+        
+        
+        if tab_name == "my_location" {
+            
+            point = DistanceTracker.sharedInstance.latestCoord
+            
+            guard point != nil else {
+                print("could not get point from distance tracker")
+                return
+            }
+        
+        // Get coord set by g places
+        } else if tab_name == "address" {
+            
+            guard self.coord != nil else {
+                print("no coord exists")
+                return
+            }
+            
+            point = self.coord
+            
+        } else {
+            print("unrecognized tab_name")
+            return
+        }
+
+        // Search near point
         marker_aggregator.loadNearPoint(point!, noun: self.noun);
     }
+    
     
     // Handle the user's selection.
     func viewController(viewController: GMSAutocompleteViewController, didAutocompleteWithPlace place: GMSPlace) {

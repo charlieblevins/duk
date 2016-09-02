@@ -698,7 +698,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     func appendSearchBox () {
-        let searchBox = SearchBox()
+        let searchBox = SearchBox(self)
             
         // Create reference to this controller
         searchBox.parentController = self
