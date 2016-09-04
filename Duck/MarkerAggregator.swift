@@ -41,7 +41,7 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         super.init()
     }
     
-    func loadNearPoint (point: CLLocationCoordinate2D, noun: String?) {
+    func loadNearPoint (point: CLLocationCoordinate2D, noun: String?, searchType: SearchType) {
         self.isLoading = true
         
         self.coreLoading = true
@@ -58,7 +58,7 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         self.coreLoading = true
         dispatch_async(dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0)) {
             
-            let found_markers = self.getCoreMarkersNear(point, noun: noun, limit: 30)
+            let found_markers = self.getCoreMarkersNear(point, noun: noun, searchType: searchType, limit: 30)
             
             // Add found_markers to aggregate in main thread
             dispatch_async(dispatch_get_main_queue()) {
@@ -113,16 +113,14 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         
         var found_markers = [Marker]()
         
-        let markers_from_core = Util.fetchCoreData("Marker", predicate: nil)
+        let markers_from_core = Marker.allMarkersWithFields(["latitude", "longitude", "timestamp", "public_id", "tags"])
         
         if markers_from_core.count == 0 {
             return nil
         }
         
         // Find and return markers within provided bounds
-        for marker_data in markers_from_core {
-            
-            let marker = Marker(fromCoreData: marker_data)
+        for marker in markers_from_core {
             
             // Get marker coords
             let coords = CLLocationCoordinate2D(latitude: marker.latitude!, longitude: marker.longitude!)
@@ -138,14 +136,40 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
     }
     
     // Get local markers sorted by distance_to_me. Optionally filtered by tags. Limit 30
-    func getCoreMarkersNear (point: CLLocationCoordinate2D, noun: String?, limit: Int) -> [Marker]? {
+    func getCoreMarkersNear (point: CLLocationCoordinate2D, noun: String?, searchType: SearchType, limit: Int) -> [Marker]? {
+        
+        var markers = [Marker]()
+        
+        // Background sorted markers
+        if searchType == .MyLocation {
+            markers = DistanceTracker.sharedInstance.markersByDistance
+        
+        // Get sorted markers near point
+        } else if searchType == .Address {
+            
+            // Replace distance_from_me with distance from "address"
+            markers = Marker.allMarkersWithFields(["latitude", "longitude", "timestamp", "public_id", "tags"])
+            markers = markers.map({ marker in
+                
+                var new_marker = marker
+                
+                let coords = CLLocationCoordinate2D(latitude: marker.latitude!, longitude: marker.longitude!)
+                new_marker.distance_from_me = GMSGeometryDistance(point, coords)
+                
+                return new_marker
+            })
+            
+        } else {
+            print("search type not supported")
+            return nil
+        }
         
         // No nouns: return markersByDistance
         if noun == nil {
-            if DistanceTracker.sharedInstance.markersByDistance.count < 30 {
-                return Array(DistanceTracker.sharedInstance.markersByDistance)
+            if markers.count < 30 {
+                return Array(markers)
             } else {
-                return Array(DistanceTracker.sharedInstance.markersByDistance[0..<30])
+                return Array(markers[0..<30])
             }
         
         } else {
@@ -153,7 +177,7 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
             var matched_markers = [Marker]()
             
             // Check each marker for matching tags
-            for marker in DistanceTracker.sharedInstance.markersByDistance {
+            for marker in markers {
                 
                 // If this marker has tags
                 if let tags = marker.tags {

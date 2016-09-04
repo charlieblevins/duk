@@ -273,6 +273,35 @@ struct Marker {
         // Nothing found
         return public_ids
     }
+    
+    
+    // Fetch fields for entity
+    static func allMarkersWithFields (fields: Array<String>) -> [Marker] {
+        var found = [Marker]()
+        
+        // Context
+        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        
+        // Fetch request
+        let fetchReq: NSFetchRequest = NSFetchRequest()
+        fetchReq.entity = NSEntityDescription.entityForName("Marker", inManagedObjectContext: managedContext)
+        
+        fetchReq.resultType = .DictionaryResultType
+        fetchReq.propertiesToFetch = fields
+        
+        do {
+            let markers = try managedContext.executeFetchRequest(fetchReq)
+            for marker in markers {
+                found.append(Marker(fromCoreData: marker))
+            }
+            
+        } catch let error as NSError {
+            print("Fetch failed: \(error.localizedDescription)")
+        }
+        
+        return found
+    }
 
     
 }

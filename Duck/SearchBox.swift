@@ -169,6 +169,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         self.noun = (self.nounsField.text != "") ? self.nounsField.text : nil
         
         var point: CLLocationCoordinate2D? = nil
+        var search_type: SearchType? = nil
         
         // Get tab name
         guard let tab_index = tabGroup.indexOf({ $0.selected }) else {
@@ -190,12 +191,14 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         // Get bounds for this_area
         if tab_name == "this_area" {
             
+            search_type = .ThisArea
+            
             // get map current bounds
             let vis_region = self.parentController.mapView.projection.visibleRegion()
             let NE = vis_region.farRight
             let SW = vis_region.nearLeft
             let bounds = GMSCoordinateBounds(coordinate: NE, coordinate: SW)
-            marker_aggregator.loadWithinBounds(bounds, page: 0, noun: self.noun)
+            marker_aggregator.loadWithinBounds(bounds, page: 1, noun: self.noun)
             return
         }
         
@@ -203,6 +206,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         if tab_name == "my_location" {
             
             point = DistanceTracker.sharedInstance.latestCoord
+            search_type = .MyLocation
             
             guard point != nil else {
                 print("could not get point from distance tracker")
@@ -218,6 +222,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
             }
             
             point = self.coord
+            search_type = .Address
             
         } else {
             print("unrecognized tab_name")
@@ -225,7 +230,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         }
 
         // Search near point
-        marker_aggregator.loadNearPoint(point!, noun: self.noun);
+        marker_aggregator.loadNearPoint(point!, noun: self.noun, searchType: search_type!);
     }
     
     
@@ -288,5 +293,9 @@ class UISearchField: UITextField {
 class UIButtonTab: UIButton {
     
     var name: String? = nil
+}
+
+enum SearchType: Int {
+    case MyLocation, Address, ThisArea
 }
 

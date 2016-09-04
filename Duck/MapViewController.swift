@@ -204,12 +204,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             DistanceTracker.sharedInstance.delegate = marker_aggregator
             
             marker_aggregator.distanceDataCallback = {
-                marker_aggregator.loadNearPoint(self.mapView!.myLocation!.coordinate, noun: nil)
+                marker_aggregator.loadNearPoint(self.mapView!.myLocation!.coordinate, noun: nil, searchType: .MyLocation)
             }
             return
         } else {
 
-            marker_aggregator.loadNearPoint(mapView!.myLocation!.coordinate, noun: nil);
+            marker_aggregator.loadNearPoint(mapView!.myLocation!.coordinate, noun: nil, searchType: .MyLocation);
         }
     }
     
