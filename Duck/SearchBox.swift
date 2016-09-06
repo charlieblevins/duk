@@ -56,6 +56,9 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         nounsField.placeholder = nounPL
         nounsField.delegate = self
         
+        // Set initial selection
+        myLocation.selected = true
+        
         // Register tab buttons as a group
         tabGroup = [myLocation, thisArea, address]
         
@@ -101,7 +104,6 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
     }
     
     @IBAction func addressTapped(sender: UIButton) {
-        nearTabTapped(sender)
         loadPlacesPicker()
     }
     
@@ -240,6 +242,8 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         print("Place address: ", place.formattedAddress)
         
         self.addressField.text = place.formattedAddress
+        
+        self.addressField.selected = true
         
         self.coord = place.coordinate
         

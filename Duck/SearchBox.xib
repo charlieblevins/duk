@@ -83,7 +83,7 @@
                             </state>
                             <state key="selected">
                                 <attributedString key="attributedTitle">
-                                    <fragment content="My Location Selected">
+                                    <fragment content="My Location">
                                         <attributes>
                                             <color key="NSColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                             <font key="NSFont" size="15" name="HelveticaNeue"/>
