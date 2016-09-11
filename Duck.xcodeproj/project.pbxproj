@@ -30,6 +30,8 @@
 		EC9210D61C01FE9800814131 /* Autocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9210D51C01FE9800814131 /* Autocomplete.swift */; };
 		EC9EE2CD1CFB3E8D00DC9060 /* NounViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9EE2CC1CFB3E8D00DC9060 /* NounViewController.swift */; };
 		EC9EE2CF1CFBB8FA00DC9060 /* NounTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9EE2CE1CFBB8FA00DC9060 /* NounTableViewCell.swift */; };
+		ECA46ADE1D803B6600B2F04F /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA46ADC1D803B6600B2F04F /* SearchResultsViewController.swift */; };
+		ECA46ADF1D803B6600B2F04F /* SearchResultsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = ECA46ADD1D803B6600B2F04F /* SearchResultsViewController.xib */; };
 		ECA9BAAA1D20469A009BCBCD /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA9BAA91D20469A009BCBCD /* AccountViewController.swift */; };
 		ECBB67721C5D5932002842E5 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBB67711C5D5932002842E5 /* ApiRequest.swift */; };
 		ECCF43731C0A664100EEEEF1 /* MarkerModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */; };
@@ -87,6 +89,8 @@
 		EC9210D51C01FE9800814131 /* Autocomplete.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Autocomplete.swift; sourceTree = "<group>"; };
 		EC9EE2CC1CFB3E8D00DC9060 /* NounViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NounViewController.swift; sourceTree = "<group>"; };
 		EC9EE2CE1CFBB8FA00DC9060 /* NounTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NounTableViewCell.swift; sourceTree = "<group>"; };
+		ECA46ADC1D803B6600B2F04F /* SearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
+		ECA46ADD1D803B6600B2F04F /* SearchResultsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchResultsViewController.xib; sourceTree = "<group>"; };
 		ECA9BAA91D20469A009BCBCD /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		ECBB67711C5D5932002842E5 /* ApiRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
 		ECCF43721C0A664100EEEEF1 /* MarkerModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MarkerModel.xcdatamodel; sourceTree = "<group>"; };
@@ -169,6 +173,8 @@
 				EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */,
 				ECD31B1F1D4424AB00494DCD /* SearchBox.swift */,
 				ECD31B201D4424AB00494DCD /* SearchBox.xib */,
+				ECA46ADC1D803B6600B2F04F /* SearchResultsViewController.swift */,
+				ECA46ADD1D803B6600B2F04F /* SearchResultsViewController.xib */,
 				EC14494C1CD5385400496E07 /* InfoWindowView.swift */,
 				EC14494A1CD5330700496E07 /* InfoWindow.xib */,
 				EC85CDC81D1F5F2D001F707D /* MenuViewController.swift */,
@@ -321,6 +327,7 @@
 				EC6DDCE01BAF31EE00458B42 /* Images.xcassets in Resources */,
 				EC14494B1CD5330700496E07 /* InfoWindow.xib in Resources */,
 				ECD31B221D4424AB00494DCD /* SearchBox.xib in Resources */,
+				ECA46ADF1D803B6600B2F04F /* SearchResultsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -387,6 +394,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				ECFD74CD1C11BFC900124C9D /* Util.swift in Sources */,
+				ECA46ADE1D803B6600B2F04F /* SearchResultsViewController.swift in Sources */,
 				EC7043891C60E0AE00EA0BE4 /* PublishConfirmController.swift in Sources */,
 				EC9EE2CD1CFB3E8D00DC9060 /* NounViewController.swift in Sources */,
 				ECD266FB1CC50DA0009E1574 /* UIZoomableImage.swift in Sources */,

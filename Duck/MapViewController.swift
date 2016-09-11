@@ -14,6 +14,7 @@ import GoogleMaps
 class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate, ApiRequestDelegate, MarkerAggregatorDelegate {
     
     @IBOutlet weak var mapView: GMSMapView!
+    @IBOutlet weak var searchBtn: UIButton!
 
     
     var locationManager: CLLocationManager!
@@ -33,6 +34,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
     var deletedMarkers: [Double] = []
     var curMapMarkers: [DukGMSMarker] = []
+    
+    // Reference search box when present
+    var searchBox: SearchBox? = nil
     
     
     // Store a marker from the addMarker view to be 
@@ -532,6 +536,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         widthConstraint.active = true
         horizontalConstraint.active = true
         verticalConstraint.active = true
+        
+        // HIDDEN - FIXME
+        button.hidden = true
     }
  
     // Moves user to add marker view
@@ -587,10 +594,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // Activate constraints
         horizontalConstraint.active = true
         verticalConstraint.active = true
-    }
-    
-    @IBAction func MenuButton(sender: AnyObject) {
-        goToView("MenuViewController")
     }
     
     func goToMyMarkers (sender: UIButton) {
@@ -698,22 +701,22 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     func appendSearchBox () {
-        let searchBox = SearchBox(self)
+        self.searchBox = SearchBox(self)
             
         // Create reference to this controller
-        searchBox.parentController = self
+        self.searchBox!.parentController = self
         
-        self.addChildViewController(searchBox)
+        self.addChildViewController(self.searchBox!)
       
         // Add view but hide until constraints are in place
-        self.view.addSubview(searchBox.view)
+        self.view.addSubview(self.searchBox!.view)
         
         // Turn off conclicting automatic constraints
-        searchBox.view.translatesAutoresizingMaskIntoConstraints = false
+        self.searchBox!.view.translatesAutoresizingMaskIntoConstraints = false
         
         // Full width
         let width_constraint = NSLayoutConstraint(
-            item: searchBox.view,
+            item: self.searchBox!.view,
             attribute: .Width,
             relatedBy: .Equal,
             toItem: self.view,
@@ -725,7 +728,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         // Constant height
         let height_constraint = NSLayoutConstraint(
-            item: searchBox.view,
+            item: self.searchBox!.view,
             attribute: .Height,
             relatedBy: .Equal,
             toItem: nil,
@@ -737,7 +740,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         // Top
         let top_constraint = NSLayoutConstraint(
-            item: searchBox.view,
+            item: self.searchBox!.view,
             attribute: .Top,
             relatedBy: .Equal,
             toItem: self.view,
@@ -749,7 +752,86 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         // Left
         let left_constraint = NSLayoutConstraint(
-            item: searchBox.view,
+            item: self.searchBox!.view,
+            attribute: .Leading,
+            relatedBy: .Equal,
+            toItem: self.view,
+            attribute: .Leading,
+            multiplier: 1,
+            constant: 0
+        )
+        left_constraint.active = true
+    }
+    
+    // Hide the search box
+    func hideSearchBox () {
+        guard self.searchBox != nil else {
+            print("cannot hide searchbox. search box not present")
+            return
+        }
+        
+        self.searchBox?.willMoveToParentViewController(nil)
+        self.searchBox?.view.removeFromSuperview()
+        self.searchBox?.removeFromParentViewController()
+    }
+    
+    func appendSearchResults (message: String?) {
+        let searchResults = SearchResultsViewController(self)
+        
+        // Create reference to this controller
+        searchResults.parentController = self
+        
+        self.addChildViewController(searchResults)
+        
+        // Add view but hide until constraints are in place
+        self.view.addSubview(searchResults.view)
+        
+        if message != nil {
+            searchResults.setMessage(message!)
+        }
+        
+        // Turn off conclicting automatic constraints
+        searchResults.view.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Full width
+        let width_constraint = NSLayoutConstraint(
+            item: searchResults.view,
+            attribute: .Width,
+            relatedBy: .Equal,
+            toItem: self.view,
+            attribute: .Width,
+            multiplier: 1,
+            constant: 0
+        )
+        width_constraint.active = true
+        
+        // Constant height
+        let height_constraint = NSLayoutConstraint(
+            item: searchResults.view,
+            attribute: .Height,
+            relatedBy: .Equal,
+            toItem: nil,
+            attribute: .NotAnAttribute,
+            multiplier: 1,
+            constant: 45
+        )
+        height_constraint.active = true
+        
+        // Top
+        let top_constraint = NSLayoutConstraint(
+            item: searchResults.view,
+            attribute: .Top,
+            relatedBy: .Equal,
+            toItem: self.view,
+            attribute: .Top,
+            multiplier: 1,
+            constant: 0
+        )
+        top_constraint.active = true
+        
+        // Left
+        let left_constraint = NSLayoutConstraint(
+            item: searchResults.view,
             attribute: .Leading,
             relatedBy: .Equal,
             toItem: self.view,
@@ -967,6 +1049,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             return
         }
         
+        hideSearchBox()
+        
         // Iterate through markers, adding them to the map
         // and creating a bounding box for the group
         var groupBounds: GMSCoordinateBounds? = nil
@@ -988,6 +1072,14 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // Animate camera to markers
         let cameraUpdate = GMSCameraUpdate.fitBounds(groupBounds!)
         mapView!.animateWithCameraUpdate(cameraUpdate)
+        
+        if method == .MarkersNearPoint {
+            appendSearchResults("\(data.count) nearby markers")
+        
+        } else if method == .MarkersWithinBounds {
+            appendSearchResults("\(data.count) markers in view")
+        }
+        
     }
 }
 
