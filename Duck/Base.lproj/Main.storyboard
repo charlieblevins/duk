@@ -25,28 +25,11 @@
                                 <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                                 <color key="backgroundColor" white="0.33333333333333331" alpha="1" colorSpace="calibratedWhite"/>
                             </view>
-                            <view contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="mjc-nd-bAv" userLabel="MenuBG">
-                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mjc-nd-bAv" userLabel="MenuBG">
+                                <rect key="frame" x="0.0" y="64" width="600" height="600"/>
                                 <color key="backgroundColor" red="0.89975931186868685" green="0.89975931186868685" blue="0.89975931186868685" alpha="0.69999999999999996" colorSpace="calibratedRGB"/>
                             </view>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wLM-gk-s7L">
-                                <rect key="frame" x="270" y="220" width="60" height="60"/>
-                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="60" id="6Lr-wS-UPL"/>
-                                    <constraint firstAttribute="height" constant="60" id="VCC-90-SeZ"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
-                                <state key="normal" title="Account">
-                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
-                                </state>
-                                <userDefinedRuntimeAttributes>
-                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
-                                        <integer key="value" value="30"/>
-                                    </userDefinedRuntimeAttribute>
-                                </userDefinedRuntimeAttributes>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mSx-F9-mDf">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mSx-F9-mDf" customClass="DukBtn" customModule="Duck" customModuleProvider="target">
                                 <rect key="frame" x="270" y="290" width="60" height="60"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -63,7 +46,24 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tBv-xr-tJg">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wLM-gk-s7L" customClass="DukBtn" customModule="Duck" customModuleProvider="target">
+                                <rect key="frame" x="270" y="220" width="60" height="60"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="60" id="6Lr-wS-UPL"/>
+                                    <constraint firstAttribute="height" constant="60" id="VCC-90-SeZ"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="13"/>
+                                <state key="normal" title="Account">
+                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="30"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tBv-xr-tJg" customClass="DukBtn" customModule="Duck" customModuleProvider="target">
                                 <rect key="frame" x="265" y="360" width="70" height="70"/>
                                 <color key="backgroundColor" red="0.00045816844500000002" green="0.64786537249999998" blue="0.025279928010000001" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -79,7 +79,7 @@
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ZP-gs-S2W" userLabel="Search">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="0ZP-gs-S2W" userLabel="Search" customClass="DukBtn" customModule="Duck" customModuleProvider="target">
                                 <rect key="frame" x="265" y="440" width="70" height="70"/>
                                 <color key="backgroundColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -99,7 +99,7 @@
                                     <action selector="searchTapped:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="KWd-mN-chd"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MuD-Av-5oy">
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MuD-Av-5oy" customClass="DukBtn" customModule="Duck" customModuleProvider="target">
                                 <rect key="frame" x="270" y="525" width="60" height="60"/>
                                 <color key="backgroundColor" red="0.0" green="0.26457727276559073" blue="0.61047979797979801" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
@@ -109,6 +109,7 @@
                                 <state key="normal" title="DUK">
                                     <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
+                                <state key="selected" image="close-x-small-white"/>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.shadowOpacity">
                                         <real key="value" value="0.25"/>
@@ -121,25 +122,28 @@
                                         <integer key="value" value="30"/>
                                     </userDefinedRuntimeAttribute>
                                 </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="dukTapped:" destination="vXZ-lx-hvc" eventType="touchUpInside" id="77n-R5-6jl"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="9jn-w6-iJj" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="1uc-pq-Gu2"/>
                             <constraint firstItem="tBv-xr-tJg" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="2TI-19-ro9"/>
+                            <constraint firstItem="mjc-nd-bAv" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" id="4Nd-Ra-nI2"/>
+                            <constraint firstItem="mSx-F9-mDf" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="AJ8-jK-bzW"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="wLM-gk-s7L" secondAttribute="bottom" constant="320" id="Apz-KY-V8W"/>
+                            <constraint firstItem="mjc-nd-bAv" firstAttribute="height" secondItem="kh9-bI-dsS" secondAttribute="height" id="HtK-x3-qEt"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="0ZP-gs-S2W" secondAttribute="bottom" constant="90" id="Kp8-w4-6oT"/>
-                            <constraint firstItem="mjc-nd-bAv" firstAttribute="width" secondItem="kh9-bI-dsS" secondAttribute="width" id="OOZ-Lf-Xtc"/>
-                            <constraint firstItem="mjc-nd-bAv" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" id="PxN-Zc-HQO"/>
+                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="mSx-F9-mDf" secondAttribute="bottom" constant="250" id="QHw-2M-P0b"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="MuD-Av-5oy" secondAttribute="bottom" constant="15" id="ROv-Cy-Zkh"/>
+                            <constraint firstItem="mjc-nd-bAv" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="TzU-Y4-PUb"/>
                             <constraint firstItem="9jn-w6-iJj" firstAttribute="width" secondItem="kh9-bI-dsS" secondAttribute="width" id="WdY-mY-Usb"/>
-                            <constraint firstItem="mjc-nd-bAv" firstAttribute="height" secondItem="kh9-bI-dsS" secondAttribute="height" id="bpN-VF-QPh"/>
-                            <constraint firstItem="mSx-F9-mDf" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="fPR-1d-jaS"/>
+                            <constraint firstItem="mjc-nd-bAv" firstAttribute="width" secondItem="kh9-bI-dsS" secondAttribute="width" id="f1a-fq-7qJ"/>
                             <constraint firstItem="wLM-gk-s7L" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="g9R-Y4-eiy"/>
-                            <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="mSx-F9-mDf" secondAttribute="bottom" constant="250" id="gbJ-ra-tLS"/>
                             <constraint firstAttribute="trailingMargin" secondItem="MuD-Av-5oy" secondAttribute="trailing" constant="264" id="iIr-M2-9Ea"/>
                             <constraint firstItem="9jn-w6-iJj" firstAttribute="top" secondItem="jyV-Pf-zRb" secondAttribute="bottom" constant="-64" id="iPv-kM-W48"/>
-                            <constraint firstItem="mjc-nd-bAv" firstAttribute="leading" secondItem="kh9-bI-dsS" secondAttribute="leading" id="jc2-Td-VQj"/>
                             <constraint firstItem="MuD-Av-5oy" firstAttribute="centerX" secondItem="kh9-bI-dsS" secondAttribute="centerX" id="py7-s2-Buq"/>
                             <constraint firstItem="2fi-mo-0CV" firstAttribute="top" secondItem="tBv-xr-tJg" secondAttribute="bottom" constant="170" id="te1-n6-mw0"/>
                             <constraint firstAttribute="trailing" secondItem="9jn-w6-iJj" secondAttribute="trailing" constant="-20" id="thh-6s-rfP"/>
@@ -155,7 +159,12 @@
                     </view>
                     <navigationItem key="navigationItem" id="5bT-pm-eFx"/>
                     <connections>
+                        <outlet property="accountBtn" destination="wLM-gk-s7L" id="dNQ-9V-NSo"/>
+                        <outlet property="addMarkerBtn" destination="tBv-xr-tJg" id="ayH-w9-Lot"/>
+                        <outlet property="dukBtn" destination="MuD-Av-5oy" id="OSH-6l-OI7"/>
                         <outlet property="mapView" destination="9jn-w6-iJj" id="488-63-ej2"/>
+                        <outlet property="markersBtn" destination="mSx-F9-mDf" id="3hD-k3-5jh"/>
+                        <outlet property="menuBG" destination="mjc-nd-bAv" id="Up7-g0-YvD"/>
                         <outlet property="searchBtn" destination="0ZP-gs-S2W" id="LdS-Xw-VID"/>
                         <segue destination="PRT-KV-WT9" kind="show" identifier="MapToMyMarkers" id="aHA-iD-u80"/>
                         <segue destination="qwp-Vw-ANI" kind="show" identifier="MapToMarkerDetail" id="kqa-9W-h1L"/>
@@ -1003,6 +1012,7 @@
     <resources>
         <image name="camera" width="180" height="128"/>
         <image name="close-x" width="35" height="35"/>
+        <image name="close-x-small-white" width="30" height="30"/>
         <image name="photoMarker" width="40" height="53"/>
     </resources>
     <inferredMetricsTieBreakers>

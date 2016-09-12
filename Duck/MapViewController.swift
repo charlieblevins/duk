@@ -13,9 +13,16 @@ import GoogleMaps
 
 class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate, ApiRequestDelegate, MarkerAggregatorDelegate {
     
+    @IBOutlet weak var menuBG: UIView!
     @IBOutlet weak var mapView: GMSMapView!
-    @IBOutlet weak var searchBtn: UIButton!
+    @IBOutlet weak var searchBtn: DukBtn!
+    @IBOutlet weak var addMarkerBtn: DukBtn!
+    @IBOutlet weak var markersBtn: DukBtn!
+    @IBOutlet weak var accountBtn: DukBtn!
+    @IBOutlet weak var dukBtn: DukBtn!
 
+    var menuBtns: [DukBtn]!
+    var menuOpen: Bool = false
     
     var locationManager: CLLocationManager!
 
@@ -60,8 +67,11 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         showGMap()
         
         // Add buttons
-        showAddMarkerButton()
+        //showAddMarkerButton()
         showMyLocationBtn()
+        
+        menuBtns = [searchBtn, addMarkerBtn, markersBtn, accountBtn]
+        toggleMenu(false)
         
         // This kicks off all initial loading.
         checkUserLocation(false) {
@@ -695,6 +705,34 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
     }
     
+    /** Menu Handling */
+    @IBAction func dukTapped(sender: DukBtn) {
+        toggleMenu(!menuOpen)
+    }
+    
+    func toggleMenu (open: Bool) {
+        
+        for btn in menuBtns {
+            btn.hidden = !open
+        }
+        
+        menuBG.hidden = !open
+        
+        menuOpen = open
+        
+        if open {
+            let closeX = UIImage(named: "close-x-small-white")
+            dukBtn.setImage(closeX, forState: .Normal)
+            let inset: CGFloat = 20
+            dukBtn.imageEdgeInsets = UIEdgeInsetsMake(inset, inset, inset, inset)
+            dukBtn.setTitle("", forState: .Normal)
+        } else {
+            dukBtn.setTitle("DUK", forState: .Normal)
+            dukBtn.setImage(nil, forState: .Normal)
+        }
+    }
+
+    
     // Search Btn Tapped
     @IBAction func searchTapped(sender: AnyObject) {
         appendSearchBox()
@@ -1116,16 +1154,35 @@ class DukBtn: UIButton {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        self.setup()
+    }
+    
+    override init(frame: CGRect) {
+        super.init(frame: frame)
+        self.setup()
     }
     
     init() {
         super.init(frame: CGRectZero)
+        self.setup()
+    }
+    
+    func setup () {
         
         // Change BG on down press
         self.addTarget(self, action: #selector(self.pressDown), forControlEvents: .TouchDown)
         
         // Reset bg on release
         self.addTarget(self, action: #selector(self.resetBg), forControlEvents: .TouchUpInside)
+        
+        // Shadow
+        self.layer.shadowColor = UIColor.blackColor().CGColor
+        self.layer.shadowOpacity = 0.25
+        self.layer.shadowOffset = CGSize(width: 0, height: 0)
+        self.layer.shadowRadius = 4
+        
+        // Undo default clipping mask to make shadow visible
+        self.layer.masksToBounds = false
     }
     
     func pressDown () {
