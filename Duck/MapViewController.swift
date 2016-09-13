@@ -468,146 +468,21 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
     }
     
-    // Show Add Marker button
-    func showAddMarkerButton() {
-        let button = DukBtn()
-        
-        // Build button
-        button.translatesAutoresizingMaskIntoConstraints = false
-        
-        button.layer.masksToBounds = true
-        button.backgroundColor = .whiteColor()
-
-        button.setTitle("Add Marker", forState: .Normal)
-        button.titleLabel!.lineBreakMode = .ByWordWrapping;
-        button.titleLabel!.textAlignment = .Center
-        
-        button.setTitleColor(UIColor(red: 56, green: 150, blue: 57), forState: .Normal)
-        
-        // Dimensions
-        let widthConstraint = NSLayoutConstraint(
-            item: button,
-            attribute: .Width,
-            relatedBy: .Equal,
-            toItem: nil,
-            attribute: .NotAnAttribute,
-            multiplier: 1,
-            constant: 80)
-
-        
-        let heightConstraint = NSLayoutConstraint(
-            item: button,
-            attribute: .Height,
-            relatedBy: .Equal,
-            toItem: nil,
-            attribute: .NotAnAttribute,
-            multiplier: 1,
-            constant: 80)
-        
-        
-        // Make Circle
-        button.layer.cornerRadius = 40
-        
-        // Position
-        let horizontalConstraint = NSLayoutConstraint(
-            item: button,
-            attribute: .CenterX,
-            relatedBy: .Equal,
-            toItem: view,
-            attribute: .CenterX,
-            multiplier: 1,
-            constant: 0)
-        
-        let verticalConstraint = NSLayoutConstraint(
-            item: button,
-            attribute: .Bottom,
-            relatedBy: .Equal,
-            toItem: view,
-            attribute: .Bottom,
-            multiplier: 1,
-            constant: -15)
-        
-        // Set action
-        button.addTarget(self, action: #selector(MapViewController.addMarker(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        
-        // Add button to view
-        self.view.addSubview(button)
-        
-        // Shadow
-        button.layer.shadowOpacity = 0.25
-        button.layer.shadowOffset = CGSize(width: 0, height: 0)
-        button.layer.shadowRadius = 4
-        
-        // Undo default clipping mask to make shadow visible
-        button.layer.masksToBounds = false
-        
-        // Activate constraints
-        heightConstraint.active = true
-        widthConstraint.active = true
-        horizontalConstraint.active = true
-        verticalConstraint.active = true
-        
-        // HIDDEN - FIXME
-        button.hidden = true
-    }
- 
-    // Moves user to add marker view
-    func addMarker(sender:UIButton!) {
+    @IBAction func addMarker(sender: DukBtn) {
         
         // Ensure we have location authorization
         // then move to add marker view
         self.checkUserLocation(true) {
-            self.goToAddMarkerView()
+            self.goToView("AddMarkerController")
         }
     }
     
-    func goToAddMarkerView () {
-        let AddMarkerViewController = self.storyboard!.instantiateViewControllerWithIdentifier("AddMarkerController")
-        self.navigationController?.pushViewController(AddMarkerViewController, animated: true)
+    @IBAction func accountTapped(sender: DukBtn) {
+        self.goToView("AccountViewController")
     }
     
-    func showMyMarkersButton () {
-        let button = DukBtn()
-        
-        // Build button
-        button.frame = CGRectMake(100, 100, 100, 50)
-        
-        button.backgroundColor = UIColor.blueColor()
-        button.setTitle("My Markers", forState: UIControlState.Normal)
-        
-        // Position
-        button.translatesAutoresizingMaskIntoConstraints = false
-        let horizontalConstraint = NSLayoutConstraint(
-            item: button,
-            attribute: .Left,
-            relatedBy: .Equal,
-            toItem: view,
-            attribute: .Left,
-            multiplier: 1,
-            constant: 0)
-        
-        let verticalConstraint = NSLayoutConstraint(
-            item: button,
-            attribute: .Top,
-            relatedBy: .Equal,
-            toItem: view,
-            attribute: .Top,
-            multiplier: 1,
-            constant: 20)
-        
-        // Set action
-        button.addTarget(self, action: #selector(MapViewController.goToMyMarkers(_:)), forControlEvents: UIControlEvents.TouchUpInside)
-        
-        // Add button to view
-        self.view.addSubview(button)
-        
-        // Activate constraints
-        horizontalConstraint.active = true
-        verticalConstraint.active = true
-    }
-    
-    func goToMyMarkers (sender: UIButton) {
-        goToView("MyMarkersController")
+    @IBAction func markersTapped(sender: DukBtn) {
+        self.goToView("MyMarkersController")
     }
     
     func goToView(controllerName: String) {
@@ -629,7 +504,11 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         guard let image = UIImage(named: "crosshair") else {
             return
         }
+        
         button.setImage(image, forState: .Normal)
+        
+        let inset: CGFloat = 12
+        button.imageEdgeInsets = UIEdgeInsetsMake(inset, inset, inset, inset)
         
         
         // Dimensions
@@ -640,7 +519,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             toItem: nil,
             attribute: .NotAnAttribute,
             multiplier: 1,
-            constant: 60)
+            constant: 50)
         
         
         let heightConstraint = NSLayoutConstraint(
@@ -650,11 +529,11 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             toItem: nil,
             attribute: .NotAnAttribute,
             multiplier: 1,
-            constant: 60)
+            constant: 50)
         
         
         // Make Circle
-        button.layer.cornerRadius = 30
+        button.layer.cornerRadius = 25
         
         // Position
         let horizontalConstraint = NSLayoutConstraint(
