@@ -47,8 +47,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "796"
             endingLineNumber = "796"
-            landmarkName = "showLocationAcessDeniedAlert(_:)"
-            landmarkType = "5">
+            landmarkName = "showLocationAcessDeniedAlert(message:)"
+            landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>
