@@ -9,7 +9,7 @@
 import UIKit
 
 protocol PopOverDateDelegate {
-    func savePublishDate(chosenTime: String?)
+    func savePublishDate(_ chosenTime: String?)
 }
 
 class PopOverDate: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
@@ -22,7 +22,7 @@ class PopOverDate: UIViewController, UIPickerViewDataSource, UIPickerViewDelegat
     var choice: String?
     var delegate: PopOverDateDelegate?
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
     }
     
@@ -38,7 +38,7 @@ class PopOverDate: UIViewController, UIPickerViewDataSource, UIPickerViewDelegat
     }
     
     // Add " day(s) from now" to each day number
-    func addDaysFromNow (choicesArr: [String], row: Int) -> String {
+    func addDaysFromNow (_ choicesArr: [String], row: Int) -> String {
         let item = choices[row]
         
         // Handle plurality
@@ -49,26 +49,26 @@ class PopOverDate: UIViewController, UIPickerViewDataSource, UIPickerViewDelegat
         }
     }
     
-    func setDefault (defaultChoice: String) {
+    func setDefault (_ defaultChoice: String) {
         
         // Remove " days from now" before lookup
-        let choiceNumberOnly = defaultChoice.stringByReplacingOccurrencesOfString(" days from now", withString: "")
-        let defaultIndex = choices.indexOf(choiceNumberOnly)
+        let choiceNumberOnly = defaultChoice.replacingOccurrences(of: " days from now", with: "")
+        let defaultIndex = choices.index(of: choiceNumberOnly)
         
         if defaultIndex != nil {
             pickerView.selectRow(defaultIndex!, inComponent: 0, animated: false)
         }
     }
     
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
     
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return choices.count
     }
     
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         
         if choices[row] == "Now" {
             return "Now"
@@ -77,11 +77,11 @@ class PopOverDate: UIViewController, UIPickerViewDataSource, UIPickerViewDelegat
         }
     }
     
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         choice = addDaysFromNow(choices, row: row)
     }
     
-    @IBAction func finishedPickingDate(sender: AnyObject) {
+    @IBAction func finishedPickingDate(_ sender: AnyObject) {
         
         // Pass date to super view
         if choice != nil {
@@ -91,6 +91,6 @@ class PopOverDate: UIViewController, UIPickerViewDataSource, UIPickerViewDelegat
         }
         
         // Close popover
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
 }

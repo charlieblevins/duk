@@ -25,20 +25,20 @@ class MenuViewController: UIViewController {
         self.handleTapOn(myAccountView, handler: #selector(self.didTapMyAccount(_:)))
     }
 
-    func didTapMyAccount (sender: UITapGestureRecognizer) {
+    func didTapMyAccount (_ sender: UITapGestureRecognizer) {
         goToView("AccountViewController")
     }
     
-    func didTapMyMarkers (sender: UITapGestureRecognizer) {
+    func didTapMyMarkers (_ sender: UITapGestureRecognizer) {
         goToView("MyMarkersController")
     }
     
-    func goToView (controller: String) {
-        let controller = self.storyboard!.instantiateViewControllerWithIdentifier(controller)
+    func goToView (_ controller: String) {
+        let controller = self.storyboard!.instantiateViewController(withIdentifier: controller)
         self.navigationController?.pushViewController(controller, animated: true)
     }
     
-    func handleTapOn (section: UIView, handler: Selector) {
+    func handleTapOn (_ section: UIView, handler: Selector) {
         let tap = UITapGestureRecognizer(target: self, action: handler)
         section.addGestureRecognizer(tap)
     }

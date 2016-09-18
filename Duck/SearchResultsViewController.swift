@@ -35,11 +35,11 @@ class SearchResultsViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-    func setMessage (message: String) {
+    func setMessage (_ message: String) {
         resultsLabel.text = message
     }
     
-    @IBAction func closeTapped(sender: UIButton) {
+    @IBAction func closeTapped(_ sender: UIButton) {
         self.view.removeFromSuperview()
         self.removeFromParentViewController()
     }

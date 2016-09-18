@@ -14,9 +14,9 @@ import CoreLocation
 class Util {
     
     // Fetch any entity from core data
-    class func fetchCoreData (entityName: String, predicate: NSPredicate?) -> [AnyObject]! {
+    class func fetchCoreData (_ entityName: String, predicate: NSPredicate?) -> [AnyObject]! {
         //1
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         
         //2
@@ -29,7 +29,7 @@ class Util {
         
         //4
         do {
-            return try managedContext.executeFetchRequest(fetchRequest)
+            return try managedContext.fetch(fetchRequest)
         } catch let error as NSError {
             print("Could not fetch \(error), \(error.userInfo)")
             return nil
@@ -38,20 +38,20 @@ class Util {
     
     // Utility
     // Update a single field value for all items of a particular entity type
-    class func updateCoreDataForEntity (entityName: String, fieldName: String, newValue: AnyObject?) {
+    class func updateCoreDataForEntity (_ entityName: String, fieldName: String, newValue: AnyObject?) {
         
         // Clear markers for now - NOT FOR PRODUCTION!
         let allItems: NSFetchRequest = NSFetchRequest()
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
-        allItems.entity = NSEntityDescription.entityForName(entityName, inManagedObjectContext: managedContext)
+        allItems.entity = NSEntityDescription.entity(forEntityName: entityName, in: managedContext)
         allItems.includesPropertyValues = false
         //only fetch the managedObjectID
         var items: [AnyObject]
         
         do {
-            items = try managedContext.executeFetchRequest(allItems)
+            items = try managedContext.fetch(allItems)
             
             for item in items {
                 item.setValue(newValue, forKey: fieldName)
@@ -70,23 +70,23 @@ class Util {
     
     // Utility
     // Delete all objects of a certain entity type from core data
-    class func deleteCoreDataForEntity (entityName: String) {
+    class func deleteCoreDataForEntity (_ entityName: String) {
         
         // Clear markers for now - NOT FOR PRODUCTION!
         let allItems: NSFetchRequest = NSFetchRequest()
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
-        allItems.entity = NSEntityDescription.entityForName(entityName, inManagedObjectContext: managedContext)
+        allItems.entity = NSEntityDescription.entity(forEntityName: entityName, in: managedContext)
         allItems.includesPropertyValues = false
         //only fetch the managedObjectID
         var items: [AnyObject]
         
         do {
-            items = try managedContext.executeFetchRequest(allItems)
+            items = try managedContext.fetch(allItems)
             
             for item in items {
-                managedContext.deleteObject(item as! NSManagedObject)
+                managedContext.delete(item as! NSManagedObject)
             }
         } catch let error as NSError {
             print("Fetch failed: \(error.localizedDescription)")
@@ -100,13 +100,13 @@ class Util {
     }
     
     // Delete objects with a certain time stamp from core data
-    class func deleteCoreDataByTime (entityName: String, timestamp: Double) {
+    class func deleteCoreDataByTime (_ entityName: String, timestamp: Double) {
         // Clear markers for now - NOT FOR PRODUCTION!
         let marker: NSFetchRequest = NSFetchRequest()
         
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
-        marker.entity = NSEntityDescription.entityForName(entityName, inManagedObjectContext: managedContext)
+        marker.entity = NSEntityDescription.entity(forEntityName: entityName, in: managedContext)
         marker.includesPropertyValues = false
         
         // Query by timestamp
@@ -116,10 +116,10 @@ class Util {
         var markers: [AnyObject]
         
         do {
-            markers = try managedContext.executeFetchRequest(marker)
+            markers = try managedContext.fetch(marker)
             
             for marker in markers {
-                managedContext.deleteObject(marker as! NSManagedObject)
+                managedContext.delete(marker as! NSManagedObject)
             }
         } catch let error as NSError {
             print("Fetch failed: \(error.localizedDescription)")
@@ -132,7 +132,7 @@ class Util {
         }
     }
     
-    class func loadMarkerIcon (marker: DukGMSMarker, noun_tags: String) {
+    class func loadMarkerIcon (_ marker: DukGMSMarker, noun_tags: String) {
         
         // Set placeholder for interim
         let placeholder = UIImage(named: "photoMarker")
@@ -141,7 +141,7 @@ class Util {
         // Split string into array
         let tagArr = noun_tags.characters.split{ $0 == " " }.map {
             item in
-            String(item).stringByReplacingOccurrencesOfString("#", withString: "")
+            String(item).replacingOccurrences(of: "#", with: "")
         }
         
         // Load image from server
@@ -150,7 +150,7 @@ class Util {
         let file = filenameFromNoun(tagArr[0])
         
         imgView.kf_setImageWithURL(
-            NSURL(string: "http://dukapp.io/icon/\(file)")!,
+            URL(string: "http://dukapp.io/icon/\(file)")!,
             placeholderImage: nil,
             optionsInfo: nil,
             progressBlock: nil,
@@ -171,31 +171,31 @@ class Util {
     
     
     // Thumbnail size?
-    class func resizeImage(image: UIImage, scaledToFillSize size: CGSize) -> UIImage {
+    class func resizeImage(_ image: UIImage, scaledToFillSize size: CGSize) -> UIImage {
         
         let scale: CGFloat = max(size.width / image.size.width, size.height / image.size.height)
         let width: CGFloat = image.size.width * scale
         let height: CGFloat = image.size.height * scale
         
-        let imageRect: CGRect = CGRectMake((size.width - width) / 2.0, (size.height - height) / 2.0, width, height)
+        let imageRect: CGRect = CGRect(x: (size.width - width) / 2.0, y: (size.height - height) / 2.0, width: width, height: height)
         
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         
-        image.drawInRect(imageRect)
-        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        image.draw(in: imageRect)
+        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         
         UIGraphicsEndImageContext()
         return newImage
     }
     
     // Load an icon image from the server
-    class func loadIconImage (noun: String, imageView: UIImageView, activitIndicator: UIActivityIndicatorView) {
+    class func loadIconImage (_ noun: String, imageView: UIImageView, activitIndicator: UIActivityIndicatorView) {
         
         activitIndicator.startAnimating()
         
         let file = filenameFromNoun(noun)
         
-        imageView.kf_setImageWithURL(NSURL(string: "http://dukapp.io/icon/\(file)")!,
+        imageView.kf_setImageWithURL(URL(string: "http://dukapp.io/icon/\(file)")!,
                                         placeholderImage: nil,
                                         optionsInfo: nil,
                                         progressBlock: nil,
@@ -216,16 +216,16 @@ class Util {
     
     // Create filename string from noun
     // for use with image creation api
-    class func filenameFromNoun (noun: String) -> String {
+    class func filenameFromNoun (_ noun: String) -> String {
         
         // Remove first char if it is a "#"
         var noun_no_hash = noun
         if noun[noun.startIndex] == "#" {
-            noun_no_hash = noun.substringFromIndex(noun.startIndex.successor())
+            noun_no_hash = noun.substring(from: noun.characters.index(after: noun.startIndex))
         }
         
         // Detect this iphone's resolution requirement
-        let scale: Int = Int(UIScreen.mainScreen().scale)
+        let scale: Int = Int(UIScreen.main.scale)
         
         let file: String = "\(noun_no_hash)@\(scale)x.png"
         
@@ -234,29 +234,29 @@ class Util {
     
     // Show an alert overlay for long running tasks
     // Call <return_value>.dismissviewControllerAnimated(... to close
-    class func showLoadingOverlay (viewController: UIViewController, message: String) -> UIAlertController {
+    class func showLoadingOverlay (_ viewController: UIViewController, message: String) -> UIAlertController {
         
-        let alert = UIAlertController(title: nil, message: message, preferredStyle: .Alert)
+        let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
         
-        alert.view.tintColor = UIColor.blackColor()
-        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRectMake(10, 5, 50, 50)) as UIActivityIndicatorView
+        alert.view.tintColor = UIColor.black
+        let loadingIndicator: UIActivityIndicatorView = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50)) as UIActivityIndicatorView
         loadingIndicator.hidesWhenStopped = true
-        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.Gray
+        loadingIndicator.activityIndicatorViewStyle = UIActivityIndicatorViewStyle.gray
         loadingIndicator.startAnimating();
         
         alert.view.addSubview(loadingIndicator)
-        viewController.presentViewController(alert, animated: true, completion: nil)
+        viewController.present(alert, animated: true, completion: nil)
         
         return alert
     }
     
-    class func coreToDictionary (managedObj: NSManagedObject) -> NSDictionary {
+    class func coreToDictionary (_ managedObj: NSManagedObject) -> NSDictionary {
         let keys = Array(managedObj.entity.attributesByName.keys)
-        return managedObj.dictionaryWithValuesForKeys(keys)
+        return managedObj.dictionaryWithValues(forKeys: keys) as NSDictionary
     }
     
     // Calculate distance between two points
-    class func distanceFromHereTo (point: CLLocationCoordinate2D) {
+    class func distanceFromHereTo (_ point: CLLocationCoordinate2D) {
         
     }
 }

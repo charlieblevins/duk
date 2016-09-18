@@ -10,20 +10,20 @@ import Foundation
 import UIKit
 
 protocol AutocompleteDelegate {
-    func willChooseTag(autocomplete: Autocomplete, tag: UIButton)
+    func willChooseTag(_ autocomplete: Autocomplete, tag: UIButton)
 }
 
-public class Autocomplete: NSObject {
+open class Autocomplete: NSObject {
     
-    public var itemHeight: CGFloat = 20
-    public var itemWidth: CGFloat = 200
-    public var backgroundColor: CGColor = UIColor.whiteColor().CGColor
+    open var itemHeight: CGFloat = 20
+    open var itemWidth: CGFloat = 200
+    open var backgroundColor: CGColor = UIColor.white.cgColor
     
     var delegate: AutocompleteDelegate?
     
-    private var iconModel: IconModel?
-    private var autocompleteView: UIView?
-    private var tagBubbles: UIView?
+    fileprivate var iconModel: IconModel?
+    fileprivate var autocompleteView: UIView?
+    fileprivate var tagBubbles: UIView?
     
 
     
@@ -33,7 +33,7 @@ public class Autocomplete: NSObject {
     
     // Takes a string. Finds all matching icons and returns a ui view containing
     // each matching icon as a button
-    public func suggest (search: String) -> UIView? {
+    open func suggest (_ search: String) -> UIView? {
         
         // Load icon data
         if iconModel == nil {
@@ -91,18 +91,18 @@ public class Autocomplete: NSObject {
             let iconImg = UIImage(named: icon.imageName)
             
             // Build button
-            let iconBtn: UIButton = UIButton(frame: CGRectMake(0, yPos, self.itemWidth, self.itemHeight))
-            iconBtn.imageView?.contentMode = UIViewContentMode.ScaleAspectFit
-            iconBtn.imageView?.frame = CGRectMake(2, 2, self.itemWidth - 4, self.itemHeight - 4)
-            iconBtn.setImage(iconImg, forState: .Normal)
-            iconBtn.setTitleColor(UIColor.grayColor(), forState: .Normal)
-            iconBtn.setTitle(icon.tag, forState: .Normal)
+            let iconBtn: UIButton = UIButton(frame: CGRect(x: 0, y: yPos, width: self.itemWidth, height: self.itemHeight))
+            iconBtn.imageView?.contentMode = UIViewContentMode.scaleAspectFit
+            iconBtn.imageView?.frame = CGRect(x: 2, y: 2, width: self.itemWidth - 4, height: self.itemHeight - 4)
+            iconBtn.setImage(iconImg, for: UIControlState())
+            iconBtn.setTitleColor(UIColor.gray, for: UIControlState())
+            iconBtn.setTitle(icon.tag, for: UIControlState())
             
             // Set button image insets (padding)
             iconBtn.imageEdgeInsets = UIEdgeInsetsMake(5, 5, 5, 5)
             
             // Listen for tap
-            iconBtn.addTarget(self, action: #selector(Autocomplete.willChooseTag(_:)), forControlEvents: .TouchUpInside)
+            iconBtn.addTarget(self, action: #selector(Autocomplete.willChooseTag(_:)), for: .touchUpInside)
             
             // Add to super
             autocompleteView!.addSubview(iconBtn)
@@ -113,19 +113,19 @@ public class Autocomplete: NSObject {
         return autocompleteView!
     }
     
-    func willChooseTag(sender: UIButton) {
+    func willChooseTag(_ sender: UIButton) {
         delegate?.willChooseTag(self, tag: sender)
     }
     
     // Get array of icons that match a search
-    private func findMatchingIcons (search: String) -> [IconModel.Icon] {
+    fileprivate func findMatchingIcons (_ search: String) -> [IconModel.Icon] {
         return iconModel!.icons.filter({
             
             // Check if icon tag contains typed text
-            let foundString: Range? = $0.tag.rangeOfString(search)
+            let foundString: Range? = $0.tag.range(of: search)
             
             // all characters of search string match first characters of Icon name
-            if foundString != nil && foundString!.startIndex == search.startIndex {
+            if foundString != nil && foundString!.lowerBound == search.startIndex {
                 return true
             } else {
                 return false

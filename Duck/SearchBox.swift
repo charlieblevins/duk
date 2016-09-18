@@ -43,7 +43,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.view.userInteractionEnabled = true
+        self.view.isUserInteractionEnabled = true
         
         // Name tabs
         myLocation.name = "my_location"
@@ -57,7 +57,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         nounsField.delegate = self
         
         // Set initial selection
-        myLocation.selected = true
+        myLocation.isSelected = true
         
         // Register tab buttons as a group
         tabGroup = [myLocation, thisArea, address]
@@ -75,10 +75,10 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
     }
     
     // Add tap recognizer to a subview
-    func addTap (view: UIView, action: Selector) {
+    func addTap (_ view: UIView, action: Selector) {
         
         // Even though IB says this is already true, it isn't
-        view.userInteractionEnabled = true
+        view.isUserInteractionEnabled = true
         
         view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: action))
     }
@@ -93,27 +93,27 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
     }
 
     // Handle taps on near tabs
-    @IBAction func myLocationTapped(sender: UIButton) {
+    @IBAction func myLocationTapped(_ sender: UIButton) {
         nearTabTapped(sender)
         hideAddressField()
     }
     
-    @IBAction func thisAreaTapped(sender: UIButton) {
+    @IBAction func thisAreaTapped(_ sender: UIButton) {
         nearTabTapped(sender)
         hideAddressField()
     }
     
-    @IBAction func addressTapped(sender: UIButton) {
+    @IBAction func addressTapped(_ sender: UIButton) {
         loadPlacesPicker()
     }
     
     func loadPlacesPicker () {
         let autocompleteController = GMSAutocompleteViewController()
         autocompleteController.delegate = self
-        self.presentViewController(autocompleteController, animated: true, completion: nil)
+        self.present(autocompleteController, animated: true, completion: nil)
     }
     
-    func nearTabTapped (button: UIButton) {
+    func nearTabTapped (_ button: UIButton) {
         print("\(button.currentTitle) tapped")
         
         guard let tappedBtn = button as? UIButtonTab else {
@@ -123,33 +123,33 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         
         // Set highlighted state for all tabs
         for tab in tabGroup {
-            tab.selected = (tab == tappedBtn) ? true : false
+            tab.isSelected = (tab == tappedBtn) ? true : false
         }
     }
     
     func setTabUnderline() {
         for tab in tabGroup {
             let attributes = [
-                NSForegroundColorAttributeName : UIColor.whiteColor(),
-                NSUnderlineStyleAttributeName : NSUnderlineStyle.StyleSingle.rawValue
-            ]
+                NSForegroundColorAttributeName : UIColor.white,
+                NSUnderlineStyleAttributeName : NSUnderlineStyle.styleSingle.rawValue
+            ] as [String : Any]
             
-            tab.setAttributedTitle(NSAttributedString(string: tab.currentAttributedTitle!.string, attributes: attributes), forState: UIControlState.Selected)
+            tab.setAttributedTitle(NSAttributedString(string: tab.currentAttributedTitle!.string, attributes: attributes), for: UIControlState.selected)
         }
     }
     
     // Hide address field and resize container to fit
     func hideAddressField () {
         
-        if (!self.addressField.hidden) {
-            self.addressField.hidden = true
+        if (!self.addressField.isHidden) {
+            self.addressField.isHidden = true
             
             // Subtract address field height from container
             containerHeight.constant -= addressField.frame.height
         }
     }
     
-    func textFieldDidEndEditing(textField: UITextField) {
+    func textFieldDidEndEditing(_ textField: UITextField) {
         
         if textField == nounsField {
             
@@ -160,12 +160,12 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         }
     }
     
-    @IBAction func closeTapped(sender: UIButton) {
+    @IBAction func closeTapped(_ sender: UIButton) {
         self.view.removeFromSuperview()
         self.removeFromParentViewController()
     }
     
-    @IBAction func searchTapped(sender: AnyObject) {
+    @IBAction func searchTapped(_ sender: AnyObject) {
         print("search tapped")
         
         self.noun = (self.nounsField.text != "") ? self.nounsField.text : nil
@@ -174,7 +174,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         var search_type: SearchType? = nil
         
         // Get tab name
-        guard let tab_index = tabGroup.indexOf({ $0.selected }) else {
+        guard let tab_index = tabGroup.index(where: { $0.isSelected }) else {
             print("selected tab not found")
             return
         }
@@ -193,7 +193,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         // Get bounds for this_area
         if tab_name == "this_area" {
             
-            search_type = .ThisArea
+            search_type = .thisArea
             
             // get map current bounds
             let vis_region = self.parentController.mapView.projection.visibleRegion()
@@ -208,7 +208,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         if tab_name == "my_location" {
             
             point = DistanceTracker.sharedInstance.latestCoord
-            search_type = .MyLocation
+            search_type = .myLocation
             
             guard point != nil else {
                 print("could not get point from distance tracker")
@@ -224,7 +224,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
             }
             
             point = self.coord
-            search_type = .Address
+            search_type = .address
             
         } else {
             print("unrecognized tab_name")
@@ -237,42 +237,42 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
     
     
     // Handle the user's selection.
-    func viewController(viewController: GMSAutocompleteViewController, didAutocompleteWithPlace place: GMSPlace) {
+    func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         print("Place name: ", place.name)
         print("Place address: ", place.formattedAddress)
         
         self.addressField.text = place.formattedAddress
         
-        self.addressField.selected = true
+        self.addressField.isSelected = true
         
         self.coord = place.coordinate
         
         // Show address field
-        if (self.addressField.hidden) {
-            self.addressField.hidden = false
+        if (self.addressField.isHidden) {
+            self.addressField.isHidden = false
             containerHeight.constant += addressField.frame.height
         }
         
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
     
-    func viewController(viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: NSError) {
+    func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: NSError) {
         // TODO: handle the error.
         print("Error: ", error.description)
     }
     
     // User canceled the operation.
-    func wasCancelled(viewController: GMSAutocompleteViewController) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    func wasCancelled(_ viewController: GMSAutocompleteViewController) {
+        self.dismiss(animated: true, completion: nil)
     }
     
     // Turn the network activity indicator on and off again.
-    func didRequestAutocompletePredictions(viewController: GMSAutocompleteViewController) {
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = true
+    func didRequestAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = true
     }
     
-    func didUpdateAutocompletePredictions(viewController: GMSAutocompleteViewController) {
-        UIApplication.sharedApplication().networkActivityIndicatorVisible = false
+    func didUpdateAutocompletePredictions(_ viewController: GMSAutocompleteViewController) {
+        UIApplication.shared.isNetworkActivityIndicatorVisible = false
     }
 }
 
@@ -281,15 +281,15 @@ class UISearchField: UITextField {
     
     let padding = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 5)
     
-    override func textRectForBounds(bounds: CGRect) -> CGRect {
+    override func textRect(forBounds bounds: CGRect) -> CGRect {
         return UIEdgeInsetsInsetRect(bounds, padding)
     }
     
-    override func placeholderRectForBounds(bounds: CGRect) -> CGRect {
+    override func placeholderRect(forBounds bounds: CGRect) -> CGRect {
         return UIEdgeInsetsInsetRect(bounds, padding)
     }
     
-    override func editingRectForBounds(bounds: CGRect) -> CGRect {
+    override func editingRect(forBounds bounds: CGRect) -> CGRect {
         return UIEdgeInsetsInsetRect(bounds, padding)
     }
 }
@@ -300,6 +300,6 @@ class UIButtonTab: UIButton {
 }
 
 enum SearchType: Int {
-    case MyLocation, Address, ThisArea
+    case myLocation, address, thisArea
 }
 

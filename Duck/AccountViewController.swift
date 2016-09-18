@@ -33,7 +33,7 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
         
         // Controller
         let controller = WKUserContentController()
-        controller.addScriptMessageHandler(self, name: "signInClicked")
+        controller.add(self, name: "signInClicked")
         
         // Configuration
         let config = WKWebViewConfiguration()
@@ -59,27 +59,27 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
         // If credentials exist
         if self.credentials != nil {
         
-            let url = NSURL(string: "http://dukapp.io/home")
-            request = NSMutableURLRequest(URL: url!)
+            let url = URL(string: "http://dukapp.io/home")
+            request = NSMutableURLRequest(url: url!)
             
             
             // Add basic auth to request header
-            let loginData = "\(self.credentials!.email):\(self.credentials!.password)".dataUsingEncoding(NSUTF8StringEncoding)!
-            let base64LoginString = loginData.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
+            let loginData = "\(self.credentials!.email):\(self.credentials!.password)".data(using: String.Encoding.utf8)!
+            let base64LoginString = loginData.base64EncodedString(options: .lineLength64Characters)
             
             request!.addValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
         
         // No credentials: Login
         } else {
-            let url = NSURL(string: "http://dukapp.io")
-            request = NSMutableURLRequest(URL: url!)
+            let url = URL(string: "http://dukapp.io")
+            request = NSMutableURLRequest(url: url!)
         }
         
-        self.webView!.loadRequest(request!)
+        self.webView!.load(request! as URLRequest)
     }
     
     // Receive message from page script
-    func userContentController(userContentController: WKUserContentController, didReceiveScriptMessage message: WKScriptMessage) {
+    func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         
         if let data = message.body as? NSDictionary {
             print("Data received: \(data)")
@@ -92,7 +92,7 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
     }
     
     // Receive script data and act accordingly
-    func handleScriptMessage(data: NSDictionary) {
+    func handleScriptMessage(_ data: NSDictionary) {
         
         switch data["action"] as! String {
         
@@ -108,13 +108,13 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
     }
     
     // Flag signout attempt
-    func webView(webView: WKWebView, decidePolicyForNavigationAction navigationAction: WKNavigationAction, decisionHandler: (WKNavigationActionPolicy) -> Void) {
-        decisionHandler(.Allow)
+    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
+        decisionHandler(.allow)
         
-        let req_url = navigationAction.request.URL?.absoluteString
+        let req_url = navigationAction.request.url?.absoluteString
         
         // If request signout page
-        if req_url!.rangeOfString("dukapp.io/signout") != nil {
+        if req_url!.range(of: "dukapp.io/signout") != nil {
             self.didReqSignOut = true
         }
     }
@@ -122,15 +122,15 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
     /**
      * Access the navigation response data to determine login success/fail
      */
-    func webView(webView: WKWebView, decidePolicyForNavigationResponse navigationResponse: WKNavigationResponse, decisionHandler: (WKNavigationResponsePolicy) -> Void) {
+    func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         
-        let status = (navigationResponse.response as! NSHTTPURLResponse).statusCode
-        let url = webView.URL?.absoluteString
+        let status = (navigationResponse.response as! HTTPURLResponse).statusCode
+        let url = webView.url?.absoluteString
         
         print(status)
         
         // If a 200 status AND /home is loaded AND tempCredentials are stored: assume successful login
-        if status == 200 && url!.rangeOfString("dukapp.io/home") != nil && self.tempCredentials != nil {
+        if status == 200 && url!.range(of: "dukapp.io/home") != nil && self.tempCredentials != nil {
             
             // Save credentials in core data
             self.tempCredentials!.save()
@@ -146,7 +146,7 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
             }
             
         // If loading home page and last request was signout: remove credentials
-        } else if url!.rangeOfString("dukapp.io") != nil && self.didReqSignOut {
+        } else if url!.range(of: "dukapp.io") != nil && self.didReqSignOut {
             self.credentials!.remove()
         }
         
@@ -156,19 +156,19 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
         self.tempCredentials = nil
         
         // Always allow load
-        decisionHandler(.Allow)
+        decisionHandler(.allow)
     }
 
     /**
      * Catch failed load
      */
-    func webView(webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: NSError) {
+    func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         print("terminated")
         
-        alertLoadFailed(error)
+        alertLoadFailed(error as NSError)
     }
     
-    func alertLoadFailed(error: NSError) {
+    func alertLoadFailed(_ error: NSError) {
         
         var message = error.localizedDescription
         
@@ -179,10 +179,10 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
         
         let alertController = UIAlertController(title: "Something went wrong...",
                                                 message: message,
-                                                preferredStyle: .Alert)
+                                                preferredStyle: .alert)
         
         // Allow back navigation
-        let backAction = UIAlertAction(title: "Back", style: .Default, handler: {
+        let backAction = UIAlertAction(title: "Back", style: .default, handler: {
             alertAction in
             self.previousView()
         })
@@ -190,19 +190,19 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
         alertController.addAction(backAction)
         
         // Allow feedback
-        let fbAction = UIAlertAction(title: "Feedback", style: .Default, handler: {
+        let fbAction = UIAlertAction(title: "Feedback", style: .default, handler: {
             alertAction in
-            UIApplication.sharedApplication().openURL(NSURL(string:"http://dukapp.io/feedback")!)
+            UIApplication.shared.openURL(URL(string:"http://dukapp.io/feedback")!)
         })
         
         alertController.addAction(fbAction)
         
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
     
     // Return to previous view
     func previousView () {
-        navigationController?.popViewControllerAnimated(true)
+        navigationController?.popViewController(animated: true)
     }
     
     override func didReceiveMemoryWarning() {

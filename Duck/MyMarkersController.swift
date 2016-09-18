@@ -13,7 +13,7 @@ import CoreData
 class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     
     var savedMarkers: [Marker] = [Marker]()
-    var deleteMarkerIndexPath: NSIndexPath? = nil
+    var deleteMarkerIndexPath: IndexPath? = nil
     var deleteMarkerTimestamp: Double? = nil
     var deletedMarkers: [Double] = []
     
@@ -43,7 +43,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         self.clearsSelectionOnViewWillAppear = false
 
         // display an Edit button in the navigation bar for this view controller.
-        self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
     override func didReceiveMemoryWarning() {
@@ -52,14 +52,14 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     }
     
     // Listen for updates on any pending publish requests
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         
         // If a publish request is pending, reload data
         // which will trigger the request
         if self.pending_publish != nil && self.pending_publish!["indexPath"] != nil && self.pending_publish!["marker"] != nil {
             
             // Reload data in order to set cell as delegate
-            self.tableView.reloadRowsAtIndexPaths([self.pending_publish!["indexPath"] as! NSIndexPath], withRowAnimation: .Right)
+            self.tableView.reloadRows(at: [self.pending_publish!["indexPath"] as! IndexPath], with: .right)
         
         // Reset pending publish reference
         } else {
@@ -71,27 +71,27 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         var data = [Marker]()
         
         // Context
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         
         // Fetch request
         let fetchReq: NSFetchRequest = NSFetchRequest()
-        fetchReq.entity = NSEntityDescription.entityForName("Marker", inManagedObjectContext: managedContext)
+        fetchReq.entity = NSEntityDescription.entity(forEntityName: "Marker", in: managedContext)
         
-        fetchReq.resultType = .DictionaryResultType
+        fetchReq.resultType = .dictionaryResultType
         fetchReq.propertiesToFetch = ["timestamp", "public_id", "tags", "photo_sm"]
         
         
         do {
-            let markers = try managedContext.executeFetchRequest(fetchReq)
+            let markers = try managedContext.fetch(fetchReq)
             
             for marker in markers {
                 
                 var new_marker = Marker()
-                new_marker.timestamp = marker.valueForKey("timestamp") as? Double
-                new_marker.public_id = marker.valueForKey("public_id") as? String
-                new_marker.tags = marker.valueForKey("tags") as? String
-                new_marker.photo_sm = marker.valueForKey("photo_sm") as? NSData
+                new_marker.timestamp = (marker as AnyObject).value(forKey: "timestamp") as? Double
+                new_marker.public_id = (marker as AnyObject).value(forKey: "public_id") as? String
+                new_marker.tags = (marker as AnyObject).value(forKey: "tags") as? String
+                new_marker.photo_sm = (marker as AnyObject).value(forKey: "photo_sm") as? Data
                 
                 data.append(new_marker)
             }
@@ -106,29 +106,29 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return savedMarkers.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        let cell = tableView.dequeueReusableCellWithIdentifier("MarkerTableViewCell", forIndexPath: indexPath) as! MarkerTableViewCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MarkerTableViewCell", for: indexPath) as! MarkerTableViewCell
 
         // Get marker data
-        cell.markerData = savedMarkers[indexPath.row]
+        cell.markerData = savedMarkers[(indexPath as NSIndexPath).row]
         
         cell.master = self
         
         cell.indexPath = indexPath
         
         cell.tagsLabel?.text = cell.markerData!.tags
-        cell.tagsLabel?.lineBreakMode = .ByWordWrapping
+        cell.tagsLabel?.lineBreakMode = .byWordWrapping
         cell.tagsLabel?.numberOfLines = 3
         
         // Remove right side subviews
@@ -136,13 +136,13 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         
         // Public badge or publish btn
         if cell.markerData!.public_id != nil {
-            appendPublicBadge(indexPath.row, cell: cell)
+            appendPublicBadge((indexPath as NSIndexPath).row, cell: cell)
         } else {
-            appendPublishBtn(indexPath.row, cell: cell)
+            appendPublishBtn((indexPath as NSIndexPath).row, cell: cell)
         }
 
         // Get thumbnail
-        let data: NSData = cell.markerData!.photo_sm!
+        let data: Data = cell.markerData!.photo_sm! as Data
         let image: UIImage! = UIImage(data: data)!
         cell.markerImage.image = image
 
@@ -163,11 +163,11 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     }
     
     // Show a public badge for published markers
-    func appendPublicBadge (row: Int, cell: MarkerTableViewCell) {
+    func appendPublicBadge (_ row: Int, cell: MarkerTableViewCell) {
         
         // Add publish button
         let publicBadge = UILabel()
-        publicBadge.frame.size = CGSizeMake(100, 50)
+        publicBadge.frame.size = CGSize(width: 100, height: 50)
         publicBadge.text = "Public"
         
         // Forest green
@@ -180,98 +180,98 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         // Position with constraints
         let hrzC = NSLayoutConstraint(
             item: publicBadge,
-            attribute: .Trailing,
-            relatedBy: .Equal,
+            attribute: .trailing,
+            relatedBy: .equal,
             toItem: cell.contentView,
-            attribute: .Trailing,
+            attribute: .trailing,
             multiplier: 1.0,
             constant: 0
         )
         let vrtC = NSLayoutConstraint(
             item: publicBadge,
-            attribute: .CenterY,
-            relatedBy: .Equal,
+            attribute: .centerY,
+            relatedBy: .equal,
             toItem: cell.contentView,
-            attribute: .CenterY,
+            attribute: .centerY,
             multiplier: 1.0,
             constant: 0
         )
         let hgtC = NSLayoutConstraint(
             item: publicBadge,
-            attribute: .Height,
-            relatedBy: .Equal,
+            attribute: .height,
+            relatedBy: .equal,
             toItem: cell.contentView,
-            attribute: .Height,
+            attribute: .height,
             multiplier: 1.0,
             constant: 0
         )
         
         
         // Activate all constraints
-        NSLayoutConstraint.activateConstraints([hrzC, vrtC, hgtC])
+        NSLayoutConstraint.activate([hrzC, vrtC, hgtC])
     }
     
-    func appendPublishBtn (row: Int, cell: MarkerTableViewCell) {
+    func appendPublishBtn (_ row: Int, cell: MarkerTableViewCell) {
         
         // Add publish button
         let pubBtn = UIButton()
-        pubBtn.frame.size = CGSizeMake(100, 50)
+        pubBtn.frame.size = CGSize(width: 100, height: 50)
         pubBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10)
-        pubBtn.setTitle("Publish", forState: .Normal)
-        pubBtn.backgroundColor = UIColor.blueColor()
+        pubBtn.setTitle("Publish", for: UIControlState())
+        pubBtn.backgroundColor = UIColor.blue
         pubBtn.translatesAutoresizingMaskIntoConstraints = false
         
         pubBtn.tag = row
-        pubBtn.addTarget(self, action: #selector(MyMarkersController.publishAction(_:)), forControlEvents: .TouchUpInside)
+        pubBtn.addTarget(self, action: #selector(MyMarkersController.publishAction(_:)), for: .touchUpInside)
         
         cell.contentView.addSubview(pubBtn)
         
         // Position with contraints
         let hrzC = NSLayoutConstraint(
             item: pubBtn,
-            attribute: .Trailing,
-            relatedBy: .Equal,
+            attribute: .trailing,
+            relatedBy: .equal,
             toItem: cell.contentView,
-            attribute: .Trailing,
+            attribute: .trailing,
             multiplier: 1.0,
             constant: 0
         )
         let vrtC = NSLayoutConstraint(
             item: pubBtn,
-            attribute: .CenterY,
-            relatedBy: .Equal,
+            attribute: .centerY,
+            relatedBy: .equal,
             toItem: cell.contentView,
-            attribute: .CenterY,
+            attribute: .centerY,
             multiplier: 1.0,
             constant: 0
         )
         let hgtC = NSLayoutConstraint(
             item: pubBtn,
-            attribute: .Height,
-            relatedBy: .Equal,
+            attribute: .height,
+            relatedBy: .equal,
             toItem: cell.contentView,
-            attribute: .Height,
+            attribute: .height,
             multiplier: 1.0,
             constant: 0
         )
         
         // Activate all constraints
-        NSLayoutConstraint.activateConstraints([hrzC, vrtC, hgtC])
+        NSLayoutConstraint.activate([hrzC, vrtC, hgtC])
     }
     
-    func publishAction(sender: AnyObject) {
+    func publishAction(_ sender: AnyObject) {
         
         let credentArr = Util.fetchCoreData("Login", predicate: nil)
         
         // Sign in credentials exist
-        if  credentArr.count != 0 {
+        if  credentArr?.count != 0 {
             
             self.loadPublishConfirm(sender)
             
         // If not signed in, send to account page
         } else {
             print("no credentials found")
-            let accountView = self.storyboard!.instantiateViewControllerWithIdentifier("AccountViewController") as! AccountViewController
+            let accountView = self.storyboard!.instantiateViewController(withIdentifier: "AccountViewController") as! AccountViewController
             accountView.signInSuccessHandler = {
                 self.loadPublishConfirm(sender)
             }
@@ -279,7 +279,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         }
     }
     
-    func loadPublishConfirm (sender: AnyObject) {
+    func loadPublishConfirm (_ sender: AnyObject) {
         print("credentials found")
         
         // Get and store indexpath
@@ -290,31 +290,31 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         let button = sender as! UIButton
         let sview = button.superview!
         let cell = sview.superview as! MarkerTableViewCell
-        let marker_index_path = self.tableView.indexPathForCell(cell)
+        let marker_index_path = self.tableView.indexPath(for: cell)
         self.pending_publish!["indexPath"] = marker_index_path
         
         // Load publish confirmation view
-        performSegueWithIdentifier("GoToPublish", sender: marker_index_path)
+        performSegue(withIdentifier: "GoToPublish", sender: marker_index_path)
     }
     
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
         if segue.identifier == "GoToPublish" {
             print(segue.identifier)
-            print(segue.destinationViewController)
-            let publishView = segue.destinationViewController as! PublishConfirmController
-            publishView.markerData = savedMarkers[(sender as! NSIndexPath).row];
+            print(segue.destination)
+            let publishView = segue.destination as! PublishConfirmController
+            publishView.markerData = savedMarkers[((sender as! IndexPath) as NSIndexPath).row];
             
             // Set this view as delegate to receive future messages
             publishView.delegate = self
         } else if segue.identifier == "EditMarker" {
             
-            let editView = segue.destinationViewController as! AddMarkerController
-            let indexPath = sender as! NSIndexPath
+            let editView = segue.destination as! AddMarkerController
+            let indexPath = sender as! IndexPath
             
-            guard let timestamp = savedMarkers[indexPath.row].timestamp else {
-                print("Could not get timestamp for row: ", indexPath.row)
+            guard let timestamp = savedMarkers[(indexPath as NSIndexPath).row].timestamp else {
+                print("Could not get timestamp for row: ", (indexPath as NSIndexPath).row)
                 return
             }
             
@@ -327,7 +327,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         }
     }
     
-    override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 80
     }
 
@@ -340,49 +340,49 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     */
 
     // Override to support editing the table view.
-    override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
-        if editingStyle == .Delete {
+    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
             // Delete the row from the data source
             //Util.deleteCoreDataForEntity()
             //tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
             deleteMarkerIndexPath = indexPath
-            deleteMarkerTimestamp = savedMarkers[indexPath.row].timestamp
+            deleteMarkerTimestamp = savedMarkers[(indexPath as NSIndexPath).row].timestamp
             popAlert("Are you sure you want to delete this marker?")
         }
     }
     
     // On Row Select load
     // marker edit view
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        performSegueWithIdentifier("EditMarker", sender: indexPath)
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        performSegue(withIdentifier: "EditMarker", sender: indexPath)
     }
     
-    func popAlert(text:String) {
+    func popAlert(_ text:String) {
         let alertController = UIAlertController(title: "Delete Marker",
             message: text,
-            preferredStyle: .ActionSheet)
+            preferredStyle: .actionSheet)
         
-        let deleteAction = UIAlertAction(title: "Delete", style: .Destructive, handler: handleDeleteMarker)
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive, handler: handleDeleteMarker)
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alertController.addAction(deleteAction)
         alertController.addAction(cancelAction)
         
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
     
-    func handleDeleteMarker (alertAction: UIAlertAction!) -> Void {
+    func handleDeleteMarker (_ alertAction: UIAlertAction!) -> Void {
         if let indexPath = deleteMarkerIndexPath {
             tableView.beginUpdates()
             
             // Delete from local var
-            savedMarkers.removeAtIndex(indexPath.row)
+            savedMarkers.remove(at: (indexPath as NSIndexPath).row)
             
             // Pass deleted items to mapview for removal
             let mvc = navigationController?.viewControllers.first as! MapViewController
             mvc.deletedMarkers.append(deleteMarkerTimestamp!)
             
             // Delete from table view
-            tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+            tableView.deleteRows(at: [indexPath], with: .automatic)
             
             // Delete from core data
             Util.deleteCoreDataByTime("Marker", timestamp: deleteMarkerTimestamp!)
@@ -393,7 +393,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     }
     
 
-    func makePublishRequest (cell: MarkerTableViewCell) {
+    func makePublishRequest (_ cell: MarkerTableViewCell) {
         
         // New request instance
         request = ApiRequest()
@@ -422,14 +422,14 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     // MARK: Publish delegate method
     
     // Listen for publish begin
-    func publishDidBegin (timestamp: Double, request: ApiRequest) {
+    func publishDidBegin (_ timestamp: Double, request: ApiRequest) {
     }
     
     
-    func updateMarkerEntity (localTimestamp: Double, publicID: String) {
+    func updateMarkerEntity (_ localTimestamp: Double, publicID: String) {
         
         // Get managed object context
-        let appDel: AppDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDel: AppDelegate = UIApplication.shared.delegate as! AppDelegate
         let context: NSManagedObjectContext = appDel.managedObjectContext
         
         // Construct fetch request with predicate
@@ -438,7 +438,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         
         // Execute fetch
         do {
-            let fetchResults = try appDel.managedObjectContext.executeFetchRequest(fetchRequest) as? [NSManagedObject]
+            let fetchResults = try appDel.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             
             // Insert new public id
             if  fetchResults != nil && fetchResults!.count > 0 {
@@ -461,39 +461,39 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     func popSuccessAlert() {
         let alertController = UIAlertController(title: "Upload Successful!",
             message: "Your marker was uploaded successfully.",
-            preferredStyle: .Alert)
+            preferredStyle: .alert)
         
-        let okAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
+        let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
         alertController.addAction(okAction)
         
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
     
-    func popFailAlert(text:String) {
+    func popFailAlert(_ text:String) {
         let alertController = UIAlertController(title: "Upload Failure",
             message: text,
-            preferredStyle: .Alert)
+            preferredStyle: .alert)
         
-        let cancelAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
+        let cancelAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
         alertController.addAction(cancelAction)
         
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
     
     
     // Thumbnail size?
-    func resizeImage(image: UIImage, scaledToFillSize size: CGSize) -> UIImage {
+    func resizeImage(_ image: UIImage, scaledToFillSize size: CGSize) -> UIImage {
         
         let scale: CGFloat = max(size.width / image.size.width, size.height / image.size.height)
         let width: CGFloat = image.size.width * scale
         let height: CGFloat = image.size.height * scale
         
-        let imageRect: CGRect = CGRectMake((size.width - width) / 2.0, (size.height - height) / 2.0, width, height)
+        let imageRect: CGRect = CGRect(x: (size.width - width) / 2.0, y: (size.height - height) / 2.0, width: width, height: height)
         
         UIGraphicsBeginImageContextWithOptions(size, false, 0)
         
-        image.drawInRect(imageRect)
-        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()
+        image.draw(in: imageRect)
+        let newImage: UIImage = UIGraphicsGetImageFromCurrentImageContext()!
         
         UIGraphicsEndImageContext()
         return newImage

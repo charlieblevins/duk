@@ -10,7 +10,7 @@ import UIKit
 
 
 protocol EditNounDelegate {
-    func nounsDidUpdate (nouns: String?)
+    func nounsDidUpdate (_ nouns: String?)
 }
 
 class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDelegate, UITableViewDataSource, UIGestureRecognizerDelegate {
@@ -38,7 +38,7 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         
         // Convert string of nouns to array
         if nounsRaw != nil {
-            allNouns = nounsRaw!.componentsSeparatedByString(" ").map({
+            allNouns = nounsRaw!.components(separatedBy: " ").map({
                 return NounData(name: $0)
             })
         }
@@ -49,7 +49,7 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         NounList.dataSource = self
         
         // display an Edit button in the navigation bar for this view controller.
-        self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
 
     override func didReceiveMemoryWarning() {
@@ -69,8 +69,8 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         view.endEditing(true)
     }
     
-    func gestureRecognizer(gestureRecognizer: UIGestureRecognizer, shouldReceiveTouch touch: UITouch) -> Bool {
-        if NounEntryField.isFirstResponder() {
+    func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldReceive touch: UITouch) -> Bool {
+        if NounEntryField.isFirstResponder {
             return true
         }
         return false
@@ -78,7 +78,7 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
 
     
     // Called when "Edit" btn is tapped
-    override func setEditing(editing: Bool, animated: Bool) {
+    override func setEditing(_ editing: Bool, animated: Bool) {
         
         // Toggles the edit button state
         super.setEditing(editing, animated: animated)
@@ -93,11 +93,11 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     }
     
     // Handle edit actions
-    func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         
-        if editingStyle == .Delete {
-            allNouns.removeAtIndex(indexPath.row)
-            NounList.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Automatic)
+        if editingStyle == .delete {
+            allNouns.remove(at: (indexPath as NSIndexPath).row)
+            NounList.deleteRows(at: [indexPath], with: .automatic)
             
             // Update delegate nouns
             updateDelegateNouns()
@@ -105,18 +105,18 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     }
     
     // Allow row re-order
-    func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
+    func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
         return true
     }
     
-    func tableView(tableView: UITableView, moveRowAtIndexPath sourceIndexPath: NSIndexPath, toIndexPath destinationIndexPath: NSIndexPath) {
-        let itemToMove = allNouns[sourceIndexPath.row]
-        allNouns.removeAtIndex(sourceIndexPath.row)
-        allNouns.insert(itemToMove, atIndex: destinationIndexPath.row)
+    func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        let itemToMove = allNouns[(sourceIndexPath as NSIndexPath).row]
+        allNouns.remove(at: (sourceIndexPath as NSIndexPath).row)
+        allNouns.insert(itemToMove, at: (destinationIndexPath as NSIndexPath).row)
     }
     
     // Handle return tap
-    func textFieldShouldReturn(textField: UITextField) -> Bool {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         //textField.resignFirstResponder()
         
         // Get noun
@@ -127,7 +127,7 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
             allNouns.append(NounData(name: noun_name))
             
             NounList.beginUpdates()
-            NounList.insertRowsAtIndexPaths([NSIndexPath(forRow: allNouns.count - 1, inSection: 0)], withRowAnimation: .Automatic)
+            NounList.insertRows(at: [IndexPath(row: allNouns.count - 1, section: 0)], with: .automatic)
             NounList.endUpdates()
             
             // Update delegate data
@@ -149,7 +149,7 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
                 return $0.name
             })
             
-            let nounString = nouns_arr.joinWithSeparator(" ")
+            let nounString = nouns_arr.joined(separator: " ")
             
             if nounString == "" {
                 self.delegate?.nounsDidUpdate(nil)
@@ -160,35 +160,35 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     }
     
     // Height for row
-    func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 55
     }
     
     // Cell for row
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("NounRow", forIndexPath: indexPath) as! NounTableViewCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "NounRow", for: indexPath) as! NounTableViewCell
         
-        cell.NounRowLabel.text = allNouns[indexPath.row].name
-        cell.loadIconImage(allNouns[indexPath.row].name)
+        cell.NounRowLabel.text = allNouns[(indexPath as NSIndexPath).row].name
+        cell.loadIconImage(allNouns[(indexPath as NSIndexPath).row].name)
         
         return cell
     }
     
     // Number of sections
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
     // Number of rows
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return allNouns.count
     }
     
     // Applies lower-case and dashes to incoming nouns
-    func applyNounFormat (noun: String) -> String {
+    func applyNounFormat (_ noun: String) -> String {
         
         // lowercase and dashes for spaces
-        let lowercase_dashes = noun.lowercaseString.stringByReplacingOccurrencesOfString(" ", withString: "-")
+        let lowercase_dashes = noun.lowercased().replacingOccurrences(of: " ", with: "-")
         
         // Add # to beginning
         return "#\(lowercase_dashes)"

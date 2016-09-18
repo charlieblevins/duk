@@ -13,17 +13,17 @@ import GoogleMaps
 
 @objc protocol ApiRequestDelegate {
     
-    optional func reqDidStart()
+    @objc optional func reqDidStart()
     
-    optional func uploadDidProgress(progress: Float)
+    @objc optional func uploadDidProgress(_ progress: Float)
     
-    optional func imageDownloadDidProgress(progress: Float)
+    @objc optional func imageDownloadDidProgress(_ progress: Float)
     
-    func reqDidComplete(data: NSDictionary, method: ApiMethod)
+    func reqDidComplete(_ data: NSDictionary, method: ApiMethod)
     
-    optional func reqDidComplete(withImage image: UIImage)
+    @objc optional func reqDidComplete(withImage image: UIImage)
     
-    func reqDidFail(error: String, method: ApiMethod)
+    func reqDidFail(_ error: String, method: ApiMethod)
 }
 
 
@@ -35,11 +35,11 @@ class ApiRequest {
     let baseURL: String = "http://dukapp.io/api"
     
     // MARK: Methods
-    func checkCredentials (email: String, password: String, successHandler: (() -> Void), failureHandler: ((message: String?) -> Void)) {
+    func checkCredentials (_ email: String, password: String, successHandler: @escaping (() -> Void), failureHandler: @escaping ((_ message: String?) -> Void)) {
         
         // Add basic auth to request header
-        let loginData = "\(email):\(password)".dataUsingEncoding(NSUTF8StringEncoding)!
-        let base64LoginString = loginData.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
+        let loginData = "\(email):\(password)".data(using: String.Encoding.utf8)!
+        let base64LoginString = loginData.base64EncodedString(options: .lineLength64Characters)
 
         let headers = ["Authorization": "Basic \(base64LoginString)"]
         
@@ -77,13 +77,13 @@ class ApiRequest {
     }
     
     // Sends marker data and photo as multipart POST request to server
-    func publishSingleMarker (credentials: Credentials, marker: Marker) {
+    func publishSingleMarker (_ credentials: Credentials, marker: Marker) {
         
         progress = 0
         
         // Add basic auth to request header
-        let loginData = "\(credentials.email):\(credentials.password)".dataUsingEncoding(NSUTF8StringEncoding)!
-        let base64LoginString = loginData.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
+        let loginData = "\(credentials.email):\(credentials.password)".data(using: String.Encoding.utf8)!
+        let base64LoginString = loginData.base64EncodedString(options: .lineLength64Characters)
         
         let headers = ["Authorization": "Basic \(base64LoginString)"]
         
@@ -149,7 +149,7 @@ class ApiRequest {
     
     // Get a single marker's data from API
     // Optionally request base 64 photo data by size
-    func getMarkerDataById (public_id: String, photo_size: String?) {
+    func getMarkerDataById (_ public_id: String, photo_size: String?) {
         
         var params = ["marker_id": public_id]
         
@@ -165,7 +165,7 @@ class ApiRequest {
     }
     
     // Get marker data within geographic bounds
-    func getMarkersWithinBounds (bounds: GMSCoordinateBounds, page: Int?) {
+    func getMarkersWithinBounds (_ bounds: GMSCoordinateBounds, page: Int?) {
         
         // Build request params
         var params: [String: String] = [
@@ -189,7 +189,7 @@ class ApiRequest {
     }
     
     // Get marker data near lat/lng point
-    func getMarkersNear (point: CLLocationCoordinate2D, noun: String?) {
+    func getMarkersNear (_ point: CLLocationCoordinate2D, noun: String?) {
         
         // Build request params
         var params: [String: String] = [
@@ -212,7 +212,7 @@ class ApiRequest {
     }
     
     // Get Marker Image
-    func getMarkerImage (fileName: String) {
+    func getMarkerImage (_ fileName: String) {
         
         self.delegate?.reqDidStart?()
         
@@ -220,14 +220,14 @@ class ApiRequest {
         let destination = Alamofire.Request.suggestedDownloadDestination(directory: .DocumentDirectory, domain: .UserDomainMask)
         
         // Create file path
-        let fm = NSFileManager.defaultManager()
-        let path: [NSURL] = fm.URLsForDirectory(.DocumentDirectory, inDomains: .UserDomainMask)
-        let imgPath: NSURL = path[0].URLByAppendingPathComponent(fileName)
+        let fm = FileManager.default
+        let path: [URL] = fm.urls(for: .documentDirectory, in: .userDomainMask)
+        let imgPath: URL = path[0].appendingPathComponent(fileName)
         
         // Ensure this image file does not already exist (should never happen)
-        if fm.fileExistsAtPath(imgPath.path!) {
+        if fm.fileExists(atPath: imgPath.path) {
             print("SHOULD NEVER HAPPEN: Image existed after info window display")
-            try! NSFileManager.defaultManager().removeItemAtURL(imgPath)
+            try! FileManager.default.removeItem(at: imgPath)
         }
         
         // Exec request
@@ -299,7 +299,7 @@ class ApiRequest {
     }
     
     // Handles an alamofire response object and calls associated delegate methods
-    func handleResponse (response: Response<AnyObject, NSError>, method: ApiMethod) {
+    func handleResponse (_ response: Response<AnyObject, NSError>, method: ApiMethod) {
         print("handling response")
         
         switch response.result {
@@ -340,11 +340,11 @@ class ApiRequest {
     // ** Utils
     
     // Build http basic auth header from credentials
-    func buildAuthHeader (credentials: Credentials) -> [String: String] {
+    func buildAuthHeader (_ credentials: Credentials) -> [String: String] {
         
         // Add basic auth to request header
-        let loginData = "\(credentials.email):\(credentials.password)".dataUsingEncoding(NSUTF8StringEncoding)!
-        let base64LoginString = loginData.base64EncodedStringWithOptions(.Encoding64CharacterLineLength)
+        let loginData = "\(credentials.email):\(credentials.password)".data(using: String.Encoding.utf8)!
+        let base64LoginString = loginData.base64EncodedString(options: .lineLength64Characters)
         
         return ["Authorization": "Basic \(base64LoginString)"]
     }
@@ -352,5 +352,5 @@ class ApiRequest {
 
 // Classify api method types for easier response handling
 @objc enum ApiMethod: Int {
-    case MarkersWithinBounds, MarkersNearPoint, Image, PublishMarker, GetMarkerDataById
+    case markersWithinBounds, markersNearPoint, image, publishMarker, getMarkerDataById
 }

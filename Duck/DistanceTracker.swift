@@ -10,6 +10,17 @@ import Foundation
 import GoogleMaps
 import CoreLocation
 import CoreData
+fileprivate func < <T : Comparable>(lhs: T?, rhs: T?) -> Bool {
+  switch (lhs, rhs) {
+  case let (l?, r?):
+    return l < r
+  case (nil, _?):
+    return true
+  default:
+    return false
+  }
+}
+
 
 protocol DistanceTrackerDelegate {
     func distanceTracker (updateDidComplete distanceTracker: DistanceTracker)
@@ -46,16 +57,16 @@ class DistanceTracker: NSObject, CLLocationManagerDelegate {
     }
     
     // Change of user location permissions
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        if status == .AuthorizedWhenInUse || status == .AuthorizedAlways {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedWhenInUse || status == .authorizedAlways {
             // Receive updates for location change
             self.locationManager.startUpdatingLocation()
         }
     }
 
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
-        NSNotificationCenter.defaultCenter().postNotificationName(LocationNotifKey, object: self)
+        NotificationCenter.default.post(name: Notification.Name(rawValue: LocationNotifKey), object: self)
         
         // Don't handle new update if still updating
         if self.updating {
@@ -64,7 +75,7 @@ class DistanceTracker: NSObject, CLLocationManagerDelegate {
         
         self.updating = true
             
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async {
             
             // Store latest coord
             self.latestCoord = locations[locations.count - 1].coordinate
@@ -72,7 +83,7 @@ class DistanceTracker: NSObject, CLLocationManagerDelegate {
             // Update with latest coordinate
             self.update(self.latestCoord!)
             
-            dispatch_async(dispatch_get_main_queue()) {
+            DispatchQueue.main.async {
                 self.updating = false
                 if self.delegate != nil {
                     self.firstUpdateComplete = true
@@ -82,23 +93,23 @@ class DistanceTracker: NSObject, CLLocationManagerDelegate {
         }
     }
 
-    func update (point: CLLocationCoordinate2D) {
+    func update (_ point: CLLocationCoordinate2D) {
 
         // Context
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         
 
         // Fetch request
         let fetchReq: NSFetchRequest = NSFetchRequest()
-        fetchReq.entity = NSEntityDescription.entityForName("Marker", inManagedObjectContext: managedContext)
+        fetchReq.entity = NSEntityDescription.entity(forEntityName: "Marker", in: managedContext)
 
-        fetchReq.resultType = .DictionaryResultType
+        fetchReq.resultType = .dictionaryResultType
         fetchReq.propertiesToFetch = ["latitude", "longitude", "timestamp", "public_id", "tags"]
 
 
         do {
-            let markers = try managedContext.executeFetchRequest(fetchReq)
+            let markers = try managedContext.fetch(fetchReq)
             var markers_with_distance = [Marker]()
 
             for marker in markers {
@@ -113,15 +124,15 @@ class DistanceTracker: NSObject, CLLocationManagerDelegate {
                 new_marker.latitude = lat
                 new_marker.longitude = lng
                 new_marker.distance_from_me = distance
-                new_marker.timestamp = marker.valueForKey("timestamp") as? Double
-                new_marker.public_id = marker.valueForKey("public_id") as? String
-                new_marker.tags = marker.valueForKey("tags") as? String
+                new_marker.timestamp = (marker as AnyObject).value(forKey: "timestamp") as? Double
+                new_marker.public_id = (marker as AnyObject).value(forKey: "public_id") as? String
+                new_marker.tags = (marker as AnyObject).value(forKey: "tags") as? String
                 
                 markers_with_distance.append(new_marker)
             }
             
             // Sort by distance nearest to furthest
-            self.markersByDistance = markers_with_distance.sort({
+            self.markersByDistance = markers_with_distance.sorted(by: {
                 $0.distance_from_me < $1.distance_from_me
             })
             

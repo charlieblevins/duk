@@ -17,14 +17,14 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     var statusBar: UILabel? = nil
     var master: MyMarkersController? = nil
     
-    var indexPath: NSIndexPath? = nil
+    var indexPath: IndexPath? = nil
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
@@ -44,9 +44,9 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     
     }
     
-    func updateStatus (content: String) {
+    func updateStatus (_ content: String) {
         
-        if (master!.isViewLoaded() == false) {
+        if (master!.isViewLoaded == false) {
             return Void()
         }
         
@@ -65,9 +65,9 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         
         // Make a label to act as status bar
         statusBar = UILabel()
-        statusBar!.frame.size = CGSizeMake(100, 30)
+        statusBar!.frame.size = CGSize(width: 100, height: 30)
         statusBar!.text = "Status Placeholder"
-        statusBar!.textColor = UIColor.redColor()
+        statusBar!.textColor = UIColor.red
         statusBar!.translatesAutoresizingMaskIntoConstraints = false
         
         // Append status bar
@@ -77,34 +77,34 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         // Position with constraints
         let hrzC = NSLayoutConstraint(
             item: statusBar!,
-            attribute: .Trailing,
-            relatedBy: .Equal,
+            attribute: .trailing,
+            relatedBy: .equal,
             toItem: self.contentView,
-            attribute: .Trailing,
+            attribute: .trailing,
             multiplier: 1.0,
             constant: -10
         )
         let vrtC = NSLayoutConstraint(
             item: statusBar!,
-            attribute: .CenterY,
-            relatedBy: .Equal,
+            attribute: .centerY,
+            relatedBy: .equal,
             toItem: self.contentView,
-            attribute: .CenterY,
+            attribute: .centerY,
             multiplier: 1.0,
             constant: 0
         )
         let hgtC = NSLayoutConstraint(
             item: statusBar!,
-            attribute: .Height,
-            relatedBy: .Equal,
+            attribute: .height,
+            relatedBy: .equal,
             toItem: self.contentView,
-            attribute: .Height,
+            attribute: .height,
             multiplier: 1.0,
             constant: 0
         )
         
         // Activate all constraints
-        NSLayoutConstraint.activateConstraints([hrzC, vrtC, hgtC])
+        NSLayoutConstraint.activate([hrzC, vrtC, hgtC])
     }
     
     // MARK: upload delegate method handlers
@@ -113,32 +113,42 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     }
     
     // Show progress
-    func uploadDidProgress(progress: Float) {
+    func uploadDidProgress(_ progress: Float) {
         let percentage = Int(progress * 100)
         self.updateStatus("\(percentage)% complete")
     }
     
     
-    func reqDidComplete(data: NSDictionary, method: ApiMethod) {
+    func reqDidComplete(_ data: NSDictionary, method: ApiMethod) {
         print("upload complete")
         
         // Save new data to core data
         let timestamp: Double = self.markerData!.timestamp!
-        let pubID: String = data["data"]!["_id"] as! String
+        
+        guard let data_convert = data["data"] as? [String:String] else {
+            print("unexpected data structure at reqDidComplete")
+            return
+        }
+        
+        guard let pubID: String = data_convert["_id"] else {
+            print("could not get _id from response")
+            return
+        }
+        
         master!.updateMarkerEntity(timestamp, publicID: pubID)
         
         // Alert that upload was successful
         //master!.popSuccessAlert()
         
-        master!.tableView.reloadRowsAtIndexPaths([self.indexPath!], withRowAnimation: .Right)
+        master!.tableView.reloadRows(at: [self.indexPath!], with: .right)
     }
     
     // Show alert on failure
-    func reqDidFail(error: String, method: ApiMethod) {
+    func reqDidFail(_ error: String, method: ApiMethod) {
         
         print("upload failure")
         
-        master!.appendPublishBtn(self.indexPath!.row, cell: self)
+        master!.appendPublishBtn((self.indexPath! as NSIndexPath).row, cell: self)
         
         // Pop alert with error message
         master!.popFailAlert(error)

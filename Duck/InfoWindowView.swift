@@ -16,7 +16,7 @@ class InfoWindowView: UIView {
     @IBOutlet weak var tags: UILabel!
 
     class func instanceFromNib() -> InfoWindowView {
-        return UINib(nibName: "InfoWindow", bundle: nil).instantiateWithOwner(nil, options: nil)[0] as! InfoWindowView
+        return UINib(nibName: "InfoWindow", bundle: nil).instantiate(withOwner: nil, options: nil)[0] as! InfoWindowView
     }
     
     // Bug fix: without this infowindow freezes
@@ -25,7 +25,7 @@ class InfoWindowView: UIView {
     }
     
     
-    @IBAction func didTapMoreDetail(sender: AnyObject) {
+    @IBAction func didTapMoreDetail(_ sender: AnyObject) {
         print("more detail tapped")
     }
 }

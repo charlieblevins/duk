@@ -33,7 +33,7 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         self.title = "Publish Marker"
         
         // Define uploading state for publish btn
-        publishBtn.setTitle("Uploading...", forState: .Selected)
+        publishBtn.setTitle("Uploading...", for: .selected)
         
         // Populate marker data in view
         if markerData != nil {
@@ -41,8 +41,8 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
             let tags = markerData!.tags
             tagLabel.text = tags
             
-            let imageData: NSData = markerData!.photo!
-            imageView.contentMode = .ScaleAspectFit
+            let imageData: Data = markerData!.photo! as Data
+            imageView.contentMode = .scaleAspectFit
             imageView.image = UIImage(data: imageData)
         }
         
@@ -53,16 +53,16 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         // Dispose of any resources that can be recreated.
     }
     
-    override func shouldAutorotate() -> Bool {
+    override var shouldAutorotate : Bool {
         return false
     }
     
     // Restrict to potrait view only
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.Portrait
+    override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.portrait
     }
     
-    @IBAction func ChangeDateAction(sender: UIButton) {
+    @IBAction func ChangeDateAction(_ sender: UIButton) {
         
         // Present PopOverDate in modal view
         let popOverDate = PopOverDate()
@@ -77,7 +77,7 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         popOverDate.delegate = self
         
         // Show view as popover
-        popOverDate.modalPresentationStyle = .Popover
+        popOverDate.modalPresentationStyle = .popover
         if let popover = popOverDate.popoverPresentationController {
             
             // Define delegate for popover controller
@@ -92,11 +92,11 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
             popover.sourceView = sender
         }
         
-        self.presentViewController(popOverDate, animated: true, completion: nil)
+        self.present(popOverDate, animated: true, completion: nil)
     }
     
     // Receive data message from PopOverDate controller
-    func savePublishDate(chosenTime: String?) {
+    func savePublishDate(_ chosenTime: String?) {
 
         timeFromDayPicker = chosenTime
         
@@ -106,7 +106,7 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         }
     }
     
-    @IBAction func publishMarker(sender: AnyObject) {
+    @IBAction func publishMarker(_ sender: AnyObject) {
         
         // Pass data to delegate
         // pending_publish should already be a dictionary containing a table indexpath
@@ -117,7 +117,7 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         
         // Back to my markers
         for controller in (self.navigationController?.viewControllers)! {
-            if controller.isKindOfClass(MyMarkersController) {
+            if controller.isKind(of: MyMarkersController.self) {
                 self.navigationController?.popToViewController(controller, animated: true)
                 break;
             }

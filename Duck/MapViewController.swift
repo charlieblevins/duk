@@ -80,19 +80,19 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         // Observe changes in user location OR
         if DistanceTracker.sharedInstance.locationManager.location == nil {
-            NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(self.enableMapLocation), name: LocationNotifKey, object: nil)
+            NotificationCenter.default.addObserver(self, selector: #selector(self.enableMapLocation), name: NSNotification.Name(rawValue: LocationNotifKey), object: nil)
         } else {
             enableMapLocation()
         }
         
 
         // Observe changes to myLocation prop of mapView
-        mapView!.addObserver(self, forKeyPath: "myLocation", options: .New, context: nil)
+        mapView!.addObserver(self, forKeyPath: "myLocation", options: .new, context: nil)
     }
     
     // Hide nav bar for this view, but show for others
-    override func viewWillAppear(animated: Bool) {
-        self.navigationController?.navigationBarHidden = true
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.isNavigationBarHidden = true
         
         // Remove deleted from map
         if (deletedMarkers.count > 0) {
@@ -107,7 +107,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             
             // Center on marker
             if mapView != nil {
-                mapView!.animateToLocation(CLLocationCoordinate2DMake(markerToAdd!.latitude!, markerToAdd!.longitude!))
+                mapView!.animate(toLocation: CLLocationCoordinate2DMake(markerToAdd!.latitude!, markerToAdd!.longitude!))
                 self.mapIsAtRest = false
             }
             
@@ -116,8 +116,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
     }
     
-    override func viewWillDisappear(animated: Bool) {
-        self.navigationController?.navigationBarHidden = false
+    override func viewWillDisappear(_ animated: Bool) {
+        self.navigationController?.isNavigationBarHidden = false
     }
     
     func showGMap () {
@@ -131,7 +131,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // - show and animate to the user's current location
     // - request the user's permission to access location
     // - show an alert that tells user how to allow location permission
-    func checkUserLocation (alertFailure: Bool, authHandler: (()->Void)?) {
+    func checkUserLocation (_ alertFailure: Bool, authHandler: (()->Void)?) {
         
         if authHandler != nil {
             self.locationAuthHandler = authHandler
@@ -145,9 +145,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         switch CLLocationManager.authorizationStatus() {
             
-        case .AuthorizedWhenInUse:
+        case .authorizedWhenInUse:
             fallthrough
-        case .AuthorizedAlways:
+        case .authorizedAlways:
             
             // Location use is authorized, execute auth handler
             if self.locationAuthHandler != nil {
@@ -155,7 +155,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
                 self.locationAuthHandler = nil
             }
 
-        case .NotDetermined:
+        case .notDetermined:
             
             // Request location auth. If user approves
             // delegate method will handler authHandler execution
@@ -163,9 +163,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             
             break
             
-        case .Denied:
+        case .denied:
             fallthrough
-        case .Restricted:
+        case .restricted:
             if alertFailure {
                 showLocationAcessDeniedAlert(nil)
             }
@@ -176,9 +176,9 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         // Enable user location on Google Map and allow
         // observer to show location on first update
-        if mapView!.myLocationEnabled != true {
+        if mapView!.isMyLocationEnabled != true {
             didFindMyLocation = false
-            mapView!.myLocationEnabled = true
+            mapView!.isMyLocationEnabled = true
             
             // Location is already enabled: zoom to location
         } else if mapView!.myLocation != nil {
@@ -187,13 +187,13 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
     }
     
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         print("lcoation update")
         print(locations)
     }
     
     // Begin loading nearby markers on first update
-    override func observeValueForKeyPath(keyPath: String?, ofObject object: AnyObject?, change: [String : AnyObject]?, context: UnsafeMutablePointer<Void>) {
+    override func observeValue(forKeyPath keyPath: String?, of object: Any?, change: [NSKeyValueChangeKey : Any]?, context: UnsafeMutableRawPointer?) {
         if !didFindMyLocation {
             
             loadNearbyMarkers()
@@ -218,30 +218,30 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             DistanceTracker.sharedInstance.delegate = marker_aggregator
             
             marker_aggregator.distanceDataCallback = {
-                marker_aggregator.loadNearPoint(self.mapView!.myLocation!.coordinate, noun: nil, searchType: .MyLocation)
+                marker_aggregator.loadNearPoint(self.mapView!.myLocation!.coordinate, noun: nil, searchType: .myLocation)
             }
             return
         } else {
 
-            marker_aggregator.loadNearPoint(mapView!.myLocation!.coordinate, noun: nil, searchType: .MyLocation);
+            marker_aggregator.loadNearPoint(mapView!.myLocation!.coordinate, noun: nil, searchType: .myLocation);
         }
     }
     
     func enableMapLocation () {
-        if mapView!.myLocationEnabled != true {
-            mapView!.myLocationEnabled = true
+        if mapView!.isMyLocationEnabled != true {
+            mapView!.isMyLocationEnabled = true
         }
     }
     
     func animateToCurLocation () {
         if let loc = mapView?.myLocation {
-            mapView!.animateToCameraPosition(GMSCameraPosition.cameraWithTarget(loc.coordinate, zoom: 10))
+            mapView!.animate(to: GMSCameraPosition.camera(withTarget: loc.coordinate, zoom: 10))
             self.mapIsAtRest = false
         }
     }
     
     // map reaches idle state
-    func mapView(mapView: GMSMapView, idleAtCameraPosition position: GMSCameraPosition) {
+    func mapView(_ mapView: GMSMapView, idleAt position: GMSCameraPosition) {
         print("map is idle")
         self.mapIsAtRest = true;
         if self.mapTilesFinishedRendering {
@@ -249,11 +249,11 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
     }
     
-    func mapViewDidStartTileRendering(mapView: GMSMapView) {
+    func mapViewDidStartTileRendering(_ mapView: GMSMapView) {
         self.mapTilesFinishedRendering = false
     }
     
-    func mapViewDidFinishTileRendering(mapView: GMSMapView) {
+    func mapViewDidFinishTileRendering(_ mapView: GMSMapView) {
         self.mapTilesFinishedRendering = true
         if self.mapIsAtRest {
             self.mapAtRest()
@@ -271,7 +271,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     // Add markers near the user's current location
-    func addMarkersNearby (curLocation: CLLocationCoordinate2D) {
+    func addMarkersNearby (_ curLocation: CLLocationCoordinate2D) {
         
         // 1. Get 20 nearest from server
         let req = ApiRequest()
@@ -310,24 +310,24 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         req.getMarkersWithinBounds(bounds, page: nil)
     }
     
-    func showCoreMarkersWithin (bounds: GMSCoordinateBounds) {
+    func showCoreMarkersWithin (_ bounds: GMSCoordinateBounds) {
         
         // Show user's saved markers if they exist
         let markers_from_core = Util.fetchCoreData("Marker", predicate: nil)
         
-        if markers_from_core.count == 0 {
+        if markers_from_core?.count == 0 {
             return
         }
         
         // Find and return markers within provided bounds
-        for marker_data in markers_from_core {
+        for marker_data in markers_from_core! {
 
             let marker = Marker(fromCoreData: marker_data)
             
             // Get marker coords
             let coords = CLLocationCoordinate2D(latitude: marker.latitude!, longitude: marker.longitude!)
             
-            if bounds.containsCoordinate(coords) {
+            if bounds.contains(coords) {
                 
                 // Get map marker and store
                 if let map_marker = marker.getMapMarker() {
@@ -343,7 +343,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     // Add marker to map
-    func addMarkerToMap (marker: Marker) {
+    func addMarkerToMap (_ marker: Marker) {
         
         let mapMarker = marker.getMapMarker()
         
@@ -354,33 +354,33 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         curMapMarkers.append(mapMarker!)
     }
     
-    func mapView(mapView: GMSMapView, didTapMarker marker: GMSMarker) -> Bool {
+    func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
         print("marker tapped")
         mapView.selectedMarker = marker
         
-        var cg_point = mapView.projection.pointForCoordinate(marker.position)
+        var cg_point = mapView.projection.point(for: marker.position)
         cg_point.y = cg_point.y - 100
         
         let camPos = GMSCameraPosition(
-            target: mapView.projection.coordinateForPoint(cg_point),
+            target: mapView.projection.coordinate(for: cg_point),
             zoom: mapView.camera.zoom,
             bearing: mapView.camera.bearing,
             viewingAngle: mapView.camera.viewingAngle
         )
         
-        mapView.animateToCameraPosition(camPos)
+        mapView.animate(to: camPos)
         return true
     }
     
     // Info Window Pop Up
-    func mapView(mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView? {
+    func mapView(_ mapView: GMSMapView, markerInfoWindow marker: GMSMarker) -> UIView? {
         print("info window is about to show")
         
         // Allow view to update dynamically (only in v 1.13 which is broken!
         marker.tracksInfoWindowChanges = true
         
         // Get info window view
-        let customInfoWindow = NSBundle.mainBundle().loadNibNamed("InfoWindow", owner: self, options: nil)[0] as! InfoWindowView
+        let customInfoWindow = Bundle.main.loadNibNamed("InfoWindow", owner: self, options: nil)?[0] as! InfoWindowView
         
         let custom_marker = marker as! DukGMSMarker
         
@@ -388,10 +388,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         customInfoWindow.tags.text = custom_marker.tags!
         
         // Get image for local marker
-        if custom_marker.dataLocation == .Local {
+        if custom_marker.dataLocation == .local {
             
             // Hide loading
-            customInfoWindow.loading.hidden = true
+            customInfoWindow.loading.isHidden = true
             
             let marker_data = Marker.getLocalByTimestamp(custom_marker.timestamp!)
             
@@ -416,7 +416,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     // Tapped info window
-    func mapView(mapView: GMSMapView, didTapInfoWindowOfMarker marker: GMSMarker) {
+    func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
         print("info window tapped")
         
         // 1. Get marker data
@@ -424,14 +424,14 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         let marker_d = marker as! DukGMSMarker
         
         // If marker is local, create marker from core data
-        if marker_d.dataLocation == .Local {
+        if marker_d.dataLocation == .local {
             
             let data = Util.fetchCoreData("Marker", predicate: NSPredicate(format: "timestamp = %lf", marker_d.timestamp!))
             
-            let data_as_dictionary = Util.coreToDictionary(data[0] as! NSManagedObject)
+            let data_as_dictionary = Util.coreToDictionary(data?[0] as! NSManagedObject)
             
-            if data.count > 0 {
-                performSegueWithIdentifier("MapToMarkerDetail", sender: data_as_dictionary)
+            if (data?.count)! > 0 {
+                performSegue(withIdentifier: "MapToMarkerDetail", sender: data_as_dictionary)
             } else {
                 print("No markers found matching timestmap")
             }
@@ -446,13 +446,13 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         // Pass marker data to edit view
         if segue.identifier == "MapToMarkerDetail" {
             
             // Get next view controller
-            let detailView = segue.destinationViewController as! AddMarkerController
+            let detailView = segue.destination as! AddMarkerController
             
             // Create marker instance from data and reference in next view
             let data = sender as! NSDictionary
@@ -468,7 +468,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
     }
     
-    @IBAction func addMarker(sender: DukBtn) {
+    @IBAction func addMarker(_ sender: DukBtn) {
         
         // Ensure we have location authorization
         // then move to add marker view
@@ -477,16 +477,16 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
     }
     
-    @IBAction func accountTapped(sender: DukBtn) {
+    @IBAction func accountTapped(_ sender: DukBtn) {
         self.goToView("AccountViewController")
     }
     
-    @IBAction func markersTapped(sender: DukBtn) {
+    @IBAction func markersTapped(_ sender: DukBtn) {
         self.goToView("MyMarkersController")
     }
     
-    func goToView(controllerName: String) {
-        let MyMarkersController = self.storyboard!.instantiateViewControllerWithIdentifier(controllerName)
+    func goToView(_ controllerName: String) {
+        let MyMarkersController = self.storyboard!.instantiateViewController(withIdentifier: controllerName)
         self.navigationController?.pushViewController(MyMarkersController, animated: true)
     }
     
@@ -498,14 +498,14 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         button.translatesAutoresizingMaskIntoConstraints = false
         
         button.layer.masksToBounds = true
-        button.backgroundColor = .whiteColor()
+        button.backgroundColor = .white()
         
         // Add crosshair image
         guard let image = UIImage(named: "crosshair") else {
             return
         }
         
-        button.setImage(image, forState: .Normal)
+        button.setImage(image, for: UIControlState())
         
         let inset: CGFloat = 12
         button.imageEdgeInsets = UIEdgeInsetsMake(inset, inset, inset, inset)
@@ -514,20 +514,20 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // Dimensions
         let widthConstraint = NSLayoutConstraint(
             item: button,
-            attribute: .Width,
-            relatedBy: .Equal,
+            attribute: .width,
+            relatedBy: .equal,
             toItem: nil,
-            attribute: .NotAnAttribute,
+            attribute: .notAnAttribute,
             multiplier: 1,
             constant: 50)
         
         
         let heightConstraint = NSLayoutConstraint(
             item: button,
-            attribute: .Height,
-            relatedBy: .Equal,
+            attribute: .height,
+            relatedBy: .equal,
             toItem: nil,
-            attribute: .NotAnAttribute,
+            attribute: .notAnAttribute,
             multiplier: 1,
             constant: 50)
         
@@ -538,24 +538,24 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // Position
         let horizontalConstraint = NSLayoutConstraint(
             item: button,
-            attribute: .Trailing,
-            relatedBy: .Equal,
+            attribute: .trailing,
+            relatedBy: .equal,
             toItem: view,
-            attribute: .Trailing,
+            attribute: .trailing,
             multiplier: 1,
             constant: -15)
         
         let verticalConstraint = NSLayoutConstraint(
             item: button,
-            attribute: .Bottom,
-            relatedBy: .Equal,
+            attribute: .bottom,
+            relatedBy: .equal,
             toItem: view,
-            attribute: .Bottom,
+            attribute: .bottom,
             multiplier: 1,
             constant: -15)
         
         // Set action
-        button.addTarget(self, action: #selector(myLocationBtnTapped), forControlEvents: UIControlEvents.TouchUpInside)
+        button.addTarget(self, action: #selector(myLocationBtnTapped), for: UIControlEvents.touchUpInside)
         
         // Add button to view
         self.view.addSubview(button)
@@ -569,10 +569,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         button.layer.masksToBounds = false
         
         // Activate constraints
-        heightConstraint.active = true
-        widthConstraint.active = true
-        horizontalConstraint.active = true
-        verticalConstraint.active = true
+        heightConstraint.isActive = true
+        widthConstraint.isActive = true
+        horizontalConstraint.isActive = true
+        verticalConstraint.isActive = true
     }
     
     // Animate to users location OR alert
@@ -585,35 +585,35 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     /** Menu Handling */
-    @IBAction func dukTapped(sender: DukBtn) {
+    @IBAction func dukTapped(_ sender: DukBtn) {
         toggleMenu(!menuOpen)
     }
     
-    func toggleMenu (open: Bool) {
+    func toggleMenu (_ open: Bool) {
         
         for btn in menuBtns {
-            btn.hidden = !open
+            btn.isHidden = !open
         }
         
-        menuBG.hidden = !open
+        menuBG.isHidden = !open
         
         menuOpen = open
         
         if open {
             let closeX = UIImage(named: "close-x-small-white")
-            dukBtn.setImage(closeX, forState: .Normal)
+            dukBtn.setImage(closeX, for: UIControlState())
             let inset: CGFloat = 20
             dukBtn.imageEdgeInsets = UIEdgeInsetsMake(inset, inset, inset, inset)
-            dukBtn.setTitle("", forState: .Normal)
+            dukBtn.setTitle("", for: UIControlState())
         } else {
-            dukBtn.setTitle("DUK", forState: .Normal)
-            dukBtn.setImage(nil, forState: .Normal)
+            dukBtn.setTitle("DUK", for: UIControlState())
+            dukBtn.setImage(nil, for: UIControlState())
         }
     }
 
     
     // Search Btn Tapped
-    @IBAction func searchTapped(sender: AnyObject) {
+    @IBAction func searchTapped(_ sender: AnyObject) {
         appendSearchBox()
     }
     
@@ -634,50 +634,50 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // Full width
         let width_constraint = NSLayoutConstraint(
             item: self.searchBox!.view,
-            attribute: .Width,
-            relatedBy: .Equal,
+            attribute: .width,
+            relatedBy: .equal,
             toItem: self.view,
-            attribute: .Width,
+            attribute: .width,
             multiplier: 1,
             constant: 0
         )
-        width_constraint.active = true
+        width_constraint.isActive = true
         
         // Constant height
         let height_constraint = NSLayoutConstraint(
             item: self.searchBox!.view,
-            attribute: .Height,
-            relatedBy: .Equal,
+            attribute: .height,
+            relatedBy: .equal,
             toItem: nil,
-            attribute: .NotAnAttribute,
+            attribute: .notAnAttribute,
             multiplier: 1,
             constant: 170
         )
-        height_constraint.active = true
+        height_constraint.isActive = true
         
         // Top
         let top_constraint = NSLayoutConstraint(
             item: self.searchBox!.view,
-            attribute: .Top,
-            relatedBy: .Equal,
+            attribute: .top,
+            relatedBy: .equal,
             toItem: self.view,
-            attribute: .Top,
+            attribute: .top,
             multiplier: 1,
             constant: 0
         )
-        top_constraint.active = true
+        top_constraint.isActive = true
         
         // Left
         let left_constraint = NSLayoutConstraint(
             item: self.searchBox!.view,
-            attribute: .Leading,
-            relatedBy: .Equal,
+            attribute: .leading,
+            relatedBy: .equal,
             toItem: self.view,
-            attribute: .Leading,
+            attribute: .leading,
             multiplier: 1,
             constant: 0
         )
-        left_constraint.active = true
+        left_constraint.isActive = true
     }
     
     // Hide the search box
@@ -687,12 +687,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             return
         }
         
-        self.searchBox?.willMoveToParentViewController(nil)
+        self.searchBox?.willMove(toParentViewController: nil)
         self.searchBox?.view.removeFromSuperview()
         self.searchBox?.removeFromParentViewController()
     }
     
-    func appendSearchResults (message: String?) {
+    func appendSearchResults (_ message: String?) {
         let searchResults = SearchResultsViewController(self)
         
         // Create reference to this controller
@@ -713,50 +713,50 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // Full width
         let width_constraint = NSLayoutConstraint(
             item: searchResults.view,
-            attribute: .Width,
-            relatedBy: .Equal,
+            attribute: .width,
+            relatedBy: .equal,
             toItem: self.view,
-            attribute: .Width,
+            attribute: .width,
             multiplier: 1,
             constant: 0
         )
-        width_constraint.active = true
+        width_constraint.isActive = true
         
         // Constant height
         let height_constraint = NSLayoutConstraint(
             item: searchResults.view,
-            attribute: .Height,
-            relatedBy: .Equal,
+            attribute: .height,
+            relatedBy: .equal,
             toItem: nil,
-            attribute: .NotAnAttribute,
+            attribute: .notAnAttribute,
             multiplier: 1,
             constant: 45
         )
-        height_constraint.active = true
+        height_constraint.isActive = true
         
         // Top
         let top_constraint = NSLayoutConstraint(
             item: searchResults.view,
-            attribute: .Top,
-            relatedBy: .Equal,
+            attribute: .top,
+            relatedBy: .equal,
             toItem: self.view,
-            attribute: .Top,
+            attribute: .top,
             multiplier: 1,
             constant: 0
         )
-        top_constraint.active = true
+        top_constraint.isActive = true
         
         // Left
         let left_constraint = NSLayoutConstraint(
             item: searchResults.view,
-            attribute: .Leading,
-            relatedBy: .Equal,
+            attribute: .leading,
+            relatedBy: .equal,
             toItem: self.view,
-            attribute: .Leading,
+            attribute: .leading,
             multiplier: 1,
             constant: 0
         )
-        left_constraint.active = true
+        left_constraint.isActive = true
     }
 
     
@@ -768,12 +768,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         locationManager.delegate = self
         locationManager.desiredAccuracy = kCLLocationAccuracyBest
         locationManager.requestWhenInUseAuthorization()
-        mapView!.myLocationEnabled = true
+        mapView!.isMyLocationEnabled = true
     }
     
     // Change of user location permissions. If authorized, exec auth handler
-    func locationManager(manager: CLLocationManager, didChangeAuthorizationStatus status: CLAuthorizationStatus) {
-        if status == .AuthorizedWhenInUse || status == .AuthorizedAlways {
+    func locationManager(_ manager: CLLocationManager, didChangeAuthorization status: CLAuthorizationStatus) {
+        if status == .authorizedWhenInUse || status == .authorizedAlways {
             
             if self.locationAuthHandler != nil {
                 self.locationAuthHandler!()
@@ -783,7 +783,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     // Help user adjust settings if accidentally denied
-    func showLocationAcessDeniedAlert(message: String?) {
+    func showLocationAcessDeniedAlert(_ message: String?) {
         var final_message: String?
         
         if message == nil {
@@ -794,17 +794,17 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         let alertController = UIAlertController(title: "Location Services",
                                                 message: final_message,
-                                                preferredStyle: .Alert)
+                                                preferredStyle: .alert)
         
-        let settingsAction = UIAlertAction(title: "Settings", style: .Default) { (alertAction) in
+        let settingsAction = UIAlertAction(title: "Settings", style: .default) { (alertAction) in
             
-            if let appSettings = NSURL(string: UIApplicationOpenSettingsURLString) {
-                UIApplication.sharedApplication().openURL(appSettings)
+            if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
+                UIApplication.shared.openURL(appSettings)
             }
         }
         alertController.addAction(settingsAction)
         
-        let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: { (alertAction) in
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: { (alertAction) in
             
             // If mapAtRest handler exists, execute it
             // and remove
@@ -813,7 +813,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         alertController.addAction(cancelAction)
         
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
 
     func removeDeleted() {
@@ -822,12 +822,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         for timestamp in deletedMarkers {
             
             // Get marker by timestamp
-            if let marker_ind = curMapMarkers.indexOf({ $0.timestamp == timestamp }) {
+            if let marker_ind = curMapMarkers.index(where: { $0.timestamp == timestamp }) {
                 
                 // Remove from map
                 curMapMarkers[marker_ind].map = nil
                 
-                curMapMarkers.removeAtIndex(marker_ind)
+                curMapMarkers.remove(at: marker_ind)
             }
         }
         
@@ -838,7 +838,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // ApiRequestDelegate methods
     
     // Route data received from api to corresponding handler function
-    func reqDidComplete(data: NSDictionary, method: ApiMethod) {
+    func reqDidComplete(_ data: NSDictionary, method: ApiMethod) {
         
         if data["data"] == nil {
             print("Api server returned no data")
@@ -847,14 +847,14 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         switch method {
             
-        case .MarkersNearPoint:
+        case .markersNearPoint:
             handleMarkersWithinBoundsResponse(data)
         
-        case .MarkersWithinBounds:
+        case .markersWithinBounds:
             handleMarkersWithinBoundsResponse(data)
             break
         
-        case .GetMarkerDataById:
+        case .getMarkerDataById:
             handleGetMarkerDataByIdResponse(data)
             break
             
@@ -863,7 +863,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
     }
     
-    func imageDownloadDidProgress (progress: Float) {
+    func imageDownloadDidProgress (_ progress: Float) {
         let percentage = Int(progress * 100)
         curInfoWindow!.loading.text = "Loading: \(percentage)%"
     }
@@ -872,16 +872,16 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     func reqDidComplete(withImage image: UIImage) {
         
         // Hide loading
-        curInfoWindow!.loading.hidden = true
+        curInfoWindow!.loading.isHidden = true
         
         curInfoWindow!.image.image = image
     }
     
-    func reqDidFail(error: String, method: ApiMethod) {
+    func reqDidFail(_ error: String, method: ApiMethod) {
         
-        loaderOverlay?.dismissViewControllerAnimated(false, completion: nil)
+        loaderOverlay?.dismiss(animated: false, completion: nil)
         
-        if method == .Image {
+        if method == .image {
             curInfoWindow!.loading.text = "Image failed to load"
         }
         
@@ -890,7 +890,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
 
     
     // Handle data returned from a markersWithinBounds api request
-    func handleMarkersWithinBoundsResponse (data: NSDictionary) {
+    func handleMarkersWithinBoundsResponse (_ data: NSDictionary) {
         var pubMarkersById: [String: AnyObject] = [:]
         
         // Loop over received marker data
@@ -898,7 +898,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         for marker_data in marker_array {
             
             // Convert data to DukGMSMarker
-            let marker = Marker(fromPublicData: marker_data as! [String: AnyObject])
+            let marker = Marker(fromPublicData: marker_data as! [String: AnyObject] as NSDictionary)
             
             // Store map marker by public id
             if let map_marker = marker!.getMapMarker() {
@@ -914,7 +914,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         // Remove markers with a matching public id
         for public_id in local_public {
-            pubMarkersById.removeValueForKey(public_id)
+            pubMarkersById.removeValue(forKey: public_id)
         }
         
         // Make array from remaining values
@@ -931,7 +931,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     // Handle data returned from a getMArkerDataById request
-    func handleGetMarkerDataByIdResponse (data: NSDictionary) {
+    func handleGetMarkerDataByIdResponse (_ data: NSDictionary) {
         
         print("received marker data")
         
@@ -942,12 +942,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         if loaderOverlay != nil {
             
             // Hide loader
-            loaderOverlay?.dismissViewControllerAnimated(false, completion: {
-                self.performSegueWithIdentifier("MapToMarkerDetail", sender: sender)
+            loaderOverlay?.dismiss(animated: false, completion: {
+                self.performSegue(withIdentifier: "MapToMarkerDetail", sender: sender)
             })
         
         } else {
-            self.performSegueWithIdentifier("MapToMarkerDetail", sender: sender)
+            self.performSegue(withIdentifier: "MapToMarkerDetail", sender: sender)
         }
     }
     
@@ -987,13 +987,13 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
         
         // Animate camera to markers
-        let cameraUpdate = GMSCameraUpdate.fitBounds(groupBounds!)
-        mapView!.animateWithCameraUpdate(cameraUpdate)
+        let cameraUpdate = GMSCameraUpdate.fit(groupBounds!)
+        mapView!.animate(with: cameraUpdate)
         
-        if method == .MarkersNearPoint {
+        if method == .markersNearPoint {
             appendSearchResults("\(data.count) nearby markers")
         
-        } else if method == .MarkersWithinBounds {
+        } else if method == .markersWithinBounds {
             appendSearchResults("\(data.count) markers in view")
         }
         
@@ -1016,13 +1016,13 @@ class DukGMSMarker: GMSMarker {
     // Store tags for info window
     var tags: String? = nil
     
-    func assignMap (map: GMSMapView) {
+    func assignMap (_ map: GMSMapView) {
         self.map = map
     }
 }
 
 enum DataLocation {
-    case Local, Public
+    case local, `public`
 }
 
 // Custom button class used for 
@@ -1042,20 +1042,20 @@ class DukBtn: UIButton {
     }
     
     init() {
-        super.init(frame: CGRectZero)
+        super.init(frame: CGRect.zero)
         self.setup()
     }
     
     func setup () {
         
         // Change BG on down press
-        self.addTarget(self, action: #selector(self.pressDown), forControlEvents: .TouchDown)
+        self.addTarget(self, action: #selector(self.pressDown), for: .touchDown)
         
         // Reset bg on release
-        self.addTarget(self, action: #selector(self.resetBg), forControlEvents: .TouchUpInside)
+        self.addTarget(self, action: #selector(self.resetBg), for: .touchUpInside)
         
         // Shadow
-        self.layer.shadowColor = UIColor.blackColor().CGColor
+        self.layer.shadowColor = UIColor.black.cgColor
         self.layer.shadowOpacity = 0.25
         self.layer.shadowOffset = CGSize(width: 0, height: 0)
         self.layer.shadowRadius = 4

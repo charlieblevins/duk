@@ -22,8 +22,8 @@ class Credentials {
     }
     
     init(fromCoreData data: AnyObject) {
-        self.email = data.valueForKey("email") as! String
-        self.password = data.valueForKey("password") as! String
+        self.email = data.value(forKey: "email") as! String
+        self.password = data.value(forKey: "password") as! String
     }
     
     // Load from core data
@@ -39,9 +39,9 @@ class Credentials {
         // Core Data lookup
         let data = Util.fetchCoreData("Login", predicate: nil)
         
-        if data.count > 0 {
-            self.email = data[0].valueForKey("email") as! String
-            self.password = data[0].valueForKey("password") as! String
+        if (data?.count)! > 0 {
+            self.email = data?[0].value(forKey: "email") as! String
+            self.password = data?[0].value(forKey: "password") as! String
             
             Credentials.sharedInstance = self
         } else {
@@ -56,12 +56,12 @@ class Credentials {
         Util.deleteCoreDataForEntity("Login")
         
         // 1. Get managed object context
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         
         // 2. Create new object as marker entity
-        let entity = NSEntityDescription.entityForName("Login", inManagedObjectContext:managedContext)
-        let login = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "Login", in:managedContext)
+        let login = NSManagedObject(entity: entity!, insertInto: managedContext)
         
         // 3. Add username and password
         login.setValue(self.email, forKey: "email")
@@ -84,14 +84,14 @@ class Credentials {
     static func fromCore () -> Credentials? {
         let query_res = Util.fetchCoreData("Login", predicate: nil)
         
-        if  query_res.count == 0 {
+        if  query_res?.count == 0 {
             return nil
         }
         
-        return Credentials(fromCoreData: query_res[0])
+        return Credentials(fromCoreData: (query_res?[0])!)
     }
 }
 
-enum CredentialError: ErrorType {
-    case NoLoginData
+enum CredentialError: Error {
+    case noLoginData
 }

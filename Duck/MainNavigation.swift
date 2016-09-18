@@ -9,13 +9,13 @@
 import UIKit
 
 extension UINavigationController {
-    func popViewControllerWithHandler(completion: ()->()) {
+    func popViewControllerWithHandler(_ completion: @escaping ()->()) {
         CATransaction.begin()
         CATransaction.setCompletionBlock(completion)
-        self.popViewControllerAnimated(true)
+        self.popViewController(animated: true)
         CATransaction.commit()
     }
-    func pushViewController(viewController: UIViewController, completion: ()->()) {
+    func pushViewController(_ viewController: UIViewController, completion: @escaping ()->()) {
         CATransaction.begin()
         CATransaction.setCompletionBlock(completion)
         self.pushViewController(viewController, animated: true)
@@ -39,12 +39,12 @@ class MainNavigation: UINavigationController {
 
    
     // Restrict orientation for some views
-    override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
+    override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
         
         if let visibleView = self.visibleViewController {
-            return visibleView.supportedInterfaceOrientations()
+            return visibleView.supportedInterfaceOrientations
         } else {
-            return UIInterfaceOrientationMask.All
+            return UIInterfaceOrientationMask.all
         }
     }
 }
@@ -54,10 +54,10 @@ class MainNavigation: UINavigationController {
 // Explicitly override method to prevent following error:
 // "UIAlertController:supportedInterfaceOrientations was invoked recursively!"
 extension UIAlertController {
-    public override func supportedInterfaceOrientations() -> UIInterfaceOrientationMask {
-        return UIInterfaceOrientationMask.Portrait
+    open override var supportedInterfaceOrientations : UIInterfaceOrientationMask {
+        return UIInterfaceOrientationMask.portrait
     }
-    public override func shouldAutorotate() -> Bool {
+    open override var shouldAutorotate : Bool {
         return false
     }
 }

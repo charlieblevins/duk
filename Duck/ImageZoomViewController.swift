@@ -32,15 +32,15 @@ class ImageZoomViewController: UIViewController, UIScrollViewDelegate {
         // Dispose of any resources that can be recreated.
     }
     
-    func viewForZoomingInScrollView(scrollView: UIScrollView) -> UIView? {
+    func viewForZooming(in scrollView: UIScrollView) -> UIView? {
         
         return self.imageView
         
     }
     
     // User tapped X button
-    @IBAction func CloseTapped(sender: UIButton) {
-        self.dismissViewControllerAnimated(true, completion: nil)
+    @IBAction func CloseTapped(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
     }
     
 

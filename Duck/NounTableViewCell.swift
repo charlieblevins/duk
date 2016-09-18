@@ -21,14 +21,14 @@ class NounTableViewCell: UITableViewCell {
         // Initialization code
     }
 
-    override func setSelected(selected: Bool, animated: Bool) {
+    override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
     }
 
     // Load an icon image from the server
-    func loadIconImage (noun: String) { 
+    func loadIconImage (_ noun: String) { 
         Util.loadIconImage(noun, imageView: self.NounRowImage, activitIndicator: self.NounRowActivity)
     }
 }

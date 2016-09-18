@@ -13,9 +13,9 @@ import GoogleMaps
 struct Marker {
     var latitude, longitude: Double?
     var timestamp: Double?
-    var photo: NSData?
-    var photo_md: NSData?
-    var photo_sm: NSData?
+    var photo: Data?
+    var photo_md: Data?
+    var photo_sm: Data?
     var tags: String?
     
     var public_id: String?
@@ -29,7 +29,7 @@ struct Marker {
         self.latitude = nil
         self.longitude = nil
         
-        let timestamp = NSDate().timeIntervalSince1970
+        let timestamp = Date().timeIntervalSince1970
         self.timestamp = timestamp
         
         self.photo = nil
@@ -42,20 +42,20 @@ struct Marker {
     }
     
     init(fromCoreData data: AnyObject) {
-        self.latitude = data.valueForKey("latitude") as? Double
-        self.longitude = data.valueForKey("longitude") as? Double
-        self.timestamp = data.valueForKey("timestamp") as? Double
+        self.latitude = data.value(forKey: "latitude") as? Double
+        self.longitude = data.value(forKey: "longitude") as? Double
+        self.timestamp = data.value(forKey: "timestamp") as? Double
         
-        self.photo = data.valueForKey("photo") as? NSData
-        self.photo_md = data.valueForKey("photo_md") as? NSData
-        self.photo_sm = data.valueForKey("photo_sm") as? NSData
-        self.tags = data.valueForKey("tags") as? String
+        self.photo = data.value(forKey: "photo") as? Data
+        self.photo_md = data.value(forKey: "photo_md") as? Data
+        self.photo_sm = data.value(forKey: "photo_sm") as? Data
+        self.tags = data.value(forKey: "tags") as? String
         
         // If from core data, this marker is editable
         self.editable = true
         
         // Store public id if available
-        if let pid = data.valueForKey("public_id") as? String {
+        if let pid = data.value(forKey: "public_id") as? String {
             self.public_id = pid
         }
         
@@ -68,13 +68,13 @@ struct Marker {
         self.editable = false
 
         
-        let geometry = data.valueForKey("geometry")
+        let geometry = data.value(forKey: "geometry")
         if geometry == nil {
             print("no geometry provided")
             return nil
         }
         
-        let coords = geometry!.valueForKey("coordinates")
+        let coords = (geometry! as AnyObject).value(forKey: "coordinates")
         if coords == nil {
             print("no coords provided to marker init")
             return nil
@@ -91,7 +91,7 @@ struct Marker {
         self.longitude = coords_array[0] as? Double
         
         // if server returns distance
-        if let distance = data.valueForKey("distance") {
+        if let distance = data.value(forKey: "distance") {
             self.distance_from_me = distance as? Double
         }
         
@@ -102,19 +102,19 @@ struct Marker {
         self.photo_md = nil
         self.photo_sm = nil
         
-        if let photoJson = data.valueForKey("photo") {
-            let b64_photo = photoJson.valueForKey("data") as? String
-            self.photo = NSData(base64EncodedString: b64_photo!, options: [])
+        if let photoJson = data.value(forKey: "photo") {
+            let b64_photo = (photoJson as AnyObject).value(forKey: "data") as? String
+            self.photo = Data(base64Encoded: b64_photo!, options: [])
         }
 
-        if let nouns_arr = data.valueForKey("tags") as? Array<String> {
-            self.tags = nouns_arr.joinWithSeparator(" ")
+        if let nouns_arr = data.value(forKey: "tags") as? Array<String> {
+            self.tags = nouns_arr.joined(separator: " ")
         }
         
-        self.public_id = data.valueForKey("_id") as? String
+        self.public_id = data.value(forKey: "_id") as? String
         
         // Get username
-        self.user = data.valueForKey("username") as? String
+        self.user = data.value(forKey: "username") as? String
         
         // Determine if this user can edit
         self.editable = self.canEdit()
@@ -125,12 +125,12 @@ struct Marker {
     mutating func saveInCore() -> Bool {
         
         // 1. Get managed object context
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         
         // 2. Create new object as marker entity
-        let entity = NSEntityDescription.entityForName("Marker", inManagedObjectContext:managedContext)
-        let marker_data = NSManagedObject(entity: entity!, insertIntoManagedObjectContext: managedContext)
+        let entity = NSEntityDescription.entity(forEntityName: "Marker", in:managedContext)
+        let marker_data = NSManagedObject(entity: entity!, insertInto: managedContext)
         
         // 3. Add data to marker object (and validate)
         marker_data.setValue(timestamp, forKey: "timestamp")
@@ -169,7 +169,7 @@ struct Marker {
     }
     
     // Get an object that can be directly displayed on the google map
-    private func _getMapMarker (iconOverride: String?) -> DukGMSMarker? {
+    fileprivate func _getMapMarker (_ iconOverride: String?) -> DukGMSMarker? {
         let map_marker = DukGMSMarker()
         
         // Set icon
@@ -186,10 +186,10 @@ struct Marker {
         
         // If timestamp assume local
         if timestamp != nil {
-            map_marker.dataLocation = .Local
+            map_marker.dataLocation = .local
             map_marker.timestamp = timestamp
         } else {
-            map_marker.dataLocation = .Public
+            map_marker.dataLocation = .public
         }
         
         // Add public id if present
@@ -224,14 +224,14 @@ struct Marker {
     }
     
     // Update image data
-    mutating func updateImage (image: UIImage) {
+    mutating func updateImage (_ image: UIImage) {
         
         // Save image as binary
         self.photo = UIImageJPEGRepresentation(image, 1)
 
         // Make small and medium image versions
-        self.photo_sm = UIImageJPEGRepresentation(Util.resizeImage(image, scaledToFillSize: CGSizeMake(80, 80)), 1)
-        self.photo_md = UIImageJPEGRepresentation(Util.resizeImage(image, scaledToFillSize: CGSizeMake(240, 240)), 1)
+        self.photo_sm = UIImageJPEGRepresentation(Util.resizeImage(image, scaledToFillSize: CGSize(width: 80, height: 80)), 1)
+        self.photo_md = UIImageJPEGRepresentation(Util.resizeImage(image, scaledToFillSize: CGSize(width: 240, height: 240)), 1)
     }
     
     mutating func loadPhotoFromCore () {
@@ -239,15 +239,15 @@ struct Marker {
     }
     
     // Find and return marker with provided timestamp
-    static func getLocalByTimestamp (timestamp: Double) -> Marker? {
+    static func getLocalByTimestamp (_ timestamp: Double) -> Marker? {
         
         let pred = NSPredicate(format: "timestamp == %lf", timestamp)
         let markers_from_core = Util.fetchCoreData("Marker", predicate: pred)
         
-        if markers_from_core.count == 0 {
+        if markers_from_core?.count == 0 {
             return nil
         } else {
-            return Marker(fromCoreData: markers_from_core[0])
+            return Marker(fromCoreData: (markers_from_core?[0])!)
         }
     }
     
@@ -257,11 +257,11 @@ struct Marker {
         
         let markers_from_core = Util.fetchCoreData("Marker", predicate: nil)
         
-        if markers_from_core.count == 0 {
+        if markers_from_core?.count == 0 {
             return public_ids
         }
         
-        for marker_data in markers_from_core {
+        for marker_data in markers_from_core! {
             
             let marker = Marker(fromCoreData: marker_data)
             
@@ -276,24 +276,24 @@ struct Marker {
     
     
     // Fetch fields for entity
-    static func allMarkersWithFields (fields: Array<String>) -> [Marker] {
+    static func allMarkersWithFields (_ fields: Array<String>) -> [Marker] {
         var found = [Marker]()
         
         // Context
-        let appDelegate = UIApplication.sharedApplication().delegate as! AppDelegate
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
         
         // Fetch request
         let fetchReq: NSFetchRequest = NSFetchRequest()
-        fetchReq.entity = NSEntityDescription.entityForName("Marker", inManagedObjectContext: managedContext)
+        fetchReq.entity = NSEntityDescription.entity(forEntityName: "Marker", in: managedContext)
         
-        fetchReq.resultType = .DictionaryResultType
+        fetchReq.resultType = .dictionaryResultType
         fetchReq.propertiesToFetch = fields
         
         do {
-            let markers = try managedContext.executeFetchRequest(fetchReq)
+            let markers = try managedContext.fetch(fetchReq)
             for marker in markers {
-                found.append(Marker(fromCoreData: marker))
+                found.append(Marker(fromCoreData: marker as AnyObject))
             }
             
         } catch let error as NSError {

@@ -95,23 +95,23 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
 
     
     // Load camera to take photo
-    @IBAction func addPhoto(sender: UIButton) {
+    @IBAction func addPhoto(_ sender: UIButton) {
         imagePicker = UIImagePickerController()
         imagePicker.delegate = self
-        imagePicker.sourceType = .Camera
+        imagePicker.sourceType = .camera
         
-        presentViewController(imagePicker, animated: true, completion: nil)
+        present(imagePicker, animated: true, completion: nil)
     }
     
     func preventEditing () {
-        addPhotoBtn.hidden = true
-        EditNoun.hidden = true
-        SaveBtn.hidden = true
-        AccContainer.hidden = true
+        addPhotoBtn.isHidden = true
+        EditNoun.isHidden = true
+        SaveBtn.isHidden = true
+        AccContainer.isHidden = true
     }
     
     // Method called by noun view
-    func nounsDidUpdate (nouns: String?) {
+    func nounsDidUpdate (_ nouns: String?) {
 
         if editMarker != nil {
             
@@ -124,13 +124,13 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     // Refresh UI display of Nouns
     // including icon
-    func updateNouns(nouns: String?) {
+    func updateNouns(_ nouns: String?) {
         
         var primaryNoun: String? = nil
         
         // Create bold style attr
-        let dynamic_size = UIFont.preferredFontForTextStyle(UIFontTextStyleBody).pointSize
-        let bold_attrs = [NSFontAttributeName: UIFont.boldSystemFontOfSize(dynamic_size)]
+        let dynamic_size = UIFont.preferredFont(forTextStyle: UIFontTextStyle.body).pointSize
+        let bold_attrs = [NSFontAttributeName: UIFont.boldSystemFont(ofSize: dynamic_size)]
         var attributedString = NSMutableAttributedString(string: "")
         
         if nouns == nil {
@@ -140,17 +140,17 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             return
         
         // More than one noun - bold the first
-        } else if let space_range = nouns!.rangeOfString(" ") {
+        } else if let space_range = nouns!.range(of: " ") {
             
-            primaryNoun = nouns!.substringToIndex((space_range.startIndex))
+            primaryNoun = nouns!.substring(to: (space_range.lowerBound))
             
             attributedString = NSMutableAttributedString(string: primaryNoun!, attributes: bold_attrs)
             
             // Make attr string from remaining string
-            let remaining_nouns = NSMutableAttributedString(string: " \(nouns!.substringFromIndex((space_range.endIndex)))")
+            let remaining_nouns = NSMutableAttributedString(string: " \(nouns!.substring(from: (space_range.upperBound)))")
             
             // Concat first noun with remaining nouns
-            attributedString.appendAttributedString(remaining_nouns)
+            attributedString.append(remaining_nouns)
             
         // No space - assume single tag
         } else {
@@ -164,7 +164,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     }
     
     // Get icon for primary noun
-    func setIconForNoun (noun: String?) {
+    func setIconForNoun (_ noun: String?) {
         
         // If nil, set to placeholder
         if noun == nil {
@@ -178,11 +178,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     // Update this view with existing data
     // (for editing existing marker - not for adding new marker)
-    func insertExistingData (marker: Marker) {
+    func insertExistingData (_ marker: Marker) {
         
         // Add photo
-        cameraPhoto.contentMode = .ScaleAspectFit
-        cameraPhoto.image = UIImage(data: marker.photo!)
+        cameraPhoto.contentMode = .scaleAspectFit
+        cameraPhoto.image = UIImage(data: marker.photo! as Data)
         imageChosen = true
         
         // Set delegate and allow zoom
@@ -190,7 +190,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         cameraPhoto.allowZoom = true
         
         // Hide "Add Photo" button
-        addPhotoBtn.hidden = true
+        addPhotoBtn.isHidden = true
         
         // Add lat/lng data
         latLabel.text = "\(marker.latitude!)"
@@ -203,10 +203,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     // Display taken photo AND
     // get current location coords
-    func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            cameraPhoto.contentMode = .ScaleAspectFit
+            cameraPhoto.contentMode = .scaleAspectFit
             cameraPhoto.image = pickedImage
             imageChosen = true
             
@@ -222,14 +222,14 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             editMarker!.longitude = coords.longitude
         }
         
-        dismissViewControllerAnimated(true, completion: nil)
+        dismiss(animated: true, completion: nil)
     }
     
     // Edit Noun action - Loads noun editor view (NounViewController)
-    @IBAction func EditNoun(sender: AnyObject) {
+    @IBAction func EditNoun(_ sender: AnyObject) {
         print("Loading NounViewController")
         
-        let nounViewController = self.storyboard!.instantiateViewControllerWithIdentifier("NounViewController") as! NounViewController
+        let nounViewController = self.storyboard!.instantiateViewController(withIdentifier: "NounViewController") as! NounViewController
         nounViewController.delegate = self
         
         if editMarker!.tags != nil {
@@ -241,7 +241,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     // Add styles that can't easily be added in IB
     func addStyles () {
-        let lightGray = UIColor(red: 207, green: 207, blue: 207).CGColor
+        let lightGray = UIColor(red: 207, green: 207, blue: 207).cgColor
         LatContainer.layer.borderColor = lightGray
         LngContainer.layer.borderColor = lightGray
         AccContainer.layer.borderColor = lightGray
@@ -268,7 +268,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         locationManager.startUpdatingLocation()
     }
     
-    func locationManager(manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
         // Only save location if associated with taking a photo
         coords = manager.location!.coordinate
@@ -297,26 +297,26 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         }
         
         if errors.count > 0 {
-            popValidationAlert(errors.joinWithSeparator("\n"))
+            popValidationAlert(errors.joined(separator: "\n"))
             return false
         } else {
             return true
         }
     }
     
-    func popValidationAlert(text:String) {
+    func popValidationAlert(_ text:String) {
         let alertController = UIAlertController(title: "Missing Data",
             message: text,
-            preferredStyle: .Alert)
+            preferredStyle: .alert)
         
-        let okAction = UIAlertAction(title: "OK", style: .Cancel, handler: nil)
+        let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
         alertController.addAction(okAction)
         
-        presentViewController(alertController, animated: true, completion: nil)
+        present(alertController, animated: true, completion: nil)
     }
     
     // User tapped save button
-    @IBAction func saveButtonTapped(sender: AnyObject) {
+    @IBAction func saveButtonTapped(_ sender: AnyObject) {
         
         // Validate
         if validateData() == false {
@@ -336,7 +336,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         mvc.markerToAdd = editMarker
         
         // Move back to map view
-        navigationController?.popToRootViewControllerAnimated(true)
+        navigationController?.popToRootViewController(animated: true)
         
         print("Saved.")
     }

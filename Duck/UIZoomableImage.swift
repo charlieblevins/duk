@@ -20,12 +20,12 @@ class ZoomableImageView: UIImageView {
         super.init(coder: aDecoder)
         
         // Make view tappable
-        self.userInteractionEnabled = true
+        self.isUserInteractionEnabled = true
         let tapRecognizer = UITapGestureRecognizer(target: self, action: #selector(self.imageTapped(_:)))
         self.addGestureRecognizer(tapRecognizer)
     }
     
-    func imageTapped (gestureRecognizer: UITapGestureRecognizer) {
+    func imageTapped (_ gestureRecognizer: UITapGestureRecognizer) {
         
         if allowZoom == false {
             print("Image tapped but allowZoom is false")
@@ -33,10 +33,10 @@ class ZoomableImageView: UIImageView {
         }
         
         // Add this image to the zoomable view controller
-        let zoomView = self.delegate?.storyboard?.instantiateViewControllerWithIdentifier("ImageZoomView") as! ImageZoomViewController
+        let zoomView = self.delegate?.storyboard?.instantiateViewController(withIdentifier: "ImageZoomView") as! ImageZoomViewController
         zoomView.fullImage = self.image
         
         // Navigate to zoomable view
-        self.delegate?.presentViewController(zoomView, animated: true, completion: nil)
+        self.delegate?.present(zoomView, animated: true, completion: nil)
     }
 }
