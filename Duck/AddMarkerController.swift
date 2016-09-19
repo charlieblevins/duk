@@ -35,9 +35,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     var imagePicker: UIImagePickerController!
     var imageChosen: Bool = false
-    var iconModel: IconModel!
     var autocompleteView: UIView! = nil
-    var autocomplete: Autocomplete!
 
     var locationManager: CLLocationManager!
     var coords: CLLocationCoordinate2D!

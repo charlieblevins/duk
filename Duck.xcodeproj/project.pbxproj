@@ -26,7 +26,6 @@
 		EC7043891C60E0AE00EA0BE4 /* PublishConfirmController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */; };
 		EC7889E01D2882850084B9FF /* MarkerAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7889DF1D2882850084B9FF /* MarkerAggregator.swift */; };
 		EC85CDC91D1F5F2D001F707D /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC85CDC81D1F5F2D001F707D /* MenuViewController.swift */; };
-		EC9210D61C01FE9800814131 /* Autocomplete.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9210D51C01FE9800814131 /* Autocomplete.swift */; };
 		EC9EE2CD1CFB3E8D00DC9060 /* NounViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9EE2CC1CFB3E8D00DC9060 /* NounViewController.swift */; };
 		EC9EE2CF1CFBB8FA00DC9060 /* NounTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9EE2CE1CFBB8FA00DC9060 /* NounTableViewCell.swift */; };
 		ECA46ADE1D803B6600B2F04F /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA46ADC1D803B6600B2F04F /* SearchResultsViewController.swift */; };
@@ -85,7 +84,6 @@
 		EC7889DF1D2882850084B9FF /* MarkerAggregator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerAggregator.swift; sourceTree = "<group>"; };
 		EC85CDC81D1F5F2D001F707D /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		EC8D91B91C7F2C2D00F78D25 /* MarkerModel2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MarkerModel2.xcdatamodel; sourceTree = "<group>"; };
-		EC9210D51C01FE9800814131 /* Autocomplete.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Autocomplete.swift; sourceTree = "<group>"; };
 		EC9EE2CC1CFB3E8D00DC9060 /* NounViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NounViewController.swift; sourceTree = "<group>"; };
 		EC9EE2CE1CFBB8FA00DC9060 /* NounTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NounTableViewCell.swift; sourceTree = "<group>"; };
 		ECA46ADC1D803B6600B2F04F /* SearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
@@ -188,7 +186,6 @@
 				EC9EE2CE1CFBB8FA00DC9060 /* NounTableViewCell.swift */,
 				ECD266FA1CC50DA0009E1574 /* UIZoomableImage.swift */,
 				ECD266F81CC50951009E1574 /* ImageZoomViewController.swift */,
-				EC9210D51C01FE9800814131 /* Autocomplete.swift */,
 				ECBB67711C5D5932002842E5 /* ApiRequest.swift */,
 				EC1AD7F01C6E08530051F9BE /* MarkerModel.swift */,
 				EC1AD7F21C6E0ECB0051F9BE /* CredentialModel.swift */,
@@ -416,7 +413,6 @@
 				EC14494D1CD5385400496E07 /* InfoWindowView.swift in Sources */,
 				ECD579241BBDFBAD0096FA1B /* MainNavigation.swift in Sources */,
 				ECBB67721C5D5932002842E5 /* ApiRequest.swift in Sources */,
-				EC9210D61C01FE9800814131 /* Autocomplete.swift in Sources */,
 				EC1AD7F11C6E08530051F9BE /* MarkerModel.swift in Sources */,
 				EC4990F51D297E9400455741 /* DistanceTracker.swift in Sources */,
 			);

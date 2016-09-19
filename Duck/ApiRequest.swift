@@ -44,32 +44,32 @@ class ApiRequest {
         let headers = ["Authorization": "Basic \(base64LoginString)"]
         
         // Execute request
-        Alamofire.request(.GET, "\(baseURL)/authCheck", headers: headers)
+        Alamofire.request("\(baseURL)/authCheck", headers: headers)
             .responseString { response in
                 
                 switch response.result {
-                case .Success:
+                case .success:
                     successHandler()
                 
-                case .Failure(let error):
+                case .failure(let error as NSError):
                     
                     // No connection
                     if error.domain == NSURLErrorDomain && error.code == NSURLErrorNotConnectedToInternet {
-                        failureHandler(message: "No active internet connection.")
+                        failureHandler("No active internet connection.")
                         
                     // Server returned status code
                     } else if let status = response.response?.statusCode {
                         
                         // Handle 401 or other
                         if status == 401 {
-                            failureHandler(message: "Username or password is incorrect")
+                            failureHandler("Username or password is incorrect")
                         } else {
-                            failureHandler(message: "An unexpected server response occurred. If this issue persists, please allow us to assist at dukapp.io/help")
+                            failureHandler("An unexpected server response occurred. If this issue persists, please allow us to assist at dukapp.io/help")
                         }
                         
                     // No status code
                     } else {
-                        failureHandler(message: "An unexpected server error occurred. If this issue persists, please allow us to assist at dukapp.io/help")
+                        failureHandler("An unexpected server error occurred. If this issue persists, please allow us to assist at dukapp.io/help")
                     }
                 }
 
@@ -299,12 +299,12 @@ class ApiRequest {
     }
     
     // Handles an alamofire response object and calls associated delegate methods
-    func handleResponse (_ response: Response<AnyObject, NSError>, method: ApiMethod) {
+    func handleResponse (_ response: DataResponse<AnyObject>, method: ApiMethod) {
         print("handling response")
         
         switch response.result {
             
-        case .Success(let JSON):
+        case .success(let JSON):
             
             // Get json as dictionary
             let res_json_dictionary = JSON as! NSDictionary
@@ -321,7 +321,7 @@ class ApiRequest {
             // 400 status code. message prop should exist
             } else if response_code >= 300 && response_code < 500 {
                 
-                let message = res_json_dictionary.objectForKey("message") as! String
+                let message = res_json_dictionary.object(forKey: "message") as! String
                 self.delegate?.reqDidFail(message, method: method)
 
             // Server error
@@ -330,7 +330,7 @@ class ApiRequest {
             }
 
             
-        case .Failure(let error):
+        case .failure(let error):
             
             let error_descrip = error.localizedDescription
             self.delegate?.reqDidFail(error_descrip, method: method)

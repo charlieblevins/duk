@@ -498,7 +498,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         button.translatesAutoresizingMaskIntoConstraints = false
         
         button.layer.masksToBounds = true
-        button.backgroundColor = .white()
+        button.backgroundColor = UIColor.white
         
         // Add crosshair image
         guard let image = UIImage(named: "crosshair") else {

@@ -20,7 +20,7 @@ class Util {
         let managedContext = appDelegate.managedObjectContext
         
         //2
-        let fetchRequest = NSFetchRequest(entityName: entityName)
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Marker")
         
         //3
         if predicate != nil {
@@ -41,7 +41,7 @@ class Util {
     class func updateCoreDataForEntity (_ entityName: String, fieldName: String, newValue: AnyObject?) {
         
         // Clear markers for now - NOT FOR PRODUCTION!
-        let allItems: NSFetchRequest = NSFetchRequest()
+        let allItems: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
@@ -73,7 +73,7 @@ class Util {
     class func deleteCoreDataForEntity (_ entityName: String) {
         
         // Clear markers for now - NOT FOR PRODUCTION!
-        let allItems: NSFetchRequest = NSFetchRequest()
+        let allItems: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
@@ -102,7 +102,7 @@ class Util {
     // Delete objects with a certain time stamp from core data
     class func deleteCoreDataByTime (_ entityName: String, timestamp: Double) {
         // Clear markers for now - NOT FOR PRODUCTION!
-        let marker: NSFetchRequest = NSFetchRequest()
+        let marker: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
         let managedContext = appDelegate.managedObjectContext
@@ -149,10 +149,10 @@ class Util {
         
         let file = filenameFromNoun(tagArr[0])
         
-        imgView.kf_setImageWithURL(
-            URL(string: "http://dukapp.io/icon/\(file)")!,
-            placeholderImage: nil,
-            optionsInfo: nil,
+        imgView.kf_setImage(
+            with: URL(string: "http://dukapp.io/icon/\(file)")!,
+            placeholder: nil,
+            options: nil,
             progressBlock: nil,
             completionHandler: { (image, error, cacheType, imageURL) -> () in
                 
@@ -195,21 +195,22 @@ class Util {
         
         let file = filenameFromNoun(noun)
         
-        imageView.kf_setImageWithURL(URL(string: "http://dukapp.io/icon/\(file)")!,
-                                        placeholderImage: nil,
-                                        optionsInfo: nil,
-                                        progressBlock: nil,
-                                        completionHandler: { (image, error, cacheType, imageURL) -> () in
-                                            
-                                            activitIndicator.stopAnimating()
-                                            activitIndicator.hidden = true
-                                            
-                                            if error !== nil {
-                                                print("image GET failed: \(error)")
-                                                return Void()
-                                            }
-                                            
-                                            imageView.image = image
+        imageView.kf_setImage(
+            with: URL(string: "http://dukapp.io/icon/\(file)")!,
+            placeholder: nil,
+            options: nil,
+            progressBlock: nil,
+            completionHandler: { (image, error, cacheType, imageURL) -> () in
+                
+                activitIndicator.stopAnimating()
+                activitIndicator.isHidden = true
+                
+                if error !== nil {
+                    print("image GET failed: \(error)")
+                    return Void()
+                }
+                
+                imageView.image = image
         })
         
     }

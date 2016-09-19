@@ -75,7 +75,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         let managedContext = appDelegate.managedObjectContext
         
         // Fetch request
-        let fetchReq: NSFetchRequest = NSFetchRequest()
+        let fetchReq: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         fetchReq.entity = NSEntityDescription.entity(forEntityName: "Marker", in: managedContext)
         
         fetchReq.resultType = .dictionaryResultType

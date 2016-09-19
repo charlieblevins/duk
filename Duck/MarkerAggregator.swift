@@ -232,7 +232,7 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
                 // Prune and filter markers (if any were found)
                 if (self.aggregateStore!.count > 0) {
                     self.aggregateStore = self.removeDuplicates(self.aggregateStore!)
-                    self.aggregateStore = self.filterClosest(self.aggregateStore!, limit: 30)
+                    self.aggregateStore = self.filterClosest(markers: self.aggregateStore!, limit: 30)
                 }
                 
                 // Load complete - notify delegate
