@@ -256,9 +256,9 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         self.dismiss(animated: true, completion: nil)
     }
     
-    func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: NSError) {
+    func viewController(_ viewController: GMSAutocompleteViewController, didFailAutocompleteWithError error: Error) {
         // TODO: handle the error.
-        print("Error: ", error.description)
+        print("Error: ", error)
     }
     
     // User canceled the operation.

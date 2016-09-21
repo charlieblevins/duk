@@ -89,38 +89,36 @@ class ApiRequest {
         
         // Execute request
         Alamofire.upload(
-            .POST,
-            "\(baseURL)/markers",
-            headers: headers,
             multipartFormData: { multipartFormData in
                 
                 // Add marker data to multipart form
-                multipartFormData.appendBodyPart(data: "\(marker.latitude!)".dataUsingEncoding(NSUTF8StringEncoding)!, name: "latitude")
-                multipartFormData.appendBodyPart(data: "\(marker.longitude!)".dataUsingEncoding(NSUTF8StringEncoding)!, name: "longitude")
-                multipartFormData.appendBodyPart(data: "\(marker.tags!)".dataUsingEncoding(NSUTF8StringEncoding)!, name: "tags")
-                multipartFormData.appendBodyPart(data: marker.photo!, name: "photo", fileName: "photo", mimeType: "image/jpeg")
-                multipartFormData.appendBodyPart(data: marker.photo_md!, name: "photo_md", fileName: "photo_md", mimeType: "image/jpeg")
-                multipartFormData.appendBodyPart(data: marker.photo_sm!, name: "photo_sm", fileName: "photo_sm", mimeType: "image/jpeg")
+                multipartFormData.append("\(marker.latitude!)".data(using: String.Encoding.utf8)!, withName: "latitude")
+                multipartFormData.append("\(marker.longitude!)".data(using: String.Encoding.utf8)!, withName: "longitude")
+                multipartFormData.append("\(marker.tags!)".data(using: String.Encoding.utf8)!, withName: "tags")
+                multipartFormData.append(marker.photo!, withName: "photo", fileName: "photo", mimeType: "image/jpeg")
+                multipartFormData.append(marker.photo_md!, withName: "photo_md", fileName: "photo_md", mimeType: "image/jpeg")
+                multipartFormData.append(marker.photo_sm!, withName: "photo_sm", fileName: "photo_sm", mimeType: "image/jpeg")
                 
             },
+            to: baseURL + "/markers",
+            method: .post,
+            headers: headers,
             encodingCompletion: { encodingResult in
                 
                 switch encodingResult {
                     
-                case .Success(let upload, _, _):
+                case .success(let upload, _, _):
                     
                     print("upload START SUCCESS")
                     
                     // Notify delegates upload begin
                     self.delegate?.reqDidStart?()
                     
-                    // Track progress
-                    upload.progress { bytesWritten, totalBytesWritten, totalBytesExpectedToWrite in
-
-                        dispatch_async(dispatch_get_main_queue()) {
-                            
+                    upload.uploadProgress { progress in
+                        print(progress)
+                        DispatchQueue.main.async {
                             // Get percentage of uploaded bytes
-                            let percentage: Float = Float(totalBytesWritten) / Float(totalBytesExpectedToWrite)
+                            let percentage: Float = Float(progress.fractionCompleted)
                             
                             // If next percent reached: notify delegates
                             if percentage > self.progress {
@@ -128,23 +126,21 @@ class ApiRequest {
                                 self.delegate?.uploadDidProgress?(percentage)
                             }
                         }
-
                     }
-                    
+                        
                     // Response JSON received (complete)
                     // TODO: Handle request failure (server not responding)
                     // TODO: Handle failure response codes
                     upload.responseJSON { response in
-
-                        self.handleResponse(response, method: .PublishMarker)
-
+                        self.handleResponse(response, method: .publishMarker)
                     }
-                case .Failure(let encodingError):
+
+                case .failure(let encodingError):
                     print("encoding error!!")
                     print(encodingError)
                 }
-            }
-        )
+            })
+ 
     }
     
     // Get a single marker's data from API
@@ -299,7 +295,7 @@ class ApiRequest {
     }
     
     // Handles an alamofire response object and calls associated delegate methods
-    func handleResponse (_ response: DataResponse<AnyObject>, method: ApiMethod) {
+    func handleResponse (_ response: DataResponse<Any>, method: ApiMethod) {
         print("handling response")
         
         switch response.result {
