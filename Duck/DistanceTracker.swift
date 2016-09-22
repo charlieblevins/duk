@@ -101,7 +101,7 @@ class DistanceTracker: NSObject, CLLocationManagerDelegate {
         
 
         // Fetch request
-        let fetchReq: NSFetchRequest = NSFetchRequest()
+        let fetchReq: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         fetchReq.entity = NSEntityDescription.entity(forEntityName: "Marker", in: managedContext)
 
         fetchReq.resultType = .dictionaryResultType
@@ -113,8 +113,10 @@ class DistanceTracker: NSObject, CLLocationManagerDelegate {
             var markers_with_distance = [Marker]()
 
             for marker in markers {
-                let lat = marker["latitude"] as! CLLocationDegrees
-                let lng = marker["longitude"] as! CLLocationDegrees
+                let m = marker as AnyObject
+                
+                let lat = m["latitude"] as! CLLocationDegrees
+                let lng = m["longitude"] as! CLLocationDegrees
                 
                 // Calculate distance
                 let marker_coords = CLLocationCoordinate2D(latitude: lat, longitude: lng)

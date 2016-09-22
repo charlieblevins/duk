@@ -433,7 +433,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         let context: NSManagedObjectContext = appDel.managedObjectContext
         
         // Construct fetch request with predicate
-        let fetchRequest = NSFetchRequest(entityName: "Marker")
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Marker")
         fetchRequest.predicate = NSPredicate(format: "timestamp = %lf", localTimestamp)
         
         // Execute fetch

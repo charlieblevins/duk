@@ -71,6 +71,8 @@ class ApiRequest {
                     } else {
                         failureHandler("An unexpected server error occurred. If this issue persists, please allow us to assist at dukapp.io/help")
                     }
+                default:
+                    print("unexpected result: \(response.result)")
                 }
 
             }
@@ -154,9 +156,9 @@ class ApiRequest {
         }
         
         // Exec request
-        Alamofire.request(.GET, "\(baseURL)/markers", parameters: params)
+        Alamofire.request("\(baseURL)/markers", method: .get, parameters: params)
             .responseJSON { response in
-                self.handleResponse(response, method: .GetMarkerDataById)
+                self.handleResponse(response, method: .getMarkerDataById)
         }
     }
     
@@ -178,9 +180,9 @@ class ApiRequest {
         self.delegate?.reqDidStart?()
         
         // Exec request
-        Alamofire.request(.GET, "\(baseURL)/markersWithin", parameters: params)
+        Alamofire.request("\(baseURL)/markersWithin", method: .get, parameters: params)
             .responseJSON { response in
-                self.handleResponse(response, method: .MarkersWithinBounds)
+                self.handleResponse(response, method: .markersWithinBounds)
             }
     }
     
@@ -200,10 +202,10 @@ class ApiRequest {
         self.delegate?.reqDidStart?()
         
         // Exec request
-        Alamofire.request(.GET, "\(baseURL)/markersNear", parameters: params)
+        Alamofire.request("\(baseURL)/markersNear", method: .get, parameters: params)
             
             .responseJSON { response in
-                self.handleResponse(response, method: .MarkersNearPoint)
+                self.handleResponse(response, method: .markersNearPoint)
             }
     }
     
@@ -213,7 +215,7 @@ class ApiRequest {
         self.delegate?.reqDidStart?()
         
         // Set download destination path
-        let destination = Alamofire.Request.suggestedDownloadDestination(directory: .DocumentDirectory, domain: .UserDomainMask)
+        let destination = DownloadRequest.suggestedDownloadDestination(for: .documentDirectory, in: .userDomainMask)
         
         // Create file path
         let fm = FileManager.default
@@ -227,18 +229,17 @@ class ApiRequest {
         }
         
         // Exec request
-        Alamofire.download(.GET, "http://dukapp.io/photos/\(fileName)", destination: destination)
+        Alamofire.download("http://dukapp.io/photos/\(fileName)", to: destination)
             
-            .progress { bytesRead, totalBytesRead, totalBytesExpectedToRead in
-                print(totalBytesRead)
+            .downloadProgress { progress in
                 
                 // This closure is NOT called on the main queue for performance
                 // reasons. To update your ui, dispatch to the main queue.
-                dispatch_async(dispatch_get_main_queue()) {
-                    print("Total bytes read on main queue: \(totalBytesRead)")
+                DispatchQueue.main.async {
+                    print("Fraction downloaded on main queue: \(progress.fractionCompleted)")
                     
                     // Get percentage of downloaded bytes
-                    let percentage: Float = Float(totalBytesRead) / Float(totalBytesExpectedToRead)
+                    let percentage: Float = Float(progress.fractionCompleted)
                     
                     // If next percent reached: notify delegates
                     if percentage > self.progress {
@@ -248,46 +249,50 @@ class ApiRequest {
                 }
             }
         
-            .response { _, response, _, error in
+            .responseData { response in
                 print("handling response")
+                let result = response.result
                 
-                if let error = error {
+                if let error = result.error {
                     
                     print("Failed with error: \(error)")
                     let error_descrip = error.localizedDescription
-                    self.delegate?.reqDidFail(error_descrip, method: .Image)
+                    self.delegate?.reqDidFail(error_descrip, method: .image)
                     
                 } else {
                     print("Downloaded file successfully")
                     
                     // Get http status code
-                    let response_code = response!.statusCode
+                    guard let response_code = response.response?.statusCode else {
+                        print("Could not retrieve http response code")
+                        return
+                    }
                     
                     // Success: code between 200 and 300
                     if response_code >= 200 && response_code < 300 {
                         
                         // Convert data to UIImage
-                        let imgData: NSData = NSData(contentsOfFile: imgPath.path!)!
+                        let imgData: NSData = NSData(contentsOfFile: imgPath.path)!
                         
-                        let image: UIImage = UIImage(data: imgData)!
+                        let image: UIImage = UIImage(data: imgData as Data)!
                         
                         // Notify delegates of upload complete
                         self.delegate?.reqDidComplete!(withImage: image)
                         
                         // Delete downloaded image
-                        if fm.fileExistsAtPath(imgPath.path!) {
-                            try! NSFileManager.defaultManager().removeItemAtURL(imgPath)
+                        if fm.fileExists(atPath: imgPath.path) {
+                            try! FileManager.default.removeItem(at: imgPath)
                         }
                         
                         // 400 status code. message prop should exist
                     } else if response_code >= 300 && response_code < 500 {
                         
                         let message = "Server responded with http error response code \(response_code)"
-                        self.delegate?.reqDidFail(message, method: .Image)
+                        self.delegate?.reqDidFail(message, method: .image)
                         
                         // Server error
                     } else if response_code >= 500 {
-                        self.delegate?.reqDidFail("A server error occurred.", method: .Image)
+                        self.delegate?.reqDidFail("A server error occurred.", method: .image)
                     }
                 }
 
