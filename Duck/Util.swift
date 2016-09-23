@@ -20,7 +20,7 @@ class Util {
         let managedContext = appDelegate.managedObjectContext
         
         //2
-        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Marker")
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: entityName)
         
         //3
         if predicate != nil {

@@ -304,7 +304,16 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             print(segue.identifier)
             print(segue.destination)
             let publishView = segue.destination as! PublishConfirmController
-            publishView.markerData = savedMarkers[((sender as! IndexPath) as NSIndexPath).row];
+            
+            // Get all data for this marker from core
+            let marker_data = savedMarkers[((sender as! IndexPath) as NSIndexPath).row]
+            
+            guard let timestamp = marker_data.timestamp else {
+                print("Could not find timestamp for marker")
+                return
+            }
+            
+            publishView.markerData = Marker.getLocalByTimestamp(timestamp)
             
             // Set this view as delegate to receive future messages
             publishView.delegate = self
