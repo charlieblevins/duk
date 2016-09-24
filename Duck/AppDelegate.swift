@@ -190,3 +190,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 }
 
+struct GLOBALS {
+    static var firstSearch: Bool = true
+}
+

@@ -474,15 +474,18 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // then move to add marker view
         self.checkUserLocation(true) {
             self.goToView("AddMarkerController")
+            self.toggleMenu(!self.menuOpen)
         }
     }
     
     @IBAction func accountTapped(_ sender: DukBtn) {
         self.goToView("AccountViewController")
+        self.toggleMenu(!self.menuOpen)
     }
     
     @IBAction func markersTapped(_ sender: DukBtn) {
         self.goToView("MyMarkersController")
+        self.toggleMenu(!self.menuOpen)
     }
     
     func goToView(_ controllerName: String) {
@@ -615,6 +618,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Search Btn Tapped
     @IBAction func searchTapped(_ sender: AnyObject) {
         appendSearchBox()
+        toggleMenu(!menuOpen)
     }
     
     func appendSearchBox () {
@@ -989,6 +993,13 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // Animate camera to markers
         let cameraUpdate = GMSCameraUpdate.fit(groupBounds!)
         mapView!.animate(with: cameraUpdate)
+        
+        // Search is automatic on app open
+        // so search results are unexpected
+        if GLOBALS.firstSearch {
+            GLOBALS.firstSearch = false
+            return
+        }
         
         if method == .markersNearPoint {
             appendSearchResults("\(data.count) nearby markers")

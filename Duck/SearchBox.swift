@@ -66,7 +66,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         setTabUnderline()
         
         // Hide address field
-        hideAddressField()
+        self.addressField.isHidden = true
     }
     
     override func viewDidLayoutSubviews() {
