@@ -234,9 +234,41 @@ struct Marker {
         self.photo_md = UIImageJPEGRepresentation(Util.resizeImage(image, scaledToFillSize: CGSize(width: 240, height: 240)), 1)
     }
     
-    mutating func loadPhotoFromCore () {
+    // Load photo for this marker
+    mutating func loadPropFromCore (prop: String, propLoaded: (Any?) -> Void) {
         
+        guard self.timestamp != nil else {
+            print("can't lookup photo. Marker has no timestamp")
+            propLoaded(nil)
+            return
+        }
+        
+        // Context
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        
+        // Fetch request
+        let fetchReq: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
+        fetchReq.entity = NSEntityDescription.entity(forEntityName: "Marker", in: managedContext)
+        fetchReq.predicate = NSPredicate(format: "timestamp == %lf", self.timestamp!)
+        
+        fetchReq.resultType = .dictionaryResultType
+        fetchReq.propertiesToFetch = [prop]
+        
+        
+        do {
+            let markers = try managedContext.fetch(fetchReq)
+            
+            let single = markers[0] as! NSDictionary
+            let data = single[prop]
+            
+            propLoaded(data)
+            
+        } catch let error as NSError {
+            print("Fetch failed: \(error.localizedDescription)")
+        }
     }
+    
     
     // Find and return marker with provided timestamp
     static func getLocalByTimestamp (_ timestamp: Double) -> Marker? {

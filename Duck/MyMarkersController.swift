@@ -79,7 +79,8 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         fetchReq.entity = NSEntityDescription.entity(forEntityName: "Marker", in: managedContext)
         
         fetchReq.resultType = .dictionaryResultType
-        fetchReq.propertiesToFetch = ["timestamp", "public_id", "tags", "photo_sm"]
+        //fetchReq.propertiesToFetch = ["timestamp", "public_id", "tags", "photo_sm"]
+        fetchReq.propertiesToFetch = ["timestamp", "public_id", "tags"]
         
         
         do {
@@ -91,7 +92,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
                 new_marker.timestamp = (marker as AnyObject).value(forKey: "timestamp") as? Double
                 new_marker.public_id = (marker as AnyObject).value(forKey: "public_id") as? String
                 new_marker.tags = (marker as AnyObject).value(forKey: "tags") as? String
-                new_marker.photo_sm = (marker as AnyObject).value(forKey: "photo_sm") as? Data
+                //new_marker.photo_sm = (marker as AnyObject).value(forKey: "photo_sm") as? Data
                 
                 data.append(new_marker)
             }
@@ -142,9 +143,33 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         }
 
         // Get thumbnail
-        let data: Data = cell.markerData!.photo_sm! as Data
-        let image: UIImage! = UIImage(data: data)!
-        cell.markerImage.image = image
+        var marker = cell.markerData! as Marker
+        
+        // Begin photo lookup on new thread
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
+            
+            marker.loadPropFromCore(prop: "photo_sm", propLoaded: {
+                data in
+                
+                if data == nil {
+                    print("Prop lookeup for marker returned nil")
+                    return
+                }
+                
+                guard let typed_data = data as? Data else {
+                    print("lookup returned data not convertible to data type")
+                    return
+                }
+                
+                // Send image back to main thread for display
+                DispatchQueue.main.async {
+                    cell.markerImage.image = UIImage(data: typed_data)
+                }
+            })
+        }
+//        let data: Data = cell.markerData!.photo_sm! as Data
+//        let image: UIImage! = UIImage(data: data)!
+//        cell.markerImage.image = image
 
         // Set cell as request delegate if pending publish
         if self.pending_publish != nil {
