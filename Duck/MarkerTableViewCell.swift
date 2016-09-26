@@ -15,6 +15,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     
     var markerData: Marker? = nil
     var statusBar: UILabel? = nil
+    var unpublish: UIButton? = nil
     var master: MyMarkersController? = nil
     
     var indexPath: IndexPath? = nil
@@ -95,6 +96,52 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         )
         let hgtC = NSLayoutConstraint(
             item: statusBar!,
+            attribute: .height,
+            relatedBy: .equal,
+            toItem: self.contentView,
+            attribute: .height,
+            multiplier: 1.0,
+            constant: 0
+        )
+        
+        // Activate all constraints
+        NSLayoutConstraint.activate([hrzC, vrtC, hgtC])
+    }
+    
+    // Append un-publish btn
+    func appendUnpublish () {
+        
+        // Make a button
+        unpublish = UIButton()
+        unpublish!.frame.size = CGSize(width: 100, height: 30)
+        unpublish!.setTitle("Unpublish", for: .normal)
+        unpublish!.setTitleColor(UIColor(red: 0, green: 122, blue: 255), for: .normal)
+        unpublish!.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Append status bar
+        self.contentView.addSubview(unpublish!)
+        
+        // Position with constraints
+        let hrzC = NSLayoutConstraint(
+            item: unpublish!,
+            attribute: .trailing,
+            relatedBy: .equal,
+            toItem: self.contentView,
+            attribute: .trailing,
+            multiplier: 1.0,
+            constant: -10
+        )
+        let vrtC = NSLayoutConstraint(
+            item: unpublish!,
+            attribute: .centerY,
+            relatedBy: .equal,
+            toItem: self.contentView,
+            attribute: .centerY,
+            multiplier: 1.0,
+            constant: 20
+        )
+        let hgtC = NSLayoutConstraint(
+            item: unpublish!,
             attribute: .height,
             relatedBy: .equal,
             toItem: self.contentView,
