@@ -16,6 +16,8 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     var markerData: Marker? = nil
     var statusBar: UILabel? = nil
     var unpublish: UIButton? = nil
+    var publicBadge: UILabel? = nil
+    var publicBadgeTopConstraint: NSLayoutConstraint? = nil
     var master: MyMarkersController? = nil
     
     var indexPath: IndexPath? = nil
@@ -108,8 +110,107 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         NSLayoutConstraint.activate([hrzC, vrtC, hgtC])
     }
     
+    // Show a public badge for published markers
+    func appendPublicBadge () {
+        
+        if publicBadge != nil {
+            return
+        }
+        
+        // Add publish button
+        publicBadge = UILabel()
+        publicBadge!.frame.size = CGSize(width: 120, height: 30)
+        publicBadge!.text = "Public"
+        
+        // green text and border
+        let fGreen = UIColor(red: 56, green: 150, blue: 57) // Forest green
+        publicBadge!.textColor = fGreen
+        publicBadge!.layer.borderColor = fGreen.cgColor
+        publicBadge!.layer.borderWidth = 1
+        
+        // rounded corners
+        publicBadge!.layer.cornerRadius = 3
+        
+        //center text
+        publicBadge!.textAlignment = .center
+        
+        publicBadge!.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.contentView.addSubview(publicBadge!)
+        
+        // Position with constraints
+        let hrzC = NSLayoutConstraint(
+            item: publicBadge!,
+            attribute: .trailing,
+            relatedBy: .equal,
+            toItem: self.contentView,
+            attribute: .trailing,
+            multiplier: 1.0,
+            constant: -10
+        )
+        
+        // This constraint used to animate for unpublish toggle
+        publicBadgeTopConstraint = NSLayoutConstraint(
+            item: publicBadge!,
+            attribute: .centerY,
+            relatedBy: .equal,
+            toItem: self.contentView,
+            attribute: .centerY,
+            multiplier: 1.0,
+            constant: 0
+        )
+        let wdtC = NSLayoutConstraint(
+            item: publicBadge!,
+            attribute: .width,
+            relatedBy: .equal,
+            toItem: nil,
+            attribute: .height,
+            multiplier: 1.0,
+            constant: 66
+        )
+        let hgtC = NSLayoutConstraint(
+            item: publicBadge!,
+            attribute: .height,
+            relatedBy: .equal,
+            toItem: nil,
+            attribute: .height,
+            multiplier: 1.0,
+            constant: 30
+        )
+        
+        
+        // Activate all constraints
+        NSLayoutConstraint.activate([hrzC, publicBadgeTopConstraint!, wdtC, hgtC])
+        
+        // Handle tap
+        // Even though IB says this is already true, it isn't
+        publicBadge!.isUserInteractionEnabled = true
+        publicBadge!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(toggleUnpublish)))
+    }
+    
     // Append un-publish btn
-    func appendUnpublish () {
+    func toggleUnpublish () {
+        
+        // Hide
+        if unpublish != nil {
+            
+            // set constant before animation
+            publicBadgeTopConstraint!.constant = 0
+            UIView.animate(withDuration: 0.5, delay: 0.0, options: .allowAnimatedContent, animations: {
+                // fade out
+                self.unpublish?.alpha = 0.0
+                
+                // slide back
+                self.contentView.layoutIfNeeded()
+                
+            }, completion: { finished in
+                self.unpublish?.removeFromSuperview()
+                self.unpublish = nil
+            })
+            return
+        }
+        
+        // Show
         
         // Make a button
         unpublish = UIButton()
@@ -118,8 +219,10 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         unpublish!.setTitleColor(UIColor(red: 0, green: 122, blue: 255), for: .normal)
         unpublish!.translatesAutoresizingMaskIntoConstraints = false
         
-        // Append status bar
+        // Append status bar (still hidden)
+        unpublish!.alpha = 0
         self.contentView.addSubview(unpublish!)
+
         
         // Position with constraints
         let hrzC = NSLayoutConstraint(
@@ -144,14 +247,27 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             item: unpublish!,
             attribute: .height,
             relatedBy: .equal,
-            toItem: self.contentView,
+            toItem: nil,
             attribute: .height,
             multiplier: 1.0,
-            constant: 0
+            constant: 30
         )
         
         // Activate all constraints
         NSLayoutConstraint.activate([hrzC, vrtC, hgtC])
+        
+        // layout constraints before animation
+        self.contentView.layoutIfNeeded()
+        
+        // set constant before animation
+        publicBadgeTopConstraint!.constant = -12
+        UIView.animate(withDuration: 0.5, animations: {
+            // fade in
+            self.unpublish!.alpha = 1.0
+            
+            // slide up
+            self.contentView.layoutIfNeeded()
+        })
     }
     
     // MARK: upload delegate method handlers

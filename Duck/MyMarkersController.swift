@@ -137,8 +137,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         
         // Public badge or publish btn
         if cell.markerData!.public_id != nil {
-            appendPublicBadge((indexPath as NSIndexPath).row, cell: cell)
-            cell.appendUnpublish()
+            cell.appendPublicBadge()
         } else {
             appendPublishBtn((indexPath as NSIndexPath).row, cell: cell)
         }
@@ -183,73 +182,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         }
         
         return cell
-    }
-    
-    // Show a public badge for published markers
-    func appendPublicBadge (_ row: Int, cell: MarkerTableViewCell) {
-        
-        // Add publish button
-        let publicBadge = UILabel()
-        publicBadge.frame.size = CGSize(width: 120, height: 30)
-        publicBadge.text = "Public"
-        
-        // green text and border
-        let fGreen = UIColor(red: 56, green: 150, blue: 57) // Forest green
-        publicBadge.textColor = fGreen
-        publicBadge.layer.borderColor = fGreen.cgColor
-        publicBadge.layer.borderWidth = 1
-        
-        // rounded corners
-        publicBadge.layer.cornerRadius = 3
-        
-        //center text
-        publicBadge.textAlignment = .center
-        
-        publicBadge.translatesAutoresizingMaskIntoConstraints = false
-        
-        cell.contentView.addSubview(publicBadge)
-        
-        // Position with constraints
-        let hrzC = NSLayoutConstraint(
-            item: publicBadge,
-            attribute: .trailing,
-            relatedBy: .equal,
-            toItem: cell.contentView,
-            attribute: .trailing,
-            multiplier: 1.0,
-            constant: -10
-        )
-        let vrtC = NSLayoutConstraint(
-            item: publicBadge,
-            attribute: .centerY,
-            relatedBy: .equal,
-            toItem: cell.contentView,
-            attribute: .centerY,
-            multiplier: 1.0,
-            constant: -12
-        )
-        let wdtC = NSLayoutConstraint(
-            item: publicBadge,
-            attribute: .width,
-            relatedBy: .equal,
-            toItem: nil,
-            attribute: .height,
-            multiplier: 1.0,
-            constant: 66
-        )
-        let hgtC = NSLayoutConstraint(
-            item: publicBadge,
-            attribute: .height,
-            relatedBy: .equal,
-            toItem: nil,
-            attribute: .height,
-            multiplier: 1.0,
-            constant: 30
-        )
-        
-        
-        // Activate all constraints
-        NSLayoutConstraint.activate([hrzC, vrtC, wdtC, hgtC])
     }
     
     func appendPublishBtn (_ row: Int, cell: MarkerTableViewCell) {
