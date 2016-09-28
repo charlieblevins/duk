@@ -1,16 +1,16 @@
 PODS:
-  - Alamofire (4.0.0)
-  - GoogleMaps (2.0.1):
-    - GoogleMaps/Maps (= 2.0.1)
-  - GoogleMaps/Base (2.0.1)
-  - GoogleMaps/Maps (2.0.1):
-    - GoogleMaps/Base (= 2.0.1)
-  - GooglePlacePicker (2.0.1):
-    - GoogleMaps (= 2.0.1)
-    - GooglePlaces (= 2.0.1)
-  - GooglePlaces (2.0.1):
-    - GoogleMaps/Base (= 2.0.1)
-  - Kingfisher (3.0.1)
+  - Alamofire (4.0.1)
+  - GoogleMaps (2.1.0):
+    - GoogleMaps/Maps (= 2.1.0)
+  - GoogleMaps/Base (2.1.0)
+  - GoogleMaps/Maps (2.1.0):
+    - GoogleMaps/Base (= 2.1.0)
+  - GooglePlacePicker (2.1.0):
+    - GoogleMaps (= 2.1.0)
+    - GooglePlaces (= 2.1.0)
+  - GooglePlaces (2.1.0):
+    - GoogleMaps/Base (= 2.1.0)
+  - Kingfisher (3.1.1)
   - SwiftyJSON (2.3.2)
 
 DEPENDENCIES:
@@ -32,11 +32,11 @@ CHECKOUT OPTIONS:
     :git: https://github.com/acegreen/SwiftyJSON.git
 
 SPEC CHECKSUMS:
-  Alamofire: fef59f00388f267e52d9b432aa5d93dc97190f14
-  GoogleMaps: f09da64fc987c1aa29394567c3cab5a3df83c402
-  GooglePlacePicker: e7b11b732e40dbe76e8ab4c5fc2f4a7c32b96578
-  GooglePlaces: 72fab1d1651c6df0322f2aad245ffb15b80d3c56
-  Kingfisher: d5a491b45ea453d90a31bd2c0831d5243e73a73f
+  Alamofire: 7682d43245de14874acd142ec137b144aa1dd335
+  GoogleMaps: 06589b9a38097bce0cd6e90f0fd9b5e4b4a9344c
+  GooglePlacePicker: a2228b447d10008bcb765a6a081f415e8599e5d4
+  GooglePlaces: 16e96266483b8010e9f275399403647978523c86
+  Kingfisher: 12b755ae697cc9f0fd3e550db8417fa1233e09ab
   SwiftyJSON: 04ccea08915aa0109039157c7974cf0298da292a
 
 PODFILE CHECKSUM: 6550e8a5f1bbb6880a13b92c0707405df9aee1fa

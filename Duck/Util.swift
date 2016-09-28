@@ -149,7 +149,7 @@ class Util {
         
         let file = filenameFromNoun(tagArr[0])
         
-        imgView.kf_setImage(
+        imgView.kf.setImage(
             with: URL(string: "http://dukapp.io/icon/\(file)")!,
             placeholder: nil,
             options: nil,

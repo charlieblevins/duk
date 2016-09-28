@@ -32,15 +32,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
         
         // Clear downloaded files
-        let fm = FileManager.default
-        let path: [URL] = fm.urls(for: .documentDirectory, in: .userDomainMask)
-        
-        do {
-            let contents: [String] = try fm.contentsOfDirectory(atPath: path[0].absoluteString)
-            print(contents)
-        } catch {
-            print("error getting contents")
-        }
+//        let fm = FileManager.default
+//        let path: [URL] = fm.urls(for: .documentDirectory, in: .userDomainMask)
+//        
+//        do {
+//            let contents: [String] = try fm.contentsOfDirectory(atPath: path[0].absoluteString)
+//            print(contents)
+//        } catch {
+//            print("error getting contents")
+//        }
         
         //Util.updateCoreDataForEntity("Marker", fieldName: "distance_from_me", newValue: nil)
         
@@ -89,6 +89,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 //            print("save failed")
 //        }
  
+        // Clear King fisher cache (NO PROD!!!)
+//        ImageCache.default.clearMemoryCache()
+//        ImageCache.default.clearDiskCache()
         
         return true
     }
