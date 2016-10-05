@@ -14,6 +14,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     @IBOutlet weak var tagsLabel: UILabel!
     
     var markerData: Marker? = nil
+    var pubBtn: UIButton? = nil
     var statusBar: UILabel? = nil
     var unpublish: UIButton? = nil
     var publicBadge: UILabel? = nil
@@ -188,6 +189,22 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         publicBadge!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(toggleUnpublish)))
     }
     
+    // Hide action buttons
+    // Useful for showing status while waiting on server
+    func hideActions () {
+        if unpublish != nil && unpublish?.isHidden == false {
+            unpublish?.isHidden = true
+        }
+        
+        if publicBadge != nil && publicBadge?.isHidden == false {
+            publicBadge?.isHidden = true
+        }
+        
+        if pubBtn != nil && pubBtn?.isHidden == false {
+            pubBtn?.isHidden = true
+        }
+    }
+    
     // Append un-publish btn
     func toggleUnpublish () {
         
@@ -268,6 +285,80 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             // slide up
             self.contentView.layoutIfNeeded()
         })
+        
+        // Receive tap
+        unpublish!.isUserInteractionEnabled = true
+        unpublish!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(unpublishMarker)))
+    }
+    
+    func appendPublishBtn () {
+        
+        // Add publish button
+        pubBtn = UIButton()
+        
+        pubBtn?.frame.size = CGSize(width: 100, height: 50)
+        pubBtn?.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10)
+        pubBtn?.setTitle("Publish", for: UIControlState())
+        pubBtn?.backgroundColor = UIColor.blue
+        pubBtn?.translatesAutoresizingMaskIntoConstraints = false
+        
+        pubBtn?.addTarget(self, action: #selector(master!.publishAction(_:)), for: .touchUpInside)
+        
+        self.contentView.addSubview(pubBtn!)
+        
+        // Position with contraints
+        let hrzC = NSLayoutConstraint(
+            item: pubBtn!,
+            attribute: .trailing,
+            relatedBy: .equal,
+            toItem: self.contentView,
+            attribute: .trailing,
+            multiplier: 1.0,
+            constant: 0
+        )
+        let vrtC = NSLayoutConstraint(
+            item: pubBtn!,
+            attribute: .centerY,
+            relatedBy: .equal,
+            toItem: self.contentView,
+            attribute: .centerY,
+            multiplier: 1.0,
+            constant: 0
+        )
+        let hgtC = NSLayoutConstraint(
+            item: pubBtn!,
+            attribute: .height,
+            relatedBy: .equal,
+            toItem: self.contentView,
+            attribute: .height,
+            multiplier: 1.0,
+            constant: 0
+        )
+        
+        // Activate all constraints
+        NSLayoutConstraint.activate([hrzC, vrtC, hgtC])
+    }
+    
+    // Delete a marker from the server and mark the local marker as local
+    func unpublishMarker () {
+        
+        guard self.markerData != nil else {
+            print("Cannot unpublish. No id available")
+            return
+        }
+        
+        guard let pid = self.markerData?.public_id else {
+            print("Cannot unpublish. Marker has no public id")
+            return
+        }
+        
+        self.hideActions()
+        
+        self.updateStatus("Unpublishing...")
+        
+//        let req = ApiRequest()
+//        req.delegate = self
+//        req.deleteMarker(pid)
     }
     
     // MARK: upload delegate method handlers
@@ -283,37 +374,51 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     
     
     func reqDidComplete(_ data: NSDictionary, method: ApiMethod) {
-        print("upload complete")
         
-        // Save new data to core data
-        let timestamp: Double = self.markerData!.timestamp!
+        if (method == .publishMarker) {
+            print("upload complete")
+            
+            // Save new data to core data
+            let timestamp: Double = self.markerData!.timestamp!
+            
+            guard let data_convert = data["data"] as? [String:String] else {
+                print("unexpected data structure at reqDidComplete")
+                return
+            }
+            
+            guard let pubID: String = data_convert["_id"] else {
+                print("could not get _id from response")
+                return
+            }
+            
+            master!.updateMarkerEntity(timestamp, publicID: pubID)
+            
+            // Alert that upload was successful
+            //master!.popSuccessAlert()
+            
+            master!.tableView.reloadRows(at: [self.indexPath!], with: .right)
         
-        guard let data_convert = data["data"] as? [String:String] else {
-            print("unexpected data structure at reqDidComplete")
-            return
+        } else if (method == .deleteById) {
+            print("unpublish/delete complete")
+            
+            
         }
-        
-        guard let pubID: String = data_convert["_id"] else {
-            print("could not get _id from response")
-            return
-        }
-        
-        master!.updateMarkerEntity(timestamp, publicID: pubID)
-        
-        // Alert that upload was successful
-        //master!.popSuccessAlert()
-        
-        master!.tableView.reloadRows(at: [self.indexPath!], with: .right)
+
     }
     
     // Show alert on failure
     func reqDidFail(_ error: String, method: ApiMethod) {
-        
-        print("upload failure")
-        
-        master!.appendPublishBtn((self.indexPath! as NSIndexPath).row, cell: self)
-        
-        // Pop alert with error message
-        master!.popFailAlert(error)
+        if (method == .publishMarker) {
+            print("upload failure")
+            
+            self.appendPublishBtn()
+            
+            // Pop alert with error message
+            master!.popFailAlert(error)
+        } else if (method == .deleteById) {
+            print("delete failure")
+            
+            
+        }
     }
 }

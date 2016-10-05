@@ -139,7 +139,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         if cell.markerData!.public_id != nil {
             cell.appendPublicBadge()
         } else {
-            appendPublishBtn((indexPath as NSIndexPath).row, cell: cell)
+            cell.appendPublishBtn()
         }
 
         // Get thumbnail
@@ -182,54 +182,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         }
         
         return cell
-    }
-    
-    func appendPublishBtn (_ row: Int, cell: MarkerTableViewCell) {
-        
-        // Add publish button
-        let pubBtn = UIButton()
-        pubBtn.frame.size = CGSize(width: 100, height: 50)
-        pubBtn.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10)
-        pubBtn.setTitle("Publish", for: UIControlState())
-        pubBtn.backgroundColor = UIColor.blue
-        pubBtn.translatesAutoresizingMaskIntoConstraints = false
-        
-        pubBtn.tag = row
-        pubBtn.addTarget(self, action: #selector(MyMarkersController.publishAction(_:)), for: .touchUpInside)
-        
-        cell.contentView.addSubview(pubBtn)
-        
-        // Position with contraints
-        let hrzC = NSLayoutConstraint(
-            item: pubBtn,
-            attribute: .trailing,
-            relatedBy: .equal,
-            toItem: cell.contentView,
-            attribute: .trailing,
-            multiplier: 1.0,
-            constant: 0
-        )
-        let vrtC = NSLayoutConstraint(
-            item: pubBtn,
-            attribute: .centerY,
-            relatedBy: .equal,
-            toItem: cell.contentView,
-            attribute: .centerY,
-            multiplier: 1.0,
-            constant: 0
-        )
-        let hgtC = NSLayoutConstraint(
-            item: pubBtn,
-            attribute: .height,
-            relatedBy: .equal,
-            toItem: cell.contentView,
-            attribute: .height,
-            multiplier: 1.0,
-            constant: 0
-        )
-        
-        // Activate all constraints
-        NSLayoutConstraint.activate([hrzC, vrtC, hgtC])
     }
     
     func publishAction(_ sender: AnyObject) {

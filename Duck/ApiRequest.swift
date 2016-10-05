@@ -162,6 +162,18 @@ class ApiRequest {
         }
     }
     
+    // Delete a single marker by id
+    func deleteMarker (_ public_id: String) {
+        
+        var params = ["marker_id": public_id]
+        
+        // Exec request
+        Alamofire.request("\(baseURL)/markers", method: .delete, parameters: params)
+            .responseJSON { response in
+                self.handleResponse(response, method: .deleteById)
+        }
+    }
+    
     // Get marker data within geographic bounds
     func getMarkersWithinBounds (_ bounds: GMSCoordinateBounds, page: Int?) {
         
@@ -316,7 +328,7 @@ class ApiRequest {
             // Success: code between 200 and 300
             if response_code >= 200 && response_code < 300 {
                 
-                // Notify delegates of upload complete
+                // Notify delegate of upload complete
                 self.delegate?.reqDidComplete(res_json_dictionary, method: method)
             
             // 400 status code. message prop should exist
@@ -353,5 +365,5 @@ class ApiRequest {
 
 // Classify api method types for easier response handling
 @objc enum ApiMethod: Int {
-    case markersWithinBounds, markersNearPoint, image, publishMarker, getMarkerDataById
+    case markersWithinBounds, markersNearPoint, image, publishMarker, getMarkerDataById, deleteById
 }
