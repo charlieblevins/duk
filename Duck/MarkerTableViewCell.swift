@@ -18,6 +18,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     var statusBar: UILabel? = nil
     var unpublish: UIButton? = nil
     var publicBadge: UILabel? = nil
+    var activity: UIActivityIndicatorView? = nil
     var publicBadgeTopConstraint: NSLayoutConstraint? = nil
     var master: MyMarkersController? = nil
     
@@ -354,11 +355,59 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         
         self.hideActions()
         
-        self.updateStatus("Unpublishing...")
+        self.setLoading(loading: true)
+        
+        //self.updateStatus("Unpublishing...")
         
 //        let req = ApiRequest()
 //        req.delegate = self
 //        req.deleteMarker(pid)
+    }
+    
+    // Show/hide an activity indicator
+    func setLoading(loading: Bool) {
+        
+        // Hide
+        if !loading {
+            self.activity?.removeFromSuperview()
+            self.activity = nil
+            
+        // Show
+        } else {
+            
+            if self.activity == nil {
+                self.activity = UIActivityIndicatorView()
+                self.activity?.translatesAutoresizingMaskIntoConstraints = false
+            
+                self.contentView.addSubview(self.activity!)
+                self.activity!.activityIndicatorViewStyle = .gray
+                
+                // Position with constraints
+                let hrzC = NSLayoutConstraint(
+                    item: activity!,
+                    attribute: .trailing,
+                    relatedBy: .equal,
+                    toItem: self.contentView,
+                    attribute: .trailing,
+                    multiplier: 1.0,
+                    constant: -10
+                )
+                let vrtC = NSLayoutConstraint(
+                    item: activity!,
+                    attribute: .centerY,
+                    relatedBy: .equal,
+                    toItem: self.contentView,
+                    attribute: .centerY,
+                    multiplier: 1.0,
+                    constant: 0
+                )
+                
+                // Activate all constraints
+                NSLayoutConstraint.activate([hrzC, vrtC])
+            }
+            
+            self.activity?.startAnimating()
+        }
     }
     
     // MARK: upload delegate method handlers
