@@ -18,7 +18,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     var statusBar: UILabel? = nil
     var unpublish: UIButton? = nil
     var publicBadge: UILabel? = nil
-    var activity: UIActivityIndicatorView? = nil
+    var loader: UIAlertController? = nil
     var publicBadgeTopConstraint: NSLayoutConstraint? = nil
     var master: MyMarkersController? = nil
     
@@ -26,7 +26,16 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     
     override func awakeFromNib() {
         super.awakeFromNib()
+        
         // Initialization code
+        
+        
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(hideUnpublish),
+            name: Notification.Name("UnpublishBtnShown"),
+            object: nil
+        )
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -192,17 +201,23 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     
     // Hide action buttons
     // Useful for showing status while waiting on server
-    func hideActions () {
-        if unpublish != nil && unpublish?.isHidden == false {
-            unpublish?.isHidden = true
-        }
-        
-        if publicBadge != nil && publicBadge?.isHidden == false {
-            publicBadge?.isHidden = true
-        }
-        
-        if pubBtn != nil && pubBtn?.isHidden == false {
-            pubBtn?.isHidden = true
+//    func hideActions () {
+//        if unpublish != nil && unpublish?.isHidden == false {
+//            unpublish?.isHidden = true
+//        }
+//        
+//        if publicBadge != nil && publicBadge?.isHidden == false {
+//            publicBadge?.isHidden = true
+//        }
+//        
+//        if pubBtn != nil && pubBtn?.isHidden == false {
+//            pubBtn?.isHidden = true
+//        }
+//    }
+    
+    func hideUnpublish () {
+        if unpublish != nil {
+            toggleUnpublish()
         }
     }
     
@@ -229,6 +244,10 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         }
         
         // Show
+        
+        // Notify all rows
+        let notifName = Notification.Name("UnpublishBtnShown")
+        NotificationCenter.default.post(name: notifName, object: nil)
         
         // Make a button
         unpublish = UIButton()
@@ -353,60 +372,35 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             return
         }
         
-        self.hideActions()
+        self.setLoading(loading: true, message: "Unpublishing...")
         
-        self.setLoading(loading: true)
-        
-        //self.updateStatus("Unpublishing...")
-        
-//        let req = ApiRequest()
-//        req.delegate = self
-//        req.deleteMarker(pid)
+        let req = ApiRequest()
+        req.delegate = self
+        req.deleteMarker(pid)
     }
     
     // Show/hide an activity indicator
-    func setLoading(loading: Bool) {
+    func setLoading(loading: Bool, message: String?) {
         
         // Hide
         if !loading {
-            self.activity?.removeFromSuperview()
-            self.activity = nil
+            self.loader?.dismiss(animated: true, completion: nil)
+            self.loader = nil
             
         // Show
         } else {
             
-            if self.activity == nil {
-                self.activity = UIActivityIndicatorView()
-                self.activity?.translatesAutoresizingMaskIntoConstraints = false
+            let message = (message != nil) ? message : "Loading..."
+            self.loader = UIAlertController(title: nil, message: message, preferredStyle: .alert)
             
-                self.contentView.addSubview(self.activity!)
-                self.activity!.activityIndicatorViewStyle = .gray
-                
-                // Position with constraints
-                let hrzC = NSLayoutConstraint(
-                    item: activity!,
-                    attribute: .trailing,
-                    relatedBy: .equal,
-                    toItem: self.contentView,
-                    attribute: .trailing,
-                    multiplier: 1.0,
-                    constant: -10
-                )
-                let vrtC = NSLayoutConstraint(
-                    item: activity!,
-                    attribute: .centerY,
-                    relatedBy: .equal,
-                    toItem: self.contentView,
-                    attribute: .centerY,
-                    multiplier: 1.0,
-                    constant: 0
-                )
-                
-                // Activate all constraints
-                NSLayoutConstraint.activate([hrzC, vrtC])
-            }
+            self.loader!.view.tintColor = UIColor.black
+            let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
+            loadingIndicator.hidesWhenStopped = true
+            loadingIndicator.activityIndicatorViewStyle = .gray
+            loadingIndicator.startAnimating();
             
-            self.activity?.startAnimating()
+            loader!.view.addSubview(loadingIndicator)
+            self.master?.present(loader!, animated: true, completion: nil)
         }
     }
     
@@ -447,10 +441,26 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             
             master!.tableView.reloadRows(at: [self.indexPath!], with: .right)
         
+        // Unpublish
         } else if (method == .deleteById) {
             print("unpublish/delete complete")
             
+            self.unpublish?.removeFromSuperview()
+            self.publicBadge?.removeFromSuperview()
             
+            self.appendPublishBtn()
+            
+            // Remove loading overlay
+            self.setLoading(loading: false, message: nil)
+            
+            let alertController = UIAlertController(title: "Unpublish Successful",
+                                                    message: "This marker is no longer public.",
+                                                    preferredStyle: .alert)
+            
+            let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(okAction)
+            
+            self.master?.present(alertController, animated: true, completion: nil)
         }
 
     }
@@ -465,9 +475,20 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             // Pop alert with error message
             master!.popFailAlert(error)
         } else if (method == .deleteById) {
-            print("delete failure")
+            print("unpublish failure: \(error)")
             
+            self.setLoading(loading: false, message: nil)
             
+            self.toggleUnpublish()
+            
+            let alertController = UIAlertController(title: "Unpublish Failed",
+                                                    message: error,
+                                                    preferredStyle: .alert)
+            
+            let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(okAction)
+            
+            self.master?.present(alertController, animated: true, completion: nil)
         }
     }
 }
