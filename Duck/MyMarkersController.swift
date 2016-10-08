@@ -197,8 +197,27 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         } else {
             print("no credentials found")
             let accountView = self.storyboard!.instantiateViewController(withIdentifier: "AccountViewController") as! AccountViewController
-            accountView.signInSuccessHandler = {
+            accountView.signInSuccessHandler = { credentials in
                 self.loadPublishConfirm(sender)
+            }
+            self.navigationController?.pushViewController(accountView, animated: true)
+        }
+    }
+    
+    // Get credentials or prompt user to sign in
+    func getCredentials(_ completionHandler: @escaping (_ credentials: Credentials) -> Void) {
+        
+        // Sign in credentials exist
+        if let cred = Credentials() {
+            
+            completionHandler(cred)
+            
+        // If not signed in, send to account page
+        } else {
+            print("no credentials found")
+            let accountView = self.storyboard!.instantiateViewController(withIdentifier: "AccountViewController") as! AccountViewController
+            accountView.signInSuccessHandler = { credentials in
+                completionHandler(credentials)
             }
             self.navigationController?.pushViewController(accountView, animated: true)
         }
@@ -360,7 +379,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     }
     
     
-    func updateMarkerEntity (_ localTimestamp: Double, publicID: String) {
+    func updateMarkerEntity (_ localTimestamp: Double, publicID: String?) {
         
         // Get managed object context
         let appDel: AppDelegate = UIApplication.shared.delegate as! AppDelegate

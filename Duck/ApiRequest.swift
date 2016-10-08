@@ -19,11 +19,11 @@ import GoogleMaps
     
     @objc optional func imageDownloadDidProgress(_ progress: Float)
     
-    func reqDidComplete(_ data: NSDictionary, method: ApiMethod)
+    func reqDidComplete(_ data: NSDictionary, method: ApiMethod, code: Int)
     
     @objc optional func reqDidComplete(withImage image: UIImage)
     
-    func reqDidFail(_ error: String, method: ApiMethod)
+    func reqDidFail(_ error: String, method: ApiMethod, code: Int)
 }
 
 
@@ -163,12 +163,18 @@ class ApiRequest {
     }
     
     // Delete a single marker by id
-    func deleteMarker (_ public_id: String) {
+    func deleteMarker (_ public_id: String, credentials: Credentials) {
         
-        var params = ["marker_id": public_id]
+        let params = ["marker_id": public_id]
+        
+        // Add basic auth to request header
+        let loginData = "\(credentials.email):\(credentials.password)".data(using: String.Encoding.utf8)!
+        let base64LoginString = loginData.base64EncodedString(options: .lineLength64Characters)
+        
+        let headers = ["Authorization": "Basic \(base64LoginString)"]
         
         // Exec request
-        Alamofire.request("\(baseURL)/markers", method: .delete, parameters: params)
+        Alamofire.request("\(baseURL)/markers", method: .delete, parameters: params, headers: headers)
             .responseJSON { response in
                 self.handleResponse(response, method: .deleteById)
         }
@@ -269,7 +275,7 @@ class ApiRequest {
                     
                     print("Failed with error: \(error)")
                     let error_descrip = error.localizedDescription
-                    self.delegate?.reqDidFail(error_descrip, method: .image)
+                    self.delegate?.reqDidFail(error_descrip, method: .image, code: 0)
                     
                 } else {
                     print("Downloaded file successfully")
@@ -300,11 +306,11 @@ class ApiRequest {
                     } else if response_code >= 300 && response_code < 500 {
                         
                         let message = "Server responded with http error response code \(response_code)"
-                        self.delegate?.reqDidFail(message, method: .image)
+                        self.delegate?.reqDidFail(message, method: .image, code: response_code)
                         
                         // Server error
                     } else if response_code >= 500 {
-                        self.delegate?.reqDidFail("A server error occurred.", method: .image)
+                        self.delegate?.reqDidFail("A server error occurred.", method: .image, code: response_code)
                     }
                 }
 
@@ -329,24 +335,24 @@ class ApiRequest {
             if response_code >= 200 && response_code < 300 {
                 
                 // Notify delegate of upload complete
-                self.delegate?.reqDidComplete(res_json_dictionary, method: method)
+                self.delegate?.reqDidComplete(res_json_dictionary, method: method, code: response_code)
             
             // 400 status code. message prop should exist
             } else if response_code >= 300 && response_code < 500 {
                 
                 let message = res_json_dictionary.object(forKey: "message") as! String
-                self.delegate?.reqDidFail(message, method: method)
+                self.delegate?.reqDidFail(message, method: method, code: response_code)
 
             // Server error
             } else if response_code >= 500 {
-                self.delegate?.reqDidFail("A server error occurred.", method: method)
+                self.delegate?.reqDidFail("A server error occurred.", method: method, code: response_code)
             }
 
             
         case .failure(let error):
             
             let error_descrip = error.localizedDescription
-            self.delegate?.reqDidFail(error_descrip, method: method)
+            self.delegate?.reqDidFail(error_descrip, method: method, code: 0)
         }
     }
     

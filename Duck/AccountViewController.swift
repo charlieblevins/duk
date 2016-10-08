@@ -26,7 +26,7 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
     var didReqSignOut: Bool = false
     
     // If true, pop to previous view on sign in success
-    var signInSuccessHandler: (()->Void)? = nil
+    var signInSuccessHandler: ((_ credentials: Credentials) -> Void)? = nil
     
     override func loadView() {
         super.loadView()
@@ -141,7 +141,7 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
             // Remove this view and call success handler
             if self.signInSuccessHandler != nil {
                 //navigationController?.popViewControllerAnimated(false)
-                self.signInSuccessHandler!()
+                self.signInSuccessHandler!(self.credentials!)
                 self.signInSuccessHandler = nil
             }
             

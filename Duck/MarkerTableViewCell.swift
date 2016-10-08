@@ -374,9 +374,11 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         
         self.setLoading(loading: true, message: "Unpublishing...")
         
-        let req = ApiRequest()
-        req.delegate = self
-        req.deleteMarker(pid)
+        self.master!.getCredentials({ credentials in
+            let req = ApiRequest()
+            req.delegate = self
+            req.deleteMarker(pid, credentials: credentials)
+        })
     }
     
     // Show/hide an activity indicator
@@ -416,7 +418,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     }
     
     
-    func reqDidComplete(_ data: NSDictionary, method: ApiMethod) {
+    func reqDidComplete(_ data: NSDictionary, method: ApiMethod, code: Int) {
         
         if (method == .publishMarker) {
             print("upload complete")
@@ -445,6 +447,8 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         } else if (method == .deleteById) {
             print("unpublish/delete complete")
             
+            master!.updateMarkerEntity(self.markerData!.timestamp!, publicID: nil)
+            
             self.unpublish?.removeFromSuperview()
             self.publicBadge?.removeFromSuperview()
             
@@ -466,7 +470,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     }
     
     // Show alert on failure
-    func reqDidFail(_ error: String, method: ApiMethod) {
+    func reqDidFail(_ error: String, method: ApiMethod, code: Int) {
         if (method == .publishMarker) {
             print("upload failure")
             
@@ -475,6 +479,13 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             // Pop alert with error message
             master!.popFailAlert(error)
         } else if (method == .deleteById) {
+            
+            // If marker not found, treat as success
+            if code == 404 {
+                self.reqDidComplete(NSDictionary(), method: method, code: code)
+                return
+            }
+            
             print("unpublish failure: \(error)")
             
             self.setLoading(loading: false, message: nil)

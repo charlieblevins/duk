@@ -255,7 +255,7 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
     // ApiRequestDelegate methods
     
     // Route data received from api to corresponding handler function
-    func reqDidComplete(_ data: NSDictionary, method: ApiMethod) {
+    func reqDidComplete(_ data: NSDictionary, method: ApiMethod, code: Int) {
         
         if data["data"] == nil {
             print("Api server returned no data")
@@ -276,7 +276,7 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         }
     }
     
-    func reqDidFail(_ error: String, method: ApiMethod) {
+    func reqDidFail(_ error: String, method: ApiMethod, code: Int) {
         
         switch method {
             
