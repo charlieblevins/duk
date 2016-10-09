@@ -184,21 +184,21 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         return cell
     }
     
-    func publishAction(_ sender: AnyObject) {
+    func publishAction(_ cell: MarkerTableViewCell) {
         
         let credentArr = Util.fetchCoreData("Login", predicate: nil)
         
         // Sign in credentials exist
         if  credentArr?.count != 0 {
             
-            self.loadPublishConfirm(sender)
+            self.loadPublishConfirm(cell)
             
         // If not signed in, send to account page
         } else {
             print("no credentials found")
             let accountView = self.storyboard!.instantiateViewController(withIdentifier: "AccountViewController") as! AccountViewController
             accountView.signInSuccessHandler = { credentials in
-                self.loadPublishConfirm(sender)
+                self.loadPublishConfirm(cell)
             }
             self.navigationController?.pushViewController(accountView, animated: true)
         }
@@ -223,7 +223,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         }
     }
     
-    func loadPublishConfirm (_ sender: AnyObject) {
+    func loadPublishConfirm (_ cell: MarkerTableViewCell) {
         print("credentials found")
         
         // Get and store indexpath
@@ -231,9 +231,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             self.pending_publish = Dictionary()
         }
         
-        let button = sender as! UIButton
-        let sview = button.superview!
-        let cell = sview.superview as! MarkerTableViewCell
         let marker_index_path = self.tableView.indexPath(for: cell)
         self.pending_publish!["indexPath"] = marker_index_path
         
@@ -381,6 +378,14 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     
     func updateMarkerEntity (_ localTimestamp: Double, publicID: String?) {
         
+        // Update savedMarkers
+        if let ind = savedMarkers.index(where: { $0.timestamp == localTimestamp }) {
+            savedMarkers[ind].public_id = publicID
+        } else {
+            print("could not update savedMarker: no marker with timestamp \(localTimestamp) found")
+        }
+        
+        /// Update core data
         // Get managed object context
         let appDel: AppDelegate = UIApplication.shared.delegate as! AppDelegate
         let context: NSManagedObjectContext = appDel.managedObjectContext

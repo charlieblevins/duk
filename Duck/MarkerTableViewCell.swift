@@ -322,7 +322,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         pubBtn?.backgroundColor = UIColor.blue
         pubBtn?.translatesAutoresizingMaskIntoConstraints = false
         
-        pubBtn?.addTarget(self, action: #selector(master!.publishAction(_:)), for: .touchUpInside)
+        pubBtn?.addTarget(self, action: #selector(self.publishTapped), for: .touchUpInside)
         
         self.contentView.addSubview(pubBtn!)
         
@@ -359,6 +359,10 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         NSLayoutConstraint.activate([hrzC, vrtC, hgtC])
     }
     
+    func publishTapped () {
+        self.master!.publishAction(self)
+    }
+    
     // Delete a marker from the server and mark the local marker as local
     func unpublishMarker () {
         
@@ -386,7 +390,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         
         // Hide
         if !loading {
-            self.loader?.dismiss(animated: true, completion: nil)
+            self.loader?.dismiss(animated: false, completion: nil)
             self.loader = nil
             
         // Show
@@ -408,7 +412,9 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     
     // MARK: upload delegate method handlers
     func reqDidStart() {
-        
+        if pubBtn != nil {
+            pubBtn?.removeFromSuperview()
+        }
     }
     
     // Show progress
@@ -426,12 +432,12 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             // Save new data to core data
             let timestamp: Double = self.markerData!.timestamp!
             
-            guard let data_convert = data["data"] as? [String:String] else {
+            guard let data_convert = data["data"] as? [String: Any] else {
                 print("unexpected data structure at reqDidComplete")
                 return
             }
             
-            guard let pubID: String = data_convert["_id"] else {
+            guard let pubID: String = data_convert["_id"] as? String else {
                 print("could not get _id from response")
                 return
             }
