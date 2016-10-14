@@ -14,12 +14,12 @@ protocol PublishSuccessDelegate {
     var pending_publish: Dictionary<String, Any>? { get set }
 }
 
-class PublishConfirmController: UIViewController, UIPopoverPresentationControllerDelegate, PopOverDateDelegate {
+class PublishConfirmController: UIViewController, UIPopoverPresentationControllerDelegate {
 
-    @IBOutlet weak var dateLabel: UILabel!
     @IBOutlet weak var publishBtn: UIButton!
     @IBOutlet weak var tagLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var cautionBtn: UIButton!
     
     var markerData: Marker? = nil
     var timeFromDayPicker: String?
@@ -46,6 +46,9 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
             imageView.image = UIImage(data: imageData)
         }
         
+        cautionBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -10)
+        //cautionBtn.imageEdgeInsets = UIEdgeInsetsMake(0, (cautionBtn.imageView?.frame.size.width)!, 0, -(cautionBtn.imageView?.frame.size.width)!)
+        
     }
     
     override func didReceiveMemoryWarning() {
@@ -62,48 +65,7 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         return UIInterfaceOrientationMask.portrait
     }
     
-    @IBAction func ChangeDateAction(_ sender: UIButton) {
-        
-        // Present PopOverDate in modal view
-        let popOverDate = PopOverDate()
-        
-        // If a future date has already been chosen
-        // send it back as the default
-        if timeFromDayPicker != nil {
-            popOverDate.choice = timeFromDayPicker
-        }
-        
-        // Define delegate for my custom view within popover
-        popOverDate.delegate = self
-        
-        // Show view as popover
-        popOverDate.modalPresentationStyle = .popover
-        if let popover = popOverDate.popoverPresentationController {
-            
-            // Define delegate for popover controller
-            popover.delegate = self
-            
-            // Define size of popover
-            popover.sourceRect = CGRect(
-                x: 0,
-                y: 0,
-                width: 100,
-                height: 100)
-            popover.sourceView = sender
-        }
-        
-        self.present(popOverDate, animated: true, completion: nil)
-    }
-    
-    // Receive data message from PopOverDate controller
-    func savePublishDate(_ chosenTime: String?) {
-
-        timeFromDayPicker = chosenTime
-        
-        // Update UI to show newly chosen time
-        if timeFromDayPicker != nil {
-            dateLabel.text = timeFromDayPicker
-        }
+    @IBAction func cautionTapped(_ sender: UIButton) {
     }
     
     @IBAction func publishMarker(_ sender: AnyObject) {

@@ -189,7 +189,7 @@
                                 <rect key="frame" x="0.0" y="92" width="375" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Zq5-fA-IZw" id="muh-2c-PwY">
-                                    <frame key="frameInset" width="375" height="79.5"/>
+                                    <frame key="frameInset" width="375" height="79"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iD8-Je-3Ty" userLabel="MarkerImage">
@@ -278,16 +278,6 @@
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KQW-ig-k4R" userLabel="PublishActionView">
                                 <subviews>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Publish Date:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xcu-YQ-Ych">
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Now" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Rtg-5S-vZz" userLabel="Date">
-                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                        <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                        <nil key="highlightedColor"/>
-                                    </label>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vsH-6Y-vak">
                                         <constraints>
                                             <constraint firstAttribute="height" constant="45" id="2dK-Xf-LQY"/>
@@ -297,24 +287,43 @@
                                             <action selector="publishMarker:" destination="fKt-Xx-La4" eventType="touchUpInside" id="qZU-1E-1wt"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kFY-s8-0IM">
-                                        <state key="normal" title="Change"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Make this marker available to the world." lineBreakMode="wordWrap" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7UH-F1-eIZ" userLabel="Description">
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="50" id="fDD-dS-zuG"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <color key="textColor" red="0.24887960214336449" green="0.25115757539339095" blue="0.25560546875000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                    <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bQC-PO-plo">
+                                        <constraints>
+                                            <constraint firstAttribute="width" constant="120" id="eiy-HP-5gE"/>
+                                            <constraint firstAttribute="height" constant="30" id="nDT-eH-E5F"/>
+                                        </constraints>
+                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <state key="normal" title="Be Cautious" image="info">
+                                            <color key="titleColor" red="1" green="0.33687685072383922" blue="0.029526099180795073" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <userDefinedRuntimeAttributes>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                                <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                        </userDefinedRuntimeAttributes>
                                         <connections>
-                                            <action selector="ChangeDateAction:" destination="fKt-Xx-La4" eventType="touchUpInside" id="SZT-a6-FhH"/>
+                                            <action selector="cautionTapped:" destination="fKt-Xx-La4" eventType="touchUpInside" id="Hcg-oQ-xHy"/>
                                         </connections>
                                     </button>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="kFY-s8-0IM" secondAttribute="trailing" constant="20" id="2By-2i-Z6D"/>
-                                    <constraint firstItem="Rtg-5S-vZz" firstAttribute="top" secondItem="KQW-ig-k4R" secondAttribute="top" constant="5" id="2Lm-CJ-dsN"/>
+                                    <constraint firstItem="bQC-PO-plo" firstAttribute="bottom" secondItem="vsH-6Y-vak" secondAttribute="top" constant="-10" id="5uR-Oq-iQe"/>
                                     <constraint firstAttribute="bottom" secondItem="vsH-6Y-vak" secondAttribute="bottom" id="8Oi-2U-VRr"/>
+                                    <constraint firstItem="7UH-F1-eIZ" firstAttribute="width" secondItem="KQW-ig-k4R" secondAttribute="width" multiplier="0.6" id="9Jp-kD-AjR"/>
                                     <constraint firstItem="vsH-6Y-vak" firstAttribute="leading" secondItem="KQW-ig-k4R" secondAttribute="leading" id="BQe-bI-Nb9"/>
-                                    <constraint firstItem="xcu-YQ-Ych" firstAttribute="top" secondItem="KQW-ig-k4R" secondAttribute="top" constant="5" id="IcH-xA-p1C"/>
+                                    <constraint firstAttribute="trailing" secondItem="bQC-PO-plo" secondAttribute="trailing" constant="10" id="M1W-lI-bsC"/>
+                                    <constraint firstItem="7UH-F1-eIZ" firstAttribute="bottom" secondItem="vsH-6Y-vak" secondAttribute="top" constant="-10" id="NKn-Af-oZ7"/>
                                     <constraint firstItem="vsH-6Y-vak" firstAttribute="width" secondItem="KQW-ig-k4R" secondAttribute="width" id="PmO-Rt-qqa"/>
-                                    <constraint firstItem="xcu-YQ-Ych" firstAttribute="leading" secondItem="KQW-ig-k4R" secondAttribute="leading" constant="20" id="XdR-A7-cUo"/>
-                                    <constraint firstAttribute="trailing" secondItem="Rtg-5S-vZz" secondAttribute="trailing" constant="100" id="ZJG-lS-uLf"/>
-                                    <constraint firstItem="kFY-s8-0IM" firstAttribute="top" secondItem="KQW-ig-k4R" secondAttribute="top" id="e90-Y4-dJ5"/>
+                                    <constraint firstItem="7UH-F1-eIZ" firstAttribute="leading" secondItem="KQW-ig-k4R" secondAttribute="leading" constant="10" id="q6C-kN-fxl"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -333,7 +342,7 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="dateLabel" destination="Rtg-5S-vZz" id="ts8-HB-bfP"/>
+                        <outlet property="cautionBtn" destination="bQC-PO-plo" id="DyR-mR-ok7"/>
                         <outlet property="imageView" destination="dmH-rT-DQt" id="5wq-AM-E7Z"/>
                         <outlet property="publishBtn" destination="vsH-6Y-vak" id="enE-KA-5R4"/>
                         <outlet property="tagLabel" destination="jYy-io-xGz" id="HRZ-tE-YvU"/>
@@ -341,7 +350,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="IhG-r4-Aft" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1189" y="2548"/>
+            <point key="canvasLocation" x="1188" y="2547.9760119940033"/>
         </scene>
         <!--Add Marker Controller-->
         <scene sceneID="yxI-kT-uQW">
@@ -706,7 +715,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7Bk-bW-NDo" id="8MP-uJ-kU4">
-                                            <frame key="frameInset" width="375" height="43.5"/>
+                                            <frame key="frameInset" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dkg-4b-rG0" userLabel="MarkerImage">
@@ -950,6 +959,7 @@
         <image name="camera" width="180" height="128"/>
         <image name="close-x" width="35" height="35"/>
         <image name="close-x-small-white" width="30" height="30"/>
+        <image name="info" width="20" height="20"/>
         <image name="photoMarker" width="40" height="53"/>
     </resources>
     <inferredMetricsTieBreakers>

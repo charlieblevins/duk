@@ -447,7 +447,9 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             // Alert that upload was successful
             //master!.popSuccessAlert()
             
-            master!.tableView.reloadRows(at: [self.indexPath!], with: .right)
+            //master!.tableView.reloadRows(at: [self.indexPath!], with: .right)
+            self.statusBar?.removeFromSuperview()
+            self.appendPublicBadge()
         
         // Unpublish
         } else if (method == .deleteById) {
@@ -480,6 +482,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         if (method == .publishMarker) {
             print("upload failure")
             
+            self.statusBar?.removeFromSuperview()
             self.appendPublishBtn()
             
             // Pop alert with error message
