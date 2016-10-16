@@ -264,25 +264,37 @@
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="qYl-kg-2h1" secondAttribute="trailing" id="0Ir-iZ-ye7"/>
-                                    <constraint firstAttribute="bottom" secondItem="qYl-kg-2h1" secondAttribute="bottom" id="3Cw-m1-6fz"/>
-                                    <constraint firstItem="dmH-rT-DQt" firstAttribute="width" secondItem="23c-os-oKt" secondAttribute="width" id="92E-ZI-P6s"/>
-                                    <constraint firstItem="qYl-kg-2h1" firstAttribute="width" secondItem="23c-os-oKt" secondAttribute="width" id="IxQ-KE-xw6"/>
+                                    <constraint firstAttribute="bottom" secondItem="qYl-kg-2h1" secondAttribute="bottom" constant="1" id="3Cw-m1-6fz"/>
+                                    <constraint firstItem="dmH-rT-DQt" firstAttribute="width" secondItem="23c-os-oKt" secondAttribute="width" constant="-2" id="92E-ZI-P6s"/>
+                                    <constraint firstItem="qYl-kg-2h1" firstAttribute="width" secondItem="23c-os-oKt" secondAttribute="width" constant="-2" id="IxQ-KE-xw6"/>
                                     <constraint firstItem="dmH-rT-DQt" firstAttribute="height" secondItem="23c-os-oKt" secondAttribute="height" multiplier="0.7" id="Tph-r6-E7i"/>
-                                    <constraint firstItem="qYl-kg-2h1" firstAttribute="leading" secondItem="23c-os-oKt" secondAttribute="leading" id="aTm-qL-es4"/>
-                                    <constraint firstItem="dmH-rT-DQt" firstAttribute="top" secondItem="23c-os-oKt" secondAttribute="top" id="akt-hr-v3A"/>
+                                    <constraint firstItem="dmH-rT-DQt" firstAttribute="top" secondItem="23c-os-oKt" secondAttribute="top" constant="1" id="akt-hr-v3A"/>
                                     <constraint firstItem="dmH-rT-DQt" firstAttribute="centerX" secondItem="23c-os-oKt" secondAttribute="centerX" id="deY-jJ-4Yx"/>
+                                    <constraint firstItem="qYl-kg-2h1" firstAttribute="centerX" secondItem="23c-os-oKt" secondAttribute="centerX" id="jfz-20-tAM"/>
                                     <constraint firstItem="qYl-kg-2h1" firstAttribute="top" secondItem="dmH-rT-DQt" secondAttribute="bottom" id="pxh-4J-8mU"/>
-                                    <constraint firstAttribute="bottom" secondItem="qYl-kg-2h1" secondAttribute="bottom" id="vpX-Fp-rHl"/>
                                 </constraints>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
+                                        <integer key="value" value="3"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="5"/>
+                                    </userDefinedRuntimeAttribute>
+                                    <userDefinedRuntimeAttribute type="color" keyPath="layer.borderColor">
+                                        <color key="value" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="KQW-ig-k4R" userLabel="PublishActionView">
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="vsH-6Y-vak">
+                                        <color key="backgroundColor" red="0.20377070354016835" green="0.46474024424985372" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="45" id="2dK-Xf-LQY"/>
                                         </constraints>
-                                        <state key="normal" title="Publish"/>
+                                        <state key="normal" title="Publish">
+                                            <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
                                         <connections>
                                             <action selector="publishMarker:" destination="fKt-Xx-La4" eventType="touchUpInside" id="qZU-1E-1wt"/>
                                         </connections>
@@ -291,14 +303,14 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="fDD-dS-zuG"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="15"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="18"/>
                                         <color key="textColor" red="0.24887960214336449" green="0.25115757539339095" blue="0.25560546875000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bQC-PO-plo">
+                                    <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" contentHorizontalAlignment="left" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bQC-PO-plo">
                                         <constraints>
-                                            <constraint firstAttribute="width" constant="120" id="eiy-HP-5gE"/>
-                                            <constraint firstAttribute="height" constant="30" id="nDT-eH-E5F"/>
+                                            <constraint firstAttribute="width" constant="130" id="eiy-HP-5gE"/>
+                                            <constraint firstAttribute="height" constant="34" id="nDT-eH-E5F"/>
                                         </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="15"/>
                                         <state key="normal" title="Be Cautious" image="info">
@@ -307,6 +319,9 @@
                                         <userDefinedRuntimeAttributes>
                                             <userDefinedRuntimeAttribute type="number" keyPath="layer.borderWidth">
                                                 <integer key="value" value="1"/>
+                                            </userDefinedRuntimeAttribute>
+                                            <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                                <integer key="value" value="5"/>
                                             </userDefinedRuntimeAttribute>
                                         </userDefinedRuntimeAttributes>
                                         <connections>
@@ -331,19 +346,18 @@
                         <constraints>
                             <constraint firstItem="KQW-ig-k4R" firstAttribute="width" secondItem="FyL-3n-nBj" secondAttribute="width" id="3yZ-Vx-Grg"/>
                             <constraint firstAttribute="bottom" secondItem="KQW-ig-k4R" secondAttribute="bottom" id="AX2-df-RW2"/>
-                            <constraint firstItem="23c-os-oKt" firstAttribute="height" secondItem="FyL-3n-nBj" secondAttribute="height" multiplier="0.7" constant="-70" id="Ald-JF-bDM"/>
+                            <constraint firstItem="23c-os-oKt" firstAttribute="height" secondItem="FyL-3n-nBj" secondAttribute="height" multiplier="0.7" constant="-20" id="Ald-JF-bDM"/>
                             <constraint firstItem="23c-os-oKt" firstAttribute="centerX" secondItem="FyL-3n-nBj" secondAttribute="centerX" id="UEr-GC-IQC"/>
-                            <constraint firstItem="23c-os-oKt" firstAttribute="top" secondItem="Ux4-Vb-U6e" secondAttribute="bottom" id="gSS-kK-Xpl"/>
-                            <constraint firstItem="23c-os-oKt" firstAttribute="leading" secondItem="FyL-3n-nBj" secondAttribute="leading" id="gt1-Fk-HgP"/>
-                            <constraint firstItem="23c-os-oKt" firstAttribute="width" secondItem="FyL-3n-nBj" secondAttribute="width" id="mzf-xH-RR9"/>
+                            <constraint firstItem="23c-os-oKt" firstAttribute="top" secondItem="Ux4-Vb-U6e" secondAttribute="bottom" constant="25" id="gSS-kK-Xpl"/>
+                            <constraint firstItem="23c-os-oKt" firstAttribute="width" secondItem="FyL-3n-nBj" secondAttribute="width" constant="-50" id="mzf-xH-RR9"/>
                             <constraint firstItem="KQW-ig-k4R" firstAttribute="leading" secondItem="FyL-3n-nBj" secondAttribute="leading" id="nFI-W8-hTA"/>
-                            <constraint firstAttribute="trailing" secondItem="23c-os-oKt" secondAttribute="trailing" id="sEv-Hi-g2s"/>
-                            <constraint firstItem="KQW-ig-k4R" firstAttribute="height" secondItem="FyL-3n-nBj" secondAttribute="height" multiplier="0.3" id="ySl-Iy-wOE"/>
+                            <constraint firstItem="KQW-ig-k4R" firstAttribute="height" secondItem="FyL-3n-nBj" secondAttribute="height" multiplier="0.3" constant="-86" id="ySl-Iy-wOE"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="cautionBtn" destination="bQC-PO-plo" id="DyR-mR-ok7"/>
                         <outlet property="imageView" destination="dmH-rT-DQt" id="5wq-AM-E7Z"/>
+                        <outlet property="markerDataView" destination="23c-os-oKt" id="ayV-DU-3CA"/>
                         <outlet property="publishBtn" destination="vsH-6Y-vak" id="enE-KA-5R4"/>
                         <outlet property="tagLabel" destination="jYy-io-xGz" id="HRZ-tE-YvU"/>
                     </connections>

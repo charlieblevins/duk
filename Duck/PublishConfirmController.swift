@@ -16,6 +16,7 @@ protocol PublishSuccessDelegate {
 
 class PublishConfirmController: UIViewController, UIPopoverPresentationControllerDelegate {
 
+    @IBOutlet weak var markerDataView: UIView!
     @IBOutlet weak var publishBtn: UIButton!
     @IBOutlet weak var tagLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
@@ -46,9 +47,9 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
             imageView.image = UIImage(data: imageData)
         }
         
-        cautionBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 0, 0, -10)
-        //cautionBtn.imageEdgeInsets = UIEdgeInsetsMake(0, (cautionBtn.imageView?.frame.size.width)!, 0, -(cautionBtn.imageView?.frame.size.width)!)
+        styleMarkerView()
         
+        styleCaution()
     }
     
     override func didReceiveMemoryWarning() {
@@ -66,6 +67,15 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
     }
     
     @IBAction func cautionTapped(_ sender: UIButton) {
+        
+        let alertController = UIAlertController(title: "Be Cautious",
+                                                message: "Publishing photos of your current location can show the world where you are. If in doubt, wait to publish photos after leaving the location.",
+                                                preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        alertController.addAction(okAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
     
     @IBAction func publishMarker(_ sender: AnyObject) {
@@ -86,7 +96,20 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         }
         //self.navigationController?.popViewControllerAnimated(true)
     }
-
+    
+    func styleMarkerView () {
+        markerDataView.layer.borderColor = UIColor.gray.cgColor
+        markerDataView.layer.borderWidth = 1
+        markerDataView.layer.cornerRadius = 5
+    }
+    
+    func styleCaution () {
+        
+        cautionBtn.titleEdgeInsets = UIEdgeInsetsMake(0, 16, 0, 0)
+        cautionBtn.imageEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 0)
+        
+        cautionBtn.layer.borderColor = UIColor(colorLiteralRed: 255/255, green: 86/255, blue: 8/255, alpha: 1).cgColor
+    }
 }
 
 
