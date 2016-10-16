@@ -124,41 +124,17 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     // including icon
     func updateNouns(_ nouns: String?) {
         
-        var primaryNoun: String? = nil
-        
-        // Create bold style attr
-        let dynamic_size = UIFont.preferredFont(forTextStyle: UIFontTextStyle.body).pointSize
-        let bold_attrs = [NSFontAttributeName: UIFont.boldSystemFont(ofSize: dynamic_size)]
-        var attributedString = NSMutableAttributedString(string: "")
-        
         if nouns == nil {
             NounText.attributedText = NSMutableAttributedString(string: "Add Nouns Here", attributes: nil)
 
             setIconForNoun(nil)
             return
-        
-        // More than one noun - bold the first
-        } else if let space_range = nouns!.range(of: " ") {
-            
-            primaryNoun = nouns!.substring(to: (space_range.lowerBound))
-            
-            attributedString = NSMutableAttributedString(string: primaryNoun!, attributes: bold_attrs)
-            
-            // Make attr string from remaining string
-            let remaining_nouns = NSMutableAttributedString(string: " \(nouns!.substring(from: (space_range.upperBound)))")
-            
-            // Concat first noun with remaining nouns
-            attributedString.append(remaining_nouns)
-            
-        // No space - assume single tag
-        } else {
-            primaryNoun = nouns
-            attributedString = NSMutableAttributedString(string: nouns!, attributes: bold_attrs)
         }
         
-        NounText.attributedText = attributedString
+        // Format nouns
+        NounText.attributedText = Marker.formatNouns(nouns!)
         
-        setIconForNoun(primaryNoun!)
+        setIconForNoun(Marker.getPrimaryNoun(nouns!))
     }
     
     // Get icon for primary noun

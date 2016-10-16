@@ -40,7 +40,7 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         if markerData != nil {
             
             let tags = markerData!.tags
-            tagLabel.text = tags
+            tagLabel.attributedText = Marker.formatNouns(tags!)
             
             let imageData: Data = markerData!.photo! as Data
             imageView.contentMode = .scaleAspectFit

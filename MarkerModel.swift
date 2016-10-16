@@ -335,5 +335,54 @@ struct Marker {
         return found
     }
 
+    // Format noun(s) in attributed style. Primary noun should be bold.
+    static func formatNouns (_ nouns: String) -> NSMutableAttributedString {
+        
+        var primaryNoun: String? = nil
+        
+        // Create bold style attr
+        let dynamic_size = UIFont.preferredFont(forTextStyle: UIFontTextStyle.body).pointSize
+        let bold_attrs = [NSFontAttributeName: UIFont.boldSystemFont(ofSize: dynamic_size)]
+        var attributedString = NSMutableAttributedString(string: "")
+        
+        // More than one noun - bold the first
+        if let space_range = nouns.range(of: " ") {
+            
+            primaryNoun = nouns.substring(to: (space_range.lowerBound))
+            
+            attributedString = NSMutableAttributedString(string: "#\(primaryNoun!)", attributes: bold_attrs)
+            
+            // Make attr string from remaining string
+            let remaining_nouns = nouns.substring(from: (space_range.upperBound))
+            
+            // split by spaces and add command #
+            let remaining_formatted = remaining_nouns.components(separatedBy: " ").map {
+                item in
+                return ", #\(item)"
+            }.joined()
+            
+            // convert to attributed
+            let remaining_attributed = NSMutableAttributedString(string: remaining_formatted)
+            
+            // Concat first noun with remaining nouns
+            attributedString.append(remaining_attributed)
+            
+            // No space - assume single tag
+        } else {
+            attributedString = NSMutableAttributedString(string: "#\(nouns)", attributes: bold_attrs)
+        }
+        
+        return attributedString
+    }
     
+    static func getPrimaryNoun (_ nouns: String) -> String {
+        
+        // if more than one noun
+        if let space_range = nouns.range(of: " ") {
+            return nouns.substring(to: (space_range.lowerBound))
+            
+        } else {
+            return nouns
+        }
+    }
 }
