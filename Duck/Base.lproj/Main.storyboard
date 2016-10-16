@@ -3,7 +3,6 @@
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
         <capability name="Alignment constraints with different attributes" minToolsVersion="5.1"/>
-        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -249,16 +248,25 @@
                                     <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dmH-rT-DQt"/>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qYl-kg-2h1" userLabel="TagView">
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Tags" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jYy-io-xGz">
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nouns" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jYy-io-xGz">
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
+                                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kiR-cH-JwX" userLabel="iconView" customClass="MarkerIconView" customModule="Duck">
+                                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="38" id="Nr9-f4-i73"/>
+                                                    <constraint firstAttribute="height" constant="38" id="UGY-r9-BKj"/>
+                                                </constraints>
+                                            </view>
                                         </subviews>
                                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
-                                            <constraint firstItem="jYy-io-xGz" firstAttribute="centerX" secondItem="qYl-kg-2h1" secondAttribute="centerX" id="8U2-Up-okC"/>
+                                            <constraint firstItem="kiR-cH-JwX" firstAttribute="top" secondItem="qYl-kg-2h1" secondAttribute="top" constant="8" id="KbZ-vn-zcR"/>
                                             <constraint firstItem="jYy-io-xGz" firstAttribute="top" secondItem="qYl-kg-2h1" secondAttribute="top" constant="15" id="Rh2-fA-XWf"/>
+                                            <constraint firstItem="jYy-io-xGz" firstAttribute="leading" secondItem="kiR-cH-JwX" secondAttribute="trailing" constant="8" id="eV3-Hh-4TJ"/>
+                                            <constraint firstItem="kiR-cH-JwX" firstAttribute="leading" secondItem="qYl-kg-2h1" secondAttribute="leading" constant="8" id="uq8-If-M7R"/>
                                         </constraints>
                                     </view>
                                 </subviews>
@@ -356,6 +364,7 @@
                     </view>
                     <connections>
                         <outlet property="cautionBtn" destination="bQC-PO-plo" id="DyR-mR-ok7"/>
+                        <outlet property="iconView" destination="kiR-cH-JwX" id="Ufz-2V-zbv"/>
                         <outlet property="imageView" destination="dmH-rT-DQt" id="5wq-AM-E7Z"/>
                         <outlet property="markerDataView" destination="23c-os-oKt" id="ayV-DU-3CA"/>
                         <outlet property="publishBtn" destination="vsH-6Y-vak" id="enE-KA-5R4"/>
@@ -375,7 +384,7 @@
                         <viewControllerLayoutGuide type="bottom" id="eOw-u5-xdc"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="BCu-JJ-30K">
-                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WT4-hc-neF">
@@ -411,15 +420,18 @@
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JoL-QU-Pnj" userLabel="TextSection">
                                                 <subviews>
-                                                    <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="JkS-tJ-gw0" userLabel="activIndicator">
+                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Klg-Az-UQB" userLabel="iconView" customClass="MarkerIconView" customModule="Duck">
+                                                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                         <constraints>
-                                                            <constraint firstAttribute="height" constant="38" id="JF2-Ma-Y0p"/>
-                                                            <constraint firstAttribute="width" constant="38" id="cjS-ip-bF5"/>
+                                                            <constraint firstAttribute="height" constant="38" id="Pyc-Ce-P2F"/>
+                                                            <constraint firstAttribute="width" constant="38" id="ZmP-xH-9fW"/>
                                                         </constraints>
-                                                    </activityIndicatorView>
-                                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UMB-Sa-isi" userLabel="Nouns">
+                                                    </view>
+                                                    <view contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UMB-Sa-isi" userLabel="Nouns">
+                                                        <frame key="frameInset" minX="56" width="245" height="50"/>
                                                         <subviews>
-                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nouns" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nFA-7t-3et" userLabel="noun-text">
+                                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" text="Nouns" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nFA-7t-3et" userLabel="noun-text">
+                                                                <frame key="frameInset" minX="5" minY="5" width="235" height="40"/>
                                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                 <nil key="highlightedColor"/>
@@ -436,32 +448,24 @@
                                                             <constraint firstItem="nFA-7t-3et" firstAttribute="width" secondItem="UMB-Sa-isi" secondAttribute="width" constant="-10" id="mT7-ay-iId"/>
                                                         </constraints>
                                                     </view>
-                                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XIY-Ol-37B">
+                                                    <button opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XIY-Ol-37B">
+                                                        <frame key="frameInset" minX="311" minY="10" width="30" height="30"/>
                                                         <state key="normal" title="Edit"/>
                                                         <connections>
                                                             <action selector="EditNoun:" destination="qwp-Vw-ANI" eventType="touchUpInside" id="LJz-g8-5uc"/>
                                                         </connections>
                                                     </button>
-                                                    <imageView userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="photoMarker" translatesAutoresizingMaskIntoConstraints="NO" id="ppf-ah-Lni" userLabel="Icon">
-                                                        <constraints>
-                                                            <constraint firstAttribute="width" constant="38" id="FhY-0z-bbV"/>
-                                                            <constraint firstAttribute="height" constant="38" id="l4P-le-GL9"/>
-                                                        </constraints>
-                                                    </imageView>
                                                 </subviews>
                                                 <constraints>
-                                                    <constraint firstItem="ppf-ah-Lni" firstAttribute="centerY" secondItem="JoL-QU-Pnj" secondAttribute="centerY" id="53H-nN-Ymh"/>
                                                     <constraint firstItem="UMB-Sa-isi" firstAttribute="width" secondItem="JoL-QU-Pnj" secondAttribute="width" constant="-130" id="6vT-o8-hy4"/>
                                                     <constraint firstItem="XIY-Ol-37B" firstAttribute="leading" secondItem="UMB-Sa-isi" secondAttribute="trailing" constant="10" id="CKu-WX-ouU"/>
                                                     <constraint firstItem="XIY-Ol-37B" firstAttribute="centerY" secondItem="JoL-QU-Pnj" secondAttribute="centerY" id="FNC-ue-lFb"/>
-                                                    <constraint firstItem="JkS-tJ-gw0" firstAttribute="leading" secondItem="JoL-QU-Pnj" secondAttribute="leading" constant="8" id="JV5-e6-lMa"/>
-                                                    <constraint firstItem="JkS-tJ-gw0" firstAttribute="centerY" secondItem="JoL-QU-Pnj" secondAttribute="centerY" id="LBG-AV-DmB"/>
                                                     <constraint firstItem="UMB-Sa-isi" firstAttribute="width" secondItem="JoL-QU-Pnj" secondAttribute="width" constant="-130" id="NwP-4M-0V9"/>
                                                     <constraint firstItem="UMB-Sa-isi" firstAttribute="top" secondItem="JoL-QU-Pnj" secondAttribute="top" id="Rdy-z2-gnx"/>
+                                                    <constraint firstItem="Klg-Az-UQB" firstAttribute="leading" secondItem="JoL-QU-Pnj" secondAttribute="leading" constant="8" id="bUv-sb-bFp"/>
+                                                    <constraint firstItem="Klg-Az-UQB" firstAttribute="top" secondItem="JoL-QU-Pnj" secondAttribute="top" constant="6" id="cV1-60-tn7"/>
                                                     <constraint firstAttribute="height" constant="50" id="cm1-1h-NwV"/>
                                                     <constraint firstItem="UMB-Sa-isi" firstAttribute="height" secondItem="JoL-QU-Pnj" secondAttribute="height" id="fWP-Nj-1fs"/>
-                                                    <constraint firstItem="UMB-Sa-isi" firstAttribute="leading" secondItem="ppf-ah-Lni" secondAttribute="trailing" constant="10" id="jXd-Nw-Fwa"/>
-                                                    <constraint firstItem="ppf-ah-Lni" firstAttribute="leading" secondItem="JoL-QU-Pnj" secondAttribute="leading" constant="8" id="kRr-Hq-8pE"/>
                                                 </constraints>
                                                 <variation key="default">
                                                     <mask key="constraints">
@@ -666,10 +670,8 @@
                     <connections>
                         <outlet property="AccContainer" destination="FN6-aU-eEt" id="O1j-3i-Unc"/>
                         <outlet property="EditNoun" destination="XIY-Ol-37B" id="CVd-Jx-EsH"/>
-                        <outlet property="IconIndicator" destination="JkS-tJ-gw0" id="WuS-X9-JCT"/>
                         <outlet property="LatContainer" destination="gvI-xJ-fsO" id="dLK-Z7-tDu"/>
                         <outlet property="LngContainer" destination="1Fn-Zb-VSK" id="fDu-ga-XAT"/>
-                        <outlet property="MarkerIcon" destination="ppf-ah-Lni" id="ZFq-0S-ANY"/>
                         <outlet property="NounText" destination="nFA-7t-3et" id="ehU-pc-8sW"/>
                         <outlet property="PhotoSection" destination="CCt-3F-3ql" id="oxe-mx-QxV"/>
                         <outlet property="SaveBtn" destination="HUM-2v-u5E" id="1bo-Py-oN8"/>
@@ -678,6 +680,7 @@
                         <outlet property="cameraPhoto" destination="IVc-kA-wdL" id="2FV-Lz-i04"/>
                         <outlet property="containerView" destination="JkQ-0E-2WQ" id="vSy-NZ-nUe"/>
                         <outlet property="containerViewHeightConstraint" destination="SM7-vl-PVF" id="hSc-D0-Fi8"/>
+                        <outlet property="iconView" destination="Klg-Az-UQB" id="Irt-M2-Akq"/>
                         <outlet property="latLabel" destination="oUX-RV-Jii" id="uwQ-rq-fT3"/>
                         <outlet property="lngLabel" destination="c10-XJ-L4u" id="Cnd-ld-Ta6"/>
                         <outlet property="photoSectionTopConstraint" destination="HyY-7Q-Hr9" id="Ve0-mV-HfQ"/>
@@ -687,7 +690,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Onf-eN-vGu" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1860" y="1052"/>
+            <point key="canvasLocation" x="1860" y="1051.1244377811095"/>
         </scene>
         <!--Noun View Controller-->
         <scene sceneID="vhA-4h-J1P">
@@ -732,39 +735,29 @@
                                             <frame key="frameInset" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="dkg-4b-rG0" userLabel="MarkerImage">
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" secondItem="dkg-4b-rG0" secondAttribute="height" multiplier="1:1" id="EKR-06-Q95"/>
-                                                    </constraints>
-                                                </imageView>
-                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Noun" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eFy-8s-2vq">
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Noun" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eFy-8s-2vq">
+                                                    <frame key="frameInset" minX="53" minY="11" width="41" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
-                                                <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" fixedFrame="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="42h-NG-He6" userLabel="ActivityIndicator">
-                                                    <frame key="frameInset" minX="15" minY="12" width="20" height="20"/>
-                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                </activityIndicatorView>
+                                                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="LSf-fh-HBG" userLabel="iconView" customClass="MarkerIconView" customModule="Duck">
+                                                    <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="38" id="aSj-oG-rWn"/>
+                                                        <constraint firstAttribute="width" constant="38" id="tgp-MI-sfK"/>
+                                                    </constraints>
+                                                </view>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="eFy-8s-2vq" firstAttribute="leading" secondItem="dkg-4b-rG0" secondAttribute="trailing" constant="10" id="ERN-kg-8fl"/>
-                                                <constraint firstItem="dkg-4b-rG0" firstAttribute="top" secondItem="8MP-uJ-kU4" secondAttribute="top" constant="4" id="MO3-Hz-83c"/>
                                                 <constraint firstItem="eFy-8s-2vq" firstAttribute="centerY" secondItem="8MP-uJ-kU4" secondAttribute="centerY" id="OVG-y4-9dQ"/>
-                                                <constraint firstItem="dkg-4b-rG0" firstAttribute="height" secondItem="8MP-uJ-kU4" secondAttribute="height" constant="-8" id="QRr-OL-2Dc"/>
-                                                <constraint firstItem="dkg-4b-rG0" firstAttribute="leading" secondItem="8MP-uJ-kU4" secondAttribute="leadingMargin" id="WZA-Ra-gbZ"/>
-                                                <constraint firstItem="dkg-4b-rG0" firstAttribute="centerY" secondItem="8MP-uJ-kU4" secondAttribute="centerY" id="o0J-Mr-aJQ"/>
+                                                <constraint firstItem="LSf-fh-HBG" firstAttribute="top" secondItem="8MP-uJ-kU4" secondAttribute="topMargin" id="hd5-KT-KMc"/>
+                                                <constraint firstItem="LSf-fh-HBG" firstAttribute="leading" secondItem="8MP-uJ-kU4" secondAttribute="leadingMargin" id="rkG-tJ-daT"/>
                                             </constraints>
-                                            <variation key="default">
-                                                <mask key="constraints">
-                                                    <exclude reference="o0J-Mr-aJQ"/>
-                                                </mask>
-                                            </variation>
                                         </tableViewCellContentView>
                                         <connections>
-                                            <outlet property="NounRowActivity" destination="42h-NG-He6" id="yCY-ZH-3we"/>
-                                            <outlet property="NounRowImage" destination="dkg-4b-rG0" id="JNK-vh-hzd"/>
                                             <outlet property="NounRowLabel" destination="eFy-8s-2vq" id="4ad-fZ-Eq0"/>
+                                            <outlet property="iconView" destination="LSf-fh-HBG" id="vgB-Z2-vt4"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -974,9 +967,8 @@
         <image name="close-x" width="35" height="35"/>
         <image name="close-x-small-white" width="30" height="30"/>
         <image name="info" width="20" height="20"/>
-        <image name="photoMarker" width="40" height="53"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="kqa-9W-h1L"/>
+        <segue reference="mO3-IZ-UfX"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -132,42 +132,42 @@ class Util {
         }
     }
     
-    class func loadMarkerIcon (_ marker: DukGMSMarker, noun_tags: String) {
-        
-        // Set placeholder for interim
-        let placeholder = UIImage(named: "photoMarker")
-        marker.icon = placeholder
-        
-        // Split string into array
-        let tagArr = noun_tags.characters.split{ $0 == " " }.map {
-            item in
-            String(item).replacingOccurrences(of: "#", with: "")
-        }
-        
-        // Load image from server
-        let imgView: UIImageView = UIImageView()
-        
-        let file = filenameFromNoun(tagArr[0])
-        
-        imgView.kf.setImage(
-            with: URL(string: "http://dukapp.io/icon/\(file)")!,
-            placeholder: nil,
-            options: nil,
-            progressBlock: nil,
-            completionHandler: { (image, error, cacheType, imageURL) -> () in
-                
-                if error !== nil {
-                    print("loadMarkerIcon Failed: \(error!.localizedDescription)")
-                    return Void()
-                }
-                
-                let imgView = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0))
-                imgView.image = image
-                
-                marker.iconView = imgView
-            }
-        )
-    }
+//    class func loadMarkerIcon (_ marker: DukGMSMarker, noun_tags: String) {
+//        
+//        // Set placeholder for interim
+//        let placeholder = UIImage(named: "photoMarker")
+//        marker.icon = placeholder
+//        
+//        // Split string into array
+//        let tagArr = noun_tags.characters.split{ $0 == " " }.map {
+//            item in
+//            String(item).replacingOccurrences(of: "#", with: "")
+//        }
+//        
+//        // Load image from server
+//        let imgView: UIImageView = UIImageView()
+//        
+//        let file = filenameFromNoun(tagArr[0])
+//        
+//        imgView.kf.setImage(
+//            with: URL(string: "http://dukapp.io/icon/\(file)")!,
+//            placeholder: nil,
+//            options: nil,
+//            progressBlock: nil,
+//            completionHandler: { (image, error, cacheType, imageURL) -> () in
+//                
+//                if error !== nil {
+//                    print("loadMarkerIcon Failed: \(error!.localizedDescription)")
+//                    return Void()
+//                }
+//                
+//                let imgView = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0))
+//                imgView.image = image
+//                
+//                marker.iconView = imgView
+//            }
+//        )
+//    }
     
     
     // Thumbnail size?
@@ -187,51 +187,7 @@ class Util {
         UIGraphicsEndImageContext()
         return newImage
     }
-    
-    // Load an icon image from the server
-    class func loadIconImage (_ noun: String, imageView: UIImageView, activitIndicator: UIActivityIndicatorView) {
-        
-        activitIndicator.startAnimating()
-        
-        let file = filenameFromNoun(noun)
-        
-        imageView.kf_setImage(
-            with: URL(string: "http://dukapp.io/icon/\(file)")!,
-            placeholder: nil,
-            options: nil,
-            progressBlock: nil,
-            completionHandler: { (image, error, cacheType, imageURL) -> () in
-                
-                activitIndicator.stopAnimating()
-                activitIndicator.isHidden = true
-                
-                if error !== nil {
-                    print("image GET failed: \(error)")
-                    return Void()
-                }
-                
-                imageView.image = image
-        })
-        
-    }
-    
-    // Create filename string from noun
-    // for use with image creation api
-    class func filenameFromNoun (_ noun: String) -> String {
-        
-        // Remove first char if it is a "#"
-        var noun_no_hash = noun
-        if noun[noun.startIndex] == "#" {
-            noun_no_hash = noun.substring(from: noun.characters.index(after: noun.startIndex))
-        }
-        
-        // Detect this iphone's resolution requirement
-        let scale: Int = Int(UIScreen.main.scale)
-        
-        let file: String = "\(noun_no_hash)@\(scale)x.png"
-        
-        return file
-    }
+
     
     // Show an alert overlay for long running tasks
     // Call <return_value>.dismissviewControllerAnimated(... to close

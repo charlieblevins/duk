@@ -30,8 +30,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBOutlet weak var cameraPhoto: ZoomableImageView!
     @IBOutlet weak var NounText: UILabel!
     @IBOutlet weak var EditNoun: UIButton!
-    @IBOutlet weak var MarkerIcon: UIImageView!
-    @IBOutlet weak var IconIndicator: UIActivityIndicatorView!
+    @IBOutlet weak var iconView: MarkerIconView!
     
     var imagePicker: UIImagePickerController!
     var imageChosen: Bool = false
@@ -127,28 +126,16 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         if nouns == nil {
             NounText.attributedText = NSMutableAttributedString(string: "Add Nouns Here", attributes: nil)
 
-            setIconForNoun(nil)
+            self.iconView.setNoun(nil)
             return
         }
         
         // Format nouns
         NounText.attributedText = Marker.formatNouns(nouns!)
         
-        setIconForNoun(Marker.getPrimaryNoun(nouns!))
+        self.iconView.setNoun(Marker.getPrimaryNoun(nouns!))
     }
-    
-    // Get icon for primary noun
-    func setIconForNoun (_ noun: String?) {
-        
-        // If nil, set to placeholder
-        if noun == nil {
-            self.MarkerIcon.image = UIImage(named: "photoMarker")
-        
-        // Load image from noun project
-        } else {
-            Util.loadIconImage(noun!, imageView: self.MarkerIcon, activitIndicator: self.IconIndicator)
-        }
-    }
+
     
     // Update this view with existing data
     // (for editing existing marker - not for adding new marker)

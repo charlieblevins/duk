@@ -31,6 +31,7 @@
 		ECA46ADF1D803B6600B2F04F /* SearchResultsViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = ECA46ADD1D803B6600B2F04F /* SearchResultsViewController.xib */; };
 		ECA9BAAA1D20469A009BCBCD /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA9BAA91D20469A009BCBCD /* AccountViewController.swift */; };
 		ECBB67721C5D5932002842E5 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBB67711C5D5932002842E5 /* ApiRequest.swift */; };
+		ECC67C1C1DB41B9E00B4774C /* iconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC67C1B1DB41B9E00B4774C /* iconView.swift */; };
 		ECCF43731C0A664100EEEEF1 /* MarkerModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */; };
 		ECD266F91CC50951009E1574 /* ImageZoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD266F81CC50951009E1574 /* ImageZoomViewController.swift */; };
 		ECD266FB1CC50DA0009E1574 /* UIZoomableImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD266FA1CC50DA0009E1574 /* UIZoomableImage.swift */; };
@@ -88,6 +89,7 @@
 		ECA46ADD1D803B6600B2F04F /* SearchResultsViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SearchResultsViewController.xib; sourceTree = "<group>"; };
 		ECA9BAA91D20469A009BCBCD /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		ECBB67711C5D5932002842E5 /* ApiRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
+		ECC67C1B1DB41B9E00B4774C /* iconView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iconView.swift; sourceTree = "<group>"; };
 		ECCF43721C0A664100EEEEF1 /* MarkerModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MarkerModel.xcdatamodel; sourceTree = "<group>"; };
 		ECD266F81CC50951009E1574 /* ImageZoomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageZoomViewController.swift; sourceTree = "<group>"; };
 		ECD266FA1CC50DA0009E1574 /* UIZoomableImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIZoomableImage.swift; sourceTree = "<group>"; };
@@ -190,6 +192,7 @@
 				EC7889DF1D2882850084B9FF /* MarkerAggregator.swift */,
 				EC4990F41D297E9400455741 /* DistanceTracker.swift */,
 				ECFD74CC1C11BFC900124C9D /* Util.swift */,
+				ECC67C1B1DB41B9E00B4774C /* iconView.swift */,
 				EC6DDCDF1BAF31EE00458B42 /* Images.xcassets */,
 				EC3255801C678BDC00A12A2E /* PopOverDate.xib */,
 				EC6DDCE11BAF31EE00458B42 /* LaunchScreen.xib */,
@@ -409,6 +412,7 @@
 				EC14494D1CD5385400496E07 /* InfoWindowView.swift in Sources */,
 				ECD579241BBDFBAD0096FA1B /* MainNavigation.swift in Sources */,
 				ECBB67721C5D5932002842E5 /* ApiRequest.swift in Sources */,
+				ECC67C1C1DB41B9E00B4774C /* iconView.swift in Sources */,
 				EC1AD7F11C6E08530051F9BE /* MarkerModel.swift in Sources */,
 				EC4990F51D297E9400455741 /* DistanceTracker.swift in Sources */,
 			);

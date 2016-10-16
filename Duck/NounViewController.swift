@@ -169,7 +169,7 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         let cell = tableView.dequeueReusableCell(withIdentifier: "NounRow", for: indexPath) as! NounTableViewCell
         
         cell.NounRowLabel.text = allNouns[(indexPath as NSIndexPath).row].name
-        cell.loadIconImage(allNouns[(indexPath as NSIndexPath).row].name)
+        cell.iconView.setNoun(allNouns[(indexPath as NSIndexPath).row].name)
         
         return cell
     }

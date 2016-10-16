@@ -174,7 +174,12 @@ struct Marker {
         
         // Set icon
         let icon_name = (iconOverride != nil) ? iconOverride : self.tags!
-        Util.loadMarkerIcon(map_marker, noun_tags: icon_name!)
+        
+        let iconImgView = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0))
+        MarkerIconView.loadIconImage(Marker.getPrimaryNoun(icon_name!), imageView: iconImgView, complete: {
+            map_marker.iconView = iconImgView
+        })
+        //Util.loadMarkerIcon(map_marker, noun_tags: icon_name!)
         
         // Set position
         map_marker.position = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)

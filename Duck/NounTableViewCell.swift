@@ -11,9 +11,9 @@ import Kingfisher
 
 class NounTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var NounRowImage: UIImageView!
-    @IBOutlet weak var NounRowActivity: UIActivityIndicatorView!
     @IBOutlet weak var NounRowLabel: UILabel!
+    @IBOutlet weak var iconView: MarkerIconView!
+    
     
     override func awakeFromNib() {
 
@@ -25,10 +25,5 @@ class NounTableViewCell: UITableViewCell {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
-    }
-
-    // Load an icon image from the server
-    func loadIconImage (_ noun: String) { 
-        Util.loadIconImage(noun, imageView: self.NounRowImage, activitIndicator: self.NounRowActivity)
     }
 }

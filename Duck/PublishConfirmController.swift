@@ -17,6 +17,7 @@ protocol PublishSuccessDelegate {
 class PublishConfirmController: UIViewController, UIPopoverPresentationControllerDelegate {
 
     @IBOutlet weak var markerDataView: UIView!
+    @IBOutlet weak var iconView: MarkerIconView!
     @IBOutlet weak var publishBtn: UIButton!
     @IBOutlet weak var tagLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
@@ -39,8 +40,15 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         // Populate marker data in view
         if markerData != nil {
             
-            let tags = markerData!.tags
-            tagLabel.attributedText = Marker.formatNouns(tags!)
+            guard let tags = markerData!.tags else {
+                print("no tags exist for this marker")
+                return
+            }
+            
+            tagLabel.attributedText = Marker.formatNouns(tags)
+
+            // Set marker icon
+            iconView.setNoun(Marker.getPrimaryNoun(tags))
             
             let imageData: Data = markerData!.photo! as Data
             imageView.contentMode = .scaleAspectFit
