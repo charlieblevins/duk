@@ -274,6 +274,20 @@ struct Marker {
         }
     }
     
+    // Get coordinates for display (ex "-32.12345678, 23.12345678")
+    func getCoords () -> String? {
+        
+        guard self.longitude != nil && self.latitude != nil else {
+            print("Marker does not have coordinates")
+            return nil
+        }
+        
+        let lat = String(format: "%.8f", self.latitude!)
+        let lng = String(format: "%.8f", self.longitude!)
+        
+        return "\(lat), \(lng)"
+    }
+    
     
     // Find and return marker with provided timestamp
     static func getLocalByTimestamp (_ timestamp: Double) -> Marker? {

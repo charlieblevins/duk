@@ -22,6 +22,7 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
     @IBOutlet weak var tagLabel: UILabel!
     @IBOutlet weak var imageView: UIImageView!
     @IBOutlet weak var cautionBtn: UIButton!
+    @IBOutlet weak var coords: UILabel!
     
     var markerData: Marker? = nil
     var timeFromDayPicker: String?
@@ -50,9 +51,14 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
             // Set marker icon
             iconView.setNoun(Marker.getPrimaryNoun(tags))
             
+            // Set coords
+            if let lat_lng = markerData!.getCoords() {
+               coords.text = lat_lng
+            }
+            
             let imageData: Data = markerData!.photo! as Data
-            imageView.contentMode = .scaleAspectFit
             imageView.image = UIImage(data: imageData)
+            imageView.clipsToBounds = true
         }
         
         styleMarkerView()

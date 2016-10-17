@@ -22,8 +22,7 @@
                         <action selector="didTapMoreDetail:" destination="iN0-l3-epB" eventType="touchUpInside" id="cDi-Bu-A7W"/>
                     </connections>
                 </button>
-                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="0Wk-YV-DG5" userLabel="Image">
-                    <frame key="frameInset" minX="-10" width="241" height="240"/>
+                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0Wk-YV-DG5" userLabel="Image">
                     <constraints>
                         <constraint firstAttribute="width" constant="240" id="6Oz-Z0-V9J"/>
                         <constraint firstAttribute="height" constant="240" id="zu6-nQ-csQ"/>
