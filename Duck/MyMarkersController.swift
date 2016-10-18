@@ -22,6 +22,8 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     
     var request: ApiRequest?
     var pending_publish: Dictionary<String, Any>?
+    
+    static var active_requests = [Double:ApiRequest]()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -134,13 +136,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         
         // Remove right side subviews
         cell.resetRight()
-        
-        // Public badge or publish btn
-        if cell.markerData!.public_id != nil {
-            cell.appendPublicBadge()
-        } else {
-            cell.appendPublishBtn()
-        }
+
 
         // Get thumbnail
         var marker = cell.markerData! as Marker
@@ -167,19 +163,36 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
                 }
             })
         }
+        
+        let cell_timestamp = cell.markerData!.timestamp!
+        
+        // * Set cell state
+        // If active requests, set to uploading state
+        if let active_req = MyMarkersController.active_requests[cell_timestamp] {
+            active_req.delegate = cell
+            
+        // Public
+        } else if cell.markerData!.public_id != nil {
+            cell.appendPublicBadge()
+            
+        // Local
+        } else {
+            cell.appendPublishBtn()
+        }
 
-        // Set cell as request delegate if pending publish
+        // Start any pending upload requests
         if self.pending_publish != nil {
             
             let marker = self.pending_publish!["marker"] as! Marker
             let publish_timestamp = marker.timestamp
-            let cell_timestamp = cell.markerData!.timestamp!
+            
             
             // If timestamps match, set this cell as request delegate
             if cell_timestamp == publish_timestamp {
                 makePublishRequest(cell)
             }
         }
+
         
         return cell
     }
@@ -348,18 +361,21 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         // New request instance
         request = ApiRequest()
         
-        // Get pending request timestamp
+        // Get pending request marker data
         let marker = self.pending_publish!["marker"] as! Marker
         
         // Set this cell as request delegate
         request!.delegate = cell
 
-        // Get credentials
-        //let credentials = self.pending_publish!["credentials"] as! Credentials
+        guard marker.timestamp != nil else {
+            fatalError("marker does not have timestamp. publish not allowed")
+        }
+
         
         // Initiate request
         if let credentials = Credentials() {
-           request!.publishSingleMarker(credentials, marker: marker)
+            request!.publishSingleMarker(credentials, marker: marker)
+            MyMarkersController.active_requests[marker.timestamp!] = request
         } else {
             print("Error: Credentials nil in makePublishRequest")
             return

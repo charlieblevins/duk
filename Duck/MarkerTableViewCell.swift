@@ -444,10 +444,9 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             
             master!.updateMarkerEntity(timestamp, publicID: pubID)
             
-            // Alert that upload was successful
-            //master!.popSuccessAlert()
+            // Request is no longer active
+            MyMarkersController.active_requests.removeValue(forKey: timestamp)
             
-            //master!.tableView.reloadRows(at: [self.indexPath!], with: .right)
             self.statusBar?.removeFromSuperview()
             self.appendPublicBadge()
         
@@ -481,6 +480,10 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     func reqDidFail(_ error: String, method: ApiMethod, code: Int) {
         if (method == .publishMarker) {
             print("upload failure")
+            
+            // Request is no longer active
+            let timestamp: Double = self.markerData!.timestamp!
+            MyMarkersController.active_requests.removeValue(forKey: timestamp)
             
             self.statusBar?.removeFromSuperview()
             self.appendPublishBtn()
