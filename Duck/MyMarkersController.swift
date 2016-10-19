@@ -130,7 +130,10 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         
         cell.indexPath = indexPath
         
-        cell.tagsLabel?.text = cell.markerData!.tags
+        if let tags = cell.markerData!.tags {
+            cell.tagsLabel?.attributedText = Marker.formatNouns(tags)
+        }
+        
         cell.tagsLabel?.lineBreakMode = .byWordWrapping
         cell.tagsLabel?.numberOfLines = 3
         

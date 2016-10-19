@@ -188,10 +188,7 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     func applyNounFormat (_ noun: String) -> String {
         
         // lowercase and dashes for spaces
-        let lowercase_dashes = noun.lowercased().replacingOccurrences(of: " ", with: "-")
-        
-        // Add # to beginning
-        return "#\(lowercase_dashes)"
+        return noun.lowercased().replacingOccurrences(of: " ", with: "-")
     }
 }
 

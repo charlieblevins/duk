@@ -284,8 +284,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             return
         }
         
-        
-        
         // Save marker in core data
         editMarker!.saveInCore()
         
