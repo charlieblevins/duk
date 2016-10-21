@@ -121,7 +121,8 @@ struct Marker {
     }
 
     
-    // Save this marker's data in core data
+    // Save this marker's data in core data as 
+    // a new entity (insert)
     mutating func saveInCore() -> Bool {
         
         // 1. Get managed object context
@@ -136,7 +137,7 @@ struct Marker {
         marker_data.setValue(timestamp, forKey: "timestamp")
         
         marker_data.setValue(latitude, forKey:"latitude")
-
+        
         marker_data.setValue(longitude, forKey:"longitude")
         
         // Create space separated string of tags
@@ -154,6 +155,54 @@ struct Marker {
             try managedContext.save()
         } catch let error as NSError {
             print("Could not save \(error), \(error.userInfo)")
+            return false
+        }
+        
+        return true
+    }
+    
+    // Update existing marker in core
+    func updateInCore<valType>(_ key: String, value: valType) -> Bool {
+        
+        /// Update core data
+        // Get managed object context
+        let appDel: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context: NSManagedObjectContext = appDel.managedObjectContext
+        
+        // Construct fetch request with predicate
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Marker")
+        
+        guard self.timestamp != nil else {
+            print("cannot update marker with no timestamp")
+            return false
+        }
+        
+        fetchRequest.predicate = NSPredicate(format: "timestamp = %lf", self.timestamp!)
+        
+        // Execute fetch
+        do {
+            let fetchResults = try appDel.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
+            
+            // Insert new public id
+            if  fetchResults != nil && fetchResults!.count > 0 {
+                let managedObject = fetchResults![0]
+                managedObject.setValue(value, forKey: key)
+                
+            } else {
+                print("cannot update. marker does not exist")
+                return false
+            }
+            
+        } catch let error as NSError {
+            print("Fetch failed: \(error.localizedDescription)")
+            return false
+        }
+        
+        // Save
+        do {
+            try context.save()
+        } catch let error as NSError {
+            print("marker save failed: \(error.localizedDescription)")
             return false
         }
         

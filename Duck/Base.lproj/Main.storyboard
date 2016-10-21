@@ -188,7 +188,7 @@
                                 <rect key="frame" x="0.0" y="92" width="375" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Zq5-fA-IZw" id="muh-2c-PwY">
-                                    <frame key="frameInset" width="375" height="79.5"/>
+                                    <frame key="frameInset" width="375" height="79"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="iD8-Je-3Ty" userLabel="MarkerImage">
@@ -738,7 +738,7 @@
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="7Bk-bW-NDo" id="8MP-uJ-kU4">
-                                            <frame key="frameInset" width="375" height="43.5"/>
+                                            <frame key="frameInset" width="375" height="43"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Noun" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="eFy-8s-2vq">
@@ -881,7 +881,7 @@
             <objects>
                 <navigationController storyboardIdentifier="MainNavigation" id="JpL-cz-e6M" customClass="MainNavigation" customModule="Duck" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="V3g-Kp-vZr"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="58t-KB-4nF">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="58t-KB-4nF">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

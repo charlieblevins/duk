@@ -42,6 +42,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     // Marker data passed in from 
     // other view
     var editMarker: Marker? = nil
+    
+    var existingMarker: Bool = false
 
 
     override func viewDidLoad() {
@@ -71,6 +73,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         } else {
             
             self.title = "Edit Marker"
+            
+            // set flag as existing marker. Any changes will only update core data
+            self.existingMarker = true
             
             insertExistingData(editMarker!)
         }
@@ -284,8 +289,27 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             return
         }
         
-        // Save marker in core data
-        editMarker!.saveInCore()
+        if self.existingMarker {
+            
+            // Only tags are editable for now
+            if editMarker!.updateInCore("tags", value: editMarker!.tags!) {
+                print("Updated.")
+            } else {
+                print("Update failed")
+                return
+            }
+            
+        } else {
+            
+            // Save marker in core data
+            if editMarker!.saveInCore() {
+                print("Saved.")
+            } else {
+                print("insert marker failed")
+                return
+            }
+        }
+
         
         // Stop location data
         locationManager.stopUpdatingLocation()
@@ -296,8 +320,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         // Move back to map view
         navigationController?.popToRootViewController(animated: true)
-        
-        print("Saved.")
     }
 
 
