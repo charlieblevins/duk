@@ -293,9 +293,14 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             
             // Only tags are editable for now
             if editMarker!.updateInCore("tags", value: editMarker!.tags!) {
-                print("Updated.")
+                print("core data update complete.")
+                
+                // clear old from map
+                let mvc = navigationController?.viewControllers.first as! MapViewController
+                mvc.deletedMarkers.append(self.editMarker!.timestamp!)
+                
             } else {
-                print("Update failed")
+                print("Core data update failed")
                 return
             }
             

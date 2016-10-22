@@ -39,6 +39,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Array of all markers in view
     var markersInView: [AnyObject] = []
     
+    // Array of timestamps for markers to delete from map
     var deletedMarkers: [Double] = []
     var curMapMarkers: [DukGMSMarker] = []
     
@@ -385,7 +386,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         let custom_marker = marker as! DukGMSMarker
         
         // Set tags (stored in map marker obj)
-        customInfoWindow.tags.text = custom_marker.tags!
+        customInfoWindow.tags.attributedText = Marker.formatNouns(custom_marker.tags!)
         
         // Get image for local marker
         if custom_marker.dataLocation == .local {
@@ -836,7 +837,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         }
         
         // Clear deleted markers
-        //deletedMarkers = []
+        deletedMarkers = []
     }
     
     // ApiRequestDelegate methods
@@ -964,6 +965,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         // Clear all existing markers
         mapView.clear()
+        curMapMarkers = []
         
         // If no markers, stop here
         if data.count == 0 {
@@ -980,7 +982,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             let map_marker: DukGMSMarker? = (noun != nil) ? marker.getMapMarker(iconOverride: noun) : marker.getMapMarker()
             
             if let mm = map_marker {
+                
+                // Display marker on map
                 mm.map = self.mapView
+                
+                // Store reference
+                curMapMarkers.append(mm)
                 
                 if groupBounds == nil {
                     groupBounds = GMSCoordinateBounds(coordinate: mm.position, coordinate: mm.position)
