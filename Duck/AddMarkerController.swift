@@ -12,7 +12,7 @@ import CoreData
 import CoreLocation
 import UIKit
 
-class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, ZoomableImageDelegate, EditNounDelegate {
+class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, ZoomableImageDelegate, EditNounDelegate, CameraControlsOverlayDelegate {
     
     @IBOutlet weak var LatContainer: UIView!
     @IBOutlet weak var LngContainer: UIView!
@@ -53,14 +53,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         // Last minute styles
         addStyles()
         
-        // Start receiving location data
-        listenForCoords()
-        
         // Initialize Nouns
         updateNouns(nil)
-        
-        // Receive gps coords
-        // only if not editing already existing marker
+
+        // New Marker
         if editMarker == nil {
             
             self.title = "Add Marker"
@@ -69,7 +65,12 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             editMarker = Marker()
             editMarker!.editable = true
             
-        // Insert existing marker data into view
+            // Receive gps coords
+            // only if not editing already existing marker.
+            // Start receiving location data
+            listenForCoords()
+            
+        // Existing Marker
         } else {
             
             self.title = "Edit Marker"
@@ -102,7 +103,67 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         imagePicker.delegate = self
         imagePicker.sourceType = .camera
         
-        present(imagePicker, animated: true, completion: nil)
+        imagePicker.showsCameraControls = false
+        
+        present(imagePicker, animated: true, completion: {
+            
+            // Assign the overlay and associate delegate
+            let overlay = CameraControlsOverlay.instanceFromNib()
+            overlay.delegate = self
+            self.imagePicker.cameraOverlayView = overlay
+            
+            // Turn off conclicting automatic constraints
+            self.imagePicker.cameraOverlayView!.translatesAutoresizingMaskIntoConstraints = false
+            
+            // Full width
+            let width_constraint = NSLayoutConstraint(
+                item: self.imagePicker.cameraOverlayView!,
+                attribute: .width,
+                relatedBy: .equal,
+                toItem: self.imagePicker.cameraOverlayView!.superview!,
+                attribute: .width,
+                multiplier: 1,
+                constant: 0
+            )
+            width_constraint.isActive = true
+            
+            // Constant height
+            let height_constraint = NSLayoutConstraint(
+                item: self.imagePicker.cameraOverlayView!,
+                attribute: .height,
+                relatedBy: .equal,
+                toItem: self.imagePicker.cameraOverlayView!.superview!,
+                attribute: .height,
+                multiplier: 1,
+                constant: 0
+            )
+            height_constraint.isActive = true
+    
+            // Top
+            let top_constraint = NSLayoutConstraint(
+                item: self.imagePicker.cameraOverlayView!,
+                attribute: .top,
+                relatedBy: .equal,
+                toItem: self.imagePicker.cameraOverlayView!.superview!,
+                attribute: .top,
+                multiplier: 1,
+                constant: 0
+            )
+            top_constraint.isActive = true
+    
+            // Left
+            let left_constraint = NSLayoutConstraint(
+                item: self.imagePicker.cameraOverlayView!,
+                attribute: .leading,
+                relatedBy: .equal,
+                toItem: self.imagePicker.cameraOverlayView!.superview!,
+                attribute: .leading,
+                multiplier: 1,
+                constant: 0
+            )
+            left_constraint.isActive = true
+            
+        })
     }
     
     func preventEditing () {
@@ -159,17 +220,25 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         addPhotoBtn.isHidden = true
         
         // Add lat/lng data
-        latLabel.text = "\(marker.latitude!)"
-        lngLabel.text = "\(marker.longitude!)"
+        latLabel.text = Marker.formatSingleCoord(marker.latitude!)
+        lngLabel.text = Marker.formatSingleCoord(marker.longitude!)
         accLabel.text = "N/A"
         
         // Update noun display and icon
         updateNouns(marker.tags!)
     }
     
-    // Display taken photo AND
-    // get current location coords
+    // Store coords when shutter is tapped
+    func didTapShutter() {
+        
+        // triggers didFinish...
+        self.imagePicker.takePicture()
+    }
+    
+    // Display taken photo
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        
+        print(info[UIImagePickerControllerMediaMetadata])
         
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             cameraPhoto.contentMode = .scaleAspectFit
@@ -182,10 +251,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             
             // Update photo data
             editMarker!.updateImage(pickedImage)
-
-            // Associate latest coords with this photo
-            editMarker!.latitude = coords.latitude
-            editMarker!.longitude = coords.longitude
+            
+            // Associate location data with this marker and display in UI
+            updateLocationData()
         }
         
         dismiss(animated: true, completion: nil)
@@ -234,18 +302,33 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         locationManager.startUpdatingLocation()
     }
     
+    // Continuously listen for coordinates. Data is only used when photo is chosen
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         
-        // Only save location if associated with taking a photo
+        // Keep coords up to date. Used when user taps shutter for photo
         coords = manager.location!.coordinate
-        print("locations = \(coords.latitude) \(coords.longitude)")
+        print("GPS = \(coords.latitude) \(coords.longitude)")
+    }
+    
+    func updateLocationData () {
         
-        // Update UI
-        latLabel.text = "\(coords.latitude)"
-        lngLabel.text = "\(coords.longitude)"
+        guard locationManager != nil && locationManager.location != nil else {
+            print("cannot update location data. no location data present")
+            return
+        }
+        
+        // Associate latest coords with this marker
+        editMarker!.latitude = coords.latitude
+        editMarker!.longitude = coords.longitude
+
+        print("Displaying Location :: \(coords.latitude) \(coords.longitude)")
+        
+        // Update UI coords (limit to 8 decimal places)
+        latLabel.text = Marker.formatSingleCoord(coords.latitude)
+        lngLabel.text = Marker.formatSingleCoord(coords.longitude)
         
         // Get location accuracy in meters and convert to feet
-        let meterAccuracy = manager.location!.horizontalAccuracy
+        let meterAccuracy = locationManager.location!.horizontalAccuracy
         let ftAccuracy = meterAccuracy * 3.28084
         let ftAccRounded = Double(round(10 * ftAccuracy)/10)
         accLabel.text = "\(ftAccRounded) ft."
@@ -326,16 +409,5 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         // Move back to map view
         navigationController?.popToRootViewController(animated: true)
     }
-
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
-    }
-    */
 
 }

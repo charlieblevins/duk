@@ -12,6 +12,8 @@
 		EC14494D1CD5385400496E07 /* InfoWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC14494C1CD5385400496E07 /* InfoWindowView.swift */; };
 		EC1AD7F11C6E08530051F9BE /* MarkerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1AD7F01C6E08530051F9BE /* MarkerModel.swift */; };
 		EC1AD7F31C6E0ECB0051F9BE /* CredentialModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1AD7F21C6E0ECB0051F9BE /* CredentialModel.swift */; };
+		EC2D4E351DBD6590000C6A74 /* CameraControlsOverlay.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC2D4E341DBD6590000C6A74 /* CameraControlsOverlay.xib */; };
+		EC2D4E371DBD671D000C6A74 /* CameraControlsOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2D4E361DBD671D000C6A74 /* CameraControlsOverlay.swift */; };
 		EC3255811C678BDC00A12A2E /* PopOverDate.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC3255801C678BDC00A12A2E /* PopOverDate.xib */; };
 		EC47ACB01CC3F24E003148DE /* MarkerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC47ACAF1CC3F24E003148DE /* MarkerTableViewCell.swift */; };
 		EC4990F51D297E9400455741 /* DistanceTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4990F41D297E9400455741 /* DistanceTracker.swift */; };
@@ -63,6 +65,8 @@
 		EC14494C1CD5385400496E07 /* InfoWindowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoWindowView.swift; sourceTree = "<group>"; };
 		EC1AD7F01C6E08530051F9BE /* MarkerModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MarkerModel.swift; path = ../MarkerModel.swift; sourceTree = "<group>"; };
 		EC1AD7F21C6E0ECB0051F9BE /* CredentialModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredentialModel.swift; sourceTree = "<group>"; };
+		EC2D4E341DBD6590000C6A74 /* CameraControlsOverlay.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CameraControlsOverlay.xib; sourceTree = "<group>"; };
+		EC2D4E361DBD671D000C6A74 /* CameraControlsOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraControlsOverlay.swift; sourceTree = "<group>"; };
 		EC3255801C678BDC00A12A2E /* PopOverDate.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopOverDate.xib; sourceTree = "<group>"; };
 		EC47ACAE1CC116C0003148DE /* MarkerModel 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 3.xcdatamodel"; sourceTree = "<group>"; };
 		EC47ACAF1CC3F24E003148DE /* MarkerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerTableViewCell.swift; sourceTree = "<group>"; };
@@ -175,6 +179,8 @@
 				ECA46ADD1D803B6600B2F04F /* SearchResultsViewController.xib */,
 				EC14494C1CD5385400496E07 /* InfoWindowView.swift */,
 				EC14494A1CD5330700496E07 /* InfoWindow.xib */,
+				EC2D4E361DBD671D000C6A74 /* CameraControlsOverlay.swift */,
+				EC2D4E341DBD6590000C6A74 /* CameraControlsOverlay.xib */,
 				EC85CDC81D1F5F2D001F707D /* MenuViewController.swift */,
 				ECA9BAA91D20469A009BCBCD /* AccountViewController.swift */,
 				ECFD74CA1C11BA8500124C9D /* MyMarkersController.swift */,
@@ -325,6 +331,7 @@
 				EC6DDCE01BAF31EE00458B42 /* Images.xcassets in Resources */,
 				EC14494B1CD5330700496E07 /* InfoWindow.xib in Resources */,
 				ECD31B221D4424AB00494DCD /* SearchBox.xib in Resources */,
+				EC2D4E351DBD6590000C6A74 /* CameraControlsOverlay.xib in Resources */,
 				ECA46ADF1D803B6600B2F04F /* SearchResultsViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -407,6 +414,7 @@
 				EC9EE2CF1CFBB8FA00DC9060 /* NounTableViewCell.swift in Sources */,
 				ECD31B211D4424AB00494DCD /* SearchBox.swift in Sources */,
 				EC85CDC91D1F5F2D001F707D /* MenuViewController.swift in Sources */,
+				EC2D4E371DBD671D000C6A74 /* CameraControlsOverlay.swift in Sources */,
 				ECA9BAAA1D20469A009BCBCD /* AccountViewController.swift in Sources */,
 				ECFD74CB1C11BA8500124C9D /* MyMarkersController.swift in Sources */,
 				EC14494D1CD5385400496E07 /* InfoWindowView.swift in Sources */,

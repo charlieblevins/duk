@@ -331,12 +331,16 @@ struct Marker {
             return nil
         }
         
-        let lat = String(format: "%.8f", self.latitude!)
-        let lng = String(format: "%.8f", self.longitude!)
+        let lat = Marker.formatSingleCoord(self.latitude!)
+        let lng = Marker.formatSingleCoord(self.longitude!)
         
         return "\(lat), \(lng)"
     }
     
+    // Format a single coordinate to 8 decimal places
+    static func formatSingleCoord (_ coord: Double) -> String {
+        return String(format: "%.8f", coord)
+    }
     
     // Find and return marker with provided timestamp
     static func getLocalByTimestamp (_ timestamp: Double) -> Marker? {

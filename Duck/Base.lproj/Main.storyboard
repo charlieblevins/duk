@@ -392,7 +392,7 @@
                         <viewControllerLayoutGuide type="bottom" id="eOw-u5-xdc"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="BCu-JJ-30K">
-                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WT4-hc-neF">
@@ -881,7 +881,7 @@
             <objects>
                 <navigationController storyboardIdentifier="MainNavigation" id="JpL-cz-e6M" customClass="MainNavigation" customModule="Duck" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="V3g-Kp-vZr"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="58t-KB-4nF">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="58t-KB-4nF">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -975,6 +975,6 @@
         <image name="info" width="20" height="20"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="mO3-IZ-UfX"/>
+        <segue reference="kqa-9W-h1L"/>
     </inferredMetricsTieBreakers>
 </document>
