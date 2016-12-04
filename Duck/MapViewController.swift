@@ -474,7 +474,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // Ensure we have location authorization
         // then move to add marker view
         self.checkUserLocation(true) {
-            self.goToView("AddMarkerController")
+            self.goToView("MarkerGuidelinesViewController")
             self.toggleMenu(!self.menuOpen)
         }
     }

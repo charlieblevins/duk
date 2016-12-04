@@ -42,6 +42,7 @@
 		ECD579241BBDFBAD0096FA1B /* MainNavigation.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */; };
 		ECD579281BC01BC70096FA1B /* AddMarkerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD579271BC01BC70096FA1B /* AddMarkerController.swift */; };
 		ECDD61AB1C6FAF3F004063D2 /* SwiftyJSON.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ECDD61AA1C6FAF3F004063D2 /* SwiftyJSON.framework */; };
+		ECF0C8171DF4C6430006ADE7 /* MarkerGuidelinesViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECF0C8161DF4C6430006ADE7 /* MarkerGuidelinesViewController.swift */; };
 		ECFD74CB1C11BA8500124C9D /* MyMarkersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFD74CA1C11BA8500124C9D /* MyMarkersController.swift */; };
 		ECFD74CD1C11BFC900124C9D /* Util.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECFD74CC1C11BFC900124C9D /* Util.swift */; };
 /* End PBXBuildFile section */
@@ -102,6 +103,7 @@
 		ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainNavigation.swift; sourceTree = "<group>"; };
 		ECD579271BC01BC70096FA1B /* AddMarkerController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AddMarkerController.swift; sourceTree = "<group>"; };
 		ECDD61AA1C6FAF3F004063D2 /* SwiftyJSON.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftyJSON.framework; path = "Pods/../build/Debug-iphoneos/SwiftyJSON.framework"; sourceTree = "<group>"; };
+		ECF0C8161DF4C6430006ADE7 /* MarkerGuidelinesViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerGuidelinesViewController.swift; sourceTree = "<group>"; };
 		ECFD74CA1C11BA8500124C9D /* MyMarkersController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MyMarkersController.swift; sourceTree = "<group>"; };
 		ECFD74CC1C11BFC900124C9D /* Util.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Util.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -187,6 +189,7 @@
 				EC47ACAF1CC3F24E003148DE /* MarkerTableViewCell.swift */,
 				EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */,
 				ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */,
+				ECF0C8161DF4C6430006ADE7 /* MarkerGuidelinesViewController.swift */,
 				ECD579271BC01BC70096FA1B /* AddMarkerController.swift */,
 				EC9EE2CC1CFB3E8D00DC9060 /* NounViewController.swift */,
 				EC9EE2CE1CFBB8FA00DC9060 /* NounTableViewCell.swift */,
@@ -423,6 +426,7 @@
 				ECC67C1C1DB41B9E00B4774C /* iconView.swift in Sources */,
 				EC1AD7F11C6E08530051F9BE /* MarkerModel.swift in Sources */,
 				EC4990F51D297E9400455741 /* DistanceTracker.swift in Sources */,
+				ECF0C8171DF4C6430006ADE7 /* MarkerGuidelinesViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
