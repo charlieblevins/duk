@@ -11,12 +11,17 @@ import UIKit
 class MarkerGuidelinesViewController: UIViewController {
 
     @IBOutlet weak var continueBtn: UIButton!
+    @IBOutlet weak var stopMsg: UISwitch!
     
     override func viewDidLoad() {
+        
         super.viewDidLoad()
+        
+        self.title = "Marker Guidelines"
+        
+        stopMsg.setOn(false, animated: false)
 
-        continueBtn.titleEdgeInsets = UIEdgeInsetsMake(0, -(continueBtn.imageView?.frame.size.width)!, 0, (continueBtn.imageView?.frame.size.width)!);
-        continueBtn.imageEdgeInsets = UIEdgeInsetsMake(0, (continueBtn.titleLabel?.frame.size.width)!, 0, -(continueBtn.titleLabel?.frame.size.width)!);
+        styleContinueImg()
     }
 
     override func didReceiveMemoryWarning() {
@@ -34,11 +39,14 @@ class MarkerGuidelinesViewController: UIViewController {
             return
         }
         
+        let space: CGFloat = 10
+        
+        // top, left, bottom, right
         let img_width = img_view.frame.size.width
-        continueBtn.titleEdgeInsets = UIEdgeInsetsMake(0, -img_width, 0, img_width);
+        continueBtn.titleEdgeInsets = UIEdgeInsetsMake(0, -img_width/2, 0, img_width/2);
         
         let label_width = label.frame.size.width
-        continueBtn.imageEdgeInsets = UIEdgeInsetsMake(0, label_width, 0, -label_width);
+        continueBtn.imageEdgeInsets = UIEdgeInsetsMake(0, label_width + space, 0, -label_width);
     }
 
     /*
@@ -51,4 +59,35 @@ class MarkerGuidelinesViewController: UIViewController {
     }
     */
 
+}
+
+class ListItem: UILabel {
+    required init (coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)!
+        self.commonInit()
+    }
+    
+    override init (frame: CGRect) {
+        super.init(frame: frame)
+        self.commonInit()
+    }
+    
+    func commonInit () {
+
+        let item = NSMutableAttributedString(string: "- ")
+        
+        guard let content = self.text else {
+            return
+        }
+        
+        item.append(NSAttributedString(string: content))
+        
+        let para_style = NSMutableParagraphStyle()
+        para_style.headIndent = 12
+        
+        let full_range = NSRange(location: 0, length: item.length)
+        item.addAttribute("NSParagraphStyle", value: para_style, range: full_range)
+        
+        self.attributedText = item
+    }
 }
