@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duck/MarkerTableViewCell.swift"
-            timestampString = "497533660.491081"
+            timestampString = "503770335.669109"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "219"
-            endingLineNumber = "219"
+            startingLineNumber = "203"
+            endingLineNumber = "203"
             landmarkName = "hideUnpublish()"
             landmarkType = "7">
          </BreakpointContent>

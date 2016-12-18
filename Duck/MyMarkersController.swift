@@ -202,10 +202,8 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     
     func publishAction(_ cell: MarkerTableViewCell) {
         
-        let credentArr = Util.fetchCoreData("Login", predicate: nil)
-        
         // Sign in credentials exist
-        if  credentArr?.count != 0 {
+        if Credentials() != nil {
             
             self.loadPublishConfirm(cell)
             
@@ -233,7 +231,11 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             print("no credentials found")
             let accountView = self.storyboard!.instantiateViewController(withIdentifier: "AccountViewController") as! AccountViewController
             accountView.signInSuccessHandler = { credentials in
-                completionHandler(credentials)
+                
+                // Return to previous view
+                self.navigationController?.popViewControllerWithHandler {
+                    completionHandler(credentials)
+                }
             }
             self.navigationController?.pushViewController(accountView, animated: true)
         }
@@ -258,7 +260,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
         if segue.identifier == "GoToPublish" {
-            print(segue.identifier)
+            print(segue.identifier as Any)
             print(segue.destination)
             let publishView = segue.destination as! PublishConfirmController
             

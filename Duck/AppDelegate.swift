@@ -28,7 +28,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         GMSPlacesClient.provideAPIKey("AIzaSyCx00Cy9jGzz0hIcv485TWytTq82sAQYaI")
         
         // Clear KF Image cache (disk)
-        //KingfisherManager.sharedManager.cache.clearDiskCache()
+        //KingfisherManager.shared.cache.clearDiskCache()
 
         
         // Clear downloaded files

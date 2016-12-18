@@ -104,7 +104,7 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         // Back to my markers
         for controller in (self.navigationController?.viewControllers)! {
             if controller.isKind(of: MyMarkersController.self) {
-                self.navigationController?.popToViewController(controller, animated: true)
+                _ = self.navigationController?.popToViewController(controller, animated: true)
                 break;
             }
         }

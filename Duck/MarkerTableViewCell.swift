@@ -199,22 +199,6 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         publicBadge!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(toggleUnpublish)))
     }
     
-    // Hide action buttons
-    // Useful for showing status while waiting on server
-//    func hideActions () {
-//        if unpublish != nil && unpublish?.isHidden == false {
-//            unpublish?.isHidden = true
-//        }
-//        
-//        if publicBadge != nil && publicBadge?.isHidden == false {
-//            publicBadge?.isHidden = true
-//        }
-//        
-//        if pubBtn != nil && pubBtn?.isHidden == false {
-//            pubBtn?.isHidden = true
-//        }
-//    }
-    
     func hideUnpublish () {
         if unpublish != nil {
             toggleUnpublish()
@@ -376,9 +360,10 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             return
         }
         
-        self.setLoading(loading: true, message: "Unpublishing...")
-        
         self.master!.getCredentials({ credentials in
+            
+            self.setLoading(loading: true, message: "Unpublishing...")
+            
             let req = ApiRequest()
             req.delegate = self
             req.deleteMarker(pid, credentials: credentials)

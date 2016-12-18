@@ -239,7 +239,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
     // Handle the user's selection.
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
         print("Place name: ", place.name)
-        print("Place address: ", place.formattedAddress)
+        print("Place address: ", place.formattedAddress as Any)
         
         self.addressField.text = place.formattedAddress
         

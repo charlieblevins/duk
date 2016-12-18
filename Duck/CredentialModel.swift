@@ -78,6 +78,7 @@ class Credentials {
     // Remove credentials from core data (sign out)
     func remove () {
         Util.deleteCoreDataForEntity("Login")
+        Credentials.sharedInstance = nil
     }
     
     // Load latest login credentials from core data

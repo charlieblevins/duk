@@ -49,6 +49,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     override func viewDidLoad() {
 
         super.viewDidLoad()
+        
+        self.showGuidelines()
 
         // Last minute styles
         addStyles()
@@ -94,6 +96,17 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+    
+    func showGuidelines () {
+        
+        let dontShow = UserDefaults.standard.bool(forKey: "stopMarkerGuidelineMessage")
+        
+        if dontShow == true {
+            return
+        }
+        
+        self.overlay("MarkerGuidelinesViewController")
     }
 
     
@@ -238,7 +251,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     // Display taken photo
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
-        print(info[UIImagePickerControllerMediaMetadata])
+        print(info[UIImagePickerControllerMediaMetadata] as Any)
         
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             cameraPhoto.contentMode = .scaleAspectFit
@@ -407,7 +420,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         mvc.markerToAdd = editMarker
         
         // Move back to map view
-        navigationController?.popToRootViewController(animated: true)
+        _ = navigationController?.popToRootViewController(animated: true)
     }
 
 }

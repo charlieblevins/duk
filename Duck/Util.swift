@@ -216,6 +216,7 @@ class Util {
     class func distanceFromHereTo (_ point: CLLocationCoordinate2D) {
         
     }
+    
 }
 
 
@@ -231,4 +232,13 @@ extension UIColor {
         
     }
     
+}
+
+extension UIViewController {
+    
+    func overlay(_ view: String) {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let vc = storyboard.instantiateViewController(withIdentifier: view)
+        self.present(vc, animated: true, completion: nil)
+    }
 }

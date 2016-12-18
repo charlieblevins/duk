@@ -48,6 +48,15 @@ class MarkerGuidelinesViewController: UIViewController {
         let label_width = label.frame.size.width
         continueBtn.imageEdgeInsets = UIEdgeInsetsMake(0, label_width + space, 0, -label_width);
     }
+    @IBAction func switchChange(_ sender: UISwitch) {
+        let defaults = UserDefaults.standard
+        let stopShowingMessage = sender.isOn
+        defaults.set(stopShowingMessage, forKey: "stopMarkerGuidelineMessage")
+    }
+    
+    @IBAction func continueTapped(_ sender: UIButton) {
+        self.dismiss(animated: true, completion: nil)
+    }
 
     /*
     // MARK: - Navigation

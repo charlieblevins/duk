@@ -202,7 +202,7 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
     
     // Return to previous view
     func previousView () {
-        navigationController?.popViewController(animated: true)
+        _ = navigationController?.popViewController(animated: true)
     }
     
     override func didReceiveMemoryWarning() {

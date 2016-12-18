@@ -54,7 +54,7 @@ class MarkerIconView: UIView {
         let file = MarkerIconView.filenameFromNoun(noun)
         
         imageView.kf.setImage(
-            with: URL(string: "http://dukapp.io/icon/\(file)")!,
+            with: URL(string: "http://dukapp.io/icon/\(file)?key=b185052862d41f43b2e3ffb06ed8b335")!,
             placeholder: nil,
             options: nil,
             progressBlock: nil,

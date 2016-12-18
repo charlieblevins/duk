@@ -474,7 +474,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // Ensure we have location authorization
         // then move to add marker view
         self.checkUserLocation(true) {
-            self.goToView("MarkerGuidelinesViewController")
+            self.goToView("AddMarkerController")
             self.toggleMenu(!self.menuOpen)
         }
     }
@@ -490,8 +490,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     func goToView(_ controllerName: String) {
-        let MyMarkersController = self.storyboard!.instantiateViewController(withIdentifier: controllerName)
-        self.navigationController?.pushViewController(MyMarkersController, animated: true)
+        let view = self.storyboard!.instantiateViewController(withIdentifier: controllerName)
+        self.navigationController?.pushViewController(view, animated: true)
     }
     
     // Show the my location (cross-hair) button
