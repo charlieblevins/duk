@@ -46,6 +46,9 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
 
         // display an Edit button in the navigation bar for this view controller.
         self.navigationItem.rightBarButtonItem = self.editButtonItem
+        
+        self.refreshControl = UIRefreshControl()
+        self.view.addSubview(self.refreshControl!)
     }
 
     override func didReceiveMemoryWarning() {
@@ -176,7 +179,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
             
         // Public
         } else if cell.markerData!.public_id != nil {
-            cell.appendPublicBadge()
+            cell.appendPendingBadge()
             
         // Local
         } else {

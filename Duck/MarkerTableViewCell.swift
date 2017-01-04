@@ -17,6 +17,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     var pubBtn: UIButton? = nil
     var statusBar: UILabel? = nil
     var unpublish: UIButton? = nil
+    var pendingBadge: UILabel? = nil
     var publicBadge: UILabel? = nil
     var loader: UIAlertController? = nil
     var publicBadgeTopConstraint: NSLayoutConstraint? = nil
@@ -119,6 +120,95 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         
         // Activate all constraints
         NSLayoutConstraint.activate([hrzC, vrtC, hgtC])
+    }
+    
+    // Append pending badge
+    func appendPendingBadge () {
+        
+        if pendingBadge != nil {
+            return
+        }
+        
+        // Add publish button
+        pendingBadge = UILabel()
+        pendingBadge!.frame.size = CGSize(width: 120, height: 30)
+        pendingBadge!.text = "Pending"
+        
+        // green text and border
+        let fGreen = UIColor(red: 56, green: 150, blue: 57) // Forest green
+        pendingBadge!.textColor = fGreen
+        pendingBadge!.layer.borderColor = fGreen.cgColor
+        pendingBadge!.layer.borderWidth = 1
+        
+        // rounded corners
+        pendingBadge!.layer.cornerRadius = 3
+        
+        //center text
+        pendingBadge!.textAlignment = .center
+        
+        pendingBadge!.translatesAutoresizingMaskIntoConstraints = false
+        
+        self.contentView.addSubview(pendingBadge!)
+        
+        // Position with constraints
+        let hrzC = NSLayoutConstraint(
+            item: pendingBadge!,
+            attribute: .trailing,
+            relatedBy: .equal,
+            toItem: self.contentView,
+            attribute: .trailing,
+            multiplier: 1.0,
+            constant: -10
+        )
+        
+        // This constraint used to animate for unpublish toggle
+        let topC = NSLayoutConstraint(
+            item: pendingBadge!,
+            attribute: .centerY,
+            relatedBy: .equal,
+            toItem: self.contentView,
+            attribute: .centerY,
+            multiplier: 1.0,
+            constant: 0
+        )
+        let wdtC = NSLayoutConstraint(
+            item: pendingBadge!,
+            attribute: .width,
+            relatedBy: .equal,
+            toItem: nil,
+            attribute: .height,
+            multiplier: 1.0,
+            constant: 66
+        )
+        let hgtC = NSLayoutConstraint(
+            item: pendingBadge!,
+            attribute: .height,
+            relatedBy: .equal,
+            toItem: nil,
+            attribute: .height,
+            multiplier: 1.0,
+            constant: 30
+        )
+        
+        
+        // Activate all constraints
+        NSLayoutConstraint.activate([hrzC, topC, wdtC, hgtC])
+        
+        // Handle tap
+        // Even though IB says this is already true, it isn't
+        pendingBadge!.isUserInteractionEnabled = true
+        pendingBadge!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(alertPendingInfo)))
+    }
+    
+    func alertPendingInfo () {
+        let alertController = UIAlertController(title: "Pending Status",
+                                                message: "This marker is awaiting approval. Approval generally takes 12-24 hours.",
+                                                preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        alertController.addAction(okAction)
+        
+        self.master?.present(alertController, animated: true, completion: nil)
     }
     
     // Show a public badge for published markers
