@@ -501,47 +501,17 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
     
     func reqDidComplete(_ data: NSDictionary, method: ApiMethod, code: Int) {
         if (method == .markersByUser) {
+ 
             
-            guard let markers = data["markers"] as? NSArray else {
-                print("no markers returned from server")
-                return
-            }
+            // Query core data for marker with matching public id
             
-            guard markers.count > 0 else {
-                print("no markers returned from server")
-                return
-            }
+            // If the marker exists - update it's approved value
             
+            // If it does not exist, request the small photo and tags. Upon receipt,
+            // insert a new row in the tables data model
             
-            // Loop over markers and update public status to Publish, Pending, Public, or Not Approved
-            for data in markers {
-                
-                guard let marker_data = data as? NSDictionary else {
-                    print("could not convert item to dictionary")
-                    return
-                }
-                
-                guard let approved = marker_data["approved"] else {
-                    print("received marker data missing approved status")
-                    return
-                }
-                
-                switch approved {
-                case -1:
-                    break
-                case 0:
-                    break
-                case 1:
-                    break
-                default:
-                    <#code#>
-                }
-            }
-            
-            // For received markers that do not exist locally, request the small photo and tags. Upon receipt,
-            // insert a new row for each marker
-            
-            print("received markers: \(markers)")
+            // sort table markers by created date
+        
         }
     }
     
