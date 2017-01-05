@@ -10,7 +10,7 @@ import UIKit
 import Foundation
 import CoreData
 
-class MyMarkersController: UITableViewController, PublishSuccessDelegate {
+class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiRequestDelegate {
     
     var savedMarkers: [Marker] = [Marker]()
     var deleteMarkerIndexPath: IndexPath? = nil
@@ -36,9 +36,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         // Get marker data
         savedMarkers = self.loadMarkerData()
         
-//        // Register cell class
-//        self.tableView.registerClass(MarkerTableViewCell.self, forCellReuseIdentifier: "MarkerTableViewCell")
-        
         self.tableView.rowHeight = UITableViewAutomaticDimension
 
         // preserve selection between presentations
@@ -47,8 +44,8 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         // display an Edit button in the navigation bar for this view controller.
         self.navigationItem.rightBarButtonItem = self.editButtonItem
         
-        self.refreshControl = UIRefreshControl()
-        self.view.addSubview(self.refreshControl!)
+        // Set handler for pull to refresh
+        self.refreshControl?.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
     }
 
     override func didReceiveMemoryWarning() {
@@ -70,6 +67,20 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
         } else {
             self.pending_publish = nil
         }
+    }
+    
+    // Sync markers from server
+    func handleRefresh () {
+        print("refreshing markers")
+        
+        self.getCredentials({ credentials in
+            
+            // Request marker data for this user
+            let request = ApiRequest()
+            request.delegate = self
+            request.getMarkersByUser(credentials)
+        })
+
     }
     
     func loadMarkerData () -> [Marker] {
@@ -482,29 +493,63 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate {
     }
 
     
-    /*
-    // Override to support rearranging the table view.
-    override func tableView(tableView: UITableView, moveRowAtIndexPath fromIndexPath: NSIndexPath, toIndexPath: NSIndexPath) {
+    // MARK: upload delegate method handlers
+    func reqDidStart() {
 
     }
-    */
-
-    /*
-    // Override to support conditional rearranging of the table view.
-    override func tableView(tableView: UITableView, canMoveRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the item to be re-orderable.
-        return true
+    
+    
+    func reqDidComplete(_ data: NSDictionary, method: ApiMethod, code: Int) {
+        if (method == .markersByUser) {
+            
+            guard let markers = data["markers"] as? NSArray else {
+                print("no markers returned from server")
+                return
+            }
+            
+            guard markers.count > 0 else {
+                print("no markers returned from server")
+                return
+            }
+            
+            
+            // Loop over markers and update public status to Publish, Pending, Public, or Not Approved
+            for data in markers {
+                
+                guard let marker_data = data as? NSDictionary else {
+                    print("could not convert item to dictionary")
+                    return
+                }
+                
+                guard let approved = marker_data["approved"] else {
+                    print("received marker data missing approved status")
+                    return
+                }
+                
+                switch approved {
+                case -1:
+                    break
+                case 0:
+                    break
+                case 1:
+                    break
+                default:
+                    <#code#>
+                }
+            }
+            
+            // For received markers that do not exist locally, request the small photo and tags. Upon receipt,
+            // insert a new row for each marker
+            
+            print("received markers: \(markers)")
+        }
     }
-    */
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Get the new view controller using segue.destinationViewController.
-        // Pass the selected object to the new view controller.
+    
+    // Show alert on failure
+    func reqDidFail(_ error: String, method: ApiMethod, code: Int) {
+        if (method == .markersByUser) {
+            print("markers by user request failed: \(error)")
+        }
     }
-    */
 
 }

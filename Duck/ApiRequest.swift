@@ -317,6 +317,22 @@ class ApiRequest {
             }
     }
     
+    // Get all markers created by a user
+    func getMarkersByUser (_ credentials: Credentials) {
+        
+        // Add basic auth to request header
+        let loginData = "\(credentials.email):\(credentials.password)".data(using: String.Encoding.utf8)!
+        let base64LoginString = loginData.base64EncodedString(options: .lineLength64Characters)
+        
+        let headers = ["Authorization": "Basic \(base64LoginString)"]
+        
+        // Exec request
+        Alamofire.request("\(baseURL)/markersByUser", method: .get, parameters: nil, headers: headers)
+            .responseJSON { response in
+                self.handleResponse(response, method: .markersByUser)
+        }
+    }
+    
     // Handles an alamofire response object and calls associated delegate methods
     func handleResponse (_ response: DataResponse<Any>, method: ApiMethod) {
         print("handling response")
@@ -371,5 +387,5 @@ class ApiRequest {
 
 // Classify api method types for easier response handling
 @objc enum ApiMethod: Int {
-    case markersWithinBounds, markersNearPoint, image, publishMarker, getMarkerDataById, deleteById
+    case markersWithinBounds, markersNearPoint, image, publishMarker, getMarkerDataById, deleteById, markersByUser
 }
