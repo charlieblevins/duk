@@ -491,6 +491,55 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         UIGraphicsEndImageContext()
         return newImage
     }
+    
+    // Query for a marker by publicId. If it exists, update and return true.
+    // Otherwise return false
+    func updateMarkerApproved (_ publicId: String, approved: Bool) -> String {
+        
+        // Update savedMarkers
+        if let ind = savedMarkers.index(where: { $0.public_id == publicId }) {
+            savedMarkers[ind].approved = approved
+        } else {
+            print("could not update savedMarker: no marker with publicId \(publicId) found")
+        }
+        
+        /// Update core data
+        // Get managed object context
+        let appDel: AppDelegate = UIApplication.shared.delegate as! AppDelegate
+        let context: NSManagedObjectContext = appDel.managedObjectContext
+        
+        // Construct fetch request with predicate
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Marker")
+        fetchRequest.predicate = NSPredicate(format: "public_id = %lf", publicId)
+        
+        // Execute fetch
+        do {
+            let fetchResults = try appDel.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
+            
+            // Insert new public id
+            if  fetchResults != nil && fetchResults!.count > 0 {
+                let managedObject = fetchResults![0]
+                managedObject.setValue(approved, forKey: "approved")
+                
+            // Not found
+            } else {
+                return "not_found"
+            }
+            
+        } catch let error as NSError {
+            print("Fetch failed: \(error.localizedDescription)")
+            return "fail"
+        }
+        
+        // Save
+        do {
+            try context.save()
+            return "success"
+        } catch let error as NSError {
+            print("marker save failed: \(error.localizedDescription)")
+            return "fail"
+        }
+    }
 
     
     // MARK: upload delegate method handlers
@@ -501,18 +550,43 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
     
     func reqDidComplete(_ data: NSDictionary, method: ApiMethod, code: Int) {
         if (method == .markersByUser) {
+            var new_markers = [String]()
  
+            for (public_id, approved) in data {
+                
+                // Query core data for marker with matching public id
+                // If the marker exists - update it's approved value
+                guard let pid = public_id as? String, let appr = approved as? Bool else {
+                    print("Cannot convert marker data")
+                    break
+                }
+                let result = self.updateMarkerApproved(pid, approved: appr)
+                
+                // If it does not exist, request small photo and tag data.
+                if result == "not_found" {
+                    new_markers.append(pid)
+                }
+            }
             
-            // Query core data for marker with matching public id
-            
-            // If the marker exists - update it's approved value
-            
-            // If it does not exist, request the small photo and tags. Upon receipt,
-            // insert a new row in the tables data model
-            
-            // sort table markers by created date
-        
+            if new_markers.count > 0 {
+                self.loadNewPublicMarkers(new_markers, callback: { markers in
+                    self.savedMarkers.append(contentsOf: markers)
+                    self.reloadTable()
+                })
+            } else {
+                self.reloadTable()
+            }
         }
+    }
+    
+    // Request small photo and tags for public ids
+    func loadNewPublicMarkers (_ publicIds: [String], callback: ([Marker]) -> Void) {
+        
+    }
+    
+    // Refresh entire view
+    func reloadTable () {
+        
     }
     
     // Show alert on failure
