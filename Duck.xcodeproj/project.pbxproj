@@ -72,6 +72,7 @@
 		EC47ACAE1CC116C0003148DE /* MarkerModel 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 3.xcdatamodel"; sourceTree = "<group>"; };
 		EC47ACAF1CC3F24E003148DE /* MarkerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerTableViewCell.swift; sourceTree = "<group>"; };
 		EC4990F41D297E9400455741 /* DistanceTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DistanceTracker.swift; sourceTree = "<group>"; };
+		EC5958BE1E22C91500C2B8C7 /* MarkerModel 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 5.xcdatamodel"; sourceTree = "<group>"; };
 		EC6DDCD31BAF31EE00458B42 /* Duck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Duck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC6DDCD71BAF31EE00458B42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -682,12 +683,13 @@
 		ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				EC5958BE1E22C91500C2B8C7 /* MarkerModel 5.xcdatamodel */,
 				EC7889DE1D2856740084B9FF /* MarkerModel 4.xcdatamodel */,
 				EC47ACAE1CC116C0003148DE /* MarkerModel 3.xcdatamodel */,
 				EC8D91B91C7F2C2D00F78D25 /* MarkerModel2.xcdatamodel */,
 				ECCF43721C0A664100EEEEF1 /* MarkerModel.xcdatamodel */,
 			);
-			currentVersion = EC7889DE1D2856740084B9FF /* MarkerModel 4.xcdatamodel */;
+			currentVersion = EC5958BE1E22C91500C2B8C7 /* MarkerModel 5.xcdatamodel */;
 			path = MarkerModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

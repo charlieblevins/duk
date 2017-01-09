@@ -494,7 +494,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
     
     // Query for a marker by publicId. If it exists, update and return true.
     // Otherwise return false
-    func updateMarkerApproved (_ publicId: String, approved: Bool) -> String {
+    func updateMarkerApproved (_ publicId: String, approved: Int) -> String {
         
         // Update savedMarkers
         if let ind = savedMarkers.index(where: { $0.public_id == publicId }) {
@@ -510,7 +510,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         
         // Construct fetch request with predicate
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Marker")
-        fetchRequest.predicate = NSPredicate(format: "public_id = %lf", publicId)
+        fetchRequest.predicate = NSPredicate(format: "public_id = %@", publicId)
         
         // Execute fetch
         do {
@@ -556,7 +556,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
                 
                 // Query core data for marker with matching public id
                 // If the marker exists - update it's approved value
-                guard let pid = public_id as? String, let appr = approved as? Bool else {
+                guard let pid = public_id as? String, let appr = approved as? Int else {
                     print("Cannot convert marker data")
                     break
                 }
@@ -571,21 +571,16 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
             if new_markers.count > 0 {
                 self.loadNewPublicMarkers(new_markers, callback: { markers in
                     self.savedMarkers.append(contentsOf: markers)
-                    self.reloadTable()
+                    self.tableView.reloadData()
                 })
             } else {
-                self.reloadTable()
+                self.tableView.reloadData()
             }
         }
     }
     
     // Request small photo and tags for public ids
     func loadNewPublicMarkers (_ publicIds: [String], callback: ([Marker]) -> Void) {
-        
-    }
-    
-    // Refresh entire view
-    func reloadTable () {
         
     }
     

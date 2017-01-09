@@ -443,7 +443,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             // Get marker data
             let request = ApiRequest()
             request.delegate = self
-            request.getMarkerDataById(marker_d.public_id!, photo_size: "full")
+            request.getMarkerDataById([["id": marker_d.public_id!, "photo_size": "full"]])
         }
     }
     

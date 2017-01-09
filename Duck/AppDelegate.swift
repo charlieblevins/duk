@@ -26,6 +26,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // G Places Api Key
         GMSPlacesClient.provideAPIKey("AIzaSyCx00Cy9jGzz0hIcv485TWytTq82sAQYaI")
+
         
         // Clear KF Image cache (disk)
         //KingfisherManager.shared.cache.clearDiskCache()
@@ -137,8 +138,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }()
     
     lazy var persistentStoreCoordinator: NSPersistentStoreCoordinator = {
+//        self.lsDocumentsDir()
+//        self.removeFile(itemName: "SingleViewCoreData", fileExtension: "sqlite-shm")
+//        self.removeFile(itemName: "SingleViewCoreData", fileExtension: "sqlite-wal")
+//        self.lsDocumentsDir()
         // The persistent store coordinator for the application. This implementation creates and returns a coordinator, having added the store for the application to it. This property is optional since there are legitimate error conditions that could cause the creation of the store to fail.
         // Create the coordinator and store
+        
         let coordinator = NSPersistentStoreCoordinator(managedObjectModel: self.managedObjectModel)
         let url = self.applicationDocumentsDirectory.appendingPathComponent("SingleViewCoreData.sqlite")
         var failureReason = "There was an error creating or loading the application's saved data."
@@ -189,6 +195,37 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                 NSLog("Unresolved error \(nserror), \(nserror.userInfo)")
                 abort()
             }
+        }
+    }
+    
+    func removeFile(itemName:String, fileExtension: String) {
+        let fileManager = FileManager.default
+        let nsDocumentDirectory = FileManager.SearchPathDirectory.documentDirectory
+        let nsUserDomainMask = FileManager.SearchPathDomainMask.userDomainMask
+        let paths = NSSearchPathForDirectoriesInDomains(nsDocumentDirectory, nsUserDomainMask, true)
+        guard let dirPath = paths.first else {
+            return
+        }
+        let filePath = "\(dirPath)/\(itemName).\(fileExtension)"
+        do {
+            try fileManager.removeItem(atPath: filePath)
+        } catch let error as NSError {
+            print(error.debugDescription)
+        }
+    }
+    
+    
+    func lsDocumentsDir () {
+        // Get the document directory url
+        let documentsUrl =  FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+        
+        do {
+            // Get the directory contents urls (including subfolders urls)
+            let directoryContents = try FileManager.default.contentsOfDirectory(at: documentsUrl, includingPropertiesForKeys: nil, options: [])
+            print(directoryContents)
+            
+        } catch let error as NSError {
+            print(error.localizedDescription)
         }
     }
 }

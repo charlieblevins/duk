@@ -25,6 +25,8 @@ struct Marker {
     
     var distance_from_me: Double?
     
+    var approved: Int?
+    
     init() {
         self.latitude = nil
         self.longitude = nil
@@ -112,6 +114,7 @@ struct Marker {
         }
         
         self.public_id = data.value(forKey: "_id") as? String
+        self.approved = data.value(forKey: "approved") as? Int
         
         // Get username
         self.user = data.value(forKey: "username") as? String
