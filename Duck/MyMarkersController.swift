@@ -569,19 +569,39 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
             }
             
             if new_markers.count > 0 {
-                self.loadNewPublicMarkers(new_markers, callback: { markers in
-                    self.savedMarkers.append(contentsOf: markers)
-                    self.tableView.reloadData()
-                })
+                self.loadNewPublicMarkers(new_markers)
             } else {
                 self.tableView.reloadData()
             }
+            
+        } else if (method == .getMarkerDataById) {
+            // Convert returned to marker objects
+            print(data.value(forKey: "data"))
+            let arr = data.value(forKey: "data") as! Array<Dictionary<String, String>>
+            print(arr)
+//            
+//            for marker_data in returned {
+//                self.savedMarkers.append(Marker(fromPublicData: marker_data))
+//            }
+//            self.tableView.reloadData()
         }
     }
     
     // Request small photo and tags for public ids
-    func loadNewPublicMarkers (_ publicIds: [String], callback: ([Marker]) -> Void) {
+    func loadNewPublicMarkers (_ publicIds: [String]) {
+        var requestMarkers: Array<Dictionary<String, String>> = []
         
+        // Make array of marker requests
+        for id in publicIds {
+            var req: [String: String] = [:]
+            req["public_id"] = id
+            req["photo_size"] = "sm"
+            requestMarkers.append(req)
+        }
+        
+        let request = ApiRequest()
+        request.delegate = self
+        request.getMarkerDataById(requestMarkers)
     }
     
     // Show alert on failure

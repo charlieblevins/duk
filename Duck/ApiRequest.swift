@@ -152,7 +152,7 @@ class ApiRequest {
         let params: Parameters = ["markers": markers]
         
         // Exec request
-        Alamofire.request("\(baseURL)/markers", method: .post, parameters: params, encoding: JSONEncoding.default)
+        Alamofire.request("\(baseURL)/getMarkersById", method: .post, parameters: params, encoding: JSONEncoding.default)
             .responseJSON { response in
                 self.handleResponse(response, method: .getMarkerDataById)
         }
