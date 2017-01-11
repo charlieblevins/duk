@@ -289,6 +289,10 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         publicBadge!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(toggleUnpublish)))
     }
     
+    func appendDeniedBadge () {
+        print("Build denied badge")
+    }
+    
     func hideUnpublish () {
         if unpublish != nil {
             toggleUnpublish()

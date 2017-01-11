@@ -181,37 +181,66 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
             })
         }
         
-        let cell_timestamp = cell.markerData!.timestamp!
+        self.setCellPublishStatus(cell)
         
-        // * Set cell state
-        // If active requests, set to uploading state
-        if let active_req = MyMarkersController.active_requests[cell_timestamp] {
-            active_req.delegate = cell
+        // Start or resume upload if necessary
+        if let cell_timestamp = cell.markerData!.timestamp {
             
-        // Public
-        } else if cell.markerData!.public_id != nil {
-            cell.appendPendingBadge()
+            // * Set cell state
+            // If active requests, set to uploading state
+            if let active_req = MyMarkersController.active_requests[cell_timestamp] {
+                active_req.delegate = cell
+            }
             
-        // Local
+            // Start any pending upload requests
+            if self.pending_publish != nil {
+                
+                let marker = self.pending_publish!["marker"] as! Marker
+                let publish_timestamp = marker.timestamp
+                
+                
+                // If timestamps match, set this cell as request delegate
+                if cell_timestamp == publish_timestamp {
+                    makePublishRequest(cell)
+                }
+            }
+        }
+        
+        return cell
+    }
+    
+    // Set the UI of the cell depending on it's published status
+    func setCellPublishStatus (_ cell: MarkerTableViewCell) {
+        
+        guard let marker = cell.markerData else {
+            print("Cell has no associated marker data")
+            return
+        }
+        
+        // If cell is currently uploading
+        if let cell_timestamp = marker.timestamp {
+            if MyMarkersController.active_requests[cell_timestamp] != nil {
+                cell.updateStatus("(0)% complete")
+                return
+            }
+        }
+        
+        if marker.public_id != nil && marker.approved != nil {
+            
+            switch marker.approved! {
+            case .denied:
+                cell.appendDeniedBadge()
+                break
+            case .pending:
+                cell.appendPendingBadge()
+                break
+            case .approved:
+                cell.appendPublicBadge()
+            }
+            
         } else {
             cell.appendPublishBtn()
         }
-
-        // Start any pending upload requests
-        if self.pending_publish != nil {
-            
-            let marker = self.pending_publish!["marker"] as! Marker
-            let publish_timestamp = marker.timestamp
-            
-            
-            // If timestamps match, set this cell as request delegate
-            if cell_timestamp == publish_timestamp {
-                makePublishRequest(cell)
-            }
-        }
-
-        
-        return cell
     }
     
     func publishAction(_ cell: MarkerTableViewCell) {
@@ -390,7 +419,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
             fatalError("marker does not have timestamp. publish not allowed")
         }
 
-        
         // Initiate request
         if let credentials = Credentials() {
             request!.publishSingleMarker(credentials, marker: marker)
@@ -498,7 +526,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         
         // Update savedMarkers
         if let ind = savedMarkers.index(where: { $0.public_id == publicId }) {
-            savedMarkers[ind].approved = approved
+            savedMarkers[ind].approved = Marker.Approval(rawValue: approved)
         } else {
             print("could not update savedMarker: no marker with publicId \(publicId) found")
         }
@@ -576,14 +604,21 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
             
         } else if (method == .getMarkerDataById) {
             // Convert returned to marker objects
-            print(data.value(forKey: "data"))
-            let arr = data.value(forKey: "data") as! Array<Dictionary<String, String>>
-            print(arr)
-//            
-//            for marker_data in returned {
-//                self.savedMarkers.append(Marker(fromPublicData: marker_data))
-//            }
-//            self.tableView.reloadData()
+            let returned = data.value(forKey: "data") as! Array<Any>
+            
+            for marker_data in returned {
+                
+                guard let data_dic: NSDictionary = marker_data as? NSDictionary else {
+                    print("could not cast to NSDictionary")
+                    return
+                }
+                
+                if let marker = Marker(fromPublicData: data_dic) {
+                    self.savedMarkers.append(marker)
+                }
+            }
+            self.tableView.reloadData()
+            self.refreshControl?.endRefreshing()
         }
     }
     

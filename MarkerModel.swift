@@ -11,6 +11,13 @@ import CoreData
 import GoogleMaps
 
 struct Marker {
+    
+    enum Approval: Int {
+        case approved = 1
+        case pending = 0
+        case denied = -1
+    }
+    
     var latitude, longitude: Double?
     var timestamp: Double?
     var photo: Data?
@@ -25,7 +32,7 @@ struct Marker {
     
     var distance_from_me: Double?
     
-    var approved: Int?
+    var approved: Approval?
     
     init() {
         self.latitude = nil
@@ -114,7 +121,12 @@ struct Marker {
         }
         
         self.public_id = data.value(forKey: "_id") as? String
-        self.approved = data.value(forKey: "approved") as? Int
+        
+        // Approval
+        if let appr_int = data.value(forKey: "approved") as? Int {
+        
+            self.approved = Approval(rawValue: appr_int)
+        }
         
         // Get username
         self.user = data.value(forKey: "username") as? String
