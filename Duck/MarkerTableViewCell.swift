@@ -22,6 +22,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     var loader: UIAlertController? = nil
     var publicBadgeTopConstraint: NSLayoutConstraint? = nil
     var master: MyMarkersController? = nil
+    var curBadge: UIView? = nil
     
     var indexPath: IndexPath? = nil
     
@@ -72,6 +73,18 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         self.statusBar!.text = content
     }
     
+    // Remove the current badge and append a new one
+    func appendBadge (_ badge: UIView) {
+        
+        // Remove old
+        if self.curBadge != nil {
+            self.curBadge?.removeFromSuperview()
+        }
+        
+        self.contentView.addSubview(badge)
+        self.curBadge = badge
+    }
+    
     // Append a status bar in this cell
     func appendStatusBar () {
         
@@ -86,8 +99,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         statusBar!.translatesAutoresizingMaskIntoConstraints = false
         
         // Append status bar
-        self.contentView.addSubview(statusBar!)
-        
+        appendBadge(statusBar!)
         
         // Position with constraints
         let hrzC = NSLayoutConstraint(
@@ -125,20 +137,16 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     // Append pending badge
     func appendPendingBadge () {
         
-        if pendingBadge != nil {
-            return
-        }
-        
         // Add publish button
         pendingBadge = UILabel()
         pendingBadge!.frame.size = CGSize(width: 120, height: 30)
         pendingBadge!.text = "Pending"
         
-        // green text and border
-        let fGreen = UIColor(red: 56, green: 150, blue: 57) // Forest green
-        pendingBadge!.textColor = fGreen
-        pendingBadge!.layer.borderColor = fGreen.cgColor
-        pendingBadge!.layer.borderWidth = 1
+        // white text and orange background
+        pendingBadge!.textColor = UIColor.white
+        
+        let orange = UIColor(red: 239, green: 108, blue: 0) // Orange
+        pendingBadge!.layer.backgroundColor = orange.cgColor
         
         // rounded corners
         pendingBadge!.layer.cornerRadius = 3
@@ -148,7 +156,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         
         pendingBadge!.translatesAutoresizingMaskIntoConstraints = false
         
-        self.contentView.addSubview(pendingBadge!)
+        appendBadge(pendingBadge!)
         
         // Position with constraints
         let hrzC = NSLayoutConstraint(
@@ -214,20 +222,16 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     // Show a public badge for published markers
     func appendPublicBadge () {
         
-        if publicBadge != nil {
-            return
-        }
-        
         // Add publish button
         publicBadge = UILabel()
         publicBadge!.frame.size = CGSize(width: 120, height: 30)
         publicBadge!.text = "Public"
         
-        // green text and border
+        // white text and green background
+        publicBadge!.textColor = UIColor.white
+        
         let fGreen = UIColor(red: 56, green: 150, blue: 57) // Forest green
-        publicBadge!.textColor = fGreen
-        publicBadge!.layer.borderColor = fGreen.cgColor
-        publicBadge!.layer.borderWidth = 1
+        publicBadge!.layer.backgroundColor = fGreen.cgColor
         
         // rounded corners
         publicBadge!.layer.cornerRadius = 3
@@ -237,7 +241,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         
         publicBadge!.translatesAutoresizingMaskIntoConstraints = false
         
-        self.contentView.addSubview(publicBadge!)
+        appendBadge(publicBadge!)
         
         // Position with constraints
         let hrzC = NSLayoutConstraint(
@@ -290,7 +294,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     }
     
     func appendDeniedBadge () {
-        print("Build denied badge")
+        print("Build denied badge!!!")
     }
     
     func hideUnpublish () {
@@ -489,6 +493,62 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         }
     }
     
+    func getPhoto () {
+        
+        guard var marker = self.markerData else {
+            print("cannot load photo for cell without assigned marker")
+            return
+        }
+        
+        // Photo stored locally
+        if marker.timestamp != nil {
+            
+            // Begin photo lookup on new thread
+            DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
+                
+                marker.loadPropFromCore(prop: "photo_sm", propLoaded: {
+                    data in
+                    
+                    if data == nil {
+                        print("Prop lookeup for marker returned nil")
+                        return
+                    }
+                    
+                    guard let typed_data = data as? Data else {
+                        print("lookup returned data not convertible to data type")
+                        return
+                    }
+                    
+                    // Send image back to main thread for display
+                    DispatchQueue.main.async {
+                        self.markerImage.image = UIImage(data: typed_data)
+                    }
+                })
+            }
+            return
+        }
+        
+        // Load from server
+        if let id = marker.public_id {
+            let url_str = "http://dukapp.io/photos/\(id)_sm.jpg"
+            let url = URL(string: url_str)
+            self.markerImage.kf.setImage(
+                with: url,
+                placeholder: nil,
+                options: nil,
+                progressBlock: nil,
+                completionHandler: { (image, error, cacheType, imageURL) -> () in
+                    
+                    if error !== nil {
+                        print("image GET failed: \(error)")
+                        return Void()
+                    }
+                    
+                    self.markerImage.image = image
+            })
+        }
+    }
+    
     // MARK: upload delegate method handlers
     func reqDidStart() {
         if pubBtn != nil {
@@ -527,7 +587,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             MyMarkersController.active_requests.removeValue(forKey: timestamp)
             
             self.statusBar?.removeFromSuperview()
-            self.appendPublicBadge()
+            self.appendPendingBadge()
         
         // Unpublish
         } else if (method == .deleteById) {

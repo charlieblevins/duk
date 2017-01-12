@@ -36,6 +36,13 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         // Get marker data
         savedMarkers = self.loadMarkerData()
         
+        // Sync with public if credentials exist
+        if let cred = Credentials() {
+            let request = ApiRequest()
+            request.delegate = self
+            request.getMarkersByUser(cred)
+        }
+        
         self.tableView.rowHeight = UITableViewAutomaticDimension
 
         // preserve selection between presentations
@@ -154,28 +161,8 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         // Get thumbnail
         var marker = cell.markerData! as Marker
         
-        // Begin photo lookup on new thread
-        DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
-            
-            marker.loadPropFromCore(prop: "photo_sm", propLoaded: {
-                data in
-                
-                if data == nil {
-                    print("Prop lookeup for marker returned nil")
-                    return
-                }
-                
-                guard let typed_data = data as? Data else {
-                    print("lookup returned data not convertible to data type")
-                    return
-                }
-                
-                // Send image back to main thread for display
-                DispatchQueue.main.async {
-                    cell.markerImage.image = UIImage(data: typed_data)
-                }
-            })
-        }
+        // Get Photo
+        cell.getPhoto()
         
         self.setCellPublishStatus(cell)
         
@@ -600,7 +587,15 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
             
         } else if (method == .getMarkerDataById) {
             // Convert returned to marker objects
-            let returned = data.value(forKey: "data") as! Array<Any>
+            guard let returned = data.value(forKey: "data") as? Array<Any> else {
+                print("Returned markers could not be converted to an array")
+                return
+            }
+            
+            guard returned.count > 0 else {
+                print("No public markers returned by getMArkerDataById")
+                return
+            }
             
             for marker_data in returned {
                 
