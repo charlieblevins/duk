@@ -96,7 +96,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         
         fetchReq.resultType = .dictionaryResultType
         //fetchReq.propertiesToFetch = ["timestamp", "public_id", "tags", "photo_sm"]
-        fetchReq.propertiesToFetch = ["timestamp", "public_id", "tags"]
+        fetchReq.propertiesToFetch = ["timestamp", "public_id", "tags", "approved"]
         
         
         do {
@@ -104,11 +104,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
             
             for marker in markers {
                 
-                var new_marker = Marker()
-                new_marker.timestamp = (marker as AnyObject).value(forKey: "timestamp") as? Double
-                new_marker.public_id = (marker as AnyObject).value(forKey: "public_id") as? String
-                new_marker.tags = (marker as AnyObject).value(forKey: "tags") as? String
-                //new_marker.photo_sm = (marker as AnyObject).value(forKey: "photo_sm") as? Data
+                let new_marker = Marker(fromCoreData: marker as AnyObject)
                 
                 data.append(new_marker)
             }
@@ -614,7 +610,12 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
                 }
                 
                 if let marker = Marker(fromPublicData: data_dic) {
-                    self.savedMarkers.append(marker)
+                    
+                    if let ind = self.savedMarkers.index(where: { $0.public_id == data_dic["_id"] as? String}) {
+                        self.savedMarkers[ind] = marker
+                    } else {
+                        self.savedMarkers.append(marker)
+                    }
                 }
             }
             self.tableView.reloadData()

@@ -66,6 +66,11 @@ struct Marker {
         // Store public id if available
         if let pid = data.value(forKey: "public_id") as? String {
             self.public_id = pid
+            
+            // Set approved if public_id and an approved value is stored
+            if let appr = data.value(forKey: "approved") as? Int {
+                self.approved = Approval(rawValue: appr)
+            }
         }
         
         self.distance_from_me = nil
