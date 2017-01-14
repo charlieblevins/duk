@@ -294,7 +294,87 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     }
     
     func appendDeniedBadge () {
-        print("Build denied badge!!!")
+        
+        // Add publish button
+        let deniedBadge = UILabel()
+        deniedBadge.frame.size = CGSize(width: 120, height: 30)
+        deniedBadge.text = "Not Approved"
+        
+        // white text and orange background
+        deniedBadge.textColor = UIColor.white
+        
+        let orange = UIColor(red: 40, green: 53, blue: 157) // Purple
+        deniedBadge.layer.backgroundColor = orange.cgColor
+        
+        // rounded corners
+        deniedBadge.layer.cornerRadius = 3
+        
+        //center text
+        deniedBadge.textAlignment = .center
+        
+        deniedBadge.translatesAutoresizingMaskIntoConstraints = false
+        
+        appendBadge(deniedBadge)
+        
+        // Position with constraints
+        let hrzC = NSLayoutConstraint(
+            item: deniedBadge,
+            attribute: .trailing,
+            relatedBy: .equal,
+            toItem: self.contentView,
+            attribute: .trailing,
+            multiplier: 1.0,
+            constant: -10
+        )
+        
+        // This constraint used to animate for unpublish toggle
+        let topC = NSLayoutConstraint(
+            item: deniedBadge,
+            attribute: .centerY,
+            relatedBy: .equal,
+            toItem: self.contentView,
+            attribute: .centerY,
+            multiplier: 1.0,
+            constant: 0
+        )
+        let wdtC = NSLayoutConstraint(
+            item: deniedBadge,
+            attribute: .width,
+            relatedBy: .equal,
+            toItem: nil,
+            attribute: .height,
+            multiplier: 1.0,
+            constant: 66
+        )
+        let hgtC = NSLayoutConstraint(
+            item: deniedBadge,
+            attribute: .height,
+            relatedBy: .equal,
+            toItem: nil,
+            attribute: .height,
+            multiplier: 1.0,
+            constant: 30
+        )
+        
+        
+        // Activate all constraints
+        NSLayoutConstraint.activate([hrzC, topC, wdtC, hgtC])
+        
+        // Handle tap
+        // Even though IB says this is already true, it isn't
+        deniedBadge.isUserInteractionEnabled = true
+        deniedBadge.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(alertDeniedInfo)))
+    }
+    
+    func alertDeniedInfo () {
+        let alertController = UIAlertController(title: "Not Approved",
+                                                message: "Every so often a marker does not meet Duk's photo guidelines. Please check your email for more information about why this marker received this status.",
+                                                preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        alertController.addAction(okAction)
+        
+        self.master?.present(alertController, animated: true, completion: nil)
     }
     
     func hideUnpublish () {

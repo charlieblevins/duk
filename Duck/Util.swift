@@ -68,6 +68,38 @@ class Util {
         }
     }
     
+    class func updateMarkerPropByTimestamp (_ timestamp: Double, fieldName: String, newValue: Any?) {
+        
+        // Clear markers for now - NOT FOR PRODUCTION!
+        let marker: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
+        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        marker.entity = NSEntityDescription.entity(forEntityName: "Marker", in: managedContext)
+        marker.includesPropertyValues = false
+        marker.predicate = NSPredicate(format: "timestamp = %lf", timestamp)
+        
+        //only fetch the managedObjectID
+        var items: [AnyObject]
+        
+        do {
+            items = try managedContext.fetch(marker)
+            
+            for item in items {
+                item.setValue(newValue, forKey: fieldName)
+            }
+            
+        } catch let error as NSError {
+            print("Fetch failed: \(error.localizedDescription)")
+        }
+        
+        do {
+            try managedContext.save()
+        } catch {
+            print("save failed")
+        }
+    }
+    
     // Utility
     // Delete all objects of a certain entity type from core data
     class func deleteCoreDataForEntity (_ entityName: String) {

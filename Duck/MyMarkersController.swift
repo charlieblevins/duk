@@ -552,6 +552,20 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         }
     }
 
+    // Remove un-owned markers. Mutates savedMarkers array
+    func removeUnownedMarkers (_ user_markers: NSDictionary) {
+        
+        self.savedMarkers = self.savedMarkers.filter() {
+            
+            // Consider un-owned if a public_id exists in core data
+            // that is not returned by server
+            if let id = $0.public_id {
+                return user_markers[id] != nil
+            } else {
+                return true
+            }
+        }
+    }
     
     // MARK: upload delegate method handlers
     func reqDidStart() {
@@ -578,6 +592,9 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
                     new_markers.append(pid)
                 }
             }
+            
+            // TODO: Hide any markers that do not belong to the current user account
+            self.removeUnownedMarkers(data)
             
             if new_markers.count > 0 {
                 self.loadNewPublicMarkers(new_markers)
@@ -637,8 +654,12 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
     
     // Show alert on failure
     func reqDidFail(_ error: String, method: ApiMethod, code: Int) {
-        if (method == .markersByUser) {
+        if method == .markersByUser {
             print("markers by user request failed: \(error)")
+            self.refreshControl?.endRefreshing()
+        } else if method == .getMarkerDataById {
+            print("getMarkerDataById request failed: \(error)")
+            self.refreshControl?.endRefreshing()
         }
     }
 

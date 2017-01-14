@@ -26,7 +26,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         
         // G Places Api Key
         GMSPlacesClient.provideAPIKey("AIzaSyCx00Cy9jGzz0hIcv485TWytTq82sAQYaI")
-
+        
+        Util.updateMarkerPropByTimestamp(1454869988.6626999, fieldName: "public_id", newValue: nil)
+        Util.updateMarkerPropByTimestamp(1454869988.6626999, fieldName: "approved", newValue: nil)
         
         // Clear KF Image cache (disk)
         //KingfisherManager.shared.cache.clearDiskCache()
