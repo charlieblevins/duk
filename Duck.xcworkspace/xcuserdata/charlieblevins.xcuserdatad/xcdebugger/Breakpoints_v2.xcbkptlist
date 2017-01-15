@@ -54,33 +54,49 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "Duck/MyMarkersController.swift"
-            timestampString = "505956978.074614"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "167"
-            endingLineNumber = "167"
-            landmarkName = "tableView(_:cellForRowAt:)"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Duck/Util.swift"
-            timestampString = "506126208.234841"
+            filePath = "Duck/MyMarkersController.swift"
+            timestampString = "506205720.074393"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "80"
-            endingLineNumber = "80"
-            landmarkName = "updateMarkerPropByTimestamp(_:fieldName:newValue:)"
+            startingLineNumber = "346"
+            endingLineNumber = "346"
+            landmarkName = "tableView(_:editActionsForRowAt:)"
             landmarkType = "7">
+            <Locations>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Duck.MyMarkersController.tableView (__ObjC.UITableView, editActionsForRowAt : Foundation.IndexPath) -&gt; Swift.Array&lt;__ObjC.UITableViewRowAction&gt;"
+                  moduleName = "Duck"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/charlieblevins/Desktop/Sandbox/Duck/Duck/MyMarkersController.swift"
+                  timestampString = "506206524.324215"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "346"
+                  endingLineNumber = "346"
+                  offsetFromSymbolStart = "64">
+               </Location>
+               <Location
+                  shouldBeEnabled = "Yes"
+                  ignoreCount = "0"
+                  continueAfterRunningActions = "No"
+                  symbolName = "Duck.MyMarkersController.tableView (__ObjC.UITableView, editActionsForRowAt : Foundation.IndexPath) -&gt; Swift.Array&lt;__ObjC.UITableViewRowAction&gt;"
+                  moduleName = "Duck"
+                  usesParentBreakpointCondition = "Yes"
+                  urlString = "file:///Users/charlieblevins/Desktop/Sandbox/Duck/Duck/MyMarkersController.swift"
+                  timestampString = "506206524.326321"
+                  startingColumnNumber = "9223372036854775807"
+                  endingColumnNumber = "9223372036854775807"
+                  startingLineNumber = "346"
+                  endingLineNumber = "346"
+                  offsetFromSymbolStart = "508">
+               </Location>
+            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

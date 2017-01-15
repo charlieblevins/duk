@@ -13,8 +13,6 @@ import CoreData
 class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiRequestDelegate {
     
     var savedMarkers: [Marker] = [Marker]()
-    var deleteMarkerIndexPath: IndexPath? = nil
-    var deleteMarkerTimestamp: Double? = nil
     var deletedMarkers: [Double] = []
     
     var progressView: UIProgressView? = nil
@@ -46,7 +44,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         self.tableView.rowHeight = UITableViewAutomaticDimension
 
         // preserve selection between presentations
-        self.clearsSelectionOnViewWillAppear = false
+        self.clearsSelectionOnViewWillAppear = true
 
         // display an Edit button in the navigation bar for this view controller.
         self.navigationItem.rightBarButtonItem = self.editButtonItem
@@ -156,10 +154,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         
         // Remove right side subviews
         cell.resetRight()
-
-
-        // Get thumbnail
-        var marker = cell.markerData! as Marker
         
         // Get Photo
         cell.getPhoto()
@@ -325,24 +319,44 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         return 80
     }
 
-    /*
+
     // Override to support conditional editing of the table view.
-    override func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: NSIndexPath) -> Bool {
-        // Return false if you do not want the specified item to be editable.
+    func tableView(tableView: UITableView, canEditRowAtIndexPath indexPath: IndexPath) -> Bool {
+        
+        guard self.tableView.cellForRow(at: indexPath) as? MarkerTableViewCell != nil else {
+            print("cannot edit cell that has no MarkerTableViewCell")
+            return false
+        }
+        
         return true
     }
-    */
 
     // Override to support editing the table view.
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             // Delete the row from the data source
-            //Util.deleteCoreDataForEntity()
-            //tableView.deleteRowsAtIndexPaths([indexPath], withRowAnimation: .Fade)
-            deleteMarkerIndexPath = indexPath
-            deleteMarkerTimestamp = savedMarkers[(indexPath as NSIndexPath).row].timestamp
-            popAlert("Are you sure you want to delete this marker?")
+            popDeleteAlert(rowAction: UITableViewRowAction(), indexPath: indexPath)
         }
+    }
+    
+    // Define custom swipe actions for row
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction] {
+        var actions = [UITableViewRowAction]()
+        
+        if let cell = self.tableView.cellForRow(at: indexPath) as? MarkerTableViewCell {
+            
+            // Delete - only allowed if not published
+            if cell.markerData?.public_id == nil {
+                let del = UITableViewRowAction(style: .destructive, title: "Delete", handler: self.popDeleteAlert)
+                actions.append(del)
+            } else {
+                let unpublish = UITableViewRowAction(style: .destructive, title: "Un-publish", handler: self.popDeleteAlert)
+                actions.append(unpublish)
+            }
+            
+        }
+        
+        return actions
     }
     
     // On Row Select load
@@ -351,12 +365,15 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         performSegue(withIdentifier: "EditMarker", sender: indexPath)
     }
     
-    func popAlert(_ text:String) {
+    func popDeleteAlert(rowAction: UITableViewRowAction, indexPath: IndexPath) {
         let alertController = UIAlertController(title: "Delete Marker",
-            message: text,
+            message: "Are you sure you want to delete this marker?",
             preferredStyle: .actionSheet)
         
-        let deleteAction = UIAlertAction(title: "Delete", style: .destructive, handler: handleDeleteMarker)
+        let deleteAction = UIAlertAction(title: "Delete", style: .destructive, handler: { alertAction in
+            self.handleDeleteMarker(rowAction: rowAction, indexPath: indexPath)
+        })
+        
         let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
         alertController.addAction(deleteAction)
         alertController.addAction(cancelAction)
@@ -364,26 +381,33 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         present(alertController, animated: true, completion: nil)
     }
     
-    func handleDeleteMarker (_ alertAction: UIAlertAction!) -> Void {
-        if let indexPath = deleteMarkerIndexPath {
-            tableView.beginUpdates()
-            
-            // Delete from local var
-            savedMarkers.remove(at: (indexPath as NSIndexPath).row)
-            
-            // Pass deleted items to mapview for removal
-            let mvc = navigationController?.viewControllers.first as! MapViewController
-            mvc.deletedMarkers.append(deleteMarkerTimestamp!)
-            
-            // Delete from table view
-            tableView.deleteRows(at: [indexPath], with: .automatic)
-            
-            // Delete from core data
-            Util.deleteCoreDataByTime("Marker", timestamp: deleteMarkerTimestamp!)
-            
-            tableView.endUpdates()
+    func handleDeleteMarker (rowAction: UITableViewRowAction, indexPath: IndexPath) -> Void {
+        tableView.beginUpdates()
+        
+        // Delete from local var
+        savedMarkers.remove(at: (indexPath as NSIndexPath).row)
+        
+        guard let cell = tableView.cellForRow(at: indexPath) as? MarkerTableViewCell else {
+            print("cannot fully delete marker: cell cannot be converted to MarkerTableViewCell")
+            return
         }
         
+        guard let timestamp = cell.markerData?.timestamp else {
+            print("cannot delete: cannot retrieve timestamp from marker")
+            return
+        }
+        
+        // Pass deleted items to mapview for removal
+        let mvc = navigationController?.viewControllers.first as! MapViewController
+        mvc.deletedMarkers.append(timestamp)
+        
+        // Delete from table view
+        tableView.deleteRows(at: [indexPath], with: .automatic)
+        
+        // Delete from core data
+        Util.deleteCoreDataByTime("Marker", timestamp: timestamp)
+        
+        tableView.endUpdates()
     }
     
 

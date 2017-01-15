@@ -1,6 +1,7 @@
 source 'https://github.com/CocoaPods/Specs.git'
 platform :ios, '9.0'
 use_frameworks!
+project 'Duck', 'Debug - local'=>:debug, 'Debug - staging'=>:debug, 'Debug - PRODUCTION'=>:debug
 
 target 'Duck' do
     pod 'GooglePlaces'

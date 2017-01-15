@@ -476,17 +476,14 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     func appendPublishBtn () {
         
         // Add publish button
-        pubBtn = UIButton()
+        pubBtn = UIButton(type: .system)
         
-        pubBtn?.frame.size = CGSize(width: 100, height: 50)
-        pubBtn?.contentEdgeInsets = UIEdgeInsetsMake(0, 10, 0, 10)
-        pubBtn?.setTitle("Publish", for: UIControlState())
-        pubBtn?.backgroundColor = UIColor.blue
-        pubBtn?.translatesAutoresizingMaskIntoConstraints = false
+        pubBtn!.setTitle("Publish", for: UIControlState())
+        pubBtn!.translatesAutoresizingMaskIntoConstraints = false
         
-        pubBtn?.addTarget(self, action: #selector(self.publishTapped), for: .touchUpInside)
+        pubBtn!.addTarget(self, action: #selector(self.publishTapped), for: .touchUpInside)
         
-        self.contentView.addSubview(pubBtn!)
+        appendBadge(pubBtn!)
         
         // Position with contraints
         let hrzC = NSLayoutConstraint(
@@ -496,7 +493,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             toItem: self.contentView,
             attribute: .trailing,
             multiplier: 1.0,
-            constant: 0
+            constant: -12
         )
         let vrtC = NSLayoutConstraint(
             item: pubBtn!,
@@ -511,10 +508,10 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             item: pubBtn!,
             attribute: .height,
             relatedBy: .equal,
-            toItem: self.contentView,
+            toItem: nil,
             attribute: .height,
             multiplier: 1.0,
-            constant: 0
+            constant: 30
         )
         
         // Activate all constraints
