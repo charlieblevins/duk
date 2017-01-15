@@ -343,17 +343,15 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction] {
         var actions = [UITableViewRowAction]()
         
-        if let cell = self.tableView.cellForRow(at: indexPath) as? MarkerTableViewCell {
-            
-            // Delete - only allowed if not published
-            if cell.markerData?.public_id == nil {
-                let del = UITableViewRowAction(style: .destructive, title: "Delete", handler: self.popDeleteAlert)
-                actions.append(del)
-            } else {
-                let unpublish = UITableViewRowAction(style: .destructive, title: "Un-publish", handler: self.popDeleteAlert)
-                actions.append(unpublish)
-            }
-            
+        let marker = self.savedMarkers[indexPath.row]
+        
+        // Delete - only allowed if not published
+        if marker.public_id == nil {
+            let del = UITableViewRowAction(style: .destructive, title: "Delete", handler: self.popDeleteAlert)
+            actions.append(del)
+        } else {
+            let unpublish = UITableViewRowAction(style: .destructive, title: "Un-publish", handler: self.popUnpublishAlert)
+            actions.append(unpublish)
         }
         
         return actions
@@ -363,6 +361,26 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
     // marker edit view
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         performSegue(withIdentifier: "EditMarker", sender: indexPath)
+    }
+    
+    func popUnpublishAlert(rowAction: UITableViewRowAction, indexPath: IndexPath) {
+        let alertController = UIAlertController(title: "Unpublish Marker",
+                                                message: "Are you sure you want to remove this marker from public view?",
+                                                preferredStyle: .actionSheet)
+        
+        let unpublishAction = UIAlertAction(title: "Unpublish", style: .destructive, handler: { alertAction in
+            guard let cell = self.tableView.cellForRow(at: indexPath) as? MarkerTableViewCell else {
+                print("cannot convert cell to MarkerTableViewCell")
+                return
+            }
+            cell.unpublishMarker()
+        })
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(unpublishAction)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true, completion: nil)
     }
     
     func popDeleteAlert(rowAction: UITableViewRowAction, indexPath: IndexPath) {

@@ -290,7 +290,18 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         // Handle tap
         // Even though IB says this is already true, it isn't
         publicBadge!.isUserInteractionEnabled = true
-        publicBadge!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(toggleUnpublish)))
+        publicBadge!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(alertPublicInfo)))
+    }
+    
+    func alertPublicInfo () {
+        let alertController = UIAlertController(title: "Public",
+                                                message: "This marker is publicly viewable.",
+                                                preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        alertController.addAction(okAction)
+        
+        self.master?.present(alertController, animated: true, completion: nil)
     }
     
     func appendDeniedBadge () {
@@ -384,6 +395,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     }
     
     // Append un-publish btn
+    // DEPRECATED - no longer used
     func toggleUnpublish () {
         
         // Hide
@@ -672,22 +684,13 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             
             master!.updateMarkerEntity(self.markerData!.timestamp!, publicID: nil)
             
-            self.unpublish?.removeFromSuperview()
-            self.publicBadge?.removeFromSuperview()
-            
-            self.appendPublishBtn()
-            
             // Remove loading overlay
             self.setLoading(loading: false, message: nil)
             
-            let alertController = UIAlertController(title: "Unpublish Successful",
-                                                    message: "This marker is no longer public.",
-                                                    preferredStyle: .alert)
-            
-            let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-            alertController.addAction(okAction)
-            
-            self.master?.present(alertController, animated: true, completion: nil)
+            // Reload this cell
+            if let index = self.indexPath, let parent = master {
+                parent.tableView.reloadRows(at: [index], with: .automatic)
+            }
         }
 
     }
