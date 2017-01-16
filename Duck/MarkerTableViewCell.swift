@@ -551,10 +551,34 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             
             self.setLoading(loading: true, message: "Unpublishing...")
             
-            let req = ApiRequest()
-            req.delegate = self
-            req.deleteMarker(pid, credentials: credentials)
+            // If marker is not stored locally - first download it
+            if self.markerData?.timestamp == nil {
+                self.requestMarkerDownload(pid)
+                
+            // Marker exists locally - proceed with unpublish
+            } else {
+                self.requestUnpublish(pid, credentials: credentials)
+            }
         })
+    }
+    
+    func requestMarkerDownload(_ public_id: String) {
+        let req = ApiRequest()
+        req.delegate = self
+        
+        let marker_params: Dictionary<String, Any> = [
+            "public_id": public_id,
+            "photo_size": ["sm", "md", "full"]
+        ]
+        let params: Array<Dictionary<String, Any>> = [marker_params]
+        
+        req.getMarkerDataById(params)
+    }
+    
+    func requestUnpublish(_ public_id: String, credentials: Credentials) {
+        let req = ApiRequest()
+        req.delegate = self
+        req.deleteMarker(public_id, credentials: credentials)
     }
     
     // Show/hide an activity indicator

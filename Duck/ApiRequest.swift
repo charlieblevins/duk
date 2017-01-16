@@ -147,7 +147,7 @@ class ApiRequest {
     
     // Get a single marker's data from API
     // Optionally request base 64 photo data by size
-    func getMarkerDataById (_ markers: Array<Dictionary<String, String>>) {
+    func getMarkerDataById (_ markers: Array<Dictionary<String, Any>>) {
         
         let params: Parameters = ["markers": markers]
         
