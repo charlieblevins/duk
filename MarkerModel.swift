@@ -38,8 +38,7 @@ struct Marker {
         self.latitude = nil
         self.longitude = nil
         
-        let timestamp = Date().timeIntervalSince1970
-        self.timestamp = timestamp
+        self.timestamp = Marker.generateTimestamp()
         
         self.photo = nil
         self.photo_md = nil
@@ -112,15 +111,28 @@ struct Marker {
         // public markers don't have a timestamp
         self.timestamp = nil
         
-        self.photo = nil
-        self.photo_md = nil
-        self.photo_sm = nil
-        
-        if let photoJson = data.value(forKey: "photo") {
-            let b64_photo = (photoJson as AnyObject).value(forKey: "data") as? String
-            self.photo = Data(base64Encoded: b64_photo!, options: [])
+        // PHOTOS
+        if let photo_data = data.value(forKey: "photos") as? Dictionary<String, String> {
+            
+            if let sm = photo_data["sm"] {
+                self.photo = Data(base64Encoded: sm)
+            }
+            
+            if let md = photo_data["md"] {
+                self.photo_md = Data(base64Encoded: md)
+            }
+            
+            if let full = photo_data["full"] {
+                self.photo_sm = Data(base64Encoded: full)
+            }
+            
+        } else {
+            self.photo = nil
+            self.photo_md = nil
+            self.photo_sm = nil
         }
-
+        
+        // Tags/Nouns
         if let nouns_arr = data.value(forKey: "tags") as? Array<String> {
             self.tags = nouns_arr.joined(separator: " ")
         }
@@ -143,7 +155,7 @@ struct Marker {
     
     // Save this marker's data in core data as 
     // a new entity (insert)
-    mutating func saveInCore() -> Bool {
+    @discardableResult mutating func saveInCore() -> Bool {
         
         // 1. Get managed object context
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -169,6 +181,9 @@ struct Marker {
         // Make small and medium image versions
         marker_data.setValue(photo_sm, forKey: "photo_sm")
         marker_data.setValue(photo_md, forKey: "photo_md")
+        
+        // approved
+        marker_data.setValue(approved, forKey: "approved")
         
         // 4. Save the marker object
         do {
@@ -476,5 +491,9 @@ struct Marker {
         } else {
             return nouns
         }
+    }
+    
+    static func generateTimestamp () -> Double {
+        return Date().timeIntervalSince1970
     }
 }

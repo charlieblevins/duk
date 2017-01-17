@@ -24,6 +24,8 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     var master: MyMarkersController? = nil
     var curBadge: UIView? = nil
     
+    var pendingUnpublish: Bool = false
+    
     var indexPath: IndexPath? = nil
     
     override func awakeFromNib() {
@@ -566,6 +568,8 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         let req = ApiRequest()
         req.delegate = self
         
+        self.pendingUnpublish = true
+        
         let marker_params: Dictionary<String, Any> = [
             "public_id": public_id,
             "photo_size": ["sm", "md", "full"]
@@ -714,6 +718,41 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             // Reload this cell
             if let index = self.indexPath, let parent = master {
                 parent.tableView.reloadRows(at: [index], with: .automatic)
+            }
+        
+        // Assume marker download request
+        } else if (method == .getMarkerDataById) {
+            
+            // Convert returned to marker objects
+            guard let returned = data.value(forKey: "data") as? Array<Any> else {
+                print("Returned markers could not be converted to an array")
+                return
+            }
+            
+            guard returned.count > 0 else {
+                print("No public markers returned by getMArkerDataById")
+                return
+            }
+            
+            guard let data_dic: NSDictionary = returned[0] as? NSDictionary else {
+                print("could not cast to NSDictionary")
+                return
+            }
+            
+            // Build marker instance
+            guard var marker = Marker(fromPublicData: data_dic) else {
+                print("could not build marker instance from data")
+                return
+            }
+            
+            // Generate timestamp
+            marker.timestamp = Marker.generateTimestamp()
+            
+            // Save
+            marker.saveInCore()
+            
+            if self.pendingUnpublish {
+                self.unpublishMarker()
             }
         }
 
