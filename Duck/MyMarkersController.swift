@@ -172,6 +172,9 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         
         self.setCellPublishStatus(cell)
         
+        // Set storage stage
+        cell.setStorageState()
+        
         // Start or resume upload if necessary
         if let cell_timestamp = cell.markerData!.timestamp {
             
