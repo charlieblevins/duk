@@ -32,14 +32,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         super.awakeFromNib()
         
         // Initialization code
-        
-        
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(hideUnpublish),
-            name: Notification.Name("UnpublishBtnShown"),
-            object: nil
-        )
+
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -539,6 +532,8 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     // Delete a marker from the server and mark the local marker as local
     func unpublishMarker () {
         
+        self.pendingUnpublish = false
+        
         guard self.markerData != nil else {
             print("Cannot unpublish. No id available")
             return
@@ -703,8 +698,10 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             // Request is no longer active
             MyMarkersController.active_requests.removeValue(forKey: timestamp)
             
-            self.statusBar?.removeFromSuperview()
-            self.appendPendingBadge()
+            // Reload this cell
+            if let index = self.indexPath, let parent = master {
+                parent.tableView.reloadRows(at: [index], with: .automatic)
+            }
         
         // Unpublish
         } else if (method == .deleteById) {
@@ -730,7 +727,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             }
             
             guard returned.count > 0 else {
-                print("No public markers returned by getMArkerDataById")
+                print("No public markers returned by getMarkerDataById")
                 return
             }
             
@@ -750,6 +747,13 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             
             // Save
             marker.saveInCore()
+            
+            // Update for table data source
+            if let index = self.indexPath?.row, let parent = master {
+                parent.setSavedMarker(index, marker: marker)
+            } else {
+                print("could not update table data source: No index path or parent reference")
+            }
             
             if self.pendingUnpublish {
                 self.unpublishMarker()

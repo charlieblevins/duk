@@ -74,6 +74,17 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         }
     }
     
+    // Update marker in savedMarkers (table data source)
+    func setSavedMarker(_ index: Int, marker: Marker) {
+        var savable = marker
+        
+        // Remove large photos to save memory
+        savable.photo = nil
+        savable.photo_md = nil
+        
+        self.savedMarkers[index] = savable
+    }
+    
     // Sync markers from server
     func handleRefresh () {
         print("refreshing markers")
@@ -134,6 +145,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         return savedMarkers.count
     }
 
+    // Initial load of each cell
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "MarkerTableViewCell", for: indexPath) as! MarkerTableViewCell
