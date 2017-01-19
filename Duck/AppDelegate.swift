@@ -253,8 +253,8 @@ class CustomUIViewController: UIViewController {
         self.present(loader!, animated: true, completion: nil)
     }
     
-    func hideLoading () {
-        self.loader?.dismiss(animated: false, completion: nil)
+    func hideLoading (_ completion: (()->Void)?) {
+        self.loader?.dismiss(animated: false, completion: completion)
         self.loader = nil
     }
 }

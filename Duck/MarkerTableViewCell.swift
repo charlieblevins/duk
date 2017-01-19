@@ -258,7 +258,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             toItem: self.contentView,
             attribute: .centerY,
             multiplier: 1.0,
-            constant: -20
+            constant: 0
         )
         let wdtC = NSLayoutConstraint(
             item: publicBadge!,

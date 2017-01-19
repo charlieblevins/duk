@@ -255,12 +255,19 @@ class AddMarkerController: CustomUIViewController, UINavigationControllerDelegat
             DownloadLabel.isHidden = true
             return
         }
+        
+        // Timestamp indicates local storage
+        if marker.timestamp != nil {
+            DownloadSwitch.isOn = true
+        } else {
+            DownloadSwitch.isOn = false
+        }
+        
 
         DownloadSwitch.addTarget(self, action: #selector(self.downloadSwitchTapped), for: .touchUpInside)
     }
     
     func downloadSwitchTapped (sender: UISwitch) {
-
         
         // Download
         if (sender.isOn) {
@@ -278,8 +285,26 @@ class AddMarkerController: CustomUIViewController, UINavigationControllerDelegat
         // Delete from local store
         } else {
             
+            guard let timestamp = self.editMarker?.timestamp else {
+                print("Error: no timestamp for marker. cannot delete")
+                return
+            }
+            
             // Set load spinner
-            self.showLoading("Removing stored marker...")
+            self.showLoading("Removing...")
+            
+            Util.deleteCoreDataByTime("Marker", timestamp: timestamp)
+            
+            self.hideLoading({
+                let alertController = UIAlertController(title: "Marker removed",
+                                                        message: "This marker is no longer stored on this device.",
+                                                        preferredStyle: .alert)
+                
+                let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                alertController.addAction(okAction)
+                
+                self.present(alertController, animated: true, completion: nil)
+            })
         }
     }
     
@@ -481,18 +506,7 @@ class AddMarkerController: CustomUIViewController, UINavigationControllerDelegat
     }
     
     // MARK: upload delegate method handlers
-    func reqDidStart() {
-        if pubBtn != nil {
-            pubBtn?.removeFromSuperview()
-        }
-    }
-    
-    // Show progress
-    func uploadDidProgress(_ progress: Float) {
-        let percentage = Int(progress * 100)
-        self.updateStatus("\(percentage)% complete")
-    }
-    
+    func reqDidStart() {}
     
     func reqDidComplete(_ data: NSDictionary, method: ApiMethod, code: Int) {
         
@@ -526,16 +540,9 @@ class AddMarkerController: CustomUIViewController, UINavigationControllerDelegat
             // Save
             marker.saveInCore()
             
-            // Update for table data source
-            if let index = self.indexPath?.row, let parent = master {
-                parent.setSavedMarker(index, marker: marker)
-            } else {
-                print("could not update table data source: No index path or parent reference")
-            }
-            
             self.downloading = false
             
-            self.hideLoading()
+            self.hideLoading(nil)
         }
         
     }
@@ -543,7 +550,16 @@ class AddMarkerController: CustomUIViewController, UINavigationControllerDelegat
     // Show alert on failure
     func reqDidFail(_ error: String, method: ApiMethod, code: Int) {
         if method == .getMarkerDataById {
-            
+            self.hideLoading({
+                let alertController = UIAlertController(title: "Marker Download Failed",
+                                                        message: error,
+                                                        preferredStyle: .alert)
+                
+                let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                alertController.addAction(okAction)
+                
+                self.present(alertController, animated: true, completion: nil)
+            })
         }
     }
 

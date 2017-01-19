@@ -164,44 +164,6 @@ class Util {
         }
     }
     
-//    class func loadMarkerIcon (_ marker: DukGMSMarker, noun_tags: String) {
-//        
-//        // Set placeholder for interim
-//        let placeholder = UIImage(named: "photoMarker")
-//        marker.icon = placeholder
-//        
-//        // Split string into array
-//        let tagArr = noun_tags.characters.split{ $0 == " " }.map {
-//            item in
-//            String(item).replacingOccurrences(of: "#", with: "")
-//        }
-//        
-//        // Load image from server
-//        let imgView: UIImageView = UIImageView()
-//        
-//        let file = filenameFromNoun(tagArr[0])
-//        
-//        imgView.kf.setImage(
-//            with: URL(string: "http://dukapp.io/icon/\(file)")!,
-//            placeholder: nil,
-//            options: nil,
-//            progressBlock: nil,
-//            completionHandler: { (image, error, cacheType, imageURL) -> () in
-//                
-//                if error !== nil {
-//                    print("loadMarkerIcon Failed: \(error!.localizedDescription)")
-//                    return Void()
-//                }
-//                
-//                let imgView = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0))
-//                imgView.image = image
-//                
-//                marker.iconView = imgView
-//            }
-//        )
-//    }
-    
-    
     // Thumbnail size?
     class func resizeImage(_ image: UIImage, scaledToFillSize size: CGSize) -> UIImage {
         
