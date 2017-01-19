@@ -233,3 +233,29 @@ struct GLOBALS {
     static var firstSearch: Bool = true
 }
 
+// Custom controller
+// loading overlay spinner show and hide
+class CustomUIViewController: UIViewController {
+    
+    var loader: UIAlertController? = nil
+    
+    func showLoading (_ message: String?) {
+        let message = (message != nil) ? message : "Loading..."
+        self.loader = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+        
+        self.loader!.view.tintColor = UIColor.black
+        let loadingIndicator = UIActivityIndicatorView(frame: CGRect(x: 10, y: 5, width: 50, height: 50))
+        loadingIndicator.hidesWhenStopped = true
+        loadingIndicator.activityIndicatorViewStyle = .gray
+        loadingIndicator.startAnimating();
+        
+        loader!.view.addSubview(loadingIndicator)
+        self.present(loader!, animated: true, completion: nil)
+    }
+    
+    func hideLoading () {
+        self.loader?.dismiss(animated: false, completion: nil)
+        self.loader = nil
+    }
+}
+

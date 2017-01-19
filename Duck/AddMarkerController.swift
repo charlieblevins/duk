@@ -12,7 +12,7 @@ import CoreData
 import CoreLocation
 import UIKit
 
-class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, ZoomableImageDelegate, EditNounDelegate, CameraControlsOverlayDelegate {
+class AddMarkerController: CustomUIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, ZoomableImageDelegate, EditNounDelegate, CameraControlsOverlayDelegate, ApiRequestDelegate {
     
     @IBOutlet weak var LatContainer: UIView!
     @IBOutlet weak var LngContainer: UIView!
@@ -31,6 +31,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBOutlet weak var NounText: UILabel!
     @IBOutlet weak var EditNoun: UIButton!
     @IBOutlet weak var iconView: MarkerIconView!
+    @IBOutlet weak var DownloadSwitch: UISwitch!
+    @IBOutlet weak var DownloadLabel: UILabel!
     
     var imagePicker: UIImagePickerController!
     var imageChosen: Bool = false
@@ -38,6 +40,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
 
     var locationManager: CLLocationManager!
     var coords: CLLocationCoordinate2D!
+    var downloading: Bool = false
 
     // Marker data passed in from 
     // other view
@@ -239,6 +242,60 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         // Update noun display and icon
         updateNouns(marker.tags!)
+        
+        self.initDownloadSwitch(marker)
+    }
+    
+    func initDownloadSwitch (_ marker: Marker) {
+        
+        // Hide download option if not public
+        if marker.isPublic() == false {
+            print("not showing download option. marker is not public")
+            DownloadSwitch.isHidden = true
+            DownloadLabel.isHidden = true
+            return
+        }
+
+        DownloadSwitch.addTarget(self, action: #selector(self.downloadSwitchTapped), for: .touchUpInside)
+    }
+    
+    func downloadSwitchTapped (sender: UISwitch) {
+
+        
+        // Download
+        if (sender.isOn) {
+            
+            // Set load spinner
+            self.showLoading("Downloading...")
+            
+            guard let pid = self.editMarker?.public_id else {
+                print("Error: download switch tapped but no public id present")
+                return
+            }
+            
+            self.requestMarkerDownload(pid)
+            
+        // Delete from local store
+        } else {
+            
+            // Set load spinner
+            self.showLoading("Removing stored marker...")
+        }
+    }
+    
+    func requestMarkerDownload (_ public_id: String) {
+        let req = ApiRequest()
+        req.delegate = self
+        
+        self.downloading = true
+        
+        let marker_params: Dictionary<String, Any> = [
+            "public_id": public_id,
+            "photo_size": ["sm", "md", "full"]
+        ]
+        let params: Array<Dictionary<String, Any>> = [marker_params]
+        
+        req.getMarkerDataById(params)
     }
     
     // Store coords when shutter is tapped
@@ -421,6 +478,73 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         // Move back to map view
         _ = navigationController?.popToRootViewController(animated: true)
+    }
+    
+    // MARK: upload delegate method handlers
+    func reqDidStart() {
+        if pubBtn != nil {
+            pubBtn?.removeFromSuperview()
+        }
+    }
+    
+    // Show progress
+    func uploadDidProgress(_ progress: Float) {
+        let percentage = Int(progress * 100)
+        self.updateStatus("\(percentage)% complete")
+    }
+    
+    
+    func reqDidComplete(_ data: NSDictionary, method: ApiMethod, code: Int) {
+        
+        if (method == .getMarkerDataById) {
+            
+            // Convert returned to marker objects
+            guard let returned = data.value(forKey: "data") as? Array<Any> else {
+                print("Returned markers could not be converted to an array")
+                return
+            }
+            
+            guard returned.count > 0 else {
+                print("No public markers returned by getMarkerDataById")
+                return
+            }
+            
+            guard let data_dic: NSDictionary = returned[0] as? NSDictionary else {
+                print("could not cast to NSDictionary")
+                return
+            }
+            
+            // Build marker instance
+            guard var marker = Marker(fromPublicData: data_dic) else {
+                print("could not build marker instance from data")
+                return
+            }
+            
+            // Generate timestamp
+            marker.timestamp = Marker.generateTimestamp()
+            
+            // Save
+            marker.saveInCore()
+            
+            // Update for table data source
+            if let index = self.indexPath?.row, let parent = master {
+                parent.setSavedMarker(index, marker: marker)
+            } else {
+                print("could not update table data source: No index path or parent reference")
+            }
+            
+            self.downloading = false
+            
+            self.hideLoading()
+        }
+        
+    }
+    
+    // Show alert on failure
+    func reqDidFail(_ error: String, method: ApiMethod, code: Int) {
+        if method == .getMarkerDataById {
+            
+        }
     }
 
 }

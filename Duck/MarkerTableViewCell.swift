@@ -258,7 +258,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             toItem: self.contentView,
             attribute: .centerY,
             multiplier: 1.0,
-            constant: 0
+            constant: -20
         )
         let wdtC = NSLayoutConstraint(
             item: publicBadge!,
@@ -288,40 +288,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         publicBadge!.isUserInteractionEnabled = true
         publicBadge!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(alertPublicInfo)))
     }
-    
-    func setStorageState () {
-        
-        guard self.markerData?.public_id != nil && self.markerData?.approved == .approved else {
-            print("cannot show offline button")
-            return
-        }
-        
-        // Existence of timestamp indicates local storage
-        if self.markerData?.timestamp != nil {
-            self.appendOfflineSwitch(isOn: true)
-        } else {
-            self.appendOfflineSwitch(isOn: false)
-        }
-    }
-    
-    func appendOfflineSwitch (isOn: Bool) {
-        
-        if (self.offlineSwitch != nil) {
-            self.offlineSwitch?.removeFromSuperview()
-        }
-        
-        let offline_switch = UISwitch()
-        
-        offline_switch.isOn = isOn
-        
-        self.offlineSwitch = offline_switch
-        
-        self.contentView.addSubview(offline_switch)
-        
-        // Add constraints
-        
-        // Add handler
-    }
+
     
     func alertPublicInfo () {
         let alertController = UIAlertController(title: "Public",

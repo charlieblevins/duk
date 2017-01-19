@@ -172,9 +172,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         
         self.setCellPublishStatus(cell)
         
-        // Set storage stage
-        cell.setStorageState()
-        
         // Start or resume upload if necessary
         if let cell_timestamp = cell.markerData!.timestamp {
             
@@ -330,8 +327,9 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         }
     }
     
+    // Row Height
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 80
+        return 90
     }
 
 

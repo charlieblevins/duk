@@ -372,6 +372,16 @@ struct Marker {
         return "\(lat), \(lng)"
     }
     
+    func isPublic () -> Bool {
+        if self.public_id != nil && self.approved == .approved {
+            return true
+        }
+        
+        return false
+    }
+    
+    // MARK: Static Functions
+    
     // Format a single coordinate to 8 decimal places
     static func formatSingleCoord (_ coord: Double) -> String {
         return String(format: "%.8f", coord)
