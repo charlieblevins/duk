@@ -233,11 +233,31 @@ struct GLOBALS {
     static var firstSearch: Bool = true
 }
 
+import ObjectiveC
+
+//private var associationKey: UInt8 = 0
+private var loadingOverlay: UIAlertController?
+
 // Custom controller
 // loading overlay spinner show and hide
-class CustomUIViewController: UIViewController {
+extension UIViewController {
     
-    var loader: UIAlertController? = nil
+    private struct AssociatedKeys {
+        static var Loader = "duk_loader"
+    }
+    
+    var loader: UIAlertController? {
+        get {
+            return objc_getAssociatedObject(self, &AssociatedKeys.Loader) as? UIAlertController
+        }
+        set(newValue) {
+            guard let alert = newValue else {
+                objc_setAssociatedObject(self, &AssociatedKeys.Loader, nil, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                return
+            }
+            objc_setAssociatedObject(self, &AssociatedKeys.Loader, alert as UIAlertController, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+        }
+    }
     
     func showLoading (_ message: String?) {
         let message = (message != nil) ? message : "Loading..."

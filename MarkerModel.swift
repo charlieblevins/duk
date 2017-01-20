@@ -115,7 +115,7 @@ struct Marker {
         if let photo_data = data.value(forKey: "photos") as? Dictionary<String, String> {
             
             if let sm = photo_data["sm"] {
-                self.photo = Data(base64Encoded: sm)
+                self.photo_sm = Data(base64Encoded: sm)
             }
             
             if let md = photo_data["md"] {
@@ -123,7 +123,7 @@ struct Marker {
             }
             
             if let full = photo_data["full"] {
-                self.photo_sm = Data(base64Encoded: full)
+                self.photo = Data(base64Encoded: full)
             }
             
         } else {
@@ -183,7 +183,9 @@ struct Marker {
         marker_data.setValue(photo_md, forKey: "photo_md")
         
         // approved
-        marker_data.setValue(approved, forKey: "approved")
+        marker_data.setValue(approved?.rawValue, forKey: "approved")
+        
+        marker_data.setValue(public_id, forKey: "public_id")
         
         // 4. Save the marker object
         do {

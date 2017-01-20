@@ -12,7 +12,7 @@ import CoreData
 import CoreLocation
 import UIKit
 
-class AddMarkerController: CustomUIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, ZoomableImageDelegate, EditNounDelegate, CameraControlsOverlayDelegate, ApiRequestDelegate {
+class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, ZoomableImageDelegate, EditNounDelegate, CameraControlsOverlayDelegate, ApiRequestDelegate {
     
     @IBOutlet weak var LatContainer: UIView!
     @IBOutlet weak var LngContainer: UIView!
@@ -224,13 +224,15 @@ class AddMarkerController: CustomUIViewController, UINavigationControllerDelegat
     func insertExistingData (_ marker: Marker) {
         
         // Add photo
-        cameraPhoto.contentMode = .scaleAspectFit
-        cameraPhoto.image = UIImage(data: marker.photo! as Data)
-        imageChosen = true
-        
-        // Set delegate and allow zoom
-        cameraPhoto.delegate = self
-        cameraPhoto.allowZoom = true
+        if let photo = marker.photo {
+            cameraPhoto.contentMode = .scaleAspectFit
+            cameraPhoto.image = UIImage(data: photo as Data)
+            imageChosen = true
+            
+            // Set delegate and allow zoom
+            cameraPhoto.delegate = self
+            cameraPhoto.allowZoom = true
+        }
         
         // Hide "Add Photo" button
         addPhotoBtn.isHidden = true
@@ -268,6 +270,15 @@ class AddMarkerController: CustomUIViewController, UINavigationControllerDelegat
     }
     
     func downloadSwitchTapped (sender: UISwitch) {
+        
+        // Ask my markers view to refresh it's data
+        if let navController = self.navigationController, navController.viewControllers.count >= 2 {
+            let viewController = navController.viewControllers[navController.viewControllers.count - 2]
+            
+            if let marker_view = viewController as? MyMarkersController {
+                marker_view.shouldRefreshOnAppear = true
+            }
+        }
         
         // Download
         if (sender.isOn) {

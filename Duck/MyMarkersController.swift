@@ -20,6 +20,8 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
     
     var request: ApiRequest?
     var pending_publish: Dictionary<String, Any>?
+    var movingToMarkerDetail: Bool = false
+    var shouldRefreshOnAppear: Bool = false
     
     static var active_requests = [Double:ApiRequest]()
 
@@ -60,6 +62,20 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
     
     // Listen for updates on any pending publish requests
     override func viewWillAppear(_ animated: Bool) {
+        
+        if self.shouldRefreshOnAppear {
+            savedMarkers = [Marker]()
+            savedMarkers = self.loadMarkerData()
+            
+            // Sync with public if credentials exist
+            if let cred = Credentials() {
+                let request = ApiRequest()
+                request.delegate = self
+                request.getMarkersByUser(cred)
+            }
+            
+            self.shouldRefreshOnAppear = false
+        }
         
         // If a publish request is pending, reload data
         // which will trigger the request
@@ -310,20 +326,15 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
             publishView.delegate = self
         } else if segue.identifier == "EditMarker" {
             
-            let editView = segue.destination as! AddMarkerController
-            let indexPath = sender as! IndexPath
+            self.movingToMarkerDetail = false
             
-            guard let timestamp = savedMarkers[(indexPath as NSIndexPath).row].timestamp else {
-                print("Could not get timestamp for row: ", (indexPath as NSIndexPath).row)
+            let editView = segue.destination as! AddMarkerController
+            
+            guard let marker = sender as? Marker else {
+                print("could not convert sender to marker at perform segue")
                 return
             }
-            
-            // Get all data for this marker
-            if let marker = Marker.getLocalByTimestamp(timestamp) {
-                editView.editMarker = marker
-            } else {
-                print("Could not load marker with timestamp: ", timestamp)
-            }
+            editView.editMarker = marker
         }
     }
     
@@ -373,7 +384,38 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
     // On Row Select load
     // marker edit view
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        performSegue(withIdentifier: "EditMarker", sender: indexPath)
+        
+        // get marker
+        let cur_marker = savedMarkers[(indexPath as NSIndexPath).row]
+        
+        // If local, load data from core
+        if let timestamp = cur_marker.timestamp {
+            
+            // Get all data for this marker
+            guard let marker = Marker.getLocalByTimestamp(timestamp) else {
+                print("Could not load marker with timestamp: ", timestamp)
+                return
+            }
+            performSegue(withIdentifier: "EditMarker", sender: marker)
+            
+        // else load from server
+        } else {
+            
+            self.movingToMarkerDetail = true
+            
+            self.showLoading("Loading marker...")
+            
+            guard let pid = cur_marker.public_id else {
+                print("marker has no timestamp or public_id. Cannot load marker detail")
+                self.hideLoading(nil)
+                return
+            }
+            
+            // Get marker data
+            let request = ApiRequest()
+            request.delegate = self
+            request.getMarkerDataById([["public_id": pid, "photo_size": "full"]])
+        }
     }
     
     func popUnpublishAlert(rowAction: UITableViewRowAction, indexPath: IndexPath) {
@@ -658,6 +700,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
             }
             
         } else if (method == .getMarkerDataById) {
+            
             // Convert returned to marker objects
             guard let returned = data.value(forKey: "data") as? Array<Any> else {
                 print("Returned markers could not be converted to an array")
@@ -669,24 +712,47 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
                 return
             }
             
-            for marker_data in returned {
+            // Marker detail
+            if self.movingToMarkerDetail {
+                let marker_data = returned[0]
                 
                 guard let data_dic: NSDictionary = marker_data as? NSDictionary else {
                     print("could not cast to NSDictionary")
                     return
                 }
                 
-                if let marker = Marker(fromPublicData: data_dic) {
+                guard let marker = Marker(fromPublicData: data_dic) else {
+                    print("could not convert data to marker")
+                    return
+                }
+                
+                self.hideLoading({
+                    self.performSegue(withIdentifier: "EditMarker", sender: marker)
+                })
+                
+                
+            // Refreshing table
+            } else {
+            
+                for marker_data in returned {
                     
-                    if let ind = self.savedMarkers.index(where: { $0.public_id == data_dic["_id"] as? String}) {
-                        self.savedMarkers[ind] = marker
-                    } else {
-                        self.savedMarkers.append(marker)
+                    guard let data_dic: NSDictionary = marker_data as? NSDictionary else {
+                        print("could not cast to NSDictionary")
+                        return
+                    }
+                    
+                    if let marker = Marker(fromPublicData: data_dic) {
+                        
+                        if let ind = self.savedMarkers.index(where: { $0.public_id == data_dic["_id"] as? String}) {
+                            self.savedMarkers[ind] = marker
+                        } else {
+                            self.savedMarkers.append(marker)
+                        }
                     }
                 }
+                self.tableView.reloadData()
+                self.refreshControl?.endRefreshing()
             }
-            self.tableView.reloadData()
-            self.refreshControl?.endRefreshing()
         }
     }
     
@@ -715,6 +781,10 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         } else if method == .getMarkerDataById {
             print("getMarkerDataById request failed: \(error)")
             self.refreshControl?.endRefreshing()
+            
+            if self.loader != nil {
+                self.hideLoading(nil)
+            }
         }
     }
 
