@@ -27,6 +27,7 @@
 		EC7043891C60E0AE00EA0BE4 /* PublishConfirmController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */; };
 		EC7889E01D2882850084B9FF /* MarkerAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7889DF1D2882850084B9FF /* MarkerAggregator.swift */; };
 		EC85CDC91D1F5F2D001F707D /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC85CDC81D1F5F2D001F707D /* MenuViewController.swift */; };
+		EC9B21011E32431800A7FD84 /* MarkerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9B21001E32431800A7FD84 /* MarkerRequest.swift */; };
 		EC9EE2CD1CFB3E8D00DC9060 /* NounViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9EE2CC1CFB3E8D00DC9060 /* NounViewController.swift */; };
 		EC9EE2CF1CFBB8FA00DC9060 /* NounTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9EE2CE1CFBB8FA00DC9060 /* NounTableViewCell.swift */; };
 		ECA46ADE1D803B6600B2F04F /* SearchResultsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA46ADC1D803B6600B2F04F /* SearchResultsViewController.swift */; };
@@ -89,6 +90,7 @@
 		EC7889DF1D2882850084B9FF /* MarkerAggregator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerAggregator.swift; sourceTree = "<group>"; };
 		EC85CDC81D1F5F2D001F707D /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		EC8D91B91C7F2C2D00F78D25 /* MarkerModel2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MarkerModel2.xcdatamodel; sourceTree = "<group>"; };
+		EC9B21001E32431800A7FD84 /* MarkerRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerRequest.swift; sourceTree = "<group>"; };
 		EC9EE2CC1CFB3E8D00DC9060 /* NounViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NounViewController.swift; sourceTree = "<group>"; };
 		EC9EE2CE1CFBB8FA00DC9060 /* NounTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NounTableViewCell.swift; sourceTree = "<group>"; };
 		ECA46ADC1D803B6600B2F04F /* SearchResultsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchResultsViewController.swift; sourceTree = "<group>"; };
@@ -201,6 +203,7 @@
 				EC1AD7F21C6E0ECB0051F9BE /* CredentialModel.swift */,
 				EC7889DF1D2882850084B9FF /* MarkerAggregator.swift */,
 				EC4990F41D297E9400455741 /* DistanceTracker.swift */,
+				EC9B21001E32431800A7FD84 /* MarkerRequest.swift */,
 				ECFD74CC1C11BFC900124C9D /* Util.swift */,
 				ECC67C1B1DB41B9E00B4774C /* iconView.swift */,
 				EC6DDCDF1BAF31EE00458B42 /* Images.xcassets */,
@@ -418,6 +421,7 @@
 				EC9EE2CF1CFBB8FA00DC9060 /* NounTableViewCell.swift in Sources */,
 				ECD31B211D4424AB00494DCD /* SearchBox.swift in Sources */,
 				EC85CDC91D1F5F2D001F707D /* MenuViewController.swift in Sources */,
+				EC9B21011E32431800A7FD84 /* MarkerRequest.swift in Sources */,
 				EC2D4E371DBD671D000C6A74 /* CameraControlsOverlay.swift in Sources */,
 				ECA9BAAA1D20469A009BCBCD /* AccountViewController.swift in Sources */,
 				ECFD74CB1C11BA8500124C9D /* MyMarkersController.swift in Sources */,
