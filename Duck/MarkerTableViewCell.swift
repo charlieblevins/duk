@@ -562,18 +562,47 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     }
     
     func requestMarkerDownload(_ public_id: String) {
-        let req = ApiRequest()
-        req.delegate = self
+        let marker_request = MarkerRequest()
         
-        self.pendingUnpublish = true
+        let sizes: [MarkerRequest.PhotoSizes] = [.sm, .md, .full]
+        let marker_param = MarkerRequest.LoadByIdParamsSingle(public_id, sizes: sizes)
         
-        let marker_params: Dictionary<String, Any> = [
-            "public_id": public_id,
-            "photo_size": ["sm", "md", "full"]
-        ]
-        let params: Array<Dictionary<String, Any>> = [marker_params]
-        
-        req.getMarkerDataById(params)
+        marker_request.loadById([marker_param], completion: {markers in
+            
+            guard var marker = markers?[0] else {
+                print("no markers returned")
+                self.setLoading(loading: false, message: nil)
+                return
+            }
+            
+            // Generate timestamp
+            marker.timestamp = Marker.generateTimestamp()
+            
+            // Save
+            marker.saveInCore()
+            
+            // Update for table data source
+            if let index = self.indexPath?.row, let parent = self.master {
+                parent.setSavedMarker(index, marker: marker)
+            } else {
+                print("could not update table data source: No index path or parent reference")
+            }
+            
+        }, failure: {
+            self.setLoading(loading: false, message: nil)
+        })
+//        let req = ApiRequest()
+//        req.delegate = self
+//        
+//        self.pendingUnpublish = true
+//        
+//        let marker_params: Dictionary<String, Any> = [
+//            "public_id": public_id,
+//            "photo_size": ["sm", "md", "full"]
+//        ]
+//        let params: Array<Dictionary<String, Any>> = [marker_params]
+//        
+//        req.getMarkerDataById(params)
     }
     
     func requestUnpublish(_ public_id: String, credentials: Credentials) {

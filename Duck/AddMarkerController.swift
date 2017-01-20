@@ -320,18 +320,38 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     }
     
     func requestMarkerDownload (_ public_id: String) {
-        let req = ApiRequest()
-        req.delegate = self
+        let marker_request = MarkerRequest()
         
-        self.downloading = true
+        let sizes: [MarkerRequest.PhotoSizes] = [.sm, .md, .full]
+        let marker_param = MarkerRequest.LoadByIdParamsSingle(public_id, sizes: sizes)
         
-        let marker_params: Dictionary<String, Any> = [
-            "public_id": public_id,
-            "photo_size": ["sm", "md", "full"]
-        ]
-        let params: Array<Dictionary<String, Any>> = [marker_params]
-        
-        req.getMarkerDataById(params)
+        marker_request.loadById([marker_param], completion: {markers in
+            
+            guard var marker = markers?[0] else {
+                print("no markers returned")
+                self.hideLoading(nil)
+                return
+            }
+            
+            // Generate timestamp
+            marker.timestamp = Marker.generateTimestamp()
+            
+            // Save
+            marker.saveInCore()
+            
+            self.hideLoading(nil)
+        }, failure: {
+            self.hideLoading({
+                let alertController = UIAlertController(title: "Marker Download Failed",
+                                                        message: "Could not communicate with the server.",
+                                                        preferredStyle: .alert)
+                
+                let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+                alertController.addAction(okAction)
+                
+                self.present(alertController, animated: true, completion: nil)
+            })
+        })
     }
     
     // Store coords when shutter is tapped

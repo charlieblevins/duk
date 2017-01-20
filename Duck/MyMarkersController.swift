@@ -412,9 +412,28 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
             }
             
             // Get marker data
-            let request = ApiRequest()
-            request.delegate = self
-            request.getMarkerDataById([["public_id": pid, "photo_size": "full"]])
+//            let request = ApiRequest()
+//            request.delegate = self
+//            request.getMarkerDataById([["public_id": pid, "photo_size": "full"]])
+            
+            let marker_request = MarkerRequest()
+            let sizes: [MarkerRequest.PhotoSizes] = [.full]
+            let marker_param = MarkerRequest.LoadByIdParamsSingle(pid, sizes: sizes)
+            
+            marker_request.loadById([marker_param], completion: {markers in
+                
+                guard let marker = markers?[0] else {
+                    print("No markers returned")
+                    self.hideLoading(nil)
+                    return
+                }
+                
+                self.hideLoading({
+                    self.performSegue(withIdentifier: "EditMarker", sender: marker)
+                })
+            }, failure: {
+                self.hideLoading(nil)
+            })
         }
     }
     

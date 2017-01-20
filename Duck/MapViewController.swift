@@ -417,33 +417,78 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     // Tapped info window
-    func mapView(_ mapView: GMSMapView, didTapInfoWindowOf marker: GMSMarker) {
+    func mapView(_ mapView: GMSMapView, didTapInfoWindowOf mapMarker: GMSMarker) {
         print("info window tapped")
         
         // 1. Get marker data
         
-        let marker_d = marker as! DukGMSMarker
+        guard let map_marker = mapMarker as? DukGMSMarker else {
+            print("could not convert map marker to DukGMSMarker")
+            return
+        }
         
         // If marker is local, create marker from core data
-        if marker_d.dataLocation == .local {
+        if map_marker.dataLocation == .local {
             
-            let data = Util.fetchCoreData("Marker", predicate: NSPredicate(format: "timestamp = %lf", marker_d.timestamp!))
-            
-            let data_as_dictionary = Util.coreToDictionary(data?[0] as! NSManagedObject)
-            
-            if (data?.count)! > 0 {
-                performSegue(withIdentifier: "MapToMarkerDetail", sender: data_as_dictionary)
-            } else {
-                print("No markers found matching timestmap")
+            guard let timestamp = map_marker.timestamp else {
+                print("marker had no timestamp in didTapInfoWindow")
+                return
             }
+            
+            guard let data = Util.fetchCoreData("Marker", predicate: NSPredicate(format: "timestamp = %lf", timestamp)) else {
+                print("search for marker by timestamp failed")
+                return
+            }
+            
+            guard data.count > 0 else {
+                print("No markers found by timestamp: \(timestamp)")
+                return
+            }
+            
+            let marker = Marker(fromCoreData: data[0])
+            performSegue(withIdentifier: "MapToMarkerDetail", sender: marker)
             
         // marker is public
         } else {
             
             // Get marker data
-            let request = ApiRequest()
-            request.delegate = self
-            request.getMarkerDataById([["public_id": marker_d.public_id!, "photo_size": "full"]])
+//            let request = ApiRequest()
+//            request.delegate = self
+//            request.getMarkerDataById([["public_id": marker_d.public_id!, "photo_size": "full"]])
+            
+            guard let pid = map_marker.public_id else {
+                print("Error: marker has no public id")
+                return
+            }
+            
+            let marker_request = MarkerRequest()
+            
+            let sizes: [MarkerRequest.PhotoSizes] = [.sm, .md, .full]
+            let marker_param = MarkerRequest.LoadByIdParamsSingle(pid, sizes: sizes)
+            
+            marker_request.loadById([marker_param], completion: {markers in
+                
+                guard let marker = markers?[0] else {
+                    print("no markers returned")
+                    self.hideLoading(nil)
+                    return
+                }
+                
+                // Load marker detail
+                if self.loaderOverlay != nil {
+                    
+                    // Hide loader
+                    self.loaderOverlay?.dismiss(animated: false, completion: {
+                        self.performSegue(withIdentifier: "MapToMarkerDetail", sender: marker)
+                    })
+                    
+                } else {
+                    self.performSegue(withIdentifier: "MapToMarkerDetail", sender: marker)
+                }
+
+            }, failure: {
+                self.loaderOverlay?.dismiss(animated: false, completion: nil)
+            })
         }
     }
     
@@ -455,16 +500,11 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             // Get next view controller
             let detailView = segue.destination as! AddMarkerController
             
-            // Create marker instance from data and reference in next view
-            let data = sender as! NSDictionary
-            
-            // if _id exists this data is from the server
-            var marker: Marker?
-            if data["_id"] != nil {
-                marker = Marker(fromPublicData: data)
-            } else {
-                marker = Marker(fromCoreData: data)
+            guard let marker = sender as? Marker else {
+                print("Error: data could not be converted in segue")
+                return
             }
+            
             detailView.editMarker = marker
         }
     }

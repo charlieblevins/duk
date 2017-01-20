@@ -14,6 +14,7 @@ class MarkerRequest: ApiRequestDelegate {
     
     var apiRequest: ApiRequest
     var loadByIdCompletion: ((_ markers: [Marker]?) -> Void)? = nil
+    var loadByIdFail: (() -> Void)? = nil
     var failure: (() -> Void)? = nil
     
     init () {
@@ -45,7 +46,7 @@ class MarkerRequest: ApiRequestDelegate {
         }
     }
     
-    func loadById (_ markersRequested: Array<LoadByIdParamsSingle>, completion: (_ markers: [Marker]?) -> Void, failure: () -> Void) {
+    func loadById (_ markersRequested: Array<LoadByIdParamsSingle>, completion: @escaping (_ markers: [Marker]?) -> Void, failure: @escaping () -> Void) {
         
         // Convert types to more basic dictionary and array
         var params: Array<Dictionary<String, Any>> = []
@@ -62,6 +63,9 @@ class MarkerRequest: ApiRequestDelegate {
             ]
             params.append(marker_params)
         }
+        
+        self.loadByIdCompletion = completion
+        self.loadByIdFail = failure
         
         // Make request
         apiRequest.getMarkerDataById(params)
