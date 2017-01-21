@@ -27,7 +27,14 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     
     var pendingUnpublish: Bool = false
     
-    var indexPath: IndexPath? = nil
+    var indexPath: IndexPath? {
+        get {
+            guard let parent = self.master else {
+                return nil
+            }
+            return parent.tableView.indexPath(for: self)
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
@@ -552,7 +559,17 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             
             // If marker is not stored locally - first download it
             if self.markerData?.timestamp == nil {
-                self.requestMarkerDownload(pid)
+                self.requestMarkerDownload(pid, completion: { success in
+                    
+                    if success {
+                        self.requestUnpublish(pid, credentials: credentials)
+                        
+                    // Download failed
+                    } else {
+                        print("marker download failed. Cannot unpublish")
+                        self.setLoading(loading: false, message: nil)
+                    }
+                })
                 
             // Marker exists locally - proceed with unpublish
             } else {
@@ -561,7 +578,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         })
     }
     
-    func requestMarkerDownload(_ public_id: String) {
+    func requestMarkerDownload(_ public_id: String, completion: ((_ success: Bool) -> Void)?) {
         let marker_request = MarkerRequest()
         
         let sizes: [MarkerRequest.PhotoSizes] = [.sm, .md, .full]
@@ -571,15 +588,22 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             
             guard var marker = markers?[0] else {
                 print("no markers returned")
-                self.setLoading(loading: false, message: nil)
+                completion?(false)
                 return
             }
             
             // Generate timestamp
             marker.timestamp = Marker.generateTimestamp()
             
-            // Save
+            // No longer public
+            marker.approved = nil
+            marker.public_id = nil
+            
+            // Save in core
             marker.saveInCore()
+            
+            // Update own marker data
+            self.markerData = marker
             
             // Update for table data source
             if let index = self.indexPath?.row, let parent = self.master {
@@ -588,21 +612,11 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
                 print("could not update table data source: No index path or parent reference")
             }
             
+            completion?(true)
+            
         }, failure: {
-            self.setLoading(loading: false, message: nil)
+            completion?(false)
         })
-//        let req = ApiRequest()
-//        req.delegate = self
-//        
-//        self.pendingUnpublish = true
-//        
-//        let marker_params: Dictionary<String, Any> = [
-//            "public_id": public_id,
-//            "photo_size": ["sm", "md", "full"]
-//        ]
-//        let params: Array<Dictionary<String, Any>> = [marker_params]
-//        
-//        req.getMarkerDataById(params)
     }
     
     func requestUnpublish(_ public_id: String, credentials: Credentials) {
@@ -712,7 +726,15 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             print("upload complete")
             
             // Save new data to core data
-            let timestamp: Double = self.markerData!.timestamp!
+            guard var marker = self.markerData else {
+                print("error: cell has no marker data")
+                return
+            }
+            
+            guard let timestamp: Double = marker.timestamp else {
+                print("error: cannot publish marker without timestamp")
+                return
+            }
             
             guard let data_convert = data["data"] as? [String: Any] else {
                 print("unexpected data structure at reqDidComplete")
@@ -724,13 +746,19 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
                 return
             }
             
-            master!.updateMarkerEntity(timestamp, publicID: pubID)
+            guard let parent = self.master else {
+                print("error: no reference to parent view in table cell")
+                return
+            }
+            
+            // Updates core data and table data source
+            parent.updateMarkerEntity(timestamp, publicID: pubID, approved: .pending)
             
             // Request is no longer active
             MyMarkersController.active_requests.removeValue(forKey: timestamp)
             
             // Reload this cell
-            if let index = self.indexPath, let parent = master {
+            if let index = self.indexPath {
                 parent.tableView.reloadRows(at: [index], with: .automatic)
             }
         
@@ -738,7 +766,22 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         } else if (method == .deleteById) {
             print("unpublish/delete complete")
             
-            master!.updateMarkerEntity(self.markerData!.timestamp!, publicID: nil)
+            guard let parent = self.master else {
+                print("error: cell has no parent reference")
+                return
+            }
+            
+            guard let marker = self.markerData else {
+                print("error: cell has no marker reference")
+                return
+            }
+            
+            guard let timestamp = marker.timestamp else {
+                print("error: cell has no timestmap")
+                return
+            }
+            
+            parent.updateMarkerEntity(timestamp, publicID: nil, approved: nil)
             
             // Remove loading overlay
             self.setLoading(loading: false, message: nil)
