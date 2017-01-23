@@ -38,9 +38,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     var imageChosen: Bool = false
     var autocompleteView: UIView! = nil
 
-    var locationManager: CLLocationManager!
+    var locationManager: CLLocationManager?
     var coords: CLLocationCoordinate2D!
     var downloading: Bool = false
+    var origNouns: String? = nil
 
     // Marker data passed in from 
     // other view
@@ -75,6 +76,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             // Start receiving location data
             listenForCoords()
             
+            self.origNouns = nil
+            
         // Existing Marker
         } else {
             
@@ -84,10 +87,16 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             self.existingMarker = true
             
             insertExistingData(editMarker!)
+            
+            // Don't show initially (no changes to save yet)
+            self.SaveBtn.isHidden = true
+            
+            // Store nouns before editing
+            self.origNouns = self.editMarker?.tags
         }
         
         // If marker not editable, hide edit buttons
-        if editMarker!.editable == false {
+        if self.editMarker?.editable == false {
             preventEditing()
         }
     }
@@ -192,20 +201,35 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     // Method called by noun view
     func nounsDidUpdate (_ nouns: String?) {
 
-        if editMarker != nil {
-            
-            // Update marker data
-            editMarker!.tags = nouns
+        guard self.editMarker != nil else {
+            print("No editable marker. Cannot update")
+            return
         }
         
-        updateNouns(nouns)
+        guard let new_nouns = nouns else {
+            print("cannot update nouns with nil!!")
+            //TODO: pop alert here - empty nouns no allowed!!!
+            return
+        }
+        
+        // Update marker data
+        self.editMarker?.tags = new_nouns
+        
+        updateNouns(new_nouns)
+        
+        // If nouns have changed, show save button
+        if self.origNouns != new_nouns {
+            self.SaveBtn.isHidden = false
+        } else {
+            self.SaveBtn.isHidden = true
+        }
     }
     
     // Refresh UI display of Nouns
     // including icon
     func updateNouns(_ nouns: String?) {
         
-        if nouns == nil {
+        guard let new_nouns = nouns else {
             NounText.attributedText = NSMutableAttributedString(string: "Add Nouns Here", attributes: nil)
 
             self.iconView.setNoun(nil)
@@ -213,9 +237,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         }
         
         // Format nouns
-        NounText.attributedText = Marker.formatNouns(nouns!)
+        NounText.attributedText = Marker.formatNouns(new_nouns)
         
-        self.iconView.setNoun(Marker.getPrimaryNoun(nouns!))
+        self.iconView.setNoun(Marker.getPrimaryNoun(new_nouns))
     }
 
     
@@ -414,10 +438,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             locationManager = CLLocationManager()
             
             if CLLocationManager.locationServicesEnabled() {
-                locationManager.delegate = self
+                locationManager?.delegate = self
                 
                 // Highest possible level of accuracy. High power consumption
-                locationManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation
+                locationManager?.desiredAccuracy = kCLLocationAccuracyBestForNavigation
                 
             } else {
                 print("location services not enabled. Could not get location!")
@@ -425,7 +449,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             }
         }
         
-        locationManager.startUpdatingLocation()
+        locationManager?.startUpdatingLocation()
     }
     
     // Continuously listen for coordinates. Data is only used when photo is chosen
@@ -438,7 +462,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     func updateLocationData () {
         
-        guard locationManager != nil && locationManager.location != nil else {
+        guard locationManager != nil && locationManager?.location != nil else {
             print("cannot update location data. no location data present")
             return
         }
@@ -454,7 +478,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         lngLabel.text = Marker.formatSingleCoord(coords.longitude)
         
         // Get location accuracy in meters and convert to feet
-        let meterAccuracy = locationManager.location!.horizontalAccuracy
+        guard let meterAccuracy = locationManager?.location?.horizontalAccuracy else {
+            print("Error: Cannot retrieve location accuracy")
+            return
+        }
+        
         let ftAccuracy = meterAccuracy * 3.28084
         let ftAccRounded = Double(round(10 * ftAccuracy)/10)
         accLabel.text = "\(ftAccRounded) ft."
@@ -523,10 +551,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
                 return
             }
         }
-
         
         // Stop location data
-        locationManager.stopUpdatingLocation()
+        locationManager?.stopUpdatingLocation()
         
         // Add marker to map view
         let mvc = navigationController?.viewControllers.first as! MapViewController
