@@ -34,6 +34,24 @@ struct Marker {
     
     var approved: Approval?
     
+    
+    var coordinate: CLLocationCoordinate2D? {
+        get {
+        
+            guard let lat = self.latitude else {
+                print("Marker has no latitude. Cannot make coordinate")
+                return nil
+            }
+            
+            guard let lng = self.longitude else {
+                print("Marker has no longitude. Cannot make coordinate")
+                return nil
+            }
+            
+            return CLLocationCoordinate2DMake(lat, lng)
+        }
+    }
+    
     init() {
         self.latitude = nil
         self.longitude = nil
@@ -195,6 +213,11 @@ struct Marker {
             return false
         }
         
+        // Notify all views of marker create
+        let notificationName = Notification.Name("MarkerEditIdentifier")
+        let message = MarkerUpdateMessage(self, editType: .create)
+        NotificationCenter.default.post(name: notificationName, object: message)
+        
         return true
     }
     
@@ -242,6 +265,11 @@ struct Marker {
             print("marker save failed: \(error.localizedDescription)")
             return false
         }
+        
+        // Notify all views of marker update
+        let notificationName = Notification.Name("MarkerEditIdentifier")
+        let message = MarkerUpdateMessage(self, editType: .update)
+        NotificationCenter.default.post(name: notificationName, object: message)
         
         return true
     }
@@ -508,4 +536,20 @@ struct Marker {
     static func generateTimestamp () -> Double {
         return Date().timeIntervalSince1970
     }
+}
+
+
+// Define marker update message object
+struct MarkerUpdateMessage {
+    var marker: Marker
+    var editType: MarkerEditType
+    
+    init (_ marker: Marker, editType: MarkerEditType) {
+        self.marker = marker
+        self.editType = editType
+    }
+}
+
+enum MarkerEditType {
+    case create, update, delete
 }

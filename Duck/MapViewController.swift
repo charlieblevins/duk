@@ -86,6 +86,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             enableMapLocation()
         }
         
+        // Observe changes to marker data
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleMarkerUpdate), name: Notification.Name("MarkerEditIdentifier"), object: nil)
 
         // Observe changes to myLocation prop of mapView
         mapView!.addObserver(self, forKeyPath: "myLocation", options: .new, context: nil)
@@ -94,27 +96,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Hide nav bar for this view, but show for others
     override func viewWillAppear(_ animated: Bool) {
         self.navigationController?.isNavigationBarHidden = true
-        
-        // Remove deleted from map
-        if (deletedMarkers.count > 0) {
-            removeDeleted()
-        }
-        
-        // Add new markers to map
-        if (markerToAdd != nil) {
-            
-            // Add marker
-            self.addMarkerToMap(markerToAdd!)
-            
-            // Center on marker
-            if mapView != nil {
-                mapView!.animate(toLocation: CLLocationCoordinate2DMake(markerToAdd!.latitude!, markerToAdd!.longitude!))
-                self.mapIsAtRest = false
-            }
-            
-            // Clear the array
-            markerToAdd = nil
-        }
     }
     
     override func viewWillDisappear(_ animated: Bool) {
@@ -346,13 +327,16 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Add marker to map
     func addMarkerToMap (_ marker: Marker) {
         
-        let mapMarker = marker.getMapMarker()
+        guard let mapMarker = marker.getMapMarker() else {
+            print("Error: Cannot get map marker. Cannot add marker to map.")
+            return
+        }
         
         // Add marker to the map
-        mapMarker!.assignMap(mapView)
+        mapMarker.assignMap(mapView)
         
         // Store all map markers
-        curMapMarkers.append(mapMarker!)
+        curMapMarkers.append(mapMarker)
     }
     
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
@@ -860,24 +844,28 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         present(alertController, animated: true, completion: nil)
     }
-
-    func removeDeleted() {
+    
+    // Remove a marker from this view's map and data source array
+    func removeMarker (_ marker: Marker) {
         
-        // Loop through deleted items
-        for timestamp in deletedMarkers {
-            
-            // Get marker by timestamp
-            if let marker_ind = curMapMarkers.index(where: { $0.timestamp == timestamp }) {
-                
-                // Remove from map
-                curMapMarkers[marker_ind].map = nil
-                
-                curMapMarkers.remove(at: marker_ind)
-            }
+        var marker_ind: Int? = nil
+        
+        // Remove old marker
+        // Get marker by timestamp
+        if let timestamp = marker.timestamp {
+            marker_ind = curMapMarkers.index(where: { $0.timestamp == timestamp })
+        } else if let public_id = marker.public_id {
+            marker_ind = curMapMarkers.index(where: { $0.public_id == public_id })
         }
         
-        // Clear deleted markers
-        deletedMarkers = []
+        guard let final_ind = marker_ind else {
+            print("Could not find index of marker by public id or timestamp")
+            return
+        }
+        
+        // Remove from map
+        curMapMarkers[final_ind].map = nil
+        curMapMarkers.remove(at: final_ind)
     }
     
     // ApiRequestDelegate methods
@@ -1055,6 +1043,40 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             appendSearchResults("\(data.count) markers in view")
         }
         
+    }
+    
+    // Called when any marker is changed on any view
+    // Used to keep the map up to date with the latest marker data
+    func handleMarkerUpdate (notification: Notification) {
+        
+        guard let message = notification.object as? MarkerUpdateMessage else {
+            print("cannot convert message to MarkerUpdateMessage")
+            return
+        }
+        
+        // Always remove the marker first
+        if message.editType == .create || message.editType == .update || message.editType == .delete {
+           self.removeMarker(message.marker)
+        }
+        
+        // If edited or added - add the marker back to map
+        if message.editType == .create || message.editType == .update {
+
+            self.addMarkerToMap(message.marker)
+            
+            // Center on last created marker
+            if message.editType == .create {
+                
+                if let map_view = mapView {
+                    guard let coord = message.marker.coordinate else {
+                        print("Marker has no coordinate. Cannot animate")
+                        return
+                    }
+                    map_view.animate(toLocation: coord)
+                    self.mapIsAtRest = false
+                }
+            }
+        }
     }
 }
 

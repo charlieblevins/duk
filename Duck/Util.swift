@@ -214,6 +214,7 @@ class Util {
 }
 
 
+// Create RGB colors with numbers 1 - 256
 extension UIColor {
     
     convenience init(red: Int, green: Int, blue: Int) {

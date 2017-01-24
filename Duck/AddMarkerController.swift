@@ -12,6 +12,10 @@ import CoreData
 import CoreLocation
 import UIKit
 
+protocol AddMarkerViewDelegate {
+    func addMarkerView(didUpdateMarker marker: Marker)
+}
+
 class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, ZoomableImageDelegate, EditNounDelegate, CameraControlsOverlayDelegate, ApiRequestDelegate {
     
     @IBOutlet weak var LatContainer: UIView!
@@ -42,6 +46,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     var coords: CLLocationCoordinate2D!
     var downloading: Bool = false
     var origNouns: String? = nil
+    var delegate: AddMarkerViewDelegate?
 
     // Marker data passed in from 
     // other view
@@ -526,15 +531,27 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             return
         }
         
-        if self.existingMarker {
+
+    }
+    
+    // Save this marker in core data and update delegates
+    func saveMarkerLocal () {
+        
+        guard var marker = self.editMarker else {
+            print("Error: no editMarker to save.")
+            return
+        }
+        
+        // Only tag changes are allowed for existing markers
+        if existingMarker {
             
-            // Only tags are editable for now
-            if editMarker!.updateInCore("tags", value: editMarker!.tags!) {
+            guard let tags = marker.tags else {
+                print("Error: Marker has no tags - cannot update")
+                return
+            }
+            
+            if marker.updateInCore("tags", value: tags) {
                 print("core data update complete.")
-                
-                // clear old from map
-                let mvc = navigationController?.viewControllers.first as! MapViewController
-                mvc.deletedMarkers.append(self.editMarker!.timestamp!)
                 
             } else {
                 print("Core data update failed")
@@ -544,9 +561,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         } else {
             
             // Save marker in core data
-            if editMarker!.saveInCore() {
-                print("Saved.")
-            } else {
+            guard marker.saveInCore() else {
                 print("insert marker failed")
                 return
             }
@@ -554,10 +569,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         // Stop location data
         locationManager?.stopUpdatingLocation()
-        
-        // Add marker to map view
-        let mvc = navigationController?.viewControllers.first as! MapViewController
-        mvc.markerToAdd = editMarker
         
         // Move back to map view
         _ = navigationController?.popToRootViewController(animated: true)

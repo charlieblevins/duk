@@ -10,7 +10,7 @@ import UIKit
 import Foundation
 import CoreData
 
-class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiRequestDelegate {
+class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiRequestDelegate, AddMarkerViewDelegate {
     
     var savedMarkers: [Marker] = [Marker]()
     var deletedMarkers: [Double] = []
@@ -807,4 +807,13 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         }
     }
 
+    // Called by AddMarkerDelegate
+    func addMarkerView(didUpdateMarker: Marker) {
+        
+        // Find the marker's index path
+        
+        // Set this marker's tags to data source
+        
+        // Reload row
+    }
 }
