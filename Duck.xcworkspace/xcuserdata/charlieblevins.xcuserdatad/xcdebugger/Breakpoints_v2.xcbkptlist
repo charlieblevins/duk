@@ -41,13 +41,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Pods/Alamofire/Source/ResponseSerialization.swift"
-            timestampString = "497649210.783897"
+            filePath = "MarkerModel.swift"
+            timestampString = "507001872.197954"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "504"
-            endingLineNumber = "504"
-            landmarkName = "serializeResponseJSON(options:response:data:error:)"
+            startingLineNumber = "608"
+            endingLineNumber = "608"
+            landmarkName = "reqDidFail(_:method:code:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

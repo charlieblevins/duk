@@ -10,7 +10,7 @@ import UIKit
 import Foundation
 import CoreData
 
-class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiRequestDelegate, AddMarkerViewDelegate {
+class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiRequestDelegate {
     
     var savedMarkers: [Marker] = [Marker]()
     var deletedMarkers: [Double] = []
@@ -53,6 +53,9 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         
         // Set handler for pull to refresh
         self.refreshControl?.addTarget(self, action: #selector(handleRefresh), for: .valueChanged)
+        
+        // Observe changes to marker data
+        NotificationCenter.default.addObserver(self, selector: #selector(self.handleMarkerUpdate), name: Notification.Name("MarkerEditIdentifier"), object: nil)
     }
 
     override func didReceiveMemoryWarning() {
@@ -92,7 +95,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
     
     // Update marker in savedMarkers (table data source)
     func setSavedMarker(_ index: Int, marker: Marker) {
-        var savable = marker
+        let savable = marker
         
         // Remove large photos to save memory
         savable.photo = nil
@@ -112,7 +115,42 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
             request.delegate = self
             request.getMarkersByUser(credentials)
         })
-
+    }
+    
+    // Called when any marker is changed on any view
+    // Used to keep the map up to date with the latest marker data
+    func handleMarkerUpdate (notification: Notification) {
+        
+        guard let message = notification.object as? MarkerUpdateMessage else {
+            print("cannot convert message to MarkerUpdateMessage")
+            return
+        }
+        
+        var marker_ind: Int? = nil
+        if message.editType == .update {
+            
+            guard savedMarkers.count == 0 else {
+                print("No update required as no savedMarkers exist yet")
+                return
+            }
+            
+            if let timestamp = message.marker.timestamp {
+                marker_ind = savedMarkers.index(where: { $0.timestamp == timestamp })
+                
+            } else if let public_id = message.marker.public_id {
+                marker_ind = savedMarkers.index(where: { $0.public_id == public_id })
+            }
+            
+            guard let index = marker_ind else {
+                print("No matching marker found")
+                return
+            }
+            
+            savedMarkers[index].tags = message.marker.tags
+            
+            let path = IndexPath(item: index, section: 0)
+            self.tableView.reloadRows(at: [path], with: .automatic)
+        }
     }
     
     func loadMarkerData () -> [Marker] {
@@ -259,29 +297,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
             let accountView = self.storyboard!.instantiateViewController(withIdentifier: "AccountViewController") as! AccountViewController
             accountView.signInSuccessHandler = { credentials in
                 self.loadPublishConfirm(cell)
-            }
-            self.navigationController?.pushViewController(accountView, animated: true)
-        }
-    }
-    
-    // Get credentials or prompt user to sign in
-    func getCredentials(_ completionHandler: @escaping (_ credentials: Credentials) -> Void) {
-        
-        // Sign in credentials exist
-        if let cred = Credentials() {
-            
-            completionHandler(cred)
-            
-        // If not signed in, send to account page
-        } else {
-            print("no credentials found")
-            let accountView = self.storyboard!.instantiateViewController(withIdentifier: "AccountViewController") as! AccountViewController
-            accountView.signInSuccessHandler = { credentials in
-                
-                // Return to previous view
-                self.navigationController?.popViewControllerWithHandler {
-                    completionHandler(credentials)
-                }
             }
             self.navigationController?.pushViewController(accountView, animated: true)
         }
@@ -482,20 +497,13 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
             return
         }
         
-        guard let timestamp = cell.markerData?.timestamp else {
-            print("cannot delete: cannot retrieve timestamp from marker")
-            return
-        }
-        
-        // Pass deleted items to mapview for removal
-        let mvc = navigationController?.viewControllers.first as! MapViewController
-        mvc.deletedMarkers.append(timestamp)
-        
         // Delete from table view
         tableView.deleteRows(at: [indexPath], with: .automatic)
         
         // Delete from core data
-        Util.deleteCoreDataByTime("Marker", timestamp: timestamp)
+        if cell.markerData?.deleteFromCore() == false {
+            print("Marker delete from core data failed")
+        }
         
         tableView.endUpdates()
     }
@@ -805,15 +813,5 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
                 self.hideLoading(nil)
             }
         }
-    }
-
-    // Called by AddMarkerDelegate
-    func addMarkerView(didUpdateMarker: Marker) {
-        
-        // Find the marker's index path
-        
-        // Set this marker's tags to data source
-        
-        // Reload row
     }
 }

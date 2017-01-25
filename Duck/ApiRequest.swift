@@ -145,6 +145,26 @@ class ApiRequest {
  
     }
     
+    func editSingleMarker (_ credentials: Credentials, public_id: String, tags: String) {
+        
+        let params: Parameters = [
+            "public_id": public_id,
+            "tags": tags
+        ]
+        
+        // Add basic auth to request header
+        let loginData = "\(credentials.email):\(credentials.password)".data(using: String.Encoding.utf8)!
+        let base64LoginString = loginData.base64EncodedString(options: .lineLength64Characters)
+        
+        let headers = ["Authorization": "Basic \(base64LoginString)"]
+        
+        // Exec request
+        Alamofire.request("\(baseURL)/markers", method: .put, parameters: params, encoding: JSONEncoding.default, headers: headers)
+            .responseJSON { response in
+                self.handleResponse(response, method: .editMarker)
+        }
+    }
+    
     // Get a single marker's data from API
     // Optionally request base 64 photo data by size
     func getMarkerDataById (_ markers: Array<Dictionary<String, Any>>) {
@@ -383,5 +403,5 @@ class ApiRequest {
 
 // Classify api method types for easier response handling
 @objc enum ApiMethod: Int {
-    case markersWithinBounds, markersNearPoint, image, publishMarker, getMarkerDataById, deleteById, markersByUser
+    case markersWithinBounds, markersNearPoint, image, publishMarker, getMarkerDataById, deleteById, markersByUser, editMarker
 }

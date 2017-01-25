@@ -16,7 +16,7 @@ protocol AddMarkerViewDelegate {
     func addMarkerView(didUpdateMarker marker: Marker)
 }
 
-class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, ZoomableImageDelegate, EditNounDelegate, CameraControlsOverlayDelegate, ApiRequestDelegate {
+class AddMarkerController: UIViewController, UINavigationControllerDelegate, UIImagePickerControllerDelegate, CLLocationManagerDelegate, ZoomableImageDelegate, EditNounDelegate, CameraControlsOverlayDelegate {
     
     @IBOutlet weak var LatContainer: UIView!
     @IBOutlet weak var LngContainer: UIView!
@@ -325,15 +325,12 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         // Delete from local store
         } else {
             
-            guard let timestamp = self.editMarker?.timestamp else {
-                print("Error: no timestamp for marker. cannot delete")
-                return
-            }
-            
             // Set load spinner
             self.showLoading("Removing...")
             
-            Util.deleteCoreDataByTime("Marker", timestamp: timestamp)
+            if self.editMarker?.deleteFromCore() == false {
+                print("Delete from core data failed in add marker view")
+            }
             
             self.hideLoading({
                 let alertController = UIAlertController(title: "Marker removed",
@@ -356,7 +353,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         marker_request.loadById([marker_param], completion: {markers in
             
-            guard var marker = markers?[0] else {
+            guard let marker = markers?[0] else {
                 print("no markers returned")
                 self.hideLoading(nil)
                 return
@@ -531,47 +528,77 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             return
         }
         
-
-    }
-    
-    // Save this marker in core data and update delegates
-    func saveMarkerLocal () {
-        
-        guard var marker = self.editMarker else {
+        guard let marker = self.editMarker else {
             print("Error: no editMarker to save.")
             return
         }
         
+        guard marker.public_id != nil || marker.timestamp != nil else {
+            print("No timestamp or public_id. Unable to save")
+            return
+        }
+        
         // Only tag changes are allowed for existing markers
-        if existingMarker {
-            
-            guard let tags = marker.tags else {
-                print("Error: Marker has no tags - cannot update")
-                return
-            }
-            
-            if marker.updateInCore("tags", value: tags) {
-                print("core data update complete.")
-                
-            } else {
-                print("Core data update failed")
-                return
-            }
-            
-        } else {
+        if existingMarker == false {
             
             // Save marker in core data
             guard marker.saveInCore() else {
                 print("insert marker failed")
                 return
             }
+            previousView()
+            return
         }
+        
+        guard let tags = marker.tags else {
+            print("Error: Marker has no tags - cannot update")
+            return
+        }
+        
+        if marker.public_id == nil && marker.timestamp != nil {
+            if marker.updateInCore("tags", value: tags) {
+                self.previousView()
+            } else {
+                print("update marker in core failed in add marker controller")
+            }
+        }
+        
+        if marker.public_id != nil {
+            self.getCredentials({ credentials in
+                
+                self.showLoading("Updating public marker")
+                
+                marker.updateInPublic(credentials, tags: tags, completion: { success, message in
+                    
+                    if success {
+                        
+                        if (marker.timestamp != nil) {
+                            if marker.updateInCore("tags", value: tags) == false {
+                                print("update marker in core failed in add marker controller")
+                            }
+                        }
+                        
+                        self.hideLoading({
+                            self.previousView()
+                        })
+                    
+                    } else {
+                        self.hideLoading({
+                            self.popAlert("Update failed", text: "Unable to update public marker")
+                        })
+                    }
+                })
+            })
+        }
+    }
+        
+    func previousView () {
         
         // Stop location data
         locationManager?.stopUpdatingLocation()
         
         // Move back to map view
-        _ = navigationController?.popToRootViewController(animated: true)
+        _ = navigationController?.popViewController(animated: true)
     }
     
     // MARK: upload delegate method handlers
@@ -598,7 +625,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             }
             
             // Build marker instance
-            guard var marker = Marker(fromPublicData: data_dic) else {
+            guard let marker = Marker(fromPublicData: data_dic) else {
                 print("could not build marker instance from data")
                 return
             }

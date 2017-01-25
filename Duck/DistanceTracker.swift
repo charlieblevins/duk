@@ -122,7 +122,7 @@ class DistanceTracker: NSObject, CLLocationManagerDelegate {
                 let marker_coords = CLLocationCoordinate2D(latitude: lat, longitude: lng)
                 let distance = GMSGeometryDistance(point, marker_coords)
                 
-                var new_marker = Marker()
+                let new_marker = Marker()
                 new_marker.latitude = lat
                 new_marker.longitude = lng
                 new_marker.distance_from_me = distance

@@ -152,7 +152,7 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
             markers = Marker.allMarkersWithFields(["latitude", "longitude", "timestamp", "public_id", "tags"])
             markers = markers.map({ marker in
                 
-                var new_marker = marker
+                let new_marker = marker
                 
                 let coords = CLLocationCoordinate2D(latitude: marker.latitude!, longitude: marker.longitude!)
                 new_marker.distance_from_me = GMSGeometryDistance(point, coords)

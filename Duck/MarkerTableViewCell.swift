@@ -586,7 +586,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         
         marker_request.loadById([marker_param], completion: {markers in
             
-            guard var marker = markers?[0] else {
+            guard let marker = markers?[0] else {
                 print("no markers returned")
                 completion?(false)
                 return
@@ -652,7 +652,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     
     func getPhoto () {
         
-        guard var marker = self.markerData else {
+        guard let marker = self.markerData else {
             print("cannot load photo for cell without assigned marker")
             return
         }
@@ -726,7 +726,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             print("upload complete")
             
             // Save new data to core data
-            guard var marker = self.markerData else {
+            guard let marker = self.markerData else {
                 print("error: cell has no marker data")
                 return
             }
@@ -811,7 +811,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             }
             
             // Build marker instance
-            guard var marker = Marker(fromPublicData: data_dic) else {
+            guard let marker = Marker(fromPublicData: data_dic) else {
                 print("could not build marker instance from data")
                 return
             }

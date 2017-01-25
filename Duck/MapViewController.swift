@@ -39,18 +39,10 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     // Array of all markers in view
     var markersInView: [AnyObject] = []
     
-    // Array of timestamps for markers to delete from map
-    var deletedMarkers: [Double] = []
     var curMapMarkers: [DukGMSMarker] = []
     
     // Reference search box when present
     var searchBox: SearchBox? = nil
-    
-    
-    // Store a marker from the addMarker view to be 
-    // loaded when completing add marker task and viewing
-    // newly created marker
-    var markerToAdd: Marker?
     
     var mapIsAtRest: Bool = false
     var mapTilesFinishedRendering: Bool = false

@@ -278,5 +278,40 @@ extension UIViewController {
         self.loader?.dismiss(animated: false, completion: completion)
         self.loader = nil
     }
+    
+    // Get credentials or move load account view to allow sign in, then
+    // return to original view once sign in complete
+    func getCredentials(_ completionHandler: @escaping (_ credentials: Credentials) -> Void) {
+        
+        // Sign in credentials exist
+        if let cred = Credentials() {
+            
+            completionHandler(cred)
+            
+            // If not signed in, send to account page
+        } else {
+            print("no credentials found")
+            let accountView = self.storyboard!.instantiateViewController(withIdentifier: "AccountViewController") as! AccountViewController
+            accountView.signInSuccessHandler = { credentials in
+                
+                // Return to previous view
+                self.navigationController?.popViewControllerWithHandler {
+                    completionHandler(credentials)
+                }
+            }
+            self.navigationController?.pushViewController(accountView, animated: true)
+        }
+    }
+    
+    func popAlert (_ title: String, text: String) {
+        let alertController = UIAlertController(title: "Missing Data",
+                                                message: text,
+                                                preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+        alertController.addAction(okAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
 }
 

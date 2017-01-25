@@ -131,39 +131,6 @@ class Util {
         }
     }
     
-    // Delete objects with a certain time stamp from core data
-    class func deleteCoreDataByTime (_ entityName: String, timestamp: Double) {
-        // Clear markers for now - NOT FOR PRODUCTION!
-        let marker: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
-        
-        let appDelegate = UIApplication.shared.delegate as! AppDelegate
-        let managedContext = appDelegate.managedObjectContext
-        marker.entity = NSEntityDescription.entity(forEntityName: entityName, in: managedContext)
-        marker.includesPropertyValues = false
-        
-        // Query by timestamp
-        let predicate = NSPredicate(format: "timestamp = %lf", timestamp)
-        marker.predicate = predicate
-        
-        var markers: [AnyObject]
-        
-        do {
-            markers = try managedContext.fetch(marker)
-            
-            for marker in markers {
-                managedContext.delete(marker as! NSManagedObject)
-            }
-        } catch let error as NSError {
-            print("Fetch failed: \(error.localizedDescription)")
-        }
-        
-        do {
-            try managedContext.save()
-        } catch {
-            print("save failed")
-        }
-    }
-    
     // Thumbnail size?
     class func resizeImage(_ image: UIImage, scaledToFillSize size: CGSize) -> UIImage {
         

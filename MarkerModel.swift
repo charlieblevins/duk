@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 import GoogleMaps
 
-struct Marker {
+class Marker: ApiRequestDelegate {
     
     enum Approval: Int {
         case approved = 1
@@ -33,6 +33,8 @@ struct Marker {
     var distance_from_me: Double?
     
     var approved: Approval?
+    
+    private var editMarkerCompletion: ((_ success: Bool, _ message: String?)->Void)? = nil
     
     
     var coordinate: CLLocationCoordinate2D? {
@@ -173,7 +175,7 @@ struct Marker {
     
     // Save this marker's data in core data as 
     // a new entity (insert)
-    @discardableResult mutating func saveInCore() -> Bool {
+    @discardableResult func saveInCore() -> Bool {
         
         // 1. Get managed object context
         let appDelegate = UIApplication.shared.delegate as! AppDelegate
@@ -274,6 +276,64 @@ struct Marker {
         return true
     }
     
+    
+    // Delete objects with a certain time stamp from core data
+    func deleteFromCore () -> Bool {
+        
+        guard let timestamp = self.timestamp else {
+            print("Error: no timestamp. Cannot delete")
+            return false
+        }
+        
+        let marker: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
+        
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        marker.entity = NSEntityDescription.entity(forEntityName: "Marker", in: managedContext)
+        marker.includesPropertyValues = false
+        
+        // Query by timestamp
+        let predicate = NSPredicate(format: "timestamp = %lf", timestamp)
+        marker.predicate = predicate
+        
+        var markers: [AnyObject]
+        
+        do {
+            markers = try managedContext.fetch(marker)
+            
+            for marker in markers {
+                managedContext.delete(marker as! NSManagedObject)
+            }
+        } catch let error as NSError {
+            print("Fetch failed: \(error.localizedDescription)")
+            return false
+        }
+        
+        do {
+            try managedContext.save()
+        } catch {
+            print("save failed")
+            return false
+        }
+        return true
+    }
+    
+    func updateInPublic (_ credentials: Credentials, tags: String, completion: ((_ success: Bool, _ message: String?)->Void)?) {
+        guard let pubid = self.public_id else {
+            print("Cannot edit marker. No public id present")
+            if completion != nil {
+                completion?(false, "An error occurred. Please close the app and try again")
+            }
+            return
+        }
+        
+        let req = ApiRequest()
+        req.delegate = self
+        req.editSingleMarker(credentials, public_id: pubid, tags: tags)
+        
+        self.editMarkerCompletion = completion
+    }
+    
     func getMapMarker () -> DukGMSMarker? {
         return _getMapMarker(nil)
     }
@@ -322,7 +382,7 @@ struct Marker {
         return map_marker
     }
     
-    mutating func canEdit () -> Bool {
+    func canEdit () -> Bool {
         
         let cred = Credentials()
         
@@ -341,9 +401,9 @@ struct Marker {
             return false
         }
     }
-    
+
     // Update image data
-    mutating func updateImage (_ image: UIImage) {
+    func updateImage (_ image: UIImage) {
         
         // Save image as binary
         self.photo = UIImageJPEGRepresentation(image, 1)
@@ -354,7 +414,7 @@ struct Marker {
     }
     
     // Load photo for this marker
-    mutating func loadPropFromCore (prop: String, propLoaded: (Any?) -> Void) {
+    func loadPropFromCore (prop: String, propLoaded: (Any?) -> Void) {
         
         guard self.timestamp != nil else {
             print("can't lookup photo. Marker has no timestamp")
@@ -535,6 +595,18 @@ struct Marker {
     
     static func generateTimestamp () -> Double {
         return Date().timeIntervalSince1970
+    }
+    
+    func reqDidComplete(_ data: NSDictionary, method: ApiMethod, code: Int) {
+        if method == .editMarker {
+            self.editMarkerCompletion?(true, "Marker update succeeded")
+        }
+    }
+    
+    func reqDidFail(_ error: String, method: ApiMethod, code: Int) {
+        if method == .editMarker {
+            self.editMarkerCompletion?(false, error)
+        }
     }
 }
 
