@@ -21,7 +21,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
     var request: ApiRequest?
     var pending_publish: Dictionary<String, Any>?
     var movingToMarkerDetail: Bool = false
-    var shouldRefreshOnAppear: Bool = false
     
     static var active_requests = [Double:ApiRequest]()
 
@@ -65,20 +64,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
     
     // Listen for updates on any pending publish requests
     override func viewWillAppear(_ animated: Bool) {
-        
-        if self.shouldRefreshOnAppear {
-            savedMarkers = [Marker]()
-            savedMarkers = self.loadMarkerData()
-            
-            // Sync with public if credentials exist
-            if let cred = Credentials() {
-                let request = ApiRequest()
-                request.delegate = self
-                request.getMarkersByUser(cred)
-            }
-            
-            self.shouldRefreshOnAppear = false
-        }
         
         // If a publish request is pending, reload data
         // which will trigger the request
@@ -150,6 +135,16 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
             
             let path = IndexPath(item: index, section: 0)
             self.tableView.reloadRows(at: [path], with: .automatic)
+        
+        } else if message.editType == .delete {
+            
+            // If marker has public_id maintain cell but remove timestamp
+            if let public_id = message.marker.public_id {
+                
+                if let marker_ind = savedMarkers.index(where: { $0.public_id == public_id }) {
+                   savedMarkers[marker_ind].timestamp = nil
+                }
+            }
         }
     }
     
@@ -724,6 +719,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
                 self.loadNewPublicMarkers(new_markers)
             } else {
                 self.tableView.reloadData()
+                self.refreshControl?.endRefreshing()
                 self.hideLoading(nil)
             }
             

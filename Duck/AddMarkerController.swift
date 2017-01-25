@@ -303,15 +303,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     func downloadSwitchTapped (sender: UISwitch) {
         
-        // Ask my markers view to refresh it's data
-        if let navController = self.navigationController, navController.viewControllers.count >= 2 {
-            let viewController = navController.viewControllers[navController.viewControllers.count - 2]
-            
-            if let marker_view = viewController as? MyMarkersController {
-                marker_view.shouldRefreshOnAppear = true
-            }
-        }
-        
         // Download
         if (sender.isOn) {
             
