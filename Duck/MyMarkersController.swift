@@ -129,7 +129,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         var marker_ind: Int? = nil
         if message.editType == .update {
             
-            guard savedMarkers.count == 0 else {
+            if savedMarkers.count == 0 {
                 print("No update required as no savedMarkers exist yet")
                 return
             }
