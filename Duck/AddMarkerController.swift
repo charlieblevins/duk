@@ -104,6 +104,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         if self.editMarker?.editable == false {
             preventEditing()
         }
+        
+        // Show/hide download switch
+        if let marker = editMarker {
+            initDownloadSwitch(marker)
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -273,8 +278,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         // Update noun display and icon
         updateNouns(marker.tags!)
-        
-        self.initDownloadSwitch(marker)
     }
     
     func initDownloadSwitch (_ marker: Marker) {

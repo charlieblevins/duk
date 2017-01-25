@@ -215,10 +215,7 @@ class Marker: ApiRequestDelegate {
             return false
         }
         
-        // Notify all views of marker create
-        let notificationName = Notification.Name("MarkerEditIdentifier")
-        let message = MarkerUpdateMessage(self, editType: .create)
-        NotificationCenter.default.post(name: notificationName, object: message)
+        self.notifyUpdate(.create)
         
         return true
     }
@@ -267,11 +264,8 @@ class Marker: ApiRequestDelegate {
             print("marker save failed: \(error.localizedDescription)")
             return false
         }
-        
-        // Notify all views of marker update
-        let notificationName = Notification.Name("MarkerEditIdentifier")
-        let message = MarkerUpdateMessage(self, editType: .update)
-        NotificationCenter.default.post(name: notificationName, object: message)
+
+        self.notifyUpdate(.update)
         
         return true
     }
@@ -315,6 +309,9 @@ class Marker: ApiRequestDelegate {
             print("save failed")
             return false
         }
+        
+        self.notifyUpdate(.delete)
+        
         return true
     }
     
@@ -332,6 +329,14 @@ class Marker: ApiRequestDelegate {
         req.editSingleMarker(credentials, public_id: pubid, tags: tags)
         
         self.editMarkerCompletion = completion
+    }
+    
+    func notifyUpdate (_ editType: MarkerEditType) {
+        
+        // Notify all views of marker update
+        let notificationName = Notification.Name("MarkerEditIdentifier")
+        let message = MarkerUpdateMessage(self, editType: editType)
+        NotificationCenter.default.post(name: notificationName, object: message)
     }
     
     func getMapMarker () -> DukGMSMarker? {

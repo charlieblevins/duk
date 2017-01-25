@@ -724,6 +724,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
                 self.loadNewPublicMarkers(new_markers)
             } else {
                 self.tableView.reloadData()
+                self.hideLoading(nil)
             }
             
         } else if (method == .getMarkerDataById) {
@@ -779,6 +780,8 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
                 }
                 self.tableView.reloadData()
                 self.refreshControl?.endRefreshing()
+                
+                self.hideLoading(nil)
             }
         }
     }
