@@ -10,7 +10,7 @@ import Foundation
 import CoreData
 import GoogleMaps
 
-class Marker: ApiRequestDelegate {
+class Marker: NSObject, ApiRequestDelegate {
     
     enum Approval: Int {
         case approved = 1
@@ -28,11 +28,31 @@ class Marker: ApiRequestDelegate {
     var public_id: String?
     var user: String?
     
-    var editable: Bool
-    
     var distance_from_me: Double?
     
     var approved: Approval?
+    
+    var editable: Bool {
+        get {
+                
+            let cred = Credentials()
+            
+            // Access login data
+            if cred == nil {
+                
+                // No login data
+                return false
+                
+            }
+            
+            // Compare with this markers username
+            if cred!.email == self.user {
+                return true
+            } else {
+                return false
+            }
+        }
+    }
     
     private var editMarkerCompletion: ((_ success: Bool, _ message: String?)->Void)? = nil
     
@@ -54,7 +74,7 @@ class Marker: ApiRequestDelegate {
         }
     }
     
-    init() {
+    override init() {
         self.latitude = nil
         self.longitude = nil
         
@@ -65,7 +85,6 @@ class Marker: ApiRequestDelegate {
         self.photo_sm = nil
         self.tags = nil
         
-        self.editable = false
         self.distance_from_me = nil
     }
     
@@ -78,9 +97,6 @@ class Marker: ApiRequestDelegate {
         self.photo_md = data.value(forKey: "photo_md") as? Data
         self.photo_sm = data.value(forKey: "photo_sm") as? Data
         self.tags = data.value(forKey: "tags") as? String
-        
-        // If from core data, this marker is editable
-        self.editable = true
         
         // Store public id if available
         if let pid = data.value(forKey: "public_id") as? String {
@@ -97,9 +113,6 @@ class Marker: ApiRequestDelegate {
     
     // Initialize from public (server) data
     init?(fromPublicData data: NSDictionary) {
-        
-        self.editable = false
-
         
         let geometry = data.value(forKey: "geometry")
         if geometry == nil {
@@ -167,9 +180,7 @@ class Marker: ApiRequestDelegate {
         
         // Get username
         self.user = data.value(forKey: "username") as? String
-        
-        // Determine if this user can edit
-        self.editable = self.canEdit()
+
     }
 
     
@@ -221,7 +232,7 @@ class Marker: ApiRequestDelegate {
     }
     
     // Update existing marker in core
-    func updateInCore<valType>(_ key: String, value: valType) -> Bool {
+    func updateInCore(_ props: [String]) -> Bool {
         
         /// Update core data
         // Get managed object context
@@ -231,12 +242,12 @@ class Marker: ApiRequestDelegate {
         // Construct fetch request with predicate
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Marker")
         
-        guard self.timestamp != nil else {
+        guard let ts = self.timestamp else {
             print("cannot update marker with no timestamp")
             return false
         }
         
-        fetchRequest.predicate = NSPredicate(format: "timestamp = %lf", self.timestamp!)
+        fetchRequest.predicate = NSPredicate(format: "timestamp = %lf", ts)
         
         // Execute fetch
         do {
@@ -245,7 +256,15 @@ class Marker: ApiRequestDelegate {
             // Insert new public id
             if  fetchResults != nil && fetchResults!.count > 0 {
                 let managedObject = fetchResults![0]
-                managedObject.setValue(value, forKey: key)
+                
+                for prop in props {
+                    
+                    guard let val = self.value(forKeyPath: prop) else {
+                        print("Marker has no value for prop: \(prop)")
+                        break
+                    }
+                    managedObject.setValue(val, forKey: prop)
+                }
                 
             } else {
                 print("cannot update. marker does not exist")
@@ -315,9 +334,18 @@ class Marker: ApiRequestDelegate {
         return true
     }
     
-    func updateInPublic (_ credentials: Credentials, tags: String, completion: ((_ success: Bool, _ message: String?)->Void)?) {
-        guard let pubid = self.public_id else {
-            print("Cannot edit marker. No public id present")
+    // Updates marker both publicly and locally
+    // Dispatches a single notification
+    func updateGlobal (_ credentials: Credentials, props: [String], completion: ((_ success: Bool, _ message: String?)->Void)?) {
+       
+        guard props.count > 0 && props[0] == "tags" else {
+            print("Error: Cannot update marker. Invalid prop update requested. Only 'tags' allowed")
+            return
+        }
+        
+        guard let pubid = self.public_id, let _tags = self.tags else {
+            print("Error: Cannot update marker. Public id or tags missing")
+            
             if completion != nil {
                 completion?(false, "An error occurred. Please close the app and try again")
             }
@@ -326,7 +354,7 @@ class Marker: ApiRequestDelegate {
         
         let req = ApiRequest()
         req.delegate = self
-        req.editSingleMarker(credentials, public_id: pubid, tags: tags)
+        req.editSingleMarker(credentials, public_id: pubid, tags: _tags)
         
         self.editMarkerCompletion = completion
     }
@@ -385,26 +413,6 @@ class Marker: ApiRequestDelegate {
         map_marker.tags = self.tags
         
         return map_marker
-    }
-    
-    func canEdit () -> Bool {
-        
-        let cred = Credentials()
-        
-        // Access login data
-        if cred == nil {
-            
-            // No login data
-            return false
-            
-        }
-        
-        // Compare with this markers username
-        if cred!.email == self.user {
-            return true
-        } else {
-            return false
-        }
     }
 
     // Update image data
@@ -604,6 +612,41 @@ class Marker: ApiRequestDelegate {
     
     func reqDidComplete(_ data: NSDictionary, method: ApiMethod, code: Int) {
         if method == .editMarker {
+            
+            // Use returned tags and approved to ensure exact data match
+            // Tags/Nouns
+            guard let nouns_arr = data["new_tags"] as? Array<String> else {
+                print("Error: cannot complete update. Server did not return tags")
+                return
+            }
+            guard nouns_arr.count > 0 else {
+                print("Error: emtpy array returned from server. Tags/Nouns required")
+                return
+            }
+            
+            guard let rapproved = data["approved"] as? Int else {
+                print("Error: cannot complete update. Server did not return approved")
+                return
+            }
+            
+            guard let approval = Approval.init(rawValue: rapproved) else {
+                print("Error: cannot complete update. Server returned invalid approval integer")
+                return
+            }
+            
+            self.tags = nouns_arr.joined(separator: " ")
+            self.approved = approval
+            
+            if (self.timestamp != nil) {
+                if self.updateInCore(["tags", "approved"]) == false {
+                    print("update marker in core failed")
+                    self.editMarkerCompletion?(false, "An error occurred while saving marker locally.")
+                    return
+                }
+            }
+            
+            self.notifyUpdate(.update)
+            
             self.editMarkerCompletion?(true, "Marker update succeeded")
         }
     }

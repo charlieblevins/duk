@@ -74,7 +74,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
 
             // New empty marker
             editMarker = Marker()
-            editMarker!.editable = true
             
             // Receive gps coords
             // only if not editing already existing marker.
@@ -544,33 +543,25 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             return
         }
         
-        guard let tags = marker.tags else {
-            print("Error: Marker has no tags - cannot update")
-            return
-        }
-        
         if marker.public_id == nil && marker.timestamp != nil {
-            if marker.updateInCore("tags", value: tags) {
+            if marker.updateInCore(["tags"]) {
                 self.previousView()
             } else {
                 print("update marker in core failed in add marker controller")
             }
         }
         
+        // Public
         if marker.public_id != nil {
+            
+            // Prompt for login if necessary
             self.getCredentials({ credentials in
                 
                 self.showLoading("Updating public marker")
                 
-                marker.updateInPublic(credentials, tags: tags, completion: { success, message in
+                marker.updateGlobal(credentials, props: ["tags"], completion: { success, message in
                     
                     if success {
-                        
-                        if (marker.timestamp != nil) {
-                            if marker.updateInCore("tags", value: tags) == false {
-                                print("update marker in core failed in add marker controller")
-                            }
-                        }
                         
                         self.hideLoading({
                             self.previousView()
