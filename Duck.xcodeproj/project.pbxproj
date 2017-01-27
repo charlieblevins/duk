@@ -27,6 +27,7 @@
 		EC7043891C60E0AE00EA0BE4 /* PublishConfirmController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */; };
 		EC7889E01D2882850084B9FF /* MarkerAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7889DF1D2882850084B9FF /* MarkerAggregator.swift */; };
 		EC85CDC91D1F5F2D001F707D /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC85CDC81D1F5F2D001F707D /* MenuViewController.swift */; };
+		EC8F84D91E3AC95D0087FB41 /* MarkersWrapperController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC8F84D81E3AC95D0087FB41 /* MarkersWrapperController.swift */; };
 		EC9B21011E32431800A7FD84 /* MarkerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9B21001E32431800A7FD84 /* MarkerRequest.swift */; };
 		EC9EE2CD1CFB3E8D00DC9060 /* NounViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9EE2CC1CFB3E8D00DC9060 /* NounViewController.swift */; };
 		EC9EE2CF1CFBB8FA00DC9060 /* NounTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9EE2CE1CFBB8FA00DC9060 /* NounTableViewCell.swift */; };
@@ -90,6 +91,7 @@
 		EC7889DF1D2882850084B9FF /* MarkerAggregator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerAggregator.swift; sourceTree = "<group>"; };
 		EC85CDC81D1F5F2D001F707D /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		EC8D91B91C7F2C2D00F78D25 /* MarkerModel2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MarkerModel2.xcdatamodel; sourceTree = "<group>"; };
+		EC8F84D81E3AC95D0087FB41 /* MarkersWrapperController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkersWrapperController.swift; sourceTree = "<group>"; };
 		EC9B21001E32431800A7FD84 /* MarkerRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerRequest.swift; sourceTree = "<group>"; };
 		EC9EE2CC1CFB3E8D00DC9060 /* NounViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NounViewController.swift; sourceTree = "<group>"; };
 		EC9EE2CE1CFBB8FA00DC9060 /* NounTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NounTableViewCell.swift; sourceTree = "<group>"; };
@@ -178,6 +180,7 @@
 				EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */,
 				ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */,
 				EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */,
+				EC8F84D81E3AC95D0087FB41 /* MarkersWrapperController.swift */,
 				ECD31B1F1D4424AB00494DCD /* SearchBox.swift */,
 				ECD31B201D4424AB00494DCD /* SearchBox.xib */,
 				ECA46ADC1D803B6600B2F04F /* SearchResultsViewController.swift */,
@@ -432,6 +435,7 @@
 				EC1AD7F11C6E08530051F9BE /* MarkerModel.swift in Sources */,
 				EC4990F51D297E9400455741 /* DistanceTracker.swift in Sources */,
 				ECF0C8171DF4C6430006ADE7 /* MarkerGuidelinesViewController.swift in Sources */,
+				EC8F84D91E3AC95D0087FB41 /* MarkersWrapperController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

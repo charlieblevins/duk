@@ -29,9 +29,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         
         print("My Markers loaded")
         
-        // Temporary!! Removing public id's
-        //Util.updateCoreDataForEntity("Marker", fieldName: "public_id", newValue: nil)
-        
         // Get marker data
         savedMarkers = self.loadMarkerData()
         

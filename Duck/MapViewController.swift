@@ -501,7 +501,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     @IBAction func markersTapped(_ sender: DukBtn) {
-        self.goToView("MyMarkersController")
+        self.goToView("MarkersWrapperController")
         self.toggleMenu(!self.menuOpen)
     }
     

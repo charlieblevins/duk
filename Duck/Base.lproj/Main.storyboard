@@ -1162,7 +1162,7 @@
             <objects>
                 <navigationController storyboardIdentifier="MainNavigation" id="JpL-cz-e6M" customClass="MainNavigation" customModule="Duck" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="V3g-Kp-vZr"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="58t-KB-4nF">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="58t-KB-4nF">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1250,7 +1250,53 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5GH-6H-gc0" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="486" y="1799"/>
+            <point key="canvasLocation" x="-244" y="1613"/>
+        </scene>
+        <!--Markers Wrapper Controller-->
+        <scene sceneID="Wcw-Xs-eNe">
+            <objects>
+                <viewController storyboardIdentifier="MarkersWrapperController" id="iA9-EV-k24" customClass="MarkersWrapperController" customModule="Duck" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="vTv-V8-93k"/>
+                        <viewControllerLayoutGuide type="bottom" id="uFy-Kr-Rha"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8k2-BB-M0m">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="icj-i6-W9m" userLabel="Tabs">
+                                <rect key="frame" x="0.0" y="617" width="375" height="50"/>
+                                <subviews>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="jZ1-FJ-mmB" userLabel="views">
+                                        <rect key="frame" x="102" y="11" width="171" height="29"/>
+                                        <segments>
+                                            <segment title="My Markers"/>
+                                            <segment title="Favorites"/>
+                                        </segments>
+                                    </segmentedControl>
+                                </subviews>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="50" id="LMz-Wp-dAk"/>
+                                    <constraint firstItem="jZ1-FJ-mmB" firstAttribute="centerX" secondItem="icj-i6-W9m" secondAttribute="centerX" id="nNL-Oh-smw"/>
+                                    <constraint firstItem="jZ1-FJ-mmB" firstAttribute="centerY" secondItem="icj-i6-W9m" secondAttribute="centerY" id="qbR-33-s3a"/>
+                                </constraints>
+                            </view>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="uFy-Kr-Rha" firstAttribute="top" secondItem="icj-i6-W9m" secondAttribute="bottom" id="2aZ-zg-0fU"/>
+                            <constraint firstItem="icj-i6-W9m" firstAttribute="width" secondItem="8k2-BB-M0m" secondAttribute="width" id="Eox-Uy-oHu"/>
+                            <constraint firstItem="icj-i6-W9m" firstAttribute="leading" secondItem="8k2-BB-M0m" secondAttribute="leading" id="cR8-2m-Zac"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="tabsContainer" destination="icj-i6-W9m" id="XwI-mz-kBr"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="MyJ-Lq-4Jr" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="504.80000000000001" y="1798.6506746626687"/>
         </scene>
     </scenes>
     <resources>
