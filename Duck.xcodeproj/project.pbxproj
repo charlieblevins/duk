@@ -17,6 +17,7 @@
 		EC3255811C678BDC00A12A2E /* PopOverDate.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC3255801C678BDC00A12A2E /* PopOverDate.xib */; };
 		EC47ACB01CC3F24E003148DE /* MarkerTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC47ACAF1CC3F24E003148DE /* MarkerTableViewCell.swift */; };
 		EC4990F51D297E9400455741 /* DistanceTracker.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC4990F41D297E9400455741 /* DistanceTracker.swift */; };
+		EC6C92731E3B780B00D89176 /* FavoriteMarkersController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6C92721E3B780B00D89176 /* FavoriteMarkersController.swift */; };
 		EC6DDCD91BAF31EE00458B42 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */; };
 		EC6DDCDB1BAF31EE00458B42 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */; };
 		EC6DDCDE1BAF31EE00458B42 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCDC1BAF31EE00458B42 /* Main.storyboard */; };
@@ -26,7 +27,6 @@
 		EC6DDCF91BAF329F00458B42 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCF81BAF329F00458B42 /* Settings.bundle */; };
 		EC7043891C60E0AE00EA0BE4 /* PublishConfirmController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */; };
 		EC7889E01D2882850084B9FF /* MarkerAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7889DF1D2882850084B9FF /* MarkerAggregator.swift */; };
-		EC85CDC91D1F5F2D001F707D /* MenuViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC85CDC81D1F5F2D001F707D /* MenuViewController.swift */; };
 		EC8F84D91E3AC95D0087FB41 /* MarkersWrapperController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC8F84D81E3AC95D0087FB41 /* MarkersWrapperController.swift */; };
 		EC9B21011E32431800A7FD84 /* MarkerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9B21001E32431800A7FD84 /* MarkerRequest.swift */; };
 		EC9EE2CD1CFB3E8D00DC9060 /* NounViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9EE2CC1CFB3E8D00DC9060 /* NounViewController.swift */; };
@@ -75,6 +75,7 @@
 		EC47ACAF1CC3F24E003148DE /* MarkerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerTableViewCell.swift; sourceTree = "<group>"; };
 		EC4990F41D297E9400455741 /* DistanceTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DistanceTracker.swift; sourceTree = "<group>"; };
 		EC5958BE1E22C91500C2B8C7 /* MarkerModel 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 5.xcdatamodel"; sourceTree = "<group>"; };
+		EC6C92721E3B780B00D89176 /* FavoriteMarkersController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteMarkersController.swift; sourceTree = "<group>"; };
 		EC6DDCD31BAF31EE00458B42 /* Duck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Duck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC6DDCD71BAF31EE00458B42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -89,7 +90,6 @@
 		EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublishConfirmController.swift; sourceTree = "<group>"; };
 		EC7889DE1D2856740084B9FF /* MarkerModel 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 4.xcdatamodel"; sourceTree = "<group>"; };
 		EC7889DF1D2882850084B9FF /* MarkerAggregator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerAggregator.swift; sourceTree = "<group>"; };
-		EC85CDC81D1F5F2D001F707D /* MenuViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MenuViewController.swift; sourceTree = "<group>"; };
 		EC8D91B91C7F2C2D00F78D25 /* MarkerModel2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MarkerModel2.xcdatamodel; sourceTree = "<group>"; };
 		EC8F84D81E3AC95D0087FB41 /* MarkersWrapperController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkersWrapperController.swift; sourceTree = "<group>"; };
 		EC9B21001E32431800A7FD84 /* MarkerRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerRequest.swift; sourceTree = "<group>"; };
@@ -180,7 +180,6 @@
 				EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */,
 				ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */,
 				EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */,
-				EC8F84D81E3AC95D0087FB41 /* MarkersWrapperController.swift */,
 				ECD31B1F1D4424AB00494DCD /* SearchBox.swift */,
 				ECD31B201D4424AB00494DCD /* SearchBox.xib */,
 				ECA46ADC1D803B6600B2F04F /* SearchResultsViewController.swift */,
@@ -189,9 +188,10 @@
 				EC14494A1CD5330700496E07 /* InfoWindow.xib */,
 				EC2D4E361DBD671D000C6A74 /* CameraControlsOverlay.swift */,
 				EC2D4E341DBD6590000C6A74 /* CameraControlsOverlay.xib */,
-				EC85CDC81D1F5F2D001F707D /* MenuViewController.swift */,
 				ECA9BAA91D20469A009BCBCD /* AccountViewController.swift */,
+				EC8F84D81E3AC95D0087FB41 /* MarkersWrapperController.swift */,
 				ECFD74CA1C11BA8500124C9D /* MyMarkersController.swift */,
+				EC6C92721E3B780B00D89176 /* FavoriteMarkersController.swift */,
 				EC47ACAF1CC3F24E003148DE /* MarkerTableViewCell.swift */,
 				EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */,
 				ECD579231BBDFBAD0096FA1B /* MainNavigation.swift */,
@@ -415,6 +415,7 @@
 				ECD266FB1CC50DA0009E1574 /* UIZoomableImage.swift in Sources */,
 				EC7889E01D2882850084B9FF /* MarkerAggregator.swift in Sources */,
 				EC6DDCDB1BAF31EE00458B42 /* MapViewController.swift in Sources */,
+				EC6C92731E3B780B00D89176 /* FavoriteMarkersController.swift in Sources */,
 				ECCF43731C0A664100EEEEF1 /* MarkerModel.xcdatamodeld in Sources */,
 				EC47ACB01CC3F24E003148DE /* MarkerTableViewCell.swift in Sources */,
 				EC6DDCD91BAF31EE00458B42 /* AppDelegate.swift in Sources */,
@@ -423,7 +424,6 @@
 				EC1AD7F31C6E0ECB0051F9BE /* CredentialModel.swift in Sources */,
 				EC9EE2CF1CFBB8FA00DC9060 /* NounTableViewCell.swift in Sources */,
 				ECD31B211D4424AB00494DCD /* SearchBox.swift in Sources */,
-				EC85CDC91D1F5F2D001F707D /* MenuViewController.swift in Sources */,
 				EC9B21011E32431800A7FD84 /* MarkerRequest.swift in Sources */,
 				EC2D4E371DBD671D000C6A74 /* CameraControlsOverlay.swift in Sources */,
 				ECA9BAAA1D20469A009BCBCD /* AccountViewController.swift in Sources */,
