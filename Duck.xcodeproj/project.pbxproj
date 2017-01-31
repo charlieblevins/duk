@@ -12,6 +12,7 @@
 		EC14494D1CD5385400496E07 /* InfoWindowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC14494C1CD5385400496E07 /* InfoWindowView.swift */; };
 		EC1AD7F11C6E08530051F9BE /* MarkerModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1AD7F01C6E08530051F9BE /* MarkerModel.swift */; };
 		EC1AD7F31C6E0ECB0051F9BE /* CredentialModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC1AD7F21C6E0ECB0051F9BE /* CredentialModel.swift */; };
+		EC1D79381E3F70E500CFC1FF /* MarkerModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = EC1D79311E3F70E500CFC1FF /* MarkerModel.xcdatamodeld */; };
 		EC2D4E351DBD6590000C6A74 /* CameraControlsOverlay.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC2D4E341DBD6590000C6A74 /* CameraControlsOverlay.xib */; };
 		EC2D4E371DBD671D000C6A74 /* CameraControlsOverlay.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC2D4E361DBD671D000C6A74 /* CameraControlsOverlay.swift */; };
 		EC3255811C678BDC00A12A2E /* PopOverDate.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC3255801C678BDC00A12A2E /* PopOverDate.xib */; };
@@ -27,6 +28,7 @@
 		EC6DDCF91BAF329F00458B42 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCF81BAF329F00458B42 /* Settings.bundle */; };
 		EC7043891C60E0AE00EA0BE4 /* PublishConfirmController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */; };
 		EC7889E01D2882850084B9FF /* MarkerAggregator.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7889DF1D2882850084B9FF /* MarkerAggregator.swift */; };
+		EC7B234A1E3FFC4C0014A30C /* FavoritesModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7B23491E3FFC4C0014A30C /* FavoritesModel.swift */; };
 		EC8F84D91E3AC95D0087FB41 /* MarkersWrapperController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC8F84D81E3AC95D0087FB41 /* MarkersWrapperController.swift */; };
 		EC9B21011E32431800A7FD84 /* MarkerRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9B21001E32431800A7FD84 /* MarkerRequest.swift */; };
 		EC9EE2CD1CFB3E8D00DC9060 /* NounViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC9EE2CC1CFB3E8D00DC9060 /* NounViewController.swift */; };
@@ -36,7 +38,6 @@
 		ECA9BAAA1D20469A009BCBCD /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECA9BAA91D20469A009BCBCD /* AccountViewController.swift */; };
 		ECBB67721C5D5932002842E5 /* ApiRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECBB67711C5D5932002842E5 /* ApiRequest.swift */; };
 		ECC67C1C1DB41B9E00B4774C /* iconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECC67C1B1DB41B9E00B4774C /* iconView.swift */; };
-		ECCF43731C0A664100EEEEF1 /* MarkerModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */; };
 		ECD266F91CC50951009E1574 /* ImageZoomViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD266F81CC50951009E1574 /* ImageZoomViewController.swift */; };
 		ECD266FB1CC50DA0009E1574 /* UIZoomableImage.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD266FA1CC50DA0009E1574 /* UIZoomableImage.swift */; };
 		ECD31B211D4424AB00494DCD /* SearchBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = ECD31B1F1D4424AB00494DCD /* SearchBox.swift */; };
@@ -68,13 +69,18 @@
 		EC14494C1CD5385400496E07 /* InfoWindowView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoWindowView.swift; sourceTree = "<group>"; };
 		EC1AD7F01C6E08530051F9BE /* MarkerModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = MarkerModel.swift; path = ../MarkerModel.swift; sourceTree = "<group>"; };
 		EC1AD7F21C6E0ECB0051F9BE /* CredentialModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CredentialModel.swift; sourceTree = "<group>"; };
+		EC1D79321E3F70E500CFC1FF /* MarkerModel 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 3.xcdatamodel"; sourceTree = "<group>"; };
+		EC1D79331E3F70E500CFC1FF /* MarkerModel 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 4.xcdatamodel"; sourceTree = "<group>"; };
+		EC1D79341E3F70E500CFC1FF /* MarkerModel 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 5.xcdatamodel"; sourceTree = "<group>"; };
+		EC1D79351E3F70E500CFC1FF /* MarkerModel 6.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 6.xcdatamodel"; sourceTree = "<group>"; };
+		EC1D79361E3F70E500CFC1FF /* MarkerModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MarkerModel.xcdatamodel; sourceTree = "<group>"; };
+		EC1D79371E3F70E500CFC1FF /* MarkerModel2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MarkerModel2.xcdatamodel; sourceTree = "<group>"; };
+		EC1D79391E3F70FB00CFC1FF /* MarkerModel 7.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 7.xcdatamodel"; sourceTree = "<group>"; };
 		EC2D4E341DBD6590000C6A74 /* CameraControlsOverlay.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = CameraControlsOverlay.xib; sourceTree = "<group>"; };
 		EC2D4E361DBD671D000C6A74 /* CameraControlsOverlay.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraControlsOverlay.swift; sourceTree = "<group>"; };
 		EC3255801C678BDC00A12A2E /* PopOverDate.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = PopOverDate.xib; sourceTree = "<group>"; };
-		EC47ACAE1CC116C0003148DE /* MarkerModel 3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 3.xcdatamodel"; sourceTree = "<group>"; };
 		EC47ACAF1CC3F24E003148DE /* MarkerTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerTableViewCell.swift; sourceTree = "<group>"; };
 		EC4990F41D297E9400455741 /* DistanceTracker.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DistanceTracker.swift; sourceTree = "<group>"; };
-		EC5958BE1E22C91500C2B8C7 /* MarkerModel 5.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 5.xcdatamodel"; sourceTree = "<group>"; };
 		EC6C92721E3B780B00D89176 /* FavoriteMarkersController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoriteMarkersController.swift; sourceTree = "<group>"; };
 		EC6DDCD31BAF31EE00458B42 /* Duck.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Duck.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC6DDCD71BAF31EE00458B42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -88,9 +94,9 @@
 		EC6DDCEE1BAF31EE00458B42 /* DuckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuckTests.swift; sourceTree = "<group>"; };
 		EC6DDCF81BAF329F00458B42 /* Settings.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; name = Settings.bundle; path = ../../../../Downloads/Settings.bundle; sourceTree = "<group>"; };
 		EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PublishConfirmController.swift; sourceTree = "<group>"; };
-		EC7889DE1D2856740084B9FF /* MarkerModel 4.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 4.xcdatamodel"; sourceTree = "<group>"; };
 		EC7889DF1D2882850084B9FF /* MarkerAggregator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerAggregator.swift; sourceTree = "<group>"; };
-		EC8D91B91C7F2C2D00F78D25 /* MarkerModel2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MarkerModel2.xcdatamodel; sourceTree = "<group>"; };
+		EC7B23481E3FFB0B0014A30C /* MarkerModel 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 8.xcdatamodel"; sourceTree = "<group>"; };
+		EC7B23491E3FFC4C0014A30C /* FavoritesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesModel.swift; sourceTree = "<group>"; };
 		EC8F84D81E3AC95D0087FB41 /* MarkersWrapperController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkersWrapperController.swift; sourceTree = "<group>"; };
 		EC9B21001E32431800A7FD84 /* MarkerRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerRequest.swift; sourceTree = "<group>"; };
 		EC9EE2CC1CFB3E8D00DC9060 /* NounViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NounViewController.swift; sourceTree = "<group>"; };
@@ -100,7 +106,6 @@
 		ECA9BAA91D20469A009BCBCD /* AccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 		ECBB67711C5D5932002842E5 /* ApiRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApiRequest.swift; sourceTree = "<group>"; };
 		ECC67C1B1DB41B9E00B4774C /* iconView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = iconView.swift; sourceTree = "<group>"; };
-		ECCF43721C0A664100EEEEF1 /* MarkerModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = MarkerModel.xcdatamodel; sourceTree = "<group>"; };
 		ECD266F81CC50951009E1574 /* ImageZoomViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageZoomViewController.swift; sourceTree = "<group>"; };
 		ECD266FA1CC50DA0009E1574 /* UIZoomableImage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UIZoomableImage.swift; sourceTree = "<group>"; };
 		ECD31B1F1D4424AB00494DCD /* SearchBox.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchBox.swift; sourceTree = "<group>"; };
@@ -178,7 +183,7 @@
 				EC6DDCDC1BAF31EE00458B42 /* Main.storyboard */,
 				EC6DDCF81BAF329F00458B42 /* Settings.bundle */,
 				EC6DDCD81BAF31EE00458B42 /* AppDelegate.swift */,
-				ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */,
+				EC1D79311E3F70E500CFC1FF /* MarkerModel.xcdatamodeld */,
 				EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */,
 				ECD31B1F1D4424AB00494DCD /* SearchBox.swift */,
 				ECD31B201D4424AB00494DCD /* SearchBox.xib */,
@@ -203,6 +208,7 @@
 				ECD266F81CC50951009E1574 /* ImageZoomViewController.swift */,
 				ECBB67711C5D5932002842E5 /* ApiRequest.swift */,
 				EC1AD7F01C6E08530051F9BE /* MarkerModel.swift */,
+				EC7B23491E3FFC4C0014A30C /* FavoritesModel.swift */,
 				EC1AD7F21C6E0ECB0051F9BE /* CredentialModel.swift */,
 				EC7889DF1D2882850084B9FF /* MarkerAggregator.swift */,
 				EC4990F41D297E9400455741 /* DistanceTracker.swift */,
@@ -416,10 +422,11 @@
 				EC7889E01D2882850084B9FF /* MarkerAggregator.swift in Sources */,
 				EC6DDCDB1BAF31EE00458B42 /* MapViewController.swift in Sources */,
 				EC6C92731E3B780B00D89176 /* FavoriteMarkersController.swift in Sources */,
-				ECCF43731C0A664100EEEEF1 /* MarkerModel.xcdatamodeld in Sources */,
 				EC47ACB01CC3F24E003148DE /* MarkerTableViewCell.swift in Sources */,
 				EC6DDCD91BAF31EE00458B42 /* AppDelegate.swift in Sources */,
 				ECD579281BC01BC70096FA1B /* AddMarkerController.swift in Sources */,
+				EC1D79381E3F70E500CFC1FF /* MarkerModel.xcdatamodeld in Sources */,
+				EC7B234A1E3FFC4C0014A30C /* FavoritesModel.swift in Sources */,
 				ECD266F91CC50951009E1574 /* ImageZoomViewController.swift in Sources */,
 				EC1AD7F31C6E0ECB0051F9BE /* CredentialModel.swift in Sources */,
 				EC9EE2CF1CFBB8FA00DC9060 /* NounTableViewCell.swift in Sources */,
@@ -684,16 +691,19 @@
 /* End XCConfigurationList section */
 
 /* Begin XCVersionGroup section */
-		ECCF43711C0A664100EEEEF1 /* MarkerModel.xcdatamodeld */ = {
+		EC1D79311E3F70E500CFC1FF /* MarkerModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
-				EC5958BE1E22C91500C2B8C7 /* MarkerModel 5.xcdatamodel */,
-				EC7889DE1D2856740084B9FF /* MarkerModel 4.xcdatamodel */,
-				EC47ACAE1CC116C0003148DE /* MarkerModel 3.xcdatamodel */,
-				EC8D91B91C7F2C2D00F78D25 /* MarkerModel2.xcdatamodel */,
-				ECCF43721C0A664100EEEEF1 /* MarkerModel.xcdatamodel */,
+				EC7B23481E3FFB0B0014A30C /* MarkerModel 8.xcdatamodel */,
+				EC1D79391E3F70FB00CFC1FF /* MarkerModel 7.xcdatamodel */,
+				EC1D79321E3F70E500CFC1FF /* MarkerModel 3.xcdatamodel */,
+				EC1D79331E3F70E500CFC1FF /* MarkerModel 4.xcdatamodel */,
+				EC1D79341E3F70E500CFC1FF /* MarkerModel 5.xcdatamodel */,
+				EC1D79351E3F70E500CFC1FF /* MarkerModel 6.xcdatamodel */,
+				EC1D79361E3F70E500CFC1FF /* MarkerModel.xcdatamodel */,
+				EC1D79371E3F70E500CFC1FF /* MarkerModel2.xcdatamodel */,
 			);
-			currentVersion = EC5958BE1E22C91500C2B8C7 /* MarkerModel 5.xcdatamodel */;
+			currentVersion = EC7B23481E3FFB0B0014A30C /* MarkerModel 8.xcdatamodel */;
 			path = MarkerModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

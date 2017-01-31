@@ -746,13 +746,18 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
                 return
             }
             
+            guard let user_id = Credentials.sharedInstance?.id else {
+                print("Error: no user id available. Cannot update published marker")
+                return
+            }
+            
             guard let parent = self.master else {
                 print("error: no reference to parent view in table cell")
                 return
             }
             
             // Updates core data and table data source
-            parent.updateMarkerEntity(timestamp, publicID: pubID, approved: .pending)
+            parent.updateMarkerEntity(timestamp, publicID: pubID, approved: .pending, user_id: user_id)
             
             // Request is no longer active
             MyMarkersController.active_requests.removeValue(forKey: timestamp)
@@ -781,7 +786,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
                 return
             }
             
-            parent.updateMarkerEntity(timestamp, publicID: nil, approved: nil)
+            parent.updateMarkerEntity(timestamp, publicID: nil, approved: nil, user_id: nil)
             
             // Remove loading overlay
             self.setLoading(loading: false, message: nil)
@@ -818,6 +823,12 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             
             // Generate timestamp
             marker.timestamp = Marker.generateTimestamp()
+            
+            guard let user_id = Credentials.sharedInstance?.id else {
+                print("Error: no user id available. Cannot save downloaded marker")
+                return
+            }
+            marker.user_id = user_id
             
             // Save
             marker.saveInCore()

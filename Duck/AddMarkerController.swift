@@ -37,6 +37,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBOutlet weak var iconView: MarkerIconView!
     @IBOutlet weak var DownloadSwitch: UISwitch!
     @IBOutlet weak var DownloadLabel: UILabel!
+    @IBOutlet weak var favoriteSwitch: UISwitch!
+    @IBOutlet weak var favoriteLabel: UILabel!
     
     var imagePicker: UIImagePickerController!
     var imageChosen: Bool = false
@@ -99,14 +101,20 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             self.origNouns = self.editMarker?.tags
         }
         
-        // If marker not editable, hide edit buttons
-        if self.editMarker?.editable == false {
-            preventEditing()
-        }
-        
         // Show/hide download switch
         if let marker = editMarker {
             initDownloadSwitch(marker)
+            initFavoriteSwitch(marker)
+            
+            // If marker not editable, hide edit buttons
+            if self.editMarker?.isOwned == false {
+                preventEditing()
+            }
+        
+        // no marker
+        } else {
+            print("Error: cannot load add marker view. No editMarker object")
+            return
         }
     }
     
@@ -298,6 +306,20 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
 
         DownloadSwitch.addTarget(self, action: #selector(self.downloadSwitchTapped), for: .touchUpInside)
+    }
+    
+    func initFavoriteSwitch (_ marker: Marker) {
+        
+        // Hide favorite option if owned by current user
+        if marker.isOwned == true {
+            print("not showing favorite option. marker is owned by this user")
+            favoriteSwitch.isHidden = true
+            favoriteLabel.isHidden = true
+            return
+        }
+        
+        // Set current value
+        favoriteSwitch.isOn = marker.isFavorite
     }
     
     func downloadSwitchTapped (sender: UISwitch) {

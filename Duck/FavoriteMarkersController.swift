@@ -7,19 +7,20 @@
 //
 
 import UIKit
+import CoreData
 
 class FavoriteMarkersController: UITableViewController {
+    
+    var favorites: [Marker] = []
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        favorites = self.loadFavorites()
 
-        // Uncomment the following line to preserve selection between presentations
-        // self.clearsSelectionOnViewWillAppear = false
-
-        // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-        // self.navigationItem.rightBarButtonItem = self.editButtonItem()
+        self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
-
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -35,6 +36,51 @@ class FavoriteMarkersController: UITableViewController {
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return 0
+    }
+    
+    func loadFavorites () -> [Marker] {
+        
+        let ids = Favorite.getAll()
+        
+        if ids.count == 0 {
+            return favorites
+        }
+        
+        // Context
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        
+        // Fetch request
+        let fetchReq: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
+        fetchReq.entity = NSEntityDescription.entity(forEntityName: "Marker", in: managedContext)
+        fetchReq.predicate = NSPredicate(format: "public_id IN %@", ids)
+        
+        fetchReq.resultType = .dictionaryResultType
+        //fetchReq.propertiesToFetch = ["timestamp", "public_id", "tags", "photo_sm"]
+        fetchReq.propertiesToFetch = ["timestamp", "public_id", "tags", "approved"]
+        
+        do {
+            let markers = try managedContext.fetch(fetchReq)
+            
+            // clear old
+            favorites = []
+            
+            for marker in markers {
+                
+                let new_marker = Marker(fromCoreData: marker as AnyObject)
+                
+                favorites.append(new_marker)
+            }
+            
+        } catch let error as NSError {
+            print("Fetch failed: \(error.localizedDescription)")
+        }
+        
+        // Make array of non-local markers
+        
+        // Get non-local markers from server
+        
+        return favorites
     }
 
     /*

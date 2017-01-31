@@ -536,12 +536,13 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
     }
     
     
-    func updateMarkerEntity (_ localTimestamp: Double, publicID: String?, approved: Marker.Approval?) {
+    func updateMarkerEntity (_ localTimestamp: Double, publicID: String?, approved: Marker.Approval?, user_id: String?) {
         
         // Update savedMarkers
         if let ind = savedMarkers.index(where: { $0.timestamp == localTimestamp }) {
             savedMarkers[ind].public_id = publicID
             savedMarkers[ind].approved = approved
+            savedMarkers[ind].user_id = user_id
         } else {
             print("could not update savedMarker: no marker with timestamp \(localTimestamp) found")
         }
@@ -564,6 +565,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
                 let managedObject = fetchResults![0]
                 managedObject.setValue(publicID, forKey: "public_id")
                 managedObject.setValue(approved?.rawValue, forKey: "approved")
+                managedObject.setValue(user_id, forKey: "user_id")
             }
             
         } catch let error as NSError {

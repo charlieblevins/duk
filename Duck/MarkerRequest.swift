@@ -74,7 +74,6 @@ class MarkerRequest: ApiRequestDelegate {
     /**
      * ApiRequestDelegate required methods
      */
-    func reqDidStart() {}
     
     // Format dat and execute callback
     func reqDidComplete(_ data: NSDictionary, method: ApiMethod, code: Int) {

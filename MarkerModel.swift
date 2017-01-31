@@ -26,31 +26,39 @@ class Marker: NSObject, ApiRequestDelegate {
     var tags: String?
     
     var public_id: String?
-    var user: String?
+    var user_id: String?
     
     var distance_from_me: Double?
     
     var approved: Approval?
     
-    var editable: Bool {
+    var isOwned: Bool {
         get {
-                
-            let cred = Credentials()
             
-            // Access login data
-            if cred == nil {
+            // If no public id, marker must have been created
+            // on this device, thus it is owned.
+            guard self.public_id != nil else {
+                return true
+            }
+                
+            guard let cred = Credentials() else {
                 
                 // No login data
                 return false
-                
             }
             
             // Compare with this markers username
-            if cred!.email == self.user {
+            if cred.id == self.user_id {
                 return true
             } else {
                 return false
             }
+        }
+    }
+    
+    var isFavorite: Bool {
+        get {
+            return false
         }
     }
     
@@ -106,6 +114,8 @@ class Marker: NSObject, ApiRequestDelegate {
             if let appr = data.value(forKey: "approved") as? Int {
                 self.approved = Approval(rawValue: appr)
             }
+            
+            self.user_id = data.value(forKey: "user_id") as? String
         }
         
         self.distance_from_me = nil
@@ -179,8 +189,7 @@ class Marker: NSObject, ApiRequestDelegate {
         }
         
         // Get username
-        self.user = data.value(forKey: "username") as? String
-
+        self.user_id = data.value(forKey: "user_id") as? String
     }
 
     
@@ -217,6 +226,8 @@ class Marker: NSObject, ApiRequestDelegate {
         marker_data.setValue(approved?.rawValue, forKey: "approved")
         
         marker_data.setValue(public_id, forKey: "public_id")
+        
+        marker_data.setValue(user_id, forKey: "user_id")
         
         // 4. Save the marker object
         do {

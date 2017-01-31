@@ -34,7 +34,7 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
     
     var distanceDataCallback: (()->Void)? = nil
     
-    var aggregateStore: [Marker]? = []
+    var aggregateStore: [Marker] = []
     
     var delegate: MarkerAggregatorDelegate? = nil
     
@@ -63,7 +63,10 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
             
             // Add found_markers to aggregate in main thread
             DispatchQueue.main.async {
-                self.aggregateStore! = self.aggregateStore! + found_markers!
+                
+                if let new = found_markers {
+                    self.aggregateStore = self.aggregateStore + new
+                }
                 self.coreLoading = false
                 
                 if self.coreAndServerComplete() {
@@ -95,8 +98,10 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
             
             // Add found_markers to aggregate in main thread
             DispatchQueue.main.async {
-                self.aggregateStore! = self.aggregateStore! + found_markers!
                 
+                if let new = found_markers {
+                    self.aggregateStore = self.aggregateStore + new
+                }
                 
                 if self.coreAndServerComplete() {
                     self.aggregate(.markersWithinBounds)
@@ -123,8 +128,13 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         // Find and return markers within provided bounds
         for marker in markers_from_core {
             
+            guard let lat = marker.latitude, let lng = marker.longitude else {
+                print("Cannot access coordinates")
+                break
+            }
+            
             // Get marker coords
-            let coords = CLLocationCoordinate2D(latitude: marker.latitude!, longitude: marker.longitude!)
+            let coords = CLLocationCoordinate2D(latitude: lat, longitude: lng)
             
             if bounds.contains(coords) {
                 found_markers.append(marker)
@@ -154,7 +164,12 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
                 
                 let new_marker = marker
                 
-                let coords = CLLocationCoordinate2D(latitude: marker.latitude!, longitude: marker.longitude!)
+                guard let lat = marker.latitude, let lng = marker.longitude else {
+                    print("Cannot access coordinates")
+                    return marker
+                }
+                
+                let coords = CLLocationCoordinate2D(latitude: lat, longitude: lng)
                 new_marker.distance_from_me = GMSGeometryDistance(point, coords)
                 
                 return new_marker
@@ -209,14 +224,14 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         // Given 30 from server and 15 local, get 30 closest
         case .markersWithinBounds:
             DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
-                self.aggregateStore = self.removeDuplicates(self.aggregateStore!)
+                self.aggregateStore = self.removeDuplicates(self.aggregateStore)
                 
                 // Load complete - notify delegate
                 DispatchQueue.main.async {
                     
                     // If a delegate is assigned and this request has not been cancelled
                     if self.delegate != nil && self.cancelled == false {
-                        self.delegate!.markerAggregator(loadDidComplete: self.aggregateStore!, method: .markersWithinBounds, noun: self.noun)
+                        self.delegate!.markerAggregator(loadDidComplete: self.aggregateStore, method: .markersWithinBounds, noun: self.noun)
                     }
                 }
             }
@@ -230,9 +245,9 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
             DispatchQueue.global(qos: DispatchQoS.QoSClass.userInitiated).async {
                 
                 // Prune and filter markers (if any were found)
-                if (self.aggregateStore!.count > 0) {
-                    self.aggregateStore = self.removeDuplicates(self.aggregateStore!)
-                    self.aggregateStore = self.filterClosest(markers: self.aggregateStore!, limit: 30)
+                if (self.aggregateStore.count > 0) {
+                    self.aggregateStore = self.removeDuplicates(self.aggregateStore)
+                    self.aggregateStore = self.filterClosest(markers: self.aggregateStore, limit: 30)
                 }
                 
                 // Load complete - notify delegate
@@ -240,7 +255,7 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
                     
                     // If a delegate is assigned and this request has not been cancelled
                     if self.delegate != nil && self.cancelled == false {
-                        self.delegate!.markerAggregator(loadDidComplete: self.aggregateStore!, method: .markersNearPoint, noun: self.noun)
+                        self.delegate!.markerAggregator(loadDidComplete: self.aggregateStore, method: .markersNearPoint, noun: self.noun)
                     }
                 }
             }
@@ -315,7 +330,7 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         }
         
         self.serverLoading = false
-        self.aggregateStore! = self.aggregateStore! + server_markers
+        self.aggregateStore = self.aggregateStore + server_markers
         
         if self.coreAndServerComplete() {
             self.aggregate(.markersNearPoint)
@@ -335,7 +350,7 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         }
         
         self.serverLoading = false
-        self.aggregateStore! = self.aggregateStore! + server_markers
+        self.aggregateStore = self.aggregateStore + server_markers
         
         if self.coreAndServerComplete() {
             self.aggregate(.markersNearPoint)

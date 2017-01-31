@@ -13,26 +13,24 @@ import UIKit
 class Credentials {
     let email: String
     let password: String
+    let id: String
     
     static var sharedInstance: Credentials? = nil
     
-    init (email: String, password: String) {
+    init (email: String, password: String, id: String) {
         self.email = email
         self.password = password
-    }
-    
-    init(fromCoreData data: AnyObject) {
-        self.email = data.value(forKey: "email") as! String
-        self.password = data.value(forKey: "password") as! String
+        self.id = id
     }
     
     // Load from core data
     init?() {
         
         // Cached
-        if Credentials.sharedInstance != nil {
-            self.email = Credentials.sharedInstance!.email
-            self.password = Credentials.sharedInstance!.password
+        if let cached = Credentials.sharedInstance {
+            self.email = cached.email
+            self.password = cached.password
+            self.id = cached.id
             return
         }
         
@@ -40,8 +38,21 @@ class Credentials {
         let data = Util.fetchCoreData("Login", predicate: nil)
         
         if (data?.count)! > 0 {
-            self.email = data?[0].value(forKey: "email") as! String
-            self.password = data?[0].value(forKey: "password") as! String
+            
+            guard let email = data?[0].value(forKey: "email") as? String else {
+                return nil
+            }
+            self.email = email
+            
+            guard let password = data?[0].value(forKey: "password") as? String else {
+                return nil
+            }
+            self.password = password
+            
+            guard let id = data?[0].value(forKey: "id") as? String else {
+                return nil
+            }
+            self.id = id
             
             Credentials.sharedInstance = self
         } else {
@@ -66,6 +77,7 @@ class Credentials {
         // 3. Add username and password
         login.setValue(self.email, forKey: "email")
         login.setValue(self.password, forKey: "password")
+        login.setValue(self.id, forKey: "id")
         
         // 4. Save the marker object
         do {
@@ -80,17 +92,7 @@ class Credentials {
         Util.deleteCoreDataForEntity("Login")
         Credentials.sharedInstance = nil
     }
-    
-    // Load latest login credentials from core data
-    static func fromCore () -> Credentials? {
-        let query_res = Util.fetchCoreData("Login", predicate: nil)
-        
-        if  query_res?.count == 0 {
-            return nil
-        }
-        
-        return Credentials(fromCoreData: (query_res?[0])!)
-    }
+
 }
 
 enum CredentialError: Error {

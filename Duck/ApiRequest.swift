@@ -268,7 +268,7 @@ class ApiRequest {
             .downloadProgress { progress in
                 
                 // This closure is NOT called on the main queue for performance
-                // reasons. To update your ui, dispatch to the main queue.
+                // reasons. To update ui, dispatch to the main queue.
                 DispatchQueue.main.async {
                     print("Fraction downloaded on main queue: \(progress.fractionCompleted)")
                     

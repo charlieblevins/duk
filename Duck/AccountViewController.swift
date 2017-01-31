@@ -16,14 +16,11 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
     var webView: WKWebView?
     
     // Store credentials when submitted (before login success)
-    var tempCredentials: Credentials? = nil
+    var tempUser: String? = nil
+    var tempPass: String? = nil
     
     // Store successful credentials
     var credentials: Credentials? = nil
-    
-    // Flag if sign out reguested. If true, successful 
-    // load of root (/) page means logout was successful
-    var didReqSignOut: Bool = false
     
     // If true, pop to previous view on sign in success
     var signInSuccessHandler: ((_ credentials: Credentials) -> Void)? = nil
@@ -54,7 +51,7 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
         
         print("account view")
         
-        self.credentials = Credentials.fromCore()
+        self.credentials = Credentials()
 
         // If credentials exist
         if self.credentials != nil {
@@ -99,23 +96,12 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
         case "loginAttempt":
             
             // Temporarily store username and password
-            self.tempCredentials = Credentials(email: data["username"] as! String, password: data["password"] as! String)
+            self.tempUser = data["username"] as? String
+            self.tempPass = data["password"] as? String
             break;
         
         default:
             print("Could not handle script action: \(data["action"])")
-        }
-    }
-    
-    // Flag signout attempt
-    func webView(_ webView: WKWebView, decidePolicyFor navigationAction: WKNavigationAction, decisionHandler: @escaping (WKNavigationActionPolicy) -> Void) {
-        decisionHandler(.allow)
-        
-        let req_url = navigationAction.request.url?.absoluteString
-        
-        // If request signout page
-        if req_url!.range(of: "dukapp.io/signout") != nil {
-            self.didReqSignOut = true
         }
     }
 
@@ -124,19 +110,36 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
      */
     func webView(_ webView: WKWebView, decidePolicyFor navigationResponse: WKNavigationResponse, decisionHandler: @escaping (WKNavigationResponsePolicy) -> Void) {
         
-        let status = (navigationResponse.response as! HTTPURLResponse).statusCode
-        let url = webView.url?.absoluteString
+        // Always allow load
+        decisionHandler(.allow)
         
-        print(status)
+        guard let response = navigationResponse.response as? HTTPURLResponse else {
+            print("Could not get response")
+            return
+        }
+        let headers = response.allHeaderFields as Dictionary
         
-        // If a 200 status AND /home is loaded AND tempCredentials are stored: assume successful login
-        if status == 200 && url!.range(of: "dukapp.io/home") != nil && self.tempCredentials != nil {
+        let login = headers["login_success"] as? String
+        let logout = headers["logout_success"] as? String
+        
+        if login == "true" {
+            
+            guard let user_id = headers["user_id"] as? String else {
+                print("Login success header present but not user id present")
+                return
+            }
+            
+            guard let temp_user = self.tempUser, let temp_pass = self.tempPass else {
+                print("No temp credentials. Cannot store new login")
+                return
+            }
             
             // Save credentials in core data
-            self.tempCredentials!.save()
+            let cred = Credentials(email: temp_user, password: temp_pass, id: user_id)
+            cred.save()
             
             // Save as permanenet
-            self.credentials = self.tempCredentials
+            self.credentials = cred
             
             // Remove this view and call success handler
             if self.signInSuccessHandler != nil {
@@ -145,18 +148,13 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
                 self.signInSuccessHandler = nil
             }
             
-        // If loading home page and last request was signout: remove credentials
-        } else if url!.range(of: "dukapp.io") != nil && self.didReqSignOut {
-            self.credentials!.remove()
+        } else if logout == "true" {
+            self.credentials?.remove()
         }
         
-        self.didReqSignOut = false
-        
         // Remove temp credentials on every page load
-        self.tempCredentials = nil
-        
-        // Always allow load
-        decisionHandler(.allow)
+        self.tempUser = nil
+        self.tempPass = nil
     }
 
     /**
