@@ -17,6 +17,8 @@ class FavoriteMarkersController: UITableViewController {
         super.viewDidLoad()
         
         self.loadFavorites({ possible_markers in
+            
+            self.tableView.reloadData()
             print("favorite load complete")
         })
 
@@ -31,13 +33,11 @@ class FavoriteMarkersController: UITableViewController {
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
+        return 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
+        return self.favorites.count
     }
     
     func loadFavorites (_ completion: @escaping (_ markers: [Marker]?) -> Void) {
@@ -126,6 +126,11 @@ class FavoriteMarkersController: UITableViewController {
         cell.setData(marker)
 
         return cell
+    }
+    
+    // Row Height
+    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 90
     }
 
 

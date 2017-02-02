@@ -439,11 +439,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
                 return
             }
             
-            // Get marker data
-//            let request = ApiRequest()
-//            request.delegate = self
-//            request.getMarkerDataById([["public_id": pid, "photo_size": "full"]])
-            
             let marker_request = MarkerRequest()
             let sizes: [MarkerRequest.PhotoSizes] = [.full]
             let marker_param = MarkerRequest.LoadByIdParamsSingle(pid, sizes: sizes)

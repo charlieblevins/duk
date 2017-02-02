@@ -83,7 +83,7 @@ class Favorite: NSObject {
         let managedContext = appDelegate.managedObjectContext
         
         //2
-        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Favorite")
+        let fetchRequest: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest(entityName: "Favorites")
         
         //4
         do {
