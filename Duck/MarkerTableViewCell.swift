@@ -49,6 +49,52 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         // Configure the view for the selected state
     }
     
+    func setData (_ marker: Marker) {
+        
+        // Get marker data
+        self.markerData = marker
+        
+        if let tags = self.markerData?.tags {
+            self.tagsLabel?.attributedText = Marker.formatNouns(tags)
+        }
+        
+        self.tagsLabel?.lineBreakMode = .byWordWrapping
+        self.tagsLabel?.numberOfLines = 3
+        
+        // Remove right side subviews
+        self.resetRight()
+        
+        // Get Photo
+        self.getPhoto()
+    }
+    
+    
+    // Set the UI of the cell depending on it's published status
+    func setPublishStatus () {
+        
+        guard let marker = self.markerData else {
+            print("Error: Cell has no associated marker data. Cannot set status")
+            return
+        }
+        
+        if marker.public_id != nil && marker.approved != nil {
+            
+            switch marker.approved! {
+            case .denied:
+                self.appendDeniedBadge()
+                break
+            case .pending:
+                self.appendPendingBadge()
+                break
+            case .approved:
+                self.appendPublicBadge()
+            }
+            
+        } else {
+            self.appendPublishBtn()
+        }
+    }
+    
     // Remove right-side subviews to prevent overlapping
     func resetRight () {
         let sviews = self.contentView.subviews

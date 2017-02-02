@@ -308,24 +308,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         DownloadSwitch.addTarget(self, action: #selector(self.downloadSwitchTapped), for: .touchUpInside)
     }
     
-    func initFavoriteSwitch (_ marker: Marker) {
-        
-        // Hide favorite option if owned by current user
-        if marker.isOwned == true {
-            print("not showing favorite option. marker is owned by this user")
-            favoriteSwitch.isHidden = true
-            favoriteLabel.isHidden = true
-            return
-        }
-        
-        // Set current value
-        favoriteSwitch.isOn = marker.isFavorite
-    }
-    
     func downloadSwitchTapped (sender: UISwitch) {
         
         // Download
-        if (sender.isOn) {
+        if sender.isOn {
             
             // Set load spinner
             self.showLoading("Downloading...")
@@ -337,7 +323,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             
             self.requestMarkerDownload(pid)
             
-        // Delete from local store
+            // Delete from local store
         } else {
             
             // Set load spinner
@@ -357,6 +343,41 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
                 
                 self.present(alertController, animated: true, completion: nil)
             })
+        }
+    }
+    
+    func initFavoriteSwitch (_ marker: Marker) {
+        
+        // Hide favorite option if owned by current user
+        if marker.isOwned == true {
+            print("not showing favorite option. marker is owned by this user")
+            favoriteSwitch.isHidden = true
+            favoriteLabel.isHidden = true
+            return
+        }
+        
+        // Set current value
+        favoriteSwitch.isOn = marker.isFavorite
+        
+        favoriteSwitch.addTarget(self, action: #selector(self.favoriteSwitchTapped), for: .touchUpInside)
+    }
+    
+    // Add or remove the favorite from core data
+    func favoriteSwitchTapped (sender: UISwitch) {
+        
+        guard let id = self.editMarker?.public_id else {
+            print("Error: cannot change favorite status of a marker with no public id")
+            return
+        }
+        
+        let favorite = Favorite(id)
+        
+        if sender.isOn {
+            favorite.save()
+            
+        } else {
+            
+            favorite.delete()
         }
     }
     

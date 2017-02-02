@@ -16,7 +16,9 @@ class FavoriteMarkersController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        favorites = self.loadFavorites()
+        self.loadFavorites({ possible_markers in
+            print("favorite load complete")
+        })
 
         self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
@@ -38,12 +40,13 @@ class FavoriteMarkersController: UITableViewController {
         return 0
     }
     
-    func loadFavorites () -> [Marker] {
+    func loadFavorites (_ completion: @escaping (_ markers: [Marker]?) -> Void) {
         
         let ids = Favorite.getAll()
         
         if ids.count == 0 {
-            return favorites
+            completion(favorites)
+            return
         }
         
         // Context
@@ -70,28 +73,61 @@ class FavoriteMarkersController: UITableViewController {
                 let new_marker = Marker(fromCoreData: marker as AnyObject)
                 
                 favorites.append(new_marker)
+                
+                // Make array of markers not found
+                guard let pubid = new_marker.public_id else {
+                    print("Error: no public_id on returned marker")
+                    break
+                }
+                
+                let ind: Int = ids.index(of: pubid)
+                if ind != NSNotFound {
+                    ids.removeObject(at: ind)
+                }
             }
             
         } catch let error as NSError {
             print("Fetch failed: \(error.localizedDescription)")
         }
         
-        // Make array of non-local markers
-        
         // Get non-local markers from server
+        let req = MarkerRequest()
         
-        return favorites
+        var requested_markers: [MarkerRequest.LoadByIdParamsSingle] = []
+        
+        for id in ids {
+            let sizes: [MarkerRequest.PhotoSizes] = [.sm]
+            guard let cast_id = id as? String else {
+                print("Error: could not cast array value to string")
+                break
+            }
+            requested_markers.append(MarkerRequest.LoadByIdParamsSingle(cast_id, sizes: sizes))
+        }
+        
+        req.loadById(requested_markers, completion: { markers in
+            
+            if let markers_array = markers {
+                self.favorites.append(contentsOf: markers_array)
+            }
+            completion(self.favorites)
+            
+        }, failure: {
+            print("Could not get markers from server")
+            completion(self.favorites)
+        })
     }
 
-    /*
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
+        
+        let cell = tableView.dequeueReusableCell(withIdentifier: "MarkerTableViewCell", for: indexPath) as! MarkerTableViewCell
+        
+        // Set marker data
+        let marker = favorites[(indexPath as NSIndexPath).row]
+        cell.setData(marker)
 
         return cell
     }
-    */
+
 
     /*
     // Override to support conditional editing of the table view.

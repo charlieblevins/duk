@@ -196,34 +196,93 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
 
         let cell = tableView.dequeueReusableCell(withIdentifier: "MarkerTableViewCell", for: indexPath) as! MarkerTableViewCell
 
-        // Get marker data
-        cell.markerData = savedMarkers[(indexPath as NSIndexPath).row]
+        // Set marker data
+        let marker = savedMarkers[(indexPath as NSIndexPath).row]
+        cell.setData(marker)
         
-        cell.master = self
-        
-        if let tags = cell.markerData!.tags {
-            cell.tagsLabel?.attributedText = Marker.formatNouns(tags)
+        // See if this marker has a pending/active upload and 
+        // if so, continue
+        var uploading = false
+        if let timestamp = marker.timestamp {
+
+            if self.isPendingPublish(cell, timestamp: timestamp) {
+                self.makePublishRequest(cell)
+                uploading = true
+                
+            } else if self.isPublishInProgress(cell, timestamp: timestamp) {
+                self.reconnectPublishRequest(cell, timestamp: timestamp)
+                uploading = true
+                
+            }
         }
         
-        cell.tagsLabel?.lineBreakMode = .byWordWrapping
-        cell.tagsLabel?.numberOfLines = 3
+        // No upload in progress
+        if !uploading {
+            cell.setPublishStatus()
+        }
+
+        cell.master = self
         
-        // Remove right side subviews
-        cell.resetRight()
+        return cell
+    }
+    
+    // See if this cell needs to kick off an upload to the server
+    func isPendingPublish(_ cell: MarkerTableViewCell, timestamp: Double) -> Bool {
         
-        // Get Photo
-        cell.getPhoto()
+        // Start any pending upload requests
+        guard let pending = self.pending_publish else {
+            print("no pending publish array")
+            return false
+        }
         
-        self.setCellPublishStatus(cell)
+        guard let marker = pending["marker"] as? Marker else {
+            print("Error: value in pending dictionary not castable to Marker")
+            return false
+        }
         
+        guard let publish_timestamp = marker.timestamp else {
+            print("Error: pending publish marker has no timestamp")
+            return false
+        }
+        
+        // If timestamps match, set this cell as request delegate
+        if timestamp == publish_timestamp {
+            return true
+        }
+        
+        return false
+    }
+    
+    // See if this cell is in the process of uploading data
+    func isPublishInProgress (_ cell: MarkerTableViewCell, timestamp: Double) -> Bool {
+        
+        // If cell is currently uploading
+        if MyMarkersController.active_requests[timestamp] != nil {
+            return true
+        }
+        
+        return false
+    }
+    
+    // For cases where a user starts an upload, leaves the view and later returns,
+    // restore upload status tracking for this cell
+    func reconnectPublishRequest (_ cell: MarkerTableViewCell, timestamp: Double) {
+        
+        guard let active_req = MyMarkersController.active_requests[timestamp] else {
+            print("Error: cannot get active request for marker timestamp: \(timestamp)")
+            return
+        }
+        
+        cell.updateStatus("(0)% complete")
+        active_req.delegate = cell
+    }
+
+    func reconnectActiveRequests (_ cell: MarkerTableViewCell) {
+
         // Start or resume upload if necessary
         if let cell_timestamp = cell.markerData!.timestamp {
             
-            // * Set cell state
-            // If active requests, set to uploading state
-            if let active_req = MyMarkersController.active_requests[cell_timestamp] {
-                active_req.delegate = cell
-            }
+
             
             // Start any pending upload requests
             if self.pending_publish != nil {
@@ -237,42 +296,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
                     makePublishRequest(cell)
                 }
             }
-        }
-        
-        return cell
-    }
-    
-    // Set the UI of the cell depending on it's published status
-    func setCellPublishStatus (_ cell: MarkerTableViewCell) {
-        
-        guard let marker = cell.markerData else {
-            print("Cell has no associated marker data")
-            return
-        }
-        
-        // If cell is currently uploading
-        if let cell_timestamp = marker.timestamp {
-            if MyMarkersController.active_requests[cell_timestamp] != nil {
-                cell.updateStatus("(0)% complete")
-                return
-            }
-        }
-        
-        if marker.public_id != nil && marker.approved != nil {
-            
-            switch marker.approved! {
-            case .denied:
-                cell.appendDeniedBadge()
-                break
-            case .pending:
-                cell.appendPendingBadge()
-                break
-            case .approved:
-                cell.appendPublicBadge()
-            }
-            
-        } else {
-            cell.appendPublishBtn()
         }
     }
     
