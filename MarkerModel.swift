@@ -82,6 +82,18 @@ class Marker: NSObject, ApiRequestDelegate {
         }
     }
     
+    var dataLocation: DataLocation? {
+        get {
+            if self.timestamp != nil {
+                return .local
+            } else if self.public_id != nil {
+                return .public
+            } else {
+                return nil
+            }
+        }
+    }
+    
     override init() {
         self.latitude = nil
         self.longitude = nil
@@ -378,52 +390,111 @@ class Marker: NSObject, ApiRequestDelegate {
         NotificationCenter.default.post(name: notificationName, object: message)
     }
     
-    func getMapMarker () -> DukGMSMarker? {
-        return _getMapMarker(nil)
-    }
-    
-    func getMapMarker (iconOverride icon: String?) -> DukGMSMarker? {
-        return _getMapMarker(icon)
-    }
-    
     // Get an object that can be directly displayed on the google map
-    fileprivate func _getMapMarker (_ iconOverride: String?) -> DukGMSMarker? {
-        let map_marker = DukGMSMarker()
+    func getMapMarker (_ iconOverride: String?, completion: @escaping (_ mapMarker: DukGMSMarker?)->Void) {
         
-        // Set icon
-        let icon_name = (iconOverride != nil) ? iconOverride : self.tags!
+        guard let data_loc = self.dataLocation else {
+            print("Error: cannot get map marker - marker has no public or local id")
+            completion(nil)
+            return
+        }
         
-        let iconImgView = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0))
-        MarkerIconView.loadIconImage(Marker.getPrimaryNoun(icon_name!), imageView: iconImgView, complete: {
-            map_marker.iconView = iconImgView
-        })
-        //Util.loadMarkerIcon(map_marker, noun_tags: icon_name!)
+        // Try to make a map marker from data in memory
+        if let map_marker = self.constructMapMarker(self, iconOverride: iconOverride) {
+            
+            // success
+            completion(map_marker)
+            return
+        }
         
-        // Set position
-        map_marker.position = CLLocationCoordinate2D(latitude: latitude!, longitude: longitude!)
+        // Data missing - request from public or persistent store
+        if data_loc == .public {
+            
+            let req = MarkerRequest()
+            
+            guard let pid = self.public_id else {
+                completion(nil)
+                return
+            }
+            
+            let single = MarkerRequest.LoadByIdParamsSingle(pid, sizes: [.md])
+            
+            req.loadById([single], completion: { markers in
+                
+                guard let markers_returned = markers else {
+                    print("Error: no markers returned for public_id: \(pid)")
+                    completion(nil)
+                    return
+                }
+                
+                guard markers_returned.count > 0 else {
+                    print("Error: server returned empty array for public_id: \(pid)")
+                    completion(nil)
+                    return
+                }
+                
+                let marker = markers_returned[0]
+                
+                guard let map_marker = self.constructMapMarker(marker, iconOverride: iconOverride) else {
+                    print("Error: could not construct map marker from marker data")
+                    completion(nil)
+                    return
+                }
+                
+                // success
+                completion(map_marker)
+                
+                
+            }, failure: {
+                completion(nil)
+            })
+            
+        // data_loc == .local
+        } else {
+            
+            guard let t = self.timestamp else {
+                completion(nil)
+                return
+            }
+            
+            let fields = ["tags", "latitude", "longitude", "photo_md", "timestamp", "public_id", "approved", "user_id"]
+            guard let marker = Marker.getMarkerFromCore(t, fields: fields) else {
+                print("Error: Cannot get map marker - no marker found with timestamp \(t)")
+                completion(nil)
+                return
+            }
+           
+            guard let map_marker = self.constructMapMarker(marker, iconOverride: iconOverride) else {
+                print("Error: could not construct map marker from marker data")
+                completion(nil)
+                return
+            }
+            
+            // success
+            completion(map_marker)
+        }
+    }
+    
+    func constructMapMarker(_ marker: Marker, iconOverride: String?) -> DukGMSMarker? {
         
-        // No timestamp or public id
-        if timestamp == nil && public_id == nil {
+        guard let coord = marker.coordinate else {
+            print("Error: Cannot get coordinate from marker")
             return nil
         }
         
-        // If timestamp assume local
-        if timestamp != nil {
-            map_marker.dataLocation = .local
-            map_marker.timestamp = timestamp
-        } else {
-            map_marker.dataLocation = .public
+        guard let tags = marker.tags else {
+            print("Error: Cannot get tags from marker")
+            return nil
         }
         
-        // Add public id if present
-        if public_id != nil {
-            map_marker.public_id = public_id
+        guard let data_loc: DataLocation = self.dataLocation else {
+            print("Error: cannot determine data location")
+            return nil
         }
         
-        // Add tags for info window display
-        map_marker.tags = self.tags
+        let id: Any = (data_loc == .local) ? marker.timestamp as Any : marker.public_id as Any
         
-        return map_marker
+        return DukGMSMarker(coord, tags: tags, dataLocation: data_loc, id: id, iconOverride: iconOverride)
     }
 
     // Update image data
@@ -475,15 +546,15 @@ class Marker: NSObject, ApiRequestDelegate {
     // Get coordinates for display (ex "-32.12345678, 23.12345678")
     func getCoords () -> String? {
         
-        guard self.longitude != nil && self.latitude != nil else {
+        guard let lng = self.longitude, let lat = self.latitude else {
             print("Marker does not have coordinates")
             return nil
         }
         
-        let lat = Marker.formatSingleCoord(self.latitude!)
-        let lng = Marker.formatSingleCoord(self.longitude!)
+        let f_lat = Marker.formatSingleCoord(lat)
+        let f_lng = Marker.formatSingleCoord(lng)
         
-        return "\(lat), \(lng)"
+        return "\(f_lat), \(f_lng)"
     }
     
     func isPublic () -> Bool {
@@ -564,6 +635,18 @@ class Marker: NSObject, ApiRequestDelegate {
         }
         
         return found
+    }
+    
+    static func getMarkerFromCore (_ timestamp: Double, fields: [String]) -> Marker? {
+        
+        let pred = NSPredicate(format: "timestamp = %1f", timestamp)
+        
+        let data = Util.fetchCoreData("Marker", predicate: pred, fields: fields)
+        if data.count > 0 {
+            return Marker(fromCoreData: data[0] as AnyObject)
+        }
+        
+        return nil
     }
 
     // Format noun(s) in attributed style. Primary noun should be bold.
@@ -683,4 +766,8 @@ struct MarkerUpdateMessage {
 
 enum MarkerEditType {
     case create, update, delete
+}
+
+enum DataLocation {
+    case local, `public`
 }

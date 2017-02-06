@@ -11,7 +11,11 @@ import CoreLocation
 import CoreData
 import GoogleMaps
 
-class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate, ApiRequestDelegate, MarkerAggregatorDelegate {
+protocol MapViewDelegate {
+    func zoomToMarker (_ marker: Marker)
+}
+
+class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate, ApiRequestDelegate, MarkerAggregatorDelegate, MapViewDelegate {
     
     @IBOutlet weak var menuBG: UIView!
     @IBOutlet weak var mapView: GMSMapView!
@@ -148,14 +152,19 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
     func showNearbyMarkers () {
         
+        guard let map_view = self.mapView else {
+            print("Error: cannot show nearby markers - no map view is present")
+            return
+        }
+        
         // Enable user location on Google Map and allow
         // observer to show location on first update
-        if mapView!.isMyLocationEnabled != true {
+        if map_view.isMyLocationEnabled != true {
             didFindMyLocation = false
-            mapView!.isMyLocationEnabled = true
+            map_view.isMyLocationEnabled = true
             
             // Location is already enabled: zoom to location
-        } else if mapView!.myLocation != nil {
+        } else if map_view.myLocation != nil {
             
             loadNearbyMarkers()
         }
@@ -212,6 +221,14 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             mapView!.animate(to: GMSCameraPosition.camera(withTarget: loc.coordinate, zoom: 10))
             self.mapIsAtRest = false
         }
+    }
+    
+    func zoomToMarker (_ marker: Marker) {
+        
+        self.addMarkerToMap(marker)
+        
+        // Animate to marker
+        self.mapView?.animate(to: GMSCameraPosition.camera(withTarget: marker.coordinate, zoom: 10))
     }
     
     // map reaches idle state
@@ -317,18 +334,24 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     }
     
     // Add marker to map
-    func addMarkerToMap (_ marker: Marker) {
+    func addMarkerToMap (_ marker: Marker, completion: (_ mapMarker: DukGMSMarker?) -> Void) {
         
-        guard let mapMarker = marker.getMapMarker() else {
-            print("Error: Cannot get map marker. Cannot add marker to map.")
-            return
-        }
-        
-        // Add marker to the map
-        mapMarker.assignMap(mapView)
-        
-        // Store all map markers
-        curMapMarkers.append(mapMarker)
+        marker.getMapMarker(nil, completion: { mapMarker in
+            
+            guard let map_marker = mapMarker else {
+                completion(nil)
+                return
+            }
+            
+            // Add marker to the map
+            map_marker.assignMap(mapView)
+            
+            // Store all map markers
+            curMapMarkers.append(map_marker)
+            
+            completion(map_marker)
+        })
+
     }
     
     func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
@@ -1078,7 +1101,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
 class DukGMSMarker: GMSMarker {
     
     // Indicate where marker data is stored
-    var dataLocation: DataLocation? = nil
+    var dataLocation: DataLocation
     
     // One of these will contain a reference
     // used for looking up info window data
@@ -1086,16 +1109,45 @@ class DukGMSMarker: GMSMarker {
     var public_id: String? = nil
     
     // Store tags for info window
-    var tags: String? = nil
+    var tags: String
+    
+    init (_ coords: CLLocationCoordinate2D, tags: String, dataLocation: DataLocation, id: Any, iconOverride: String?) {
+        self.position = coords
+        self.tags = tags
+        self.dataLocation = dataLocation
+        
+        // Get icon
+        let prime_noun = (iconOverride != nil) ? Marker.getPrimaryNoun(iconOverride!) : Marker.getPrimaryNoun(tags)
+        
+        let iconImgView = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0))
+        
+        MarkerIconView.loadIconImage(prime_noun, imageView: iconImgView, complete: {
+            self.iconView = iconImgView
+        })
+        
+        // Convert id to public or local
+        if dataLocation == .local {
+            if let t = id as? Double {
+                self.timestamp = t
+            } else {
+                print("Error: Data location is local but id could not be casted to timestamp")
+                return
+            }
+        } else {
+            if let p = id as? String {
+                self.public_id = p
+            } else {
+                print("Error: Data location is public but id could not be casted to string")
+                return
+            }
+        }
+    }
     
     func assignMap (_ map: GMSMapView) {
         self.map = map
     }
 }
 
-enum DataLocation {
-    case local, `public`
-}
 
 // Custom button class used for 
 // addMarker button and my markers button

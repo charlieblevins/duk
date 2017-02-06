@@ -12,6 +12,7 @@ import CoreData
 class FavoriteMarkersController: UITableViewController {
     
     var favorites: [Marker] = []
+    var delegate: MapViewDelegate!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -131,6 +132,20 @@ class FavoriteMarkersController: UITableViewController {
     // Row Height
     override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 90
+    }
+    
+    // On Row Select load
+    // marker edit view
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        // get marker
+        let cur_marker = favorites[(indexPath as NSIndexPath).row]
+        
+        // Call map view delegate method
+        self.delegate.zoomToMarker(cur_marker)
+        
+        // Move to map view
+        _ = navigationController?.popViewController(animated: true)
     }
 
 

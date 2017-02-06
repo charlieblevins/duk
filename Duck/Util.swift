@@ -36,6 +36,36 @@ class Util {
         }
     }
     
+    class func fetchCoreData (_ entityName: String, predicate: NSPredicate?, fields: [String]) -> [Dictionary<String, Any>] {
+        
+        var found = [Dictionary<String, Any>]()
+        
+        // Context
+        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+        let managedContext = appDelegate.managedObjectContext
+        
+        // Fetch request
+        let fetchReq: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
+        fetchReq.entity = NSEntityDescription.entity(forEntityName: entityName, in: managedContext)
+        
+        fetchReq.resultType = .dictionaryResultType
+        fetchReq.propertiesToFetch = fields
+        
+        do {
+            let objects = try managedContext.fetch(fetchReq)
+            for obj in objects {
+                if let dict = obj as? Dictionary<String, Any> {
+                    found.append(dict)
+                }
+            }
+            
+        } catch let error as NSError {
+            print("Fetch failed: \(error.localizedDescription)")
+        }
+        
+        return found
+    }
+    
     // Utility
     // Update a single field value for all items of a particular entity type
     class func updateCoreDataForEntity (_ entityName: String, fieldName: String, newValue: AnyObject?) {
