@@ -58,7 +58,11 @@ class Marker: NSObject, ApiRequestDelegate {
     
     var isFavorite: Bool {
         get {
-            return false
+            guard let pid = self.public_id else {
+                return false
+            }
+            
+            
         }
     }
     
@@ -400,7 +404,7 @@ class Marker: NSObject, ApiRequestDelegate {
         }
         
         // Try to make a map marker from data in memory
-        if let map_marker = self.constructMapMarker(self, iconOverride: iconOverride) {
+        if let map_marker = self.constructMapMarker(iconOverride) {
             
             // success
             completion(map_marker)
@@ -435,7 +439,7 @@ class Marker: NSObject, ApiRequestDelegate {
                 
                 let marker = markers_returned[0]
                 
-                guard let map_marker = self.constructMapMarker(marker, iconOverride: iconOverride) else {
+                guard let map_marker = marker.constructMapMarker(iconOverride) else {
                     print("Error: could not construct map marker from marker data")
                     completion(nil)
                     return
@@ -464,7 +468,7 @@ class Marker: NSObject, ApiRequestDelegate {
                 return
             }
            
-            guard let map_marker = self.constructMapMarker(marker, iconOverride: iconOverride) else {
+            guard let map_marker = marker.constructMapMarker(iconOverride) else {
                 print("Error: could not construct map marker from marker data")
                 completion(nil)
                 return
@@ -475,14 +479,14 @@ class Marker: NSObject, ApiRequestDelegate {
         }
     }
     
-    func constructMapMarker(_ marker: Marker, iconOverride: String?) -> DukGMSMarker? {
+    func constructMapMarker(_ iconOverride: String?) -> DukGMSMarker? {
         
-        guard let coord = marker.coordinate else {
+        guard let coord = self.coordinate else {
             print("Error: Cannot get coordinate from marker")
             return nil
         }
         
-        guard let tags = marker.tags else {
+        guard let _tags = self.tags else {
             print("Error: Cannot get tags from marker")
             return nil
         }
@@ -492,9 +496,9 @@ class Marker: NSObject, ApiRequestDelegate {
             return nil
         }
         
-        let id: Any = (data_loc == .local) ? marker.timestamp as Any : marker.public_id as Any
+        let id: Any = (data_loc == .local) ? self.timestamp as Any : self.public_id as Any
         
-        return DukGMSMarker(coord, tags: tags, dataLocation: data_loc, id: id, iconOverride: iconOverride)
+        return DukGMSMarker(coord, tags: _tags, dataLocation: data_loc, id: id, iconOverride: iconOverride)
     }
 
     // Update image data

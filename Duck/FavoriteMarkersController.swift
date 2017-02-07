@@ -24,6 +24,21 @@ class FavoriteMarkersController: UITableViewController {
         })
 
         self.navigationItem.rightBarButtonItem = self.editButtonItem
+        
+        // Root should always be map view
+        guard let nav = self.navigationController else {
+            fatalError("Expected nav controller")
+        }
+        
+        for controller in nav.viewControllers {
+            if let map_view = controller as? MapViewDelegate {
+                self.delegate = map_view
+                break
+            }
+        }
+        if self.delegate == nil {
+            fatalError("MapViewDelegate not found in view hierarchy")
+        }
     }
     
     override func didReceiveMemoryWarning() {

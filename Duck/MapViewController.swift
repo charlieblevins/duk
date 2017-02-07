@@ -225,10 +225,15 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     
     func zoomToMarker (_ marker: Marker) {
         
-        self.addMarkerToMap(marker)
-        
-        // Animate to marker
-        self.mapView?.animate(to: GMSCameraPosition.camera(withTarget: marker.coordinate, zoom: 10))
+        self.addMarkerToMap(marker, completion: { mapMarker in
+            
+            // Animate to marker
+            if let map_marker = mapMarker {
+                self.mapView?.animate(to: GMSCameraPosition.camera(withTarget: map_marker.position, zoom: 16))
+                self.showInfoWindow(map_marker)
+            }
+        })
+
     }
     
     // map reaches idle state
@@ -321,20 +326,24 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             if bounds.contains(coords) {
                 
                 // Get map marker and store
-                if let map_marker = marker.getMapMarker() {
-                    map_marker.map = self.mapView
+                marker.getMapMarker(nil, completion: { mapMarker in
                     
-                    // Save reference to active markers
-                    curMapMarkers.append(map_marker)
-                } else {
-                    print("marker from core had no timestamp: \(marker)")
-                }
+                    if let map_marker = mapMarker {
+                
+                        map_marker.assignMap(self.mapView)
+                        
+                        // Save reference to active markers
+                        self.curMapMarkers.append(map_marker)
+                    } else {
+                        print("No markers returned")
+                    }
+                })
             }
         }
     }
     
     // Add marker to map
-    func addMarkerToMap (_ marker: Marker, completion: (_ mapMarker: DukGMSMarker?) -> Void) {
+    func addMarkerToMap (_ marker: Marker, completion: @escaping (_ mapMarker: DukGMSMarker?) -> Void) {
         
         marker.getMapMarker(nil, completion: { mapMarker in
             
@@ -344,21 +353,20 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             }
             
             // Add marker to the map
-            map_marker.assignMap(mapView)
+            map_marker.assignMap(self.mapView)
             
             // Store all map markers
-            curMapMarkers.append(map_marker)
+            self.curMapMarkers.append(map_marker)
             
             completion(map_marker)
         })
 
     }
     
-    func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
-        print("marker tapped")
-        mapView.selectedMarker = marker
+    func showInfoWindow (_ mapMarker: GMSMarker) {
+        mapView.selectedMarker = mapMarker
         
-        var cg_point = mapView.projection.point(for: marker.position)
+        var cg_point = mapView.projection.point(for: mapMarker.position)
         cg_point.y = cg_point.y - 100
         
         let camPos = GMSCameraPosition(
@@ -369,6 +377,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         )
         
         mapView.animate(to: camPos)
+    }
+    
+    func mapView(_ mapView: GMSMapView, didTap marker: GMSMarker) -> Bool {
+        print("marker tapped")
+        
+        self.showInfoWindow(marker)
         return true
     }
     
@@ -385,7 +399,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         let custom_marker = marker as! DukGMSMarker
         
         // Set tags (stored in map marker obj)
-        customInfoWindow.tags.attributedText = Marker.formatNouns(custom_marker.tags!)
+        customInfoWindow.tags.attributedText = Marker.formatNouns(custom_marker.tags)
         
         // Get image for local marker
         if custom_marker.dataLocation == .local {
@@ -942,18 +956,30 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         var pubMarkersById: [String: AnyObject] = [:]
         
         // Loop over received marker data
-        let marker_array = data["data"] as! [AnyObject]
+        guard let marker_array = data["data"] as? [Dictionary<String, Any>] else {
+            print("Unexpected structure returned from server")
+            return
+        }
+        
         for marker_data in marker_array {
             
             // Convert data to DukGMSMarker
-            let marker = Marker(fromPublicData: marker_data as! [String: AnyObject] as NSDictionary)
+            guard let marker = Marker(fromPublicData: marker_data as NSDictionary) else {
+                print("Could not convert marker data to marker instance")
+                break
+            }
             
             // Store map marker by public id
-            if let map_marker = marker!.getMapMarker() {
-                pubMarkersById[map_marker.public_id!] = map_marker
+            if let map_marker = marker.constructMapMarker(nil) {
+                
+                guard let pid = map_marker.public_id else {
+                    print("Error: expected marker to have public_id")
+                    return
+                }
+                pubMarkersById[pid] = map_marker
                 
             } else {
-                print("could not get map marker from marker data: \(marker)")
+                print("could not construct map marker from marker data: \(marker)")
             }
         }
         
@@ -1022,7 +1048,7 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         var groupBounds: GMSCoordinateBounds? = nil
         for marker in data {
             
-            let map_marker: DukGMSMarker? = (noun != nil) ? marker.getMapMarker(iconOverride: noun) : marker.getMapMarker()
+            let map_marker: DukGMSMarker? = (noun != nil) ? marker.constructMapMarker(noun) : marker.constructMapMarker(nil)
             
             if let mm = map_marker {
                 
@@ -1077,20 +1103,21 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // If edited or added - add the marker back to map
         if message.editType == .create || message.editType == .update {
 
-            self.addMarkerToMap(message.marker)
-            
-            // Center on last created marker
-            if message.editType == .create {
+            self.addMarkerToMap(message.marker, completion: { map_marker in
                 
-                if let map_view = mapView {
-                    guard let coord = message.marker.coordinate else {
-                        print("Marker has no coordinate. Cannot animate")
-                        return
+                // Center on last created marker
+                if message.editType == .create {
+                    
+                    if let map_view = self.mapView {
+                        guard let coord = message.marker.coordinate else {
+                            print("Marker has no coordinate. Cannot animate")
+                            return
+                        }
+                        map_view.animate(toLocation: coord)
+                        self.mapIsAtRest = false
                     }
-                    map_view.animate(toLocation: coord)
-                    self.mapIsAtRest = false
                 }
-            }
+            })
         }
     }
 }
@@ -1112,9 +1139,13 @@ class DukGMSMarker: GMSMarker {
     var tags: String
     
     init (_ coords: CLLocationCoordinate2D, tags: String, dataLocation: DataLocation, id: Any, iconOverride: String?) {
-        self.position = coords
+
         self.tags = tags
         self.dataLocation = dataLocation
+        
+        super.init()
+        
+        self.position = coords
         
         // Get icon
         let prime_noun = (iconOverride != nil) ? Marker.getPrimaryNoun(iconOverride!) : Marker.getPrimaryNoun(tags)
