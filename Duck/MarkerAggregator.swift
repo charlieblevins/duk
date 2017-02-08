@@ -320,11 +320,10 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         
         var server_markers = [Marker]()
         
-        // Convert received dictionary to [DukGMSMarker]
+        // Convert received dictionary to [Marker]
         let marker_array = data["data"] as! [AnyObject]
         for marker_data in marker_array {
             
-            // Convert data to DukGMSMarker
             let marker = Marker(fromPublicData: marker_data as! [String: AnyObject] as NSDictionary)
             server_markers.append(marker!)
         }
@@ -362,13 +361,30 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
     func removeDuplicates (_ markers: [Marker]) -> [Marker] {
         
         var serverMarkersById: [String: Marker] = [:]
+        var id_store = [String]()
         
-        // Store map marker by public id, overwriting any duplicate ids
+        // Store map marker by timestamp, overwriting any duplicates
         for marker in markers {
-            if marker.public_id != nil {
-                serverMarkersById[marker.public_id!] = marker
+            
+            // if public_id is in id_store, it's a duplicate. Throw away the 
+            // duplicate with no timestamp
+            if let pid = marker.public_id {
+                
+                let is_dup: Bool = id_store.index(of: pid) != nil
+                
+                // This is a duplicate but has no timestamp
+                if is_dup && marker.timestamp == nil {
+                    continue
+                }
+
+                serverMarkersById[pid] = marker
+                
+                id_store.append(pid)
+                
             } else {
-                serverMarkersById["\(marker.timestamp!)"] = marker
+                if let t = marker.timestamp {
+                    serverMarkersById["\(t)"] = marker
+                }
             }
         }
         

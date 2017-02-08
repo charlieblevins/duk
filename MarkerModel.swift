@@ -47,7 +47,7 @@ class Marker: NSObject, ApiRequestDelegate {
                 return false
             }
             
-            // Compare with this markers username
+            // Compare with this markers user id
             if cred.id == self.user_id {
                 return true
             } else {
@@ -62,7 +62,13 @@ class Marker: NSObject, ApiRequestDelegate {
                 return false
             }
             
+            let favorites = Favorite.getAll()
             
+            if favorites.index(of: pid) != NSNotFound {
+                return true
+            } else {
+                return false
+            }
         }
     }
     
@@ -643,7 +649,7 @@ class Marker: NSObject, ApiRequestDelegate {
     
     static func getMarkerFromCore (_ timestamp: Double, fields: [String]) -> Marker? {
         
-        let pred = NSPredicate(format: "timestamp = %1f", timestamp)
+        let pred = NSPredicate(format: "timestamp = %lf", timestamp)
         
         let data = Util.fetchCoreData("Marker", predicate: pred, fields: fields)
         if data.count > 0 {

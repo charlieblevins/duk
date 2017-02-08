@@ -48,6 +48,10 @@ class Util {
         let fetchReq: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         fetchReq.entity = NSEntityDescription.entity(forEntityName: entityName, in: managedContext)
         
+        if let pred = predicate {
+            fetchReq.predicate = pred
+        }
+        
         fetchReq.resultType = .dictionaryResultType
         fetchReq.propertiesToFetch = fields
         

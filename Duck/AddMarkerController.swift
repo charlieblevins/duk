@@ -290,10 +290,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     func initDownloadSwitch (_ marker: Marker) {
         
         // Hide download option if not public
-        if marker.isPublic() == false {
-            print("not showing download option. marker is not public")
-            DownloadSwitch.isHidden = true
-            DownloadLabel.isHidden = true
+        if marker.isPublic() == false || marker.isFavorite == false {
+            toggleDownloadSwitch(true)
             return
         }
         
@@ -306,6 +304,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
 
         DownloadSwitch.addTarget(self, action: #selector(self.downloadSwitchTapped), for: .touchUpInside)
+    }
+    
+    func toggleDownloadSwitch (_ open: Bool) {
+        DownloadSwitch.isHidden = !open
+        DownloadLabel.isHidden = !open
     }
     
     func downloadSwitchTapped (sender: UISwitch) {
@@ -374,10 +377,12 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         if sender.isOn {
             favorite.save()
+            toggleDownloadSwitch(true)
             
         } else {
             
             favorite.delete()
+            toggleDownloadSwitch(false)
         }
     }
     
