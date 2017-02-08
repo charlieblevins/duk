@@ -291,8 +291,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         // Hide download option if not public
         if marker.isPublic() == false || marker.isFavorite == false {
-            toggleDownloadSwitch(true)
-            return
+            toggleDownloadSwitch(false)
         }
         
         // Timestamp indicates local storage
@@ -326,27 +325,45 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             
             self.requestMarkerDownload(pid)
             
-            // Delete from local store
+        // Delete from local store
         } else {
             
-            // Set load spinner
-            self.showLoading("Removing...")
+            sender.setOn(true, animated: false)
             
-            if self.editMarker?.deleteFromCore() == false {
-                print("Delete from core data failed in add marker view")
+            guard let marker = self.editMarker else {
+                print("Cannot remove marker: editMarker is nil")
+                return
             }
             
-            self.hideLoading({
-                let alertController = UIAlertController(title: "Marker removed",
-                                                        message: "This marker is no longer stored on this device.",
-                                                        preferredStyle: .alert)
-                
-                let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
-                alertController.addAction(okAction)
-                
-                self.present(alertController, animated: true, completion: nil)
-            })
+            self.popConfirm(
+                "Confirm Delete",
+                text: "Are you sure you want to remove this marker? Once removed, you will need an internet connection to access this marker again.",
+                onConfirm: { alert_action in
+                    
+                    self.deleteOfflineMarker(marker)
+                    self.DownloadSwitch.setOn(false, animated: true)
+                })
         }
+    }
+    
+    func deleteOfflineMarker (_ marker: Marker) {
+        // Set load spinner
+        self.showLoading("Removing...")
+        
+        if self.editMarker?.deleteFromCore() == false {
+            print("Delete from core data failed in add marker view")
+        }
+        
+        self.hideLoading({
+            let alertController = UIAlertController(title: "Marker removed",
+                                                    message: "This marker is no longer stored on this device.",
+                                                    preferredStyle: .alert)
+            
+            let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
+            alertController.addAction(okAction)
+            
+            self.present(alertController, animated: true, completion: nil)
+        })
     }
     
     func initFavoriteSwitch (_ marker: Marker) {
@@ -381,8 +398,36 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             
         } else {
             
-            favorite.delete()
-            toggleDownloadSwitch(false)
+            if self.DownloadSwitch.isOn == false {
+                favorite.delete()
+                toggleDownloadSwitch(false)
+                return
+            }
+            
+            // This marker is saved locally: confirm deletion
+            self.favoriteSwitch.setOn(true, animated: false)
+            
+            guard let marker = self.editMarker else {
+                print("Cannot remove favorite: editMarker unavailable")
+                return
+            }
+            
+            self.popConfirm(
+                "Confirm Delete",
+                text: "Once removed, you will need an internet connection to access this marker again. Are you sure you want to remove it?",
+                onConfirm: { alert_action in
+                    
+                    // Delete favorite and local copy
+                    self.deleteOfflineMarker(marker)
+                    favorite.delete()
+                    
+                    // Turn off download switch and hide it
+                    self.toggleDownloadSwitch(false)
+                    self.DownloadSwitch.setOn(false, animated: false)
+
+                    // Turn off favorite
+                    self.favoriteSwitch.setOn(false, animated: true)
+            })
         }
     }
     

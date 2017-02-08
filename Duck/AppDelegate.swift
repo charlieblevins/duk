@@ -304,12 +304,26 @@ extension UIViewController {
     }
     
     func popAlert (_ title: String, text: String) {
-        let alertController = UIAlertController(title: "Missing Data",
+        let alertController = UIAlertController(title: title,
                                                 message: text,
                                                 preferredStyle: .alert)
         
         let okAction = UIAlertAction(title: "OK", style: .cancel, handler: nil)
         alertController.addAction(okAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
+    
+    func popConfirm (_ title: String, text: String, onConfirm: @escaping (UIAlertAction)->Void) {
+        let alertController = UIAlertController(title: title,
+                                                message: text,
+                                                preferredStyle: .alert)
+        
+        let okAction = UIAlertAction(title: "Confirm", style: .default, handler: onConfirm)
+        alertController.addAction(okAction)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
         
         present(alertController, animated: true, completion: nil)
     }

@@ -1100,8 +1100,13 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
            self.removeMarker(message.marker)
         }
         
-        // If edited or added - add the marker back to map
-        if message.editType == .create || message.editType == .update {
+        // If the removed marker is not public, we're done
+        if message.editType == .delete && message.marker.isPublic() == false {
+            return
+        }
+        
+        // If edited, added OR a local copy of a public marker was deleted - add the marker back to map
+        if message.editType == .create || message.editType == .update || message.marker.isPublic() {
 
             self.addMarkerToMap(message.marker, completion: { map_marker in
                 
