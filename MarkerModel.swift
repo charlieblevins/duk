@@ -213,6 +213,23 @@ class Marker: NSObject, ApiRequestDelegate {
         // Get username
         self.user_id = data.value(forKey: "user_id") as? String
     }
+    
+    // Make a copy of another marker
+    init?(copy marker: Marker) {
+        self.latitude = marker.latitude
+        self.longitude = marker.longitude
+        
+        self.timestamp = marker.timestamp
+        
+        self.photo = marker.photo
+        self.photo_md = marker.photo_md
+        self.photo_sm = marker.photo_sm
+        self.tags = marker.tags
+        
+        self.distance_from_me = marker.distance_from_me
+        self.user_id = marker.user_id
+        self.approved = marker.approved
+    }
 
     
     // Save this marker's data in core data as 
@@ -259,7 +276,14 @@ class Marker: NSObject, ApiRequestDelegate {
             return false
         }
         
-        self.notifyUpdate(.create)
+        // If we're saving a marker that already exists on the server, dispatch an update
+        if self.isPublic() {
+            let copy = Marker(copy: self)
+            copy?.timestamp = nil
+            self.notifyUpdate(.update, oldMarker: copy)
+        } else {
+            self.notifyUpdate(.create)
+        }
         
         return true
     }
@@ -283,6 +307,7 @@ class Marker: NSObject, ApiRequestDelegate {
         fetchRequest.predicate = NSPredicate(format: "timestamp = %lf", ts)
         
         // Execute fetch
+        var new: Marker?
         do {
             let fetchResults = try appDel.managedObjectContext.fetch(fetchRequest) as? [NSManagedObject]
             
@@ -298,6 +323,8 @@ class Marker: NSObject, ApiRequestDelegate {
                     }
                     managedObject.setValue(val, forKey: prop)
                 }
+                
+                new = Marker(fromCoreData: managedObject)
                 
             } else {
                 print("cannot update. marker does not exist")
@@ -316,8 +343,10 @@ class Marker: NSObject, ApiRequestDelegate {
             print("marker save failed: \(error.localizedDescription)")
             return false
         }
-
-        self.notifyUpdate(.update)
+        
+        if new != nil {
+            new?.notifyUpdate(.update, oldMarker: self)
+        }
         
         return true
     }
@@ -362,7 +391,16 @@ class Marker: NSObject, ApiRequestDelegate {
             return false
         }
         
-        self.notifyUpdate(.delete)
+        // Only local markers create a delete message
+        if self.isPublic() {
+            
+            // Send old and new on update
+            let old = Marker(copy: self)
+            self.timestamp = nil
+            self.notifyUpdate(.update, oldMarker: old)
+        } else {
+            self.notifyUpdate(.delete)
+        }
         
         return true
     }
@@ -393,10 +431,14 @@ class Marker: NSObject, ApiRequestDelegate {
     }
     
     func notifyUpdate (_ editType: MarkerEditType) {
+        self.notifyUpdate(editType, oldMarker: nil)
+    }
+    
+    func notifyUpdate (_ editType: MarkerEditType, oldMarker: Marker?) {
         
         // Notify all views of marker update
         let notificationName = Notification.Name("MarkerEditIdentifier")
-        let message = MarkerUpdateMessage(self, editType: editType)
+        let message = MarkerUpdateMessage(self, editType: editType, oldMarker: oldMarker)
         NotificationCenter.default.post(name: notificationName, object: message)
     }
     
@@ -766,11 +808,18 @@ class Marker: NSObject, ApiRequestDelegate {
 // Define marker update message object
 struct MarkerUpdateMessage {
     var marker: Marker
+    var oldMarker: Marker?
     var editType: MarkerEditType
     
-    init (_ marker: Marker, editType: MarkerEditType) {
+    init (_ marker: Marker, editType: MarkerEditType, oldMarker: Marker?) {
         self.marker = marker
         self.editType = editType
+        
+        if editType == .create && oldMarker == nil {
+            fatalError("editType of update requires old marker value")
+        }
+        
+        self.oldMarker = oldMarker
     }
 }
 

@@ -1097,7 +1097,11 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         // Always remove the marker first
         if message.editType == .create || message.editType == .update || message.editType == .delete {
-           self.removeMarker(message.marker)
+            if let old = message.oldMarker {
+                self.removeMarker(old)
+            } else {
+                self.removeMarker(message.marker)
+            }
         }
         
         // If the removed marker is not public, we're done
