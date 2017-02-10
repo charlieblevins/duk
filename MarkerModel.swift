@@ -815,7 +815,7 @@ struct MarkerUpdateMessage {
         self.marker = marker
         self.editType = editType
         
-        if editType == .create && oldMarker == nil {
+        if editType == .update && oldMarker == nil {
             fatalError("editType of update requires old marker value")
         }
         
