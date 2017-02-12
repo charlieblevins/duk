@@ -20,6 +20,7 @@ class Marker: NSObject, ApiRequestDelegate {
     
     var latitude, longitude: Double?
     var timestamp: Double?
+    let created: NSDate
     var photo: Data?
     var photo_md: Data?
     var photo_sm: Data?
@@ -109,6 +110,7 @@ class Marker: NSObject, ApiRequestDelegate {
         self.longitude = nil
         
         self.timestamp = Marker.generateTimestamp()
+        self.created = NSDate()
         
         self.photo = nil
         self.photo_md = nil
@@ -139,6 +141,8 @@ class Marker: NSObject, ApiRequestDelegate {
             
             self.user_id = data.value(forKey: "user_id") as? String
         }
+        
+        self.created = data.value(forKey: "created") as! NSDate
         
         self.distance_from_me = nil
     }
@@ -212,6 +216,8 @@ class Marker: NSObject, ApiRequestDelegate {
         
         // Get username
         self.user_id = data.value(forKey: "user_id") as? String
+        
+        self.created = data.value(forKey: "created") as! NSDate
     }
     
     // Make a copy of another marker
@@ -229,6 +235,7 @@ class Marker: NSObject, ApiRequestDelegate {
         self.distance_from_me = marker.distance_from_me
         self.user_id = marker.user_id
         self.approved = marker.approved
+        self.created = marker.created
     }
 
     

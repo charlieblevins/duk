@@ -28,6 +28,30 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // G Places Api Key
         GMSPlacesClient.provideAPIKey("AIzaSyCx00Cy9jGzz0hIcv485TWytTq82sAQYaI")
         
+//        // Populate created attribute by timestamp attribute (one time only)
+//        let appDelegate = UIApplication.shared.delegate as! AppDelegate
+//        let managedContext = appDelegate.managedObjectContext
+//
+//        let all_markers = Util.fetchCoreData("Marker", predicate: nil)
+//        if let returned = all_markers {
+//            for marker in returned {
+//                
+//                guard let t = marker.value(forKey: "timestamp") as? Double else {
+//                    continue
+//                }
+//
+//                let created: NSDate = NSDate(timeIntervalSince1970: t)
+//
+//                marker.setValue(created, forKey: "created")
+//            }
+//
+//            do {
+//                try managedContext.save()
+//            } catch {
+//                print("save failed")
+//            }
+//        }
+        
         // Clear KF Image cache (disk)
         //KingfisherManager.shared.cache.clearDiskCache()
 

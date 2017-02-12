@@ -464,15 +464,11 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // marker is public
         } else {
             
-            // Get marker data
-//            let request = ApiRequest()
-//            request.delegate = self
-//            request.getMarkerDataById([["public_id": marker_d.public_id!, "photo_size": "full"]])
-            
             guard let pid = map_marker.public_id else {
-                print("Error: marker has no public id")
-                return
+                fatalError("Error: marker has no public id")
             }
+            
+            self.showLoading("Loading")
             
             let marker_request = MarkerRequest()
             
@@ -483,24 +479,21 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
                 
                 guard let marker = markers?[0] else {
                     print("no markers returned")
-                    self.hideLoading(nil)
+                    self.hideLoading({
+                        self.popAlert("Load Failed", text: "This marker no longer exists.")
+                    })
                     return
                 }
                 
                 // Load marker detail
-                if self.loaderOverlay != nil {
-                    
-                    // Hide loader
-                    self.loaderOverlay?.dismiss(animated: false, completion: {
-                        self.performSegue(withIdentifier: "MapToMarkerDetail", sender: marker)
-                    })
-                    
-                } else {
+                self.hideLoading({
                     self.performSegue(withIdentifier: "MapToMarkerDetail", sender: marker)
-                }
+                })
 
             }, failure: {
-                self.loaderOverlay?.dismiss(animated: false, completion: nil)
+                self.hideLoading({
+                    self.popAlert("Load Failed", text: "This could be due to a weak network connection. If the problem persists, please contact us.")
+                })
             })
         }
     }

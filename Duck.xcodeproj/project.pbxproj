@@ -97,6 +97,7 @@
 		EC7889DF1D2882850084B9FF /* MarkerAggregator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerAggregator.swift; sourceTree = "<group>"; };
 		EC7B23481E3FFB0B0014A30C /* MarkerModel 8.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 8.xcdatamodel"; sourceTree = "<group>"; };
 		EC7B23491E3FFC4C0014A30C /* FavoritesModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FavoritesModel.swift; sourceTree = "<group>"; };
+		EC89F8E31E50A729006DB436 /* MarkerModel 9.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = "MarkerModel 9.xcdatamodel"; sourceTree = "<group>"; };
 		EC8F84D81E3AC95D0087FB41 /* MarkersWrapperController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkersWrapperController.swift; sourceTree = "<group>"; };
 		EC9B21001E32431800A7FD84 /* MarkerRequest.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkerRequest.swift; sourceTree = "<group>"; };
 		EC9EE2CC1CFB3E8D00DC9060 /* NounViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NounViewController.swift; sourceTree = "<group>"; };
@@ -694,6 +695,7 @@
 		EC1D79311E3F70E500CFC1FF /* MarkerModel.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				EC89F8E31E50A729006DB436 /* MarkerModel 9.xcdatamodel */,
 				EC7B23481E3FFB0B0014A30C /* MarkerModel 8.xcdatamodel */,
 				EC1D79391E3F70FB00CFC1FF /* MarkerModel 7.xcdatamodel */,
 				EC1D79321E3F70E500CFC1FF /* MarkerModel 3.xcdatamodel */,
@@ -703,7 +705,7 @@
 				EC1D79361E3F70E500CFC1FF /* MarkerModel.xcdatamodel */,
 				EC1D79371E3F70E500CFC1FF /* MarkerModel2.xcdatamodel */,
 			);
-			currentVersion = EC7B23481E3FFB0B0014A30C /* MarkerModel 8.xcdatamodel */;
+			currentVersion = EC89F8E31E50A729006DB436 /* MarkerModel 9.xcdatamodel */;
 			path = MarkerModel.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

@@ -14,7 +14,6 @@ class MarkerRequest: ApiRequestDelegate {
     
     var apiRequest: ApiRequest
     var loadByIdCompletion: ((_ markers: [Marker]?) -> Void)? = nil
-    var loadByIdFail: (() -> Void)? = nil
     var failure: (() -> Void)? = nil
     
     init () {
@@ -65,7 +64,7 @@ class MarkerRequest: ApiRequestDelegate {
         }
         
         self.loadByIdCompletion = completion
-        self.loadByIdFail = failure
+        self.failure = failure
         
         // Make request
         apiRequest.getMarkerDataById(params)
