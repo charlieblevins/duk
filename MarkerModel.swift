@@ -20,7 +20,6 @@ class Marker: NSObject, ApiRequestDelegate {
     
     var latitude, longitude: Double?
     var timestamp: Double?
-    let created: NSDate
     var photo: Data?
     var photo_md: Data?
     var photo_sm: Data?
@@ -75,6 +74,11 @@ class Marker: NSObject, ApiRequestDelegate {
     
     private var editMarkerCompletion: ((_ success: Bool, _ message: String?)->Void)? = nil
     
+    let created: NSDate
+    
+    lazy var createdString: String = {
+        return Marker.formatDate(nsdate: self.created)
+    }()
     
     var coordinate: CLLocationCoordinate2D? {
         get {
@@ -217,7 +221,14 @@ class Marker: NSObject, ApiRequestDelegate {
         // Get username
         self.user_id = data.value(forKey: "user_id") as? String
         
-        self.created = data.value(forKey: "created") as! NSDate
+        // Convert date from json format to NSDate
+        if let raw = data.value(forKey: "createdDate") as? String, let date = Marker.formatDate(string: raw) {
+            self.created = date
+            
+        } else {
+            print("Init failure: Could not parse created date")
+            return nil
+        }
     }
     
     // Make a copy of another marker
@@ -706,6 +717,22 @@ class Marker: NSObject, ApiRequestDelegate {
         }
         
         return nil
+    }
+    
+    static func formatDate (string: String) -> NSDate? {
+        let formatter: DateFormatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        let date = formatter.date(from: string) as NSDate?
+        
+        return date
+    }
+    
+    static func formatDate (nsdate: NSDate) -> String {
+        let formatter: DateFormatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSXXXXX"
+        
+        return formatter.string(from: nsdate as Date)
     }
 
     // Format noun(s) in attributed style. Primary noun should be bold.

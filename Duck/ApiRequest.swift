@@ -97,6 +97,7 @@ class ApiRequest {
                 multipartFormData.append("\(marker.latitude!)".data(using: String.Encoding.utf8)!, withName: "latitude")
                 multipartFormData.append("\(marker.longitude!)".data(using: String.Encoding.utf8)!, withName: "longitude")
                 multipartFormData.append("\(marker.tags!)".data(using: String.Encoding.utf8)!, withName: "tags")
+                multipartFormData.append("\(marker.createdString)".data(using: String.Encoding.utf8)!, withName: "created")
                 multipartFormData.append(marker.photo!, withName: "photo", fileName: "photo", mimeType: "image/jpeg")
                 multipartFormData.append(marker.photo_md!, withName: "photo_md", fileName: "photo_md", mimeType: "image/jpeg")
                 multipartFormData.append(marker.photo_sm!, withName: "photo_sm", fileName: "photo_sm", mimeType: "image/jpeg")

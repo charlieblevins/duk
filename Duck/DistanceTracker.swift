@@ -105,7 +105,7 @@ class DistanceTracker: NSObject, CLLocationManagerDelegate {
         fetchReq.entity = NSEntityDescription.entity(forEntityName: "Marker", in: managedContext)
 
         fetchReq.resultType = .dictionaryResultType
-        fetchReq.propertiesToFetch = ["latitude", "longitude", "timestamp", "public_id", "tags"]
+        fetchReq.propertiesToFetch = ["latitude", "longitude", "timestamp", "public_id", "tags", "created"]
 
 
         do {
