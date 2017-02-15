@@ -119,7 +119,7 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         
         var found_markers = [Marker]()
         
-        let markers_from_core = Marker.allMarkersWithFields(["latitude", "longitude", "timestamp", "public_id", "tags", "user_id", "created", "approved"])
+        let markers_from_core = Marker.allMarkersWithFields(Marker.requiredFields)
         
         if markers_from_core.count == 0 {
             return nil
@@ -159,7 +159,7 @@ class MarkerAggregator: NSObject, ApiRequestDelegate, CLLocationManagerDelegate,
         } else if searchType == .address {
             
             // Replace distance_from_me with distance from "address"
-            markers = Marker.allMarkersWithFields(["latitude", "longitude", "timestamp", "public_id", "tags"])
+            markers = Marker.allMarkersWithFields(Marker.requiredFields)
             markers = markers.map({ marker in
                 
                 let new_marker = marker

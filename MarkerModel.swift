@@ -109,6 +109,8 @@ class Marker: NSObject, ApiRequestDelegate {
         }
     }
     
+    static let requiredFields = ["tags", "latitude", "longitude", "timestamp", "public_id", "created", "approved", "user_id"]
+    
     override init() {
         self.latitude = nil
         self.longitude = nil
@@ -530,8 +532,7 @@ class Marker: NSObject, ApiRequestDelegate {
                 return
             }
             
-            let fields = ["tags", "latitude", "longitude", "photo_md", "timestamp", "public_id", "created", "approved", "user_id"]
-            guard let marker = Marker.getMarkerFromCore(t, fields: fields) else {
+            guard let marker = Marker.getMarkerFromCore(t, additionalFields: ["photo_md"]) else {
                 print("Error: Cannot get map marker - no marker found with timestamp \(t)")
                 completion(nil)
                 return
@@ -710,11 +711,13 @@ class Marker: NSObject, ApiRequestDelegate {
         return found
     }
     
-    static func getMarkerFromCore (_ timestamp: Double, fields: [String]) -> Marker? {
+    static func getMarkerFromCore (_ timestamp: Double, additionalFields: [String]) -> Marker? {
         
         let pred = NSPredicate(format: "timestamp = %lf", timestamp)
         
-        let data = Util.fetchCoreData("Marker", predicate: pred, fields: fields)
+        let finalFields = Marker.requiredFields + additionalFields
+        
+        let data = Util.fetchCoreData("Marker", predicate: pred, fields: finalFields)
         if data.count > 0 {
             return Marker(fromCoreData: data[0] as AnyObject)
         }

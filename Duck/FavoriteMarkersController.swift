@@ -75,8 +75,7 @@ class FavoriteMarkersController: UITableViewController {
         fetchReq.predicate = NSPredicate(format: "public_id IN %@", ids)
         
         fetchReq.resultType = .dictionaryResultType
-        //fetchReq.propertiesToFetch = ["timestamp", "public_id", "tags", "photo_sm"]
-        fetchReq.propertiesToFetch = ["timestamp", "public_id", "tags", "approved", "created", "user_id"]
+        fetchReq.propertiesToFetch = Marker.requiredFields
         
         do {
             let markers = try managedContext.fetch(fetchReq)

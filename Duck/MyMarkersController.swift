@@ -157,7 +157,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         fetchReq.entity = NSEntityDescription.entity(forEntityName: "Marker", in: managedContext)
         
         fetchReq.resultType = .dictionaryResultType
-        fetchReq.propertiesToFetch = ["timestamp", "public_id", "tags", "approved", "created", "user_id"]
+        fetchReq.propertiesToFetch = Marker.requiredFields
         
         fetchReq.sortDescriptors = [NSSortDescriptor(key: "created", ascending: false)]
         
