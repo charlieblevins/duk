@@ -6,16 +6,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Duck/AppDelegate.swift"
-            timestampString = "508706909.626031"
+            filePath = "Duck/AddMarkerController.swift"
+            timestampString = "508811793.789467"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "48"
-            endingLineNumber = "48"
-            landmarkName = "application(_:didFinishLaunchingWithOptions:)"
+            startingLineNumber = "293"
+            endingLineNumber = "293"
+            landmarkName = "initDownloadSwitch(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -74,7 +74,7 @@ class Marker: NSObject, ApiRequestDelegate {
     
     private var editMarkerCompletion: ((_ success: Bool, _ message: String?)->Void)? = nil
     
-    let created: NSDate
+    var created: NSDate
     
     lazy var createdString: String = {
         return Marker.formatDate(nsdate: self.created)
@@ -285,6 +285,8 @@ class Marker: NSObject, ApiRequestDelegate {
         marker_data.setValue(public_id, forKey: "public_id")
         
         marker_data.setValue(user_id, forKey: "user_id")
+        
+        marker_data.setValue(created, forKey: "created")
         
         // 4. Save the marker object
         do {

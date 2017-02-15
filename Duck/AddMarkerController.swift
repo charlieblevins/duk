@@ -289,8 +289,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     func initDownloadSwitch (_ marker: Marker) {
         
-        // Hide download option if not public
-        if marker.isPublic() == false || marker.isFavorite == false {
+        // Hide download option if not owned by this user and not already a favorite
+        if marker.isOwned == false && marker.isFavorite == false {
             toggleDownloadSwitch(false)
         }
         
@@ -300,7 +300,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         } else {
             DownloadSwitch.isOn = false
         }
-        
 
         DownloadSwitch.addTarget(self, action: #selector(self.downloadSwitchTapped), for: .touchUpInside)
     }
@@ -469,6 +468,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     // Store coords when shutter is tapped
     func didTapShutter() {
         
+        // update created time
+        self.editMarker?.created = NSDate()
+        
         // triggers didFinish...
         self.imagePicker.takePicture()
     }
@@ -624,7 +626,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             return
         }
         
-        // Only tag changes are allowed for existing markers
         if existingMarker == false {
             
             // Save marker in core data
@@ -636,6 +637,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             return
         }
         
+        // Only tag changes are allowed for existing markers
         if marker.public_id == nil && marker.timestamp != nil {
             if marker.updateInCore(["tags"]) {
                 self.previousView()
