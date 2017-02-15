@@ -237,6 +237,7 @@ class Marker: NSObject, ApiRequestDelegate {
         self.longitude = marker.longitude
         
         self.timestamp = marker.timestamp
+        self.public_id = marker.public_id
         
         self.photo = marker.photo
         self.photo_md = marker.photo_md
@@ -529,7 +530,7 @@ class Marker: NSObject, ApiRequestDelegate {
                 return
             }
             
-            let fields = ["tags", "latitude", "longitude", "photo_md", "timestamp", "public_id", "approved", "user_id"]
+            let fields = ["tags", "latitude", "longitude", "photo_md", "timestamp", "public_id", "created", "approved", "user_id"]
             guard let marker = Marker.getMarkerFromCore(t, fields: fields) else {
                 print("Error: Cannot get map marker - no marker found with timestamp \(t)")
                 completion(nil)
