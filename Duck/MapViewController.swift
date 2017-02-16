@@ -400,6 +400,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         
         // Set tags (stored in map marker obj)
         customInfoWindow.tags.attributedText = Marker.formatNouns(custom_marker.tags)
+        customInfoWindow.tags.lineBreakMode = .byTruncatingTail
+        customInfoWindow.tags.numberOfLines = 2
         
         // Get image for local marker
         if custom_marker.dataLocation == .local {

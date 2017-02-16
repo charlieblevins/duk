@@ -1,34 +1,44 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11762" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11757"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
         <placeholder placeholderIdentifier="IBFirstResponder" id="-2" customClass="UIResponder"/>
         <view contentMode="scaleToFill" id="iN0-l3-epB" customClass="InfoWindowView" customModule="Duck" customModuleProvider="target">
-            <rect key="frame" x="0.0" y="0.0" width="221" height="321"/>
+            <rect key="frame" x="0.0" y="0.0" width="221" height="355"/>
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
-                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#tag1, #tag2" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2gM-iB-MWf" userLabel="Tags">
+                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="#tag1, #tag2" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="2gM-iB-MWf" userLabel="Tags">
+                    <rect key="frame" x="10.5" y="248" width="201" height="42"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="42" id="KiQ-Hy-ZZl"/>
+                    </constraints>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
                 </label>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="EXZ-wg-Ysb">
+                    <rect key="frame" x="69" y="305" width="83" height="30"/>
                     <state key="normal" title="More Detail "/>
                     <connections>
                         <action selector="didTapMoreDetail:" destination="iN0-l3-epB" eventType="touchUpInside" id="cDi-Bu-A7W"/>
                     </connections>
                 </button>
                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="0Wk-YV-DG5" userLabel="Image">
+                    <rect key="frame" x="-9.5" y="0.0" width="240" height="240"/>
                     <constraints>
                         <constraint firstAttribute="width" constant="240" id="6Oz-Z0-V9J"/>
                         <constraint firstAttribute="height" constant="240" id="zu6-nQ-csQ"/>
                     </constraints>
                 </imageView>
                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Loading: 0%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vzl-Dv-PQz" userLabel="Loading">
+                    <rect key="frame" x="64" y="110" width="93.5" height="20.5"/>
                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <nil key="highlightedColor"/>
@@ -37,7 +47,8 @@
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
                 <constraint firstItem="2gM-iB-MWf" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="39s-oE-Zx8"/>
-                <constraint firstItem="2gM-iB-MWf" firstAttribute="top" secondItem="0Wk-YV-DG5" secondAttribute="bottom" constant="15" id="GbT-UY-Vvt"/>
+                <constraint firstItem="2gM-iB-MWf" firstAttribute="width" secondItem="iN0-l3-epB" secondAttribute="width" constant="-20" id="7gR-h1-6Gq"/>
+                <constraint firstItem="2gM-iB-MWf" firstAttribute="top" secondItem="0Wk-YV-DG5" secondAttribute="bottom" constant="8" id="GbT-UY-Vvt"/>
                 <constraint firstItem="0Wk-YV-DG5" firstAttribute="top" secondItem="iN0-l3-epB" secondAttribute="top" id="Gn3-oa-vAy"/>
                 <constraint firstItem="0Wk-YV-DG5" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="SGG-95-Wxg"/>
                 <constraint firstItem="Vzl-Dv-PQz" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="aSF-og-Ce9"/>
@@ -52,7 +63,7 @@
                 <outlet property="moreDetailBtn" destination="EXZ-wg-Ysb" id="Iqg-X8-cwC"/>
                 <outlet property="tags" destination="2gM-iB-MWf" id="45u-nq-e9C"/>
             </connections>
-            <point key="canvasLocation" x="109.5" y="277.5"/>
+            <point key="canvasLocation" x="109.5" y="294.5"/>
         </view>
     </objects>
 </document>
