@@ -289,6 +289,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     
     func initDownloadSwitch (_ marker: Marker) {
         
+        // Hide download option if this marker is not public
+        if marker.isPublic() == false {
+            toggleDownloadSwitch(false)
+        }
+        
         // Hide download option if not owned by this user and not already a favorite
         if marker.isOwned == false && marker.isFavorite == false {
             toggleDownloadSwitch(false)
@@ -664,7 +669,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
                     
                     } else {
                         self.hideLoading({
-                            self.popAlert("Update failed", text: "Unable to update public marker")
+                            self.popAlert("Update failed", text: "Make sure you have an active network connection.")
                         })
                     }
                 })

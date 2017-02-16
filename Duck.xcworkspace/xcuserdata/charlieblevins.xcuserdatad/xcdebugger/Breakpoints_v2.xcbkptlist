@@ -10,11 +10,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duck/AddMarkerController.swift"
-            timestampString = "508811793.789467"
+            timestampString = "508942344.479609"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "293"
-            endingLineNumber = "293"
+            startingLineNumber = "298"
+            endingLineNumber = "298"
             landmarkName = "initDownloadSwitch(_:)"
             landmarkType = "7">
          </BreakpointContent>
