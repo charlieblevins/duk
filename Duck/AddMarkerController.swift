@@ -87,7 +87,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         // Existing Marker
         } else {
             
-            self.title = "Edit Marker"
+            if self.editMarker?.isOwned == true {
+                self.title = "Edit Marker"
+            } else {
+                self.title = "Marker Detail"
+            }
             
             // set flag as existing marker. Any changes will only update core data
             self.existingMarker = true
