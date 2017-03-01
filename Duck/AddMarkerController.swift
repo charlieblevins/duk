@@ -269,14 +269,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     func insertExistingData (_ marker: Marker) {
         
         // Add photo
-        if let photo = marker.photo {
-            cameraPhoto.contentMode = .scaleAspectFit
-            cameraPhoto.image = UIImage(data: photo as Data)
-            imageChosen = true
-            
-            // Set delegate and allow zoom
-            cameraPhoto.delegate = self
-            cameraPhoto.allowZoom = true
+        if let photo_data = marker.photo, let image = UIImage(data: photo_data as Data) {
+            setPhoto(image)
         }
         
         // Hide "Add Photo" button
@@ -490,13 +484,9 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         print(info[UIImagePickerControllerMediaMetadata] as Any)
         
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
-            cameraPhoto.contentMode = .scaleAspectFit
-            cameraPhoto.image = pickedImage
-            imageChosen = true
             
-            // Set delegate and allow zoom
-            cameraPhoto.delegate = self
-            cameraPhoto.allowZoom = true
+            // Add photo to UI
+            setPhoto(pickedImage)
             
             // Update photo data
             editMarker!.updateImage(pickedImage)
@@ -506,6 +496,18 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         }
         
         dismiss(animated: true, completion: nil)
+    }
+    
+    func setPhoto (_ image: UIImage) {
+        cameraPhoto.contentMode = .scaleAspectFit
+        cameraPhoto.image = image
+        imageChosen = true
+        
+        addPhotoBtn.setTitle("Change Photo", for: .normal)
+        
+        // Set delegate and allow zoom
+        cameraPhoto.delegate = self
+        cameraPhoto.allowZoom = true
     }
     
     // Edit Noun action - Loads noun editor view (NounViewController)
