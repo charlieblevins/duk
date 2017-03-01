@@ -737,13 +737,14 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
             let url = URL(string: url_str)
             self.markerImage.kf.setImage(
                 with: url,
-                placeholder: nil,
+                placeholder: UIImage(named: "photoMarker2"),
                 options: nil,
                 progressBlock: nil,
                 completionHandler: { (image, error, cacheType, imageURL) -> () in
                     
                     if error !== nil {
                         print("image GET failed: \(error)")
+                        self.markerImage.image = UIImage(named: "photoMarker2")
                         return Void()
                     }
                     

@@ -55,17 +55,18 @@ class MarkerIconView: UIView {
         
         imageView.kf.setImage(
             with: URL(string: "http://dukapp.io/icon/\(file)?key=b185052862d41f43b2e3ffb06ed8b335")!,
-            placeholder: nil,
+            placeholder: UIImage(named: "photoMarker2"),
             options: nil,
             progressBlock: nil,
             completionHandler: { (image, error, cacheType, imageURL) -> () in
                 
                 if error !== nil {
                     print("image GET failed: \(error)")
-                    return Void()
+                    imageView.image = UIImage(named: "photoMarker2")
+                    
+                } else {
+                    imageView.image = image
                 }
-                
-                imageView.image = image
                 
                 complete()
         })
