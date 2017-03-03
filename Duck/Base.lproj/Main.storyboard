@@ -726,10 +726,10 @@
                                                                 </constraints>
                                                             </view>
                                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="UMB-Sa-isi" userLabel="Nouns">
-                                                                <rect key="frame" x="54" y="0.0" width="205" height="50"/>
+                                                                <rect key="frame" x="54" y="0.0" width="201" height="50"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nouns" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="nFA-7t-3et" userLabel="noun-text">
-                                                                        <rect key="frame" x="5" y="5" width="195" height="40"/>
+                                                                        <rect key="frame" x="2" y="5" width="185" height="40"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <nil key="highlightedColor"/>
@@ -741,22 +741,22 @@
                                                                 </accessibility>
                                                                 <constraints>
                                                                     <constraint firstItem="nFA-7t-3et" firstAttribute="height" secondItem="UMB-Sa-isi" secondAttribute="height" constant="-10" id="5d4-0M-7fN"/>
-                                                                    <constraint firstItem="nFA-7t-3et" firstAttribute="leading" secondItem="UMB-Sa-isi" secondAttribute="leading" constant="5" id="6P0-iS-i7y"/>
+                                                                    <constraint firstItem="nFA-7t-3et" firstAttribute="leading" secondItem="UMB-Sa-isi" secondAttribute="leading" constant="2" id="6P0-iS-i7y"/>
                                                                     <constraint firstItem="nFA-7t-3et" firstAttribute="top" secondItem="UMB-Sa-isi" secondAttribute="top" constant="5" id="kt4-1X-YqW"/>
-                                                                    <constraint firstItem="nFA-7t-3et" firstAttribute="width" secondItem="UMB-Sa-isi" secondAttribute="width" constant="-10" id="mT7-ay-iId"/>
+                                                                    <constraint firstItem="nFA-7t-3et" firstAttribute="width" secondItem="UMB-Sa-isi" secondAttribute="width" constant="-16" id="mT7-ay-iId"/>
                                                                 </constraints>
                                                             </view>
                                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="XIY-Ol-37B">
-                                                                <rect key="frame" x="267" y="10" width="30" height="30"/>
-                                                                <state key="normal" title="Edit"/>
+                                                                <rect key="frame" x="255" y="10" width="76" height="30"/>
+                                                                <state key="normal" title="Add Nouns"/>
                                                                 <connections>
                                                                     <action selector="EditNoun:" destination="qwp-Vw-ANI" eventType="touchUpInside" id="LJz-g8-5uc"/>
                                                                 </connections>
                                                             </button>
                                                         </subviews>
                                                         <constraints>
-                                                            <constraint firstItem="UMB-Sa-isi" firstAttribute="width" secondItem="JoL-QU-Pnj" secondAttribute="width" constant="-130" id="6vT-o8-hy4"/>
-                                                            <constraint firstItem="XIY-Ol-37B" firstAttribute="leading" secondItem="UMB-Sa-isi" secondAttribute="trailing" constant="8" id="BKn-zR-DIE"/>
+                                                            <constraint firstItem="UMB-Sa-isi" firstAttribute="width" secondItem="JoL-QU-Pnj" secondAttribute="width" constant="-134" id="6vT-o8-hy4"/>
+                                                            <constraint firstItem="XIY-Ol-37B" firstAttribute="leading" secondItem="UMB-Sa-isi" secondAttribute="trailing" id="BKn-zR-DIE"/>
                                                             <constraint firstItem="XIY-Ol-37B" firstAttribute="centerY" secondItem="JoL-QU-Pnj" secondAttribute="centerY" id="FNC-ue-lFb"/>
                                                             <constraint firstItem="UMB-Sa-isi" firstAttribute="width" secondItem="JoL-QU-Pnj" secondAttribute="width" constant="-130" id="NwP-4M-0V9"/>
                                                             <constraint firstItem="UMB-Sa-isi" firstAttribute="top" secondItem="JoL-QU-Pnj" secondAttribute="top" id="Rdy-z2-gnx"/>
@@ -844,13 +844,13 @@
                                                                 <rect key="frame" x="281" y="0.0" width="76" height="80"/>
                                                                 <subviews>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Accuracy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vgB-Me-b1n">
-                                                                        <rect key="frame" x="2.5" y="15" width="72" height="21"/>
+                                                                        <rect key="frame" x="2" y="15" width="72" height="21"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                         <color key="textColor" red="0.33333333333333331" green="0.33333333333333331" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <nil key="highlightedColor"/>
                                                                     </label>
                                                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GAw-hC-cyd" userLabel="Acc">
-                                                                        <rect key="frame" x="17.5" y="41" width="42" height="21"/>
+                                                                        <rect key="frame" x="17" y="41" width="42" height="21"/>
                                                                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                                         <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                                         <nil key="highlightedColor"/>
@@ -1214,7 +1214,7 @@
             <objects>
                 <navigationController storyboardIdentifier="MainNavigation" id="JpL-cz-e6M" customClass="MainNavigation" customModule="Duck" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="V3g-Kp-vZr"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="58t-KB-4nF">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="58t-KB-4nF">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

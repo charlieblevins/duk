@@ -26,27 +26,41 @@ class MarkerIconView: UIView {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
+        
+        // ensure icon view is below spinner
+        self.addSubview(self.iconView)
+        
         self.addSubview(spinner)
     }
     
     func setNoun (_ noun: String?) {
         
+        self.stopSpinner()
+        
         // If nil, set to placeholder
-        guard noun != nil else {
-            iconView.image = UIImage(named: "photoMarker")
+        guard let final_noun = noun else {
+            self.iconView.image = UIImage(named: "photoMarker2")
             return
         }
         
         // load the icon
-        spinner.startAnimating()
+        self.startSpinner()
         
-        MarkerIconView.loadIconImage(noun!, imageView: iconView, complete: {
-            self.spinner.stopAnimating()
-            self.spinner.isHidden = true
+        MarkerIconView.loadIconImage(final_noun, imageView: iconView, complete: {
+            self.stopSpinner()
             
             self.spinner.removeFromSuperview()
-            self.addSubview(self.iconView)
         })
+    }
+    
+    func startSpinner () {
+        self.spinner.isHidden = false
+        self.spinner.startAnimating()
+    }
+    
+    func stopSpinner () {
+        self.spinner.stopAnimating()
+        self.spinner.isHidden = true
     }
     
     static func loadIconImage (_ noun: String, imageView: UIImageView, complete: @escaping ()->Void) {

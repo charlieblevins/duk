@@ -110,6 +110,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             initDownloadSwitch(marker)
             initFavoriteSwitch(marker)
             
+            // Go to edit noun view on noun text tap
+            let tap = UITapGestureRecognizer(target: self, action: #selector(AddMarkerController.goToNounEditor))
+            NounText.isUserInteractionEnabled = true
+            NounText.addGestureRecognizer(tap)
+            
             // If marker not editable, hide edit buttons
             if self.editMarker?.isOwned == false {
                 preventEditing()
@@ -246,14 +251,20 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         }
     }
     
+    func tappedNounText(sender: UILabel) {
+        
+    }
+    
     // Refresh UI display of Nouns
     // including icon
     func updateNouns(_ nouns: String?) {
         
         guard let new_nouns = nouns else {
-            NounText.attributedText = NSMutableAttributedString(string: "Add Nouns Here", attributes: nil)
+            NounText.attributedText = NSMutableAttributedString(string: "Nouns...", attributes: nil)
 
             self.iconView.setNoun(nil)
+            
+            EditNoun.titleLabel?.text = "Add Nouns"
             return
         }
         
@@ -261,6 +272,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         NounText.attributedText = Marker.formatNouns(new_nouns)
         
         self.iconView.setNoun(Marker.getPrimaryNoun(new_nouns))
+        
+        EditNoun.setTitle("Edit Nouns", for: .normal)
     }
 
     
@@ -282,7 +295,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         accLabel.text = "N/A"
         
         // Update noun display and icon
-        updateNouns(marker.tags!)
+        updateNouns(marker.tags)
     }
     
     func initDownloadSwitch (_ marker: Marker) {
@@ -513,6 +526,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     // Edit Noun action - Loads noun editor view (NounViewController)
     @IBAction func EditNoun(_ sender: AnyObject) {
         print("Loading NounViewController")
+        
+        goToNounEditor()
+    }
+    
+    func goToNounEditor () {
         
         let nounViewController = self.storyboard!.instantiateViewController(withIdentifier: "NounViewController") as! NounViewController
         nounViewController.delegate = self
