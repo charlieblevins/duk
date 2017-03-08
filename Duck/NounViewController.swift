@@ -18,6 +18,7 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     @IBOutlet weak var NounList: UITableView!
     @IBOutlet weak var NounEntryField: UITextField!
     @IBOutlet weak var CellNounLabel: UILabel!
+    @IBOutlet weak var NounListBottomConstraint: NSLayoutConstraint!
     
     // Raw data from AddMarkerController
     var nounsRaw: String? = nil
@@ -51,12 +52,56 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         // display an Edit button in the navigation bar for this view controller.
         self.navigationItem.rightBarButtonItem = self.editButtonItem
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillShow), name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(self.keyboardWillHide), name: .UIKeyboardWillHide, object: nil)
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        super.viewWillDisappear(animated)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: .UIKeyboardWillHide, object: nil)
+    }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         
         // Dispose of any resources that can be recreated.
         print("mem warning")
+    }
+    
+    func keyboardWillShow (notification: Notification) {
+        animateHeightWithNotification(notification, action: "add")
+    }
+    
+    func keyboardWillHide (notification: Notification) {
+        animateHeightWithNotification(notification, action: "subtract")
+    }
+    
+    func animateHeightWithNotification (_ notification: Notification, action: String) {
+        
+        guard let user_info = notification.userInfo else {
+            print("expected user info in notification")
+            return
+        }
+        
+        let duration = (user_info[UIKeyboardAnimationDurationUserInfoKey] as! NSNumber).doubleValue
+        let end_frame = (user_info[UIKeyboardFrameEndUserInfoKey] as! NSValue).cgRectValue
+        let converted_end_frame = self.view.convert(end_frame, to: self.NounList)
+        let raw_animation_curve = (user_info[UIKeyboardAnimationCurveUserInfoKey] as! NSNumber).uintValue << 16
+        let animation_curve = UIViewAnimationOptions.init(rawValue: UInt(raw_animation_curve))
+        
+        if (action == "subtract") {
+            self.NounListBottomConstraint.constant = self.NounListBottomConstraint.constant - converted_end_frame.height
+        } else {
+            self.NounListBottomConstraint.constant = self.NounListBottomConstraint.constant + converted_end_frame.height
+        }
+        
+        UIView.animate(withDuration: duration, delay: 0.0, options: [.beginFromCurrentState, animation_curve], animations: {
+            self.view.layoutIfNeeded()
+        }, completion: nil)
     }
     
     func hideKeyboardWhenTappedAround() {
@@ -120,7 +165,7 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         //textField.resignFirstResponder()
         
         // Get noun
-        if textField.text != nil {
+        if textField.text != nil && textField.text != "" {
             
             let noun_name = applyNounFormat(textField.text!)
             
