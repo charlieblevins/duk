@@ -10,45 +10,13 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Duck/NounViewController.swift"
-            timestampString = "510671950.11596"
+            timestampString = "510757962.443753"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "102"
-            endingLineNumber = "102"
-            landmarkName = "animateHeightWithNotification(_:action:)"
+            startingLineNumber = "93"
+            endingLineNumber = "93"
+            landmarkName = "scrollToBottom()"
             landmarkType = "7">
-            <Locations>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Duck.NounViewController.animateHeightWithNotification (Foundation.Notification, action : Swift.String) -&gt; ()"
-                  moduleName = "Duck"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/charlieblevins/Desktop/Sandbox/Duck/Duck/NounViewController.swift"
-                  timestampString = "510671950.45928"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "102"
-                  endingLineNumber = "102"
-                  offsetFromSymbolStart = "2960">
-               </Location>
-               <Location
-                  shouldBeEnabled = "No"
-                  ignoreCount = "0"
-                  continueAfterRunningActions = "No"
-                  symbolName = "Duck.NounViewController.(animateHeightWithNotification (Foundation.Notification, action : Swift.String) -&gt; ()).(closure #1)"
-                  moduleName = "Duck"
-                  usesParentBreakpointCondition = "Yes"
-                  urlString = "file:///Users/charlieblevins/Desktop/Sandbox/Duck/Duck/NounViewController.swift"
-                  timestampString = "510671950.461877"
-                  startingColumnNumber = "9223372036854775807"
-                  endingColumnNumber = "9223372036854775807"
-                  startingLineNumber = "103"
-                  endingLineNumber = "103"
-                  offsetFromSymbolStart = "24">
-               </Location>
-            </Locations>
          </BreakpointContent>
       </BreakpointProxy>
    </Breakpoints>

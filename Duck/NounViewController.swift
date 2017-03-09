@@ -32,9 +32,6 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Put focus on text field
-        NounEntryField.becomeFirstResponder()
-        
         self.hideKeyboardWhenTappedAround()
         
         // Convert string of nouns to array
@@ -51,6 +48,9 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
         
         // display an Edit button in the navigation bar for this view controller.
         self.navigationItem.rightBarButtonItem = self.editButtonItem
+        
+        // Put focus on text field - needs to happen after data population
+        NounEntryField.becomeFirstResponder()
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -74,10 +74,24 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
     
     func keyboardWillShow (notification: Notification) {
         animateHeightWithNotification(notification, action: "add")
+        scrollToBottom()
     }
     
     func keyboardWillHide (notification: Notification) {
         animateHeightWithNotification(notification, action: "subtract")
+    }
+    
+    func scrollToBottom () {
+        let total = self.NounList.numberOfRows(inSection: 0)
+        
+        guard total > 0 else {
+            print("cannot scrollToBottom: now nouns in view")
+            return
+        }
+        
+        let last_index = total - 1
+        let last_path = IndexPath(row: last_index, section: 0)
+        self.NounList.scrollToRow(at: last_path, at: .bottom, animated: true)
     }
     
     func animateHeightWithNotification (_ notification: Notification, action: String) {
@@ -180,6 +194,8 @@ class NounViewController: UIViewController, UITextFieldDelegate, UITableViewDele
             
             // Clear field
             textField.text = ""
+            
+            scrollToBottom()
         }
         
         return true
