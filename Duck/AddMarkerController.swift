@@ -72,60 +72,16 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
 
         // New Marker
         if editMarker == nil {
-            
-            self.title = "Add Marker"
-
-            // New empty marker
-            editMarker = Marker()
-            
-            // Receive gps coords
-            // only if not editing already existing marker.
-            // Start receiving location data
-            listenForCoords()
-            
-            self.origNouns = nil
+            applyAddMode(Marker())
             
         // Existing Marker
         } else {
-            
-            if self.editMarker?.isOwned == true {
-                self.title = "Edit Marker"
-            } else {
-                self.title = "Marker Detail"
-            }
-            
-            // set flag as existing marker. Any changes will only update core data
-            self.existingMarker = true
-            
-            insertExistingData(editMarker!)
-            
-            // Don't show initially (no changes to save yet)
-            self.SaveBtn.isHidden = true
-            
-            // Store nouns before editing
-            self.origNouns = self.editMarker?.tags
+            applyExistingMode(editMarker!)
         }
         
-        // Show/hide download switch
-        if let marker = editMarker {
-            initDownloadSwitch(marker)
-            initFavoriteSwitch(marker)
-            
-            // Go to edit noun view on noun text tap
-            let tap = UITapGestureRecognizer(target: self, action: #selector(AddMarkerController.goToNounEditor))
-            NounText.isUserInteractionEnabled = true
-            NounText.addGestureRecognizer(tap)
-            
-            // If marker not editable, hide edit buttons
-            if self.editMarker?.isOwned == false {
-                preventEditing()
-            }
+        initSwitches(editMarker!)
         
-        // no marker
-        } else {
-            print("Error: cannot load add marker view. No editMarker object")
-            return
-        }
+        initGestures()
     }
     
     override func viewDidLayoutSubviews() {
@@ -147,7 +103,78 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         self.overlay("MarkerGuidelinesViewController")
     }
+    
+    // Setup view for adding a new marker
+    func applyAddMode (_ marker: Marker) {
+        
+        self.title = "Add Marker"
+        
+        // Don't show initially (no changes to save yet)
+        self.SaveBtn.isHidden = true
+        self.PublishBtn.isHidden = true
+        
+        // New empty marker
+        editMarker = marker
+        
+        // Receive gps coords
+        // Start receiving location data
+        listenForCoords()
+    }
+    
+    // Setup view for existing marker
+    func applyExistingMode (_ existingMarker: Marker) {
+        
+        // set flag as existing marker. Any changes will only update core data
+        self.existingMarker = true
+        
+        insertExistingData(existingMarker)
+        
+        // Don't show initially (no changes to save yet)
+        self.SaveBtn.isHidden = true
+        self.PublishBtn.isHidden = true
+        
+        // Store nouns before editing
+        self.origNouns = existingMarker.tags
+        
+        if self.editMarker?.isOwned == true {
+            applyEditMode(existingMarker)
+        } else {
+            applyDetailMode()
+        }
+    }
 
+    // Setup view for editable marker
+    func applyEditMode (_ marker: Marker) {
+        self.title = "Edit Marker"
+        
+        // show publish button if private
+        if !marker.isPublic() {
+            self.PublishBtn.isHidden = false
+        }
+    }
+    
+    // Setup view for unowned marker
+    func applyDetailMode () {
+        self.title = "Marker Detail"
+        
+        // hide edit buttons
+        preventEditing()
+    }
+    
+    // Show/hide switches
+    func initSwitches (_ marker: Marker) {
+        initDownloadSwitch(marker)
+        initFavoriteSwitch(marker)
+    }
+    
+    // Initialize gestures
+    func initGestures () {
+        
+        // Go to edit noun view on noun text tap
+        let tap = UITapGestureRecognizer(target: self, action: #selector(AddMarkerController.goToNounEditor))
+        NounText.isUserInteractionEnabled = true
+        NounText.addGestureRecognizer(tap)
+    }
     
     // Load camera to take photo
     @IBAction func addPhoto(_ sender: UIButton) {
