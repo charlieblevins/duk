@@ -22,6 +22,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     @IBOutlet weak var LngContainer: UIView!
     @IBOutlet weak var AccContainer: UIView!
     @IBOutlet weak var SaveBtn: UIButton!
+    @IBOutlet weak var PublishBtn: UIButton!
     @IBOutlet weak var accLabel: UILabel!
     @IBOutlet weak var lngLabel: UILabel!
     @IBOutlet weak var latLabel: UILabel!

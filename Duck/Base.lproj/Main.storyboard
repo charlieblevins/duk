@@ -960,14 +960,29 @@
                                             <action selector="saveButtonTapped:" destination="qwp-Vw-ANI" eventType="touchUpInside" id="Kpr-jg-7Xt"/>
                                         </connections>
                                     </button>
+                                    <button opaque="NO" contentMode="scaleToFill" semanticContentAttribute="forceLeftToRight" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bfQ-0r-Ggk" userLabel="Publish Btn">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
+                                        <color key="backgroundColor" red="0.0" green="0.77275390624999996" blue="0.42677721728747547" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <state key="normal" title="Publish" image="flag">
+                                            <color key="titleColor" red="0.9313488561954808" green="0.94851164214661066" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                        </state>
+                                        <connections>
+                                            <action selector="saveButtonTapped:" destination="qwp-Vw-ANI" eventType="touchUpInside" id="9UG-xg-LrT"/>
+                                        </connections>
+                                    </button>
                                 </subviews>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstItem="HUM-2v-u5E" firstAttribute="centerY" secondItem="xc9-8z-WyT" secondAttribute="centerY" id="5rj-37-W3s"/>
                                     <constraint firstItem="HUM-2v-u5E" firstAttribute="height" secondItem="xc9-8z-WyT" secondAttribute="height" id="7Ap-xS-Gsk"/>
                                     <constraint firstItem="HUM-2v-u5E" firstAttribute="width" secondItem="xc9-8z-WyT" secondAttribute="width" id="9ZR-yj-Rqp"/>
+                                    <constraint firstItem="bfQ-0r-Ggk" firstAttribute="height" secondItem="xc9-8z-WyT" secondAttribute="height" id="J4P-Xj-f6z"/>
+                                    <constraint firstItem="bfQ-0r-Ggk" firstAttribute="top" secondItem="xc9-8z-WyT" secondAttribute="top" id="aKT-X9-Lwg"/>
+                                    <constraint firstItem="bfQ-0r-Ggk" firstAttribute="leading" secondItem="xc9-8z-WyT" secondAttribute="leading" id="cml-6j-OOn"/>
                                     <constraint firstItem="HUM-2v-u5E" firstAttribute="centerX" secondItem="xc9-8z-WyT" secondAttribute="centerX" id="gWU-lX-76J"/>
                                     <constraint firstAttribute="height" constant="50" id="jGg-qe-qSX"/>
+                                    <constraint firstItem="bfQ-0r-Ggk" firstAttribute="width" secondItem="xc9-8z-WyT" secondAttribute="width" id="vCC-Iy-fo1"/>
                                 </constraints>
                             </view>
                         </subviews>
@@ -1002,6 +1017,7 @@
                         <outlet property="LngContainer" destination="1Fn-Zb-VSK" id="fDu-ga-XAT"/>
                         <outlet property="NounText" destination="nFA-7t-3et" id="ehU-pc-8sW"/>
                         <outlet property="PhotoSection" destination="CCt-3F-3ql" id="oxe-mx-QxV"/>
+                        <outlet property="PublishBtn" destination="bfQ-0r-Ggk" id="9Ej-lP-VNW"/>
                         <outlet property="SaveBtn" destination="HUM-2v-u5E" id="1bo-Py-oN8"/>
                         <outlet property="accLabel" destination="GAw-hC-cyd" id="CBR-Fq-G2K"/>
                         <outlet property="addPhotoBtn" destination="uay-sv-EJ1" id="uno-v0-EJr"/>
@@ -1291,6 +1307,7 @@
         <image name="camera" width="180" height="128"/>
         <image name="close-x" width="35" height="35"/>
         <image name="close-x-small-white" width="30" height="30"/>
+        <image name="flag" width="27" height="36"/>
         <image name="info" width="20" height="20"/>
     </resources>
     <inferredMetricsTieBreakers>
