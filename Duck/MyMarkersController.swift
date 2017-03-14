@@ -336,8 +336,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
 
         if segue.identifier == "GoToPublish" {
-            print(segue.identifier as Any)
-            print(segue.destination)
             let publishView = segue.destination as! PublishConfirmController
             
             // Get all data for this marker from core

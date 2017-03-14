@@ -110,7 +110,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         self.title = "Add Marker"
         
         // Don't show initially (no changes to save yet)
-        self.SaveBtn.isHidden = true
+        self.toggleButtonEnabled(self.SaveBtn, enabled: false)
         self.PublishBtn.isHidden = true
         
         // New empty marker
@@ -150,6 +150,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         // show publish button if private
         if !marker.isPublic() {
             self.PublishBtn.isHidden = false
+            self.toggleButtonEnabled(self.SaveBtn, enabled: false)
         }
     }
     
@@ -271,11 +272,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         updateNouns(new_nouns)
         
-        // If nouns have changed, show save button
-        if self.origNouns != new_nouns {
-            self.SaveBtn.isHidden = false
-        } else {
-            self.SaveBtn.isHidden = true
+        // If nouns have changed, enable save button
+        if self.origNouns != new_nouns && imageChosen == true {
+            self.PublishBtn.isHidden = true
+            self.toggleButtonEnabled(self.SaveBtn, enabled: true)
         }
     }
     
@@ -425,6 +425,16 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         favoriteSwitch.addTarget(self, action: #selector(self.favoriteSwitchTapped), for: .touchUpInside)
     }
     
+    func toggleButtonEnabled (_ button: UIButton, enabled: Bool) {
+        if enabled {
+            button.isEnabled = true
+            button.alpha = 1.0
+        } else {
+            button.isEnabled = false
+            button.alpha = 0.5
+        }
+    }
+    
     // Add or remove the favorite from core data
     func favoriteSwitchTapped (sender: UISwitch) {
         
@@ -536,7 +546,19 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             updateLocationData()
         }
         
+        // If nouns have changed, show save button
+        if nounsHaveChanged() {
+            self.toggleButtonEnabled(self.SaveBtn, enabled: true)
+        }
+        
         dismiss(animated: true, completion: nil)
+    }
+    
+    func nounsHaveChanged () -> Bool {
+        guard let cur_nouns = self.editMarker?.tags else {
+            return false
+        }
+        return self.origNouns != cur_nouns
     }
     
     func setPhoto (_ image: UIImage) {
@@ -576,6 +598,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         LatContainer.layer.borderColor = lightGray
         LngContainer.layer.borderColor = lightGray
         AccContainer.layer.borderColor = lightGray
+        
+        PublishBtn.imageView?.contentMode = .scaleAspectFit
     }
     
     // Start receiving GPS coordinates. First coordinates received can be innacurate
@@ -729,6 +753,37 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         }
     }
         
+    @IBAction func pubBtnTapped(_ sender: UIButton) {
+        
+        // Sign in credentials exist
+        if Credentials() != nil {
+            
+            self.loadPublishConfirm()
+            
+        // If not signed in, send to account page
+        } else {
+            print("no credentials found")
+            let accountView = self.storyboard!.instantiateViewController(withIdentifier: "AccountViewController") as! AccountViewController
+            accountView.signInSuccessHandler = { credentials in
+                self.loadPublishConfirm()
+            }
+            self.navigationController?.pushViewController(accountView, animated: true)
+        }
+    }
+    
+    func loadPublishConfirm () {
+        
+        // Load publish confirmation view
+        let pub_view = self.storyboard!.instantiateViewController(withIdentifier: "PublishConfirmController") as! PublishConfirmController
+        
+        // pass marker data
+        pub_view.markerData = self.editMarker
+        
+        self.navigationController?.pushViewController(pub_view, completion: {
+            print("complete")
+        })
+    }
+    
     func previousView () {
         
         // Stop location data

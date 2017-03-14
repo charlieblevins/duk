@@ -108,7 +108,6 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
                 break;
             }
         }
-        //self.navigationController?.popViewControllerAnimated(true)
     }
     
     func styleMarkerView () {
