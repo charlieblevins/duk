@@ -19,7 +19,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
     var myMarkersView: MyMarkersController? = nil
     
     var request: ApiRequest?
-    var pending_publish: Dictionary<String, Any>?
+    var pending_publish = Dictionary<String, Any>()
     var movingToMarkerDetail: Bool = false
     
     static var active_requests = [Double:ApiRequest]()
@@ -64,14 +64,21 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         
         // If a publish request is pending, reload data
         // which will trigger the request
-        if self.pending_publish != nil && self.pending_publish!["indexPath"] != nil && self.pending_publish!["marker"] != nil {
+        if let marker = self.pending_publish["marker"] as? Marker {
+            
+            guard let ind = findMarkerInDataSource(marker) else {
+                print("Error: Could no find pending marker in current data source")
+                self.clearPendingPublish()
+                return
+            }
+            let path = IndexPath(item: ind, section: 0)
             
             // Reload data in order to set cell as delegate
-            self.tableView.reloadRows(at: [self.pending_publish!["indexPath"] as! IndexPath], with: .right)
+            self.tableView.reloadRows(at: [path], with: .right)
         
         // Reset pending publish reference
         } else {
-            self.pending_publish = nil
+            self.clearPendingPublish()
         }
     }
     
@@ -111,17 +118,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         var marker_ind: Int? = nil
         if message.editType == .update {
             
-            if savedMarkers.count == 0 {
-                print("No update required as no savedMarkers exist yet")
-                return
-            }
-            
-            if let timestamp = message.marker.timestamp {
-                marker_ind = savedMarkers.index(where: { $0.timestamp == timestamp })
-                
-            } else if let public_id = message.marker.public_id {
-                marker_ind = savedMarkers.index(where: { $0.public_id == public_id })
-            }
+            marker_ind = self.findMarkerInDataSource(message.marker)
             
             guard let index = marker_ind else {
                 print("No matching marker found")
@@ -143,6 +140,23 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
                 }
             }
         }
+    }
+    
+    func findMarkerInDataSource (_ marker: Marker) -> Int? {
+        var marker_ind: Int?
+        
+        if savedMarkers.count == 0 {
+            return nil
+        }
+        
+        if let timestamp = marker.timestamp {
+            marker_ind = savedMarkers.index(where: { $0.timestamp == timestamp })
+            
+        } else if let public_id = marker.public_id {
+            marker_ind = savedMarkers.index(where: { $0.public_id == public_id })
+        }
+        
+        return marker_ind
     }
     
     func loadMarkerData () -> [Marker] {
@@ -230,12 +244,8 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
     func isPendingPublish(_ cell: MarkerTableViewCell, timestamp: Double) -> Bool {
         
         // Start any pending upload requests
-        guard let pending = self.pending_publish else {
-            print("no pending publish array")
-            return false
-        }
         
-        guard let marker = pending["marker"] as? Marker else {
+        guard let marker = pending_publish["marker"] as? Marker else {
             print("Error: value in pending dictionary not castable to Marker")
             return false
         }
@@ -285,11 +295,9 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
 
             
             // Start any pending upload requests
-            if self.pending_publish != nil {
+            if let marker = self.pending_publish["marker"] as? Marker {
                 
-                let marker = self.pending_publish!["marker"] as! Marker
                 let publish_timestamp = marker.timestamp
-                
                 
                 // If timestamps match, set this cell as request delegate
                 if cell_timestamp == publish_timestamp {
@@ -321,15 +329,16 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         print("credentials found")
         
         // Get and store indexpath
-        if self.pending_publish == nil {
-            self.pending_publish = Dictionary()
-        }
+        clearPendingPublish()
         
         let marker_index_path = self.tableView.indexPath(for: cell)
-        self.pending_publish!["indexPath"] = marker_index_path
         
         // Load publish confirmation view
         performSegue(withIdentifier: "GoToPublish", sender: marker_index_path)
+    }
+    
+    func clearPendingPublish () {
+        self.pending_publish = Dictionary()
     }
     
     
@@ -523,7 +532,10 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         request = ApiRequest()
         
         // Get pending request marker data
-        let marker = self.pending_publish!["marker"] as! Marker
+        guard let marker = self.pending_publish["marker"] as? Marker else {
+            print("Error: cannot access marker in pending_publish")
+            return
+        }
         
         // Set this cell as request delegate
         request!.delegate = cell
@@ -541,8 +553,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
             return
         }
         
-        // Clear pending request data
-        self.pending_publish = nil
+        clearPendingPublish()
     }
     
     // MARK: Publish delegate method

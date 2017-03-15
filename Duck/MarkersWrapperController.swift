@@ -15,7 +15,7 @@ class MarkersWrapperController: UIViewController {
     @IBOutlet weak var tableContainer: UIView!
 
     
-    var table: UITableViewController? = nil
+    var table: UITableViewController = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MyMarkersController") as! MyMarkersController
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -26,8 +26,8 @@ class MarkersWrapperController: UIViewController {
     // Remove current table and add the selected one
     @IBAction func toggleTapped(_ sender: UISegmentedControl) {
         
-        self.table?.view.removeFromSuperview()
-        self.table?.removeFromParentViewController()
+        self.table.view.removeFromSuperview()
+        self.table.removeFromParentViewController()
         
         switch sender.selectedSegmentIndex {
         case 0:
@@ -43,17 +43,23 @@ class MarkersWrapperController: UIViewController {
     }
     
     func showMyMarkers () {
+        var table_controller: UITableViewController = self.table
         
-        if let controller_inst = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MyMarkersController") as? MyMarkersController {
-            self.addTable(controller_inst)
+        if !table.isKind(of: MyMarkersController.self) {
+            table_controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "MyMarkersController") as! MyMarkersController
         }
+        
+        self.addTable(table_controller)
     }
     
     func showFavorites () {
+        var table_controller: UITableViewController = self.table
         
-        if let controller_inst = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "FavoriteMarkersController") as? FavoriteMarkersController {
-            self.addTable(controller_inst)
+        if !table.isKind(of: MyMarkersController.self) {
+            table_controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "FavoriteMarkersController") as! FavoriteMarkersController
         }
+        
+        self.addTable(table_controller)
     }
     
     func addTable(_ tableController: UITableViewController) {

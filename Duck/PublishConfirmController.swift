@@ -11,7 +11,7 @@ import UIKit
 protocol PublishSuccessDelegate {
     
     // Set details about a pending request
-    var pending_publish: Dictionary<String, Any>? { get set }
+    var pending_publish: Dictionary<String, Any> { get set }
 }
 
 class PublishConfirmController: UIViewController, UIPopoverPresentationControllerDelegate {
@@ -93,21 +93,49 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
     }
     
     @IBAction func publishMarker(_ sender: AnyObject) {
+        var markers_wrapper: MarkersWrapperController? = nil
+        var add_my_markers = true
+        
+        // Back to my markers, if my markers is in hierarchy
+        for controller in (self.navigationController?.viewControllers)! {
+            if controller.isKind(of: MarkersWrapperController.self) {
+                markers_wrapper = controller as? MarkersWrapperController
+                add_my_markers = false
+                break
+            }
+        }
+        
+        // no markers controller in stack, make one
+        if markers_wrapper == nil {
+            
+            // add my markers view to stack
+            markers_wrapper = self.storyboard!.instantiateViewController(withIdentifier: "MarkersWrapperController") as? MarkersWrapperController
+        }
+        
+        guard let final_controller = markers_wrapper else {
+            print("Error: unable to find or create markers controller")
+            return
+        }
+        
+        guard let my_markers = final_controller.table as? MyMarkersController else {
+            print("Error: MarkersWrapper did not have mymarkers child controller")
+            return
+        }
         
         // Pass data to delegate
         // pending_publish should already be a dictionary containing a table indexpath
-        if self.delegate != nil && self.markerData != nil && self.delegate!.pending_publish != nil {
-
-            self.delegate!.pending_publish!["marker"] = self.markerData!
+        guard let marker = self.markerData else {
+            print("Error: markerData is nil in publishMarker")
+            return
+        }
+        my_markers.pending_publish["marker"] = marker
+        
+        if add_my_markers {
+            self.navigationController?.pushViewController(final_controller, animated: true)
         }
         
-        // Back to my markers
-        for controller in (self.navigationController?.viewControllers)! {
-            if controller.isKind(of: MarkersWrapperController.self) {
-                _ = self.navigationController?.popToViewController(controller, animated: true)
-                break;
-            }
-        }
+        // remove this view from stack
+        _ = self.navigationController?.popViewController(animated: false)
     }
     
     func styleMarkerView () {

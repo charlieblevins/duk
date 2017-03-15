@@ -428,9 +428,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     func toggleButtonEnabled (_ button: UIButton, enabled: Bool) {
         if enabled {
             button.isEnabled = true
+            button.isUserInteractionEnabled = true
             button.alpha = 1.0
         } else {
             button.isEnabled = false
+            button.isUserInteractionEnabled = false
             button.alpha = 0.5
         }
     }
@@ -694,6 +696,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         // Validate
         if validateData() == false {
+            return
+        }
+        
+        // since no other method of disabling works...
+        if self.SaveBtn.isEnabled == false {
             return
         }
         
