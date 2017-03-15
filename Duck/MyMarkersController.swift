@@ -246,7 +246,6 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         // Start any pending upload requests
         
         guard let marker = pending_publish["marker"] as? Marker else {
-            print("Error: value in pending dictionary not castable to Marker")
             return false
         }
         
@@ -286,7 +285,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         cell.updateStatus("(0)% complete")
         active_req.delegate = cell
     }
-
+  
     func reconnectActiveRequests (_ cell: MarkerTableViewCell) {
 
         // Start or resume upload if necessary
@@ -540,28 +539,38 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         // Set this cell as request delegate
         request!.delegate = cell
 
-        guard marker.timestamp != nil else {
+        guard let timestamp = marker.timestamp else {
             fatalError("marker does not have timestamp. publish not allowed")
         }
 
         // Initiate request
         if let credentials = Credentials() {
             request!.publishSingleMarker(credentials, marker: marker)
-            MyMarkersController.active_requests[marker.timestamp!] = request
+            MyMarkersController.active_requests[timestamp] = request
         } else {
             print("Error: Credentials nil in makePublishRequest")
             return
         }
         
+        scrollToRowByTimestamp(timestamp)
+        
         clearPendingPublish()
     }
     
-    // MARK: Publish delegate method
-    
-    // Listen for publish begin
-    func publishDidBegin (_ timestamp: Double, request: ApiRequest) {
+    func scrollToRowByTimestamp (_ timestamp: Double) {
+        
+        // find row by timestamp
+        guard let ind = savedMarkers.index(where: { $0.timestamp == timestamp }) else {
+            print("Error: cannot find index by timestamp")
+            return
+        }
+        
+        // scroll to
+        let path = IndexPath(row: ind, section: 0)
+        self.tableView.scrollToRow(at: path, at: .middle, animated: false)
     }
     
+    // MARK: Publish delegate method
     
     func updateMarkerEntity (_ localTimestamp: Double, publicID: String?, approved: Marker.Approval?, user_id: String?) {
         

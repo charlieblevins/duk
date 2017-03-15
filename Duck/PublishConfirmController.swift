@@ -135,7 +135,12 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
         }
         
         // remove this view from stack
-        _ = self.navigationController?.popViewController(animated: false)
+        let ind = self.navigationController?.viewControllers.index(where: {
+            $0.isKind(of: PublishConfirmController.self)
+        })
+        if let i = ind {
+            self.navigationController?.viewControllers.remove(at: i)
+        }
     }
     
     func styleMarkerView () {
