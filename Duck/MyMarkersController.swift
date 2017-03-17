@@ -73,6 +73,9 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
             }
             let path = IndexPath(item: ind, section: 0)
             
+            // scroll to the row to cause table view to load cell
+            self.tableView.scrollToRow(at: path, at: .middle, animated: false)
+            
             // Reload data in order to set cell as delegate
             self.tableView.reloadRows(at: [path], with: .right)
         
@@ -552,22 +555,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
             return
         }
         
-        scrollToRowByTimestamp(timestamp)
-        
         clearPendingPublish()
-    }
-    
-    func scrollToRowByTimestamp (_ timestamp: Double) {
-        
-        // find row by timestamp
-        guard let ind = savedMarkers.index(where: { $0.timestamp == timestamp }) else {
-            print("Error: cannot find index by timestamp")
-            return
-        }
-        
-        // scroll to
-        let path = IndexPath(row: ind, section: 0)
-        self.tableView.scrollToRow(at: path, at: .middle, animated: false)
     }
     
     // MARK: Publish delegate method

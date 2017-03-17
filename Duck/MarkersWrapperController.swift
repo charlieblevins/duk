@@ -55,7 +55,7 @@ class MarkersWrapperController: UIViewController {
     func showFavorites () {
         var table_controller: UITableViewController = self.table
         
-        if !table.isKind(of: MyMarkersController.self) {
+        if !table.isKind(of: FavoriteMarkersController.self) {
             table_controller = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "FavoriteMarkersController") as! FavoriteMarkersController
         }
         

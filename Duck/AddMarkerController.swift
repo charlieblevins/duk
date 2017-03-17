@@ -147,6 +147,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     func applyEditMode (_ marker: Marker) {
         self.title = "Edit Marker"
         
+        AccContainer.isHidden = true
+        
         // show publish button if private
         if !marker.isPublic() {
             self.PublishBtn.isHidden = false
@@ -534,8 +536,6 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
     // Display taken photo
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         
-        print(info[UIImagePickerControllerMediaMetadata] as Any)
-        
         if let pickedImage = info[UIImagePickerControllerOriginalImage] as? UIImage {
             
             // Add photo to UI
@@ -547,6 +547,8 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
             // Associate location data with this marker and display in UI
             updateLocationData()
         }
+        
+        AccContainer.isHidden = false
         
         // If nouns have changed, show save button
         if nounsHaveChanged() {
