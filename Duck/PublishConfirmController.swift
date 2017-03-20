@@ -93,34 +93,13 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
     }
     
     @IBAction func publishMarker(_ sender: AnyObject) {
-        var markers_wrapper: MarkersWrapperController? = nil
-        var add_my_markers = true
         
-        // Back to my markers, if my markers is in hierarchy
-        for controller in (self.navigationController?.viewControllers)! {
-            if controller.isKind(of: MarkersWrapperController.self) {
-                markers_wrapper = controller as? MarkersWrapperController
-                add_my_markers = false
-                break
-            }
+        // Move to my-markers to view upload progress
+        guard let stack = self.navigationController?.viewControllers else {
+            fatalError("No nav stack defined in publish confirm")
         }
         
-        // no markers controller in stack, make one
-        if markers_wrapper == nil {
-            
-            // add my markers view to stack
-            markers_wrapper = self.storyboard!.instantiateViewController(withIdentifier: "MarkersWrapperController") as? MarkersWrapperController
-        }
-        
-        guard let final_controller = markers_wrapper else {
-            print("Error: unable to find or create markers controller")
-            return
-        }
-        
-        guard let my_markers = final_controller.table as? MyMarkersController else {
-            print("Error: MarkersWrapper did not have mymarkers child controller")
-            return
-        }
+        self.organizeStackForUpload(stack: stack)
         
         // Pass data to delegate
         // pending_publish should already be a dictionary containing a table indexpath
@@ -129,9 +108,57 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
             return
         }
         my_markers.pending_publish["marker"] = marker
+
+        self.navigationController?.popViewController(animated: true)
+    }
+    
+    // Organize the view controller stack for navigation to my markers upload
+    // TODO: Move this method to nav controller
+    // possible stack states:
+    // marker-detail -> pub-confirm :: add my-markers, remove pub-confirm
+    // my-markers -> marker-detail -> pub-confirm :: remove pub-confirm, marker-detail
+    // my-markers -> pub-confirm :: remove pub-confirm
+    // should create stack: my-markers -> pub-confirm
+    func organizeStackForUpload (stack: inout [UIViewController]) {
+        var wrapper: MarkersWrapperController
+        
+        // If marker-detail is the previous controller remove it
+        if stack[stack.count - 1].isKind(of: AddMarkerController.self) {
+            stack.remove(at: stack.count - 1)
+        }
+        
+        // Get markers wrapper as previous controller or add it
+        if stack[stack.count - 1].isKind(of: MarkersWrapperController.self) {
+            wrapper = stack[stack.count - 1] as! MarkersWrapperController
+            
+        } else {
+            // add my markers view to stack
+            guard let new_wrapper = self.storyboard!.instantiateViewController(withIdentifier: "MarkersWrapperController") as? MarkersWrapperController else {
+               fatalError("Could not create MarkersWrapperController from storyboard")
+            }
+            wrapper = new_wrapper
+            stack.insert(wrapper, at: stack.count - 1)
+        }
+        
+        // Ensure my markers is showing
+        guard wrapper.table.isKind(of: MyMarkersController.self) else {
+            wrapper.showMyMarkers()
+        }
+        
+        // no markers controller in stack, make one
+        if markers_wrapper == nil {
+            
+            
+        }
+        
+        guard let final_controller = markers_wrapper else {
+            print("Error: unable to find or create markers controller")
+            return
+        }
+
         
         if add_my_markers {
-            self.navigationController?.pushViewController(final_controller, animated: true)
+            
         }
         
         // remove this view from stack

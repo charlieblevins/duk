@@ -150,7 +150,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         AccContainer.isHidden = true
         
         // show publish button if private
-        if !marker.isPublic() {
+        if !marker.isPublished() {
             self.PublishBtn.isHidden = false
             self.toggleButtonEnabled(self.SaveBtn, enabled: false)
         }

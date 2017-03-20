@@ -631,12 +631,18 @@ class Marker: NSObject, ApiRequestDelegate {
         return "\(f_lat), \(f_lng)"
     }
     
+    // True if marker is published and approved
     func isPublic () -> Bool {
         if self.public_id != nil && self.approved == .approved {
             return true
         }
         
         return false
+    }
+    
+    // True if marker is published (not necessarily approved)
+    func isPublished () -> Bool {
+        return self.public_id != nil
     }
     
     // MARK: Static Functions
