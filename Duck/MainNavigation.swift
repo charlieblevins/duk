@@ -47,6 +47,40 @@ class MainNavigation: UINavigationController {
             return UIInterfaceOrientationMask.all
         }
     }
+    
+    // Trim the underlying stack to maintain only the types in desired_stack. Re-orders remaining types to match
+    // desired stack order
+    func trimUnderlyingStack (_ desired_stack: [UIViewController.Type]) {
+        //var desired_mutable = desired_stack
+        
+        if desired_stack.count == 0 {
+            return
+        }
+        
+        // Remove undesired types
+        for (i, controller) in self.viewControllers.enumerated() {
+            
+            let controller_is_desired = desired_stack.contains(where: { type in
+                controller.isKind(of: type)
+            })
+            
+            if !controller_is_desired {
+                self.viewControllers.remove(at: i)
+            }
+        }
+        
+        // Re-order
+        self.viewControllers.sort(by: { a, b in
+            let desired_a = desired_stack.index(where: { type in
+                a.isKind(of: type)
+            })
+            let desired_b = desired_stack.index(where: { type in
+                b.isKind(of: type)
+            })
+            
+            return desired_a! < desired_b!
+        })
+    }
 }
 
 

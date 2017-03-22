@@ -94,12 +94,37 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
     
     @IBAction func publishMarker(_ sender: AnyObject) {
         
-        // Move to my-markers to view upload progress
-        guard let stack = self.navigationController?.viewControllers else {
-            fatalError("No nav stack defined in publish confirm")
-        }
         
-        self.organizeStackForUpload(stack: stack)
+        
+        // Organize the view controller stack for navigation to my markers upload
+        // TODO: Move this method to nav controller
+        // possible stack states:
+        // marker-detail -> pub-confirm :: replace marker-detail with my-markers
+        // my-markers -> marker-detail -> pub-confirm :: remove marker-detail
+        // my-markers -> pub-confirm :: do nothing
+        // should create stack: my-markers -> pub-confirm
+        // Loop over views from top to bottom. After top (pub-confirm), remove each view that is NOT
+        // my-markers. Stop looping when map-view is reached
+        guard let nav = self.navigationController as? MainNavigation else {
+            fatalError("Unexpected nav controller type")
+        }
+        nav.trimUnderlyingStack([MapViewController.self, MarkersWrapperController.self, PublishConfirmController.self])
+        
+        let stack = nav.viewControllers
+        
+        // If the middle view is not my-markers it must be created
+        if stack[1].isKind(of: MarkersWrapperController.self) == false {
+            
+            guard let new_wrapper = self.storyboard!.instantiateViewController(withIdentifier: "MarkersWrapperController") as? MarkersWrapperController else {
+                fatalError("Could not create MarkersWrapperController from storyboard")
+            }
+            nav.viewControllers.insert(new_wrapper, at: stack.count - 1)
+            
+            // Ensure my markers is the active nested table view
+            if !new_wrapper.table.isKind(of: MyMarkersController.self) {
+                new_wrapper.showMyMarkers()
+            }
+        }
         
         // Pass data to delegate
         // pending_publish should already be a dictionary containing a table indexpath
@@ -107,67 +132,18 @@ class PublishConfirmController: UIViewController, UIPopoverPresentationControlle
             print("Error: markerData is nil in publishMarker")
             return
         }
+        
+        guard let markers_wrapper = nav.viewControllers[1] as? MarkersWrapperController else {
+            fatalError("Expected index 1 to be MarkersWrapper")
+        }
+        guard let my_markers = markers_wrapper.table as? MyMarkersController else {
+            fatalError("Expected wrapper table to be MyMarkers")
+        }
+        
         my_markers.pending_publish["marker"] = marker
 
-        self.navigationController?.popViewController(animated: true)
-    }
-    
-    // Organize the view controller stack for navigation to my markers upload
-    // TODO: Move this method to nav controller
-    // possible stack states:
-    // marker-detail -> pub-confirm :: add my-markers, remove pub-confirm
-    // my-markers -> marker-detail -> pub-confirm :: remove pub-confirm, marker-detail
-    // my-markers -> pub-confirm :: remove pub-confirm
-    // should create stack: my-markers -> pub-confirm
-    func organizeStackForUpload (stack: inout [UIViewController]) {
-        var wrapper: MarkersWrapperController
-        
-        // If marker-detail is the previous controller remove it
-        if stack[stack.count - 1].isKind(of: AddMarkerController.self) {
-            stack.remove(at: stack.count - 1)
-        }
-        
-        // Get markers wrapper as previous controller or add it
-        if stack[stack.count - 1].isKind(of: MarkersWrapperController.self) {
-            wrapper = stack[stack.count - 1] as! MarkersWrapperController
-            
-        } else {
-            // add my markers view to stack
-            guard let new_wrapper = self.storyboard!.instantiateViewController(withIdentifier: "MarkersWrapperController") as? MarkersWrapperController else {
-               fatalError("Could not create MarkersWrapperController from storyboard")
-            }
-            wrapper = new_wrapper
-            stack.insert(wrapper, at: stack.count - 1)
-        }
-        
-        // Ensure my markers is showing
-        guard wrapper.table.isKind(of: MyMarkersController.self) else {
-            wrapper.showMyMarkers()
-        }
-        
-        // no markers controller in stack, make one
-        if markers_wrapper == nil {
-            
-            
-        }
-        
-        guard let final_controller = markers_wrapper else {
-            print("Error: unable to find or create markers controller")
-            return
-        }
-
-        
-        if add_my_markers {
-            
-        }
-        
-        // remove this view from stack
-        let ind = self.navigationController?.viewControllers.index(where: {
-            $0.isKind(of: PublishConfirmController.self)
-        })
-        if let i = ind {
-            self.navigationController?.viewControllers.remove(at: i)
-        }
+        // navigate to my markers
+        nav.popViewController(animated: true)
     }
     
     func styleMarkerView () {
