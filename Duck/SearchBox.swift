@@ -9,6 +9,10 @@
 import UIKit
 import GooglePlaces
 
+protocol searchDelegate {
+    func locationAccessFailed ()
+}
+
 class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UITextFieldDelegate {
 
 
@@ -18,6 +22,8 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
     @IBOutlet weak var address: UIButtonTab!
     @IBOutlet weak var addressField: UISearchField!
     @IBOutlet weak var containerHeight: NSLayoutConstraint!
+    
+    var delegate: searchDelegate?
 
     var parentController: MapViewController
     
@@ -120,10 +126,15 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
             print("Could not convert button to UIButtonTab")
             return
         }
+
+        selectTab(tappedBtn)
+    }
+    
+    func selectTab (_ select_tab: UIButtonTab) {
         
         // Set highlighted state for all tabs
         for tab in tabGroup {
-            tab.isSelected = (tab == tappedBtn) ? true : false
+            tab.isSelected = (tab == select_tab) ? true : false
         }
     }
     
@@ -156,7 +167,6 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
             if textField.text == "" {
                 textField.placeholder = nounPL
             }
-            
         }
     }
     
@@ -212,6 +222,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
             
             guard point != nil else {
                 print("could not get point from distance tracker")
+                self.delegate?.locationAccessFailed()
                 return
             }
         
@@ -243,7 +254,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
         
         self.addressField.text = place.formattedAddress
         
-        self.addressField.isSelected = true
+        selectTab(self.address)
         
         self.coord = place.coordinate
         

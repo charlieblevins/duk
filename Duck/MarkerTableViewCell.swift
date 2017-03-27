@@ -144,7 +144,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         statusBar = UILabel()
         statusBar!.frame.size = CGSize(width: 100, height: 30)
         statusBar!.text = "Status Placeholder"
-        statusBar!.textColor = UIColor.red
+        statusBar!.textColor = UIColor.purple
         statusBar!.translatesAutoresizingMaskIntoConstraints = false
         
         // Append status bar
@@ -341,7 +341,6 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         publicBadge!.isUserInteractionEnabled = true
         publicBadge!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(alertPublicInfo)))
     }
-
     
     func alertPublicInfo () {
         let alertController = UIAlertController(title: "Public",
@@ -437,103 +436,6 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
         
         self.master?.present(alertController, animated: true, completion: nil)
     }
-//    
-//    func hideUnpublish () {
-//        if unpublish != nil {
-//            toggleUnpublish()
-//        }
-//    }
-    
-    // Append un-publish btn
-    // DEPRECATED - no longer used
-//    func toggleUnpublish () {
-//        
-//        // Hide
-//        if unpublish != nil {
-//            
-//            // set constant before animation
-//            publicBadgeTopConstraint!.constant = 0
-//            UIView.animate(withDuration: 0.5, delay: 0.0, options: .allowAnimatedContent, animations: {
-//                // fade out
-//                self.unpublish?.alpha = 0.0
-//                
-//                // slide back
-//                self.contentView.layoutIfNeeded()
-//                
-//            }, completion: { finished in
-//                self.unpublish?.removeFromSuperview()
-//                self.unpublish = nil
-//            })
-//            return
-//        }
-//        
-//        // Show
-//        
-//        // Notify all rows
-//        let notifName = Notification.Name("UnpublishBtnShown")
-//        NotificationCenter.default.post(name: notifName, object: nil)
-//        
-//        // Make a button
-//        unpublish = UIButton()
-//        unpublish!.frame.size = CGSize(width: 100, height: 30)
-//        unpublish!.setTitle("Unpublish", for: .normal)
-//        unpublish!.setTitleColor(UIColor(red: 0, green: 122, blue: 255), for: .normal)
-//        unpublish!.translatesAutoresizingMaskIntoConstraints = false
-//        
-//        // Append status bar (still hidden)
-//        unpublish!.alpha = 0
-//        self.contentView.addSubview(unpublish!)
-//
-//        
-//        // Position with constraints
-//        let hrzC = NSLayoutConstraint(
-//            item: unpublish!,
-//            attribute: .trailing,
-//            relatedBy: .equal,
-//            toItem: self.contentView,
-//            attribute: .trailing,
-//            multiplier: 1.0,
-//            constant: -10
-//        )
-//        let vrtC = NSLayoutConstraint(
-//            item: unpublish!,
-//            attribute: .centerY,
-//            relatedBy: .equal,
-//            toItem: self.contentView,
-//            attribute: .centerY,
-//            multiplier: 1.0,
-//            constant: 20
-//        )
-//        let hgtC = NSLayoutConstraint(
-//            item: unpublish!,
-//            attribute: .height,
-//            relatedBy: .equal,
-//            toItem: nil,
-//            attribute: .height,
-//            multiplier: 1.0,
-//            constant: 30
-//        )
-//        
-//        // Activate all constraints
-//        NSLayoutConstraint.activate([hrzC, vrtC, hgtC])
-//        
-//        // layout constraints before animation
-//        self.contentView.layoutIfNeeded()
-//        
-//        // set constant before animation
-//        publicBadgeTopConstraint!.constant = -12
-//        UIView.animate(withDuration: 0.5, animations: {
-//            // fade in
-//            self.unpublish!.alpha = 1.0
-//            
-//            // slide up
-//            self.contentView.layoutIfNeeded()
-//        })
-//        
-//        // Receive tap
-//        unpublish!.isUserInteractionEnabled = true
-//        unpublish!.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(unpublishMarker)))
-//    }
     
     func appendPublishBtn () {
         
@@ -763,7 +665,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     // Show progress
     func uploadDidProgress(_ progress: Float) {
         let percentage = Int(progress * 100)
-        self.updateStatus("\(percentage)% complete")
+        self.updateStatus("\(percentage)%")
     }
     
     

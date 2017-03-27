@@ -529,7 +529,7 @@
                                         <rect key="frame" x="1" y="314" width="309" height="132"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="kiR-cH-JwX" userLabel="iconView" customClass="MarkerIconView" customModule="Duck">
-                                                <rect key="frame" x="8" y="41" width="38" height="38"/>
+                                                <rect key="frame" x="8" y="45" width="38" height="38"/>
                                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="38" id="Nr9-f4-i73"/>
@@ -537,13 +537,13 @@
                                                 </constraints>
                                             </view>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="34.00000, 23.00000" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1aB-8j-qTq" userLabel="coords">
-                                                <rect key="frame" x="54" y="51" width="151" height="20"/>
+                                                <rect key="frame" x="54" y="55" width="151" height="20"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="16"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nouns" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jYy-io-xGz">
-                                                <rect key="frame" x="12" y="12" width="50" height="21"/>
+                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Nouns" lineBreakMode="wordWrap" numberOfLines="4" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jYy-io-xGz">
+                                                <rect key="frame" x="12" y="12" width="285" height="21"/>
                                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 <nil key="highlightedColor"/>
@@ -553,9 +553,10 @@
                                         <constraints>
                                             <constraint firstItem="1aB-8j-qTq" firstAttribute="centerY" secondItem="kiR-cH-JwX" secondAttribute="centerY" constant="1" id="65l-hA-dYz"/>
                                             <constraint firstItem="jYy-io-xGz" firstAttribute="leading" secondItem="qYl-kg-2h1" secondAttribute="leading" constant="12" id="Pyr-Ru-dUK"/>
-                                            <constraint firstItem="kiR-cH-JwX" firstAttribute="top" secondItem="jYy-io-xGz" secondAttribute="bottom" constant="8" id="QLB-p3-tka"/>
+                                            <constraint firstItem="kiR-cH-JwX" firstAttribute="top" secondItem="jYy-io-xGz" secondAttribute="bottom" constant="12" id="QLB-p3-tka"/>
                                             <constraint firstItem="jYy-io-xGz" firstAttribute="top" secondItem="qYl-kg-2h1" secondAttribute="top" constant="12" id="Rh2-fA-XWf"/>
                                             <constraint firstItem="1aB-8j-qTq" firstAttribute="leading" secondItem="kiR-cH-JwX" secondAttribute="trailing" constant="8" id="cQK-Za-4lv"/>
+                                            <constraint firstItem="jYy-io-xGz" firstAttribute="width" secondItem="qYl-kg-2h1" secondAttribute="width" constant="-24" id="td4-zA-zTk"/>
                                             <constraint firstItem="kiR-cH-JwX" firstAttribute="leading" secondItem="qYl-kg-2h1" secondAttribute="leading" constant="8" id="uq8-If-M7R"/>
                                         </constraints>
                                     </view>
@@ -1233,7 +1234,7 @@
             <objects>
                 <navigationController storyboardIdentifier="MainNavigation" id="JpL-cz-e6M" customClass="MainNavigation" customModule="Duck" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="V3g-Kp-vZr"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="58t-KB-4nF">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="58t-KB-4nF">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>

@@ -6,16 +6,16 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "Yes"
+            shouldBeEnabled = "No"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "Duck/PublishConfirmController.swift"
-            timestampString = "511878301.196583"
+            filePath = "Duck/SearchBox.swift"
+            timestampString = "512311042.545978"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "108"
-            endingLineNumber = "108"
-            landmarkName = "publishMarker(_:)"
+            startingLineNumber = "220"
+            endingLineNumber = "220"
+            landmarkName = "searchTapped(_:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -15,7 +15,7 @@ protocol MapViewDelegate {
     func zoomToMarker (_ marker: Marker)
 }
 
-class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate, ApiRequestDelegate, MarkerAggregatorDelegate, MapViewDelegate {
+class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManagerDelegate, ApiRequestDelegate, MarkerAggregatorDelegate, MapViewDelegate, searchDelegate {
     
     @IBOutlet weak var menuBG: UIView!
     @IBOutlet weak var mapView: GMSMapView!
@@ -676,6 +676,8 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         // Create reference to this controller
         self.searchBox!.parentController = self
         
+        self.searchBox!.delegate = self
+        
         self.addChildViewController(self.searchBox!)
       
         // Add view but hide until constraints are in place
@@ -1123,6 +1125,11 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
                 }
             })
         }
+    }
+    
+    // searchDelegate method
+    func locationAccessFailed () {
+        showLocationAcessDeniedAlert(nil)
     }
 }
 
