@@ -645,7 +645,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
                 completionHandler: { (image, error, cacheType, imageURL) -> () in
                     
                     if error !== nil {
-                        print("image GET failed: \(error)")
+                        print("image GET failed: \(String(describing: error))")
                         self.markerImage.image = UIImage(named: "photoMarker2")
                         return Void()
                     }

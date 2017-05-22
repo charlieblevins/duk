@@ -21,6 +21,7 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
     
     // Store successful credentials
     var credentials: Credentials? = nil
+    var proto: String = "http"
     
     // If true, pop to previous view on sign in success
     var signInSuccessHandler: ((_ credentials: Credentials) -> Void)? = nil
@@ -47,34 +48,38 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        var request: NSMutableURLRequest? = nil
-        
-        print("account view")
-        
         self.credentials = Credentials()
 
         // If credentials exist
         if self.credentials != nil {
-        
-            let url = URL(string: "http://dukapp.io/home")
-            request = NSMutableURLRequest(url: url!)
-            
-            
-            // Add basic auth to request header
-            let loginData = "\(self.credentials!.email):\(self.credentials!.password)".data(using: String.Encoding.utf8)!
-            let base64LoginString = loginData.base64EncodedString(options: .lineLength64Characters)
-            
-            request!.addValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+            self.loadHome()
         
         // No credentials: Login
         } else {
-            let url = URL(string: "http://dukapp.io")
-            request = NSMutableURLRequest(url: url!)
+            self.loadLogin()
         }
-        
-        self.webView!.load(request! as URLRequest)
     }
     
+    func loadLogin () {
+        let url = URL(string: "\(self.proto)://dukapp.io")
+        let request = NSMutableURLRequest(url: url!)
+    
+        self.webView!.load(request as URLRequest)
+    }
+    
+    func loadHome () {
+        let url = URL(string: "\(self.proto)://dukapp.io/home")
+        let request = NSMutableURLRequest(url: url!)
+        
+        // Add basic auth to request header
+        let loginData = "\(self.credentials!.email):\(self.credentials!.password)".data(using: String.Encoding.utf8)!
+        let base64LoginString = loginData.base64EncodedString(options: .lineLength64Characters)
+        
+        request.addValue("Basic \(base64LoginString)", forHTTPHeaderField: "Authorization")
+        
+        self.webView!.load(request as URLRequest)
+    }
+
     // Receive message from page script
     func userContentController(_ userContentController: WKUserContentController, didReceive message: WKScriptMessage) {
         
@@ -85,7 +90,6 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
         } else {
             print("Unrecognized message format")
         }
-        
     }
     
     // Receive script data and act accordingly
@@ -101,7 +105,7 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
             break;
         
         default:
-            print("Could not handle script action: \(data["action"])")
+            print("Could not handle script action: \(String(describing: data["action"]))")
         }
     }
 
@@ -152,18 +156,22 @@ class AccountViewController: UIViewController, WKScriptMessageHandler, WKNavigat
             self.credentials?.remove()
         }
         
-        // Remove temp credentials on every page load
-        self.tempUser = nil
-        self.tempPass = nil
+        if response.statusCode == 401 {
+            self.receivedUnauth()
+        }
     }
 
+    func receivedUnauth () {
+        self.loadLogin()
+    }
+    
     /**
      * Catch failed load
      */
     func webView(_ webView: WKWebView, didFailProvisionalNavigation navigation: WKNavigation!, withError error: Error) {
         print("terminated")
         
-        alertLoadFailed(error as NSError)
+        //alertLoadFailed(error as NSError)
     }
     
     func alertLoadFailed(_ error: NSError) {

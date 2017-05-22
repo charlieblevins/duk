@@ -32,7 +32,13 @@ class ApiRequest {
     // MARK: Vars
     var delegate: ApiRequestDelegate?
     var progress: Float = 0.0
-    let baseURL: String = "http://dukapp.io/api"
+    let transferProtocol: String = "https:"
+    let dukDomain: String = "dukapp.io"
+    var apiURL: String {
+        get {
+            return "\(transferProtocol)//\(dukDomain)/api"
+        }
+    }
     
     // MARK: Methods
     func checkCredentials (_ email: String, password: String, successHandler: @escaping (() -> Void), failureHandler: @escaping ((_ message: String?) -> Void)) {
@@ -44,7 +50,7 @@ class ApiRequest {
         let headers = ["Authorization": "Basic \(base64LoginString)"]
         
         // Execute request
-        Alamofire.request("\(baseURL)/authCheck", headers: headers)
+        Alamofire.request("\(apiURL)/authCheck", headers: headers)
             .responseString { response in
                 
                 switch response.result {
@@ -103,7 +109,7 @@ class ApiRequest {
                 multipartFormData.append(marker.photo_sm!, withName: "photo_sm", fileName: "photo_sm", mimeType: "image/jpeg")
                 
             },
-            to: baseURL + "/markers",
+            to: apiURL + "/markers",
             method: .post,
             headers: headers,
             encodingCompletion: { encodingResult in
@@ -160,7 +166,7 @@ class ApiRequest {
         let headers = ["Authorization": "Basic \(base64LoginString)"]
         
         // Exec request
-        Alamofire.request("\(baseURL)/markers", method: .put, parameters: params, encoding: JSONEncoding.default, headers: headers)
+        Alamofire.request("\(apiURL)/markers", method: .put, parameters: params, encoding: JSONEncoding.default, headers: headers)
             .responseJSON { response in
                 self.handleResponse(response, method: .editMarker)
         }
@@ -173,7 +179,7 @@ class ApiRequest {
         let params: Parameters = ["markers": markers]
         
         // Exec request
-        Alamofire.request("\(baseURL)/getMarkersById", method: .post, parameters: params, encoding: JSONEncoding.default)
+        Alamofire.request("\(apiURL)/getMarkersById", method: .post, parameters: params, encoding: JSONEncoding.default)
             .responseJSON { response in
                 self.handleResponse(response, method: .getMarkerDataById)
         }
@@ -191,7 +197,7 @@ class ApiRequest {
         let headers = ["Authorization": "Basic \(base64LoginString)"]
         
         // Exec request
-        Alamofire.request("\(baseURL)/markers", method: .delete, parameters: params, headers: headers)
+        Alamofire.request("\(apiURL)/markers", method: .delete, parameters: params, headers: headers)
             .responseJSON { response in
                 self.handleResponse(response, method: .deleteById)
         }
@@ -209,13 +215,13 @@ class ApiRequest {
         ]
         
         if page != nil {
-            params["page"] = "\(page)"
+            params["page"] = String(describing: page)
         }
         
         self.delegate?.reqDidStart?()
         
         // Exec request
-        Alamofire.request("\(baseURL)/markersWithin", method: .get, parameters: params)
+        Alamofire.request("\(apiURL)/markersWithin", method: .get, parameters: params)
             .responseJSON { response in
                 self.handleResponse(response, method: .markersWithinBounds)
             }
@@ -237,7 +243,7 @@ class ApiRequest {
         self.delegate?.reqDidStart?()
         
         // Exec request
-        Alamofire.request("\(baseURL)/markersNear", method: .get, parameters: params)
+        Alamofire.request("\(apiURL)/markersNear", method: .get, parameters: params)
             
             .responseJSON { response in
                 self.handleResponse(response, method: .markersNearPoint)
@@ -264,7 +270,7 @@ class ApiRequest {
         }
         
         // Exec request
-        Alamofire.download("http://dukapp.io/photos/\(fileName)", to: destination)
+        Alamofire.download("\(transferProtocol)//\(dukDomain)/photos/\(fileName)", to: destination)
             
             .downloadProgress { progress in
                 
@@ -344,7 +350,7 @@ class ApiRequest {
         let headers = ["Authorization": "Basic \(base64LoginString)"]
         
         // Exec request
-        Alamofire.request("\(baseURL)/markersByUser", method: .get, parameters: nil, headers: headers)
+        Alamofire.request("\(apiURL)/markersByUser", method: .get, parameters: nil, headers: headers)
             .responseJSON { response in
                 self.handleResponse(response, method: .markersByUser)
         }

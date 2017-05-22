@@ -64,7 +64,7 @@ class Credentials {
     // TODO: Do not allow this function to save multiple
     func save () {
         
-        Util.deleteCoreDataForEntity("Login")
+        self.remove()
         
         // 1. Get managed object context
         let appDelegate = UIApplication.shared.delegate as! AppDelegate

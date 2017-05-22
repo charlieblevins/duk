@@ -1161,10 +1161,12 @@ class DukGMSMarker: GMSMarker {
         // Get icon
         let prime_noun = (iconOverride != nil) ? Marker.getPrimaryNoun(iconOverride!) : Marker.getPrimaryNoun(tags)
         
-        let iconImgView = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0))
+        //let markerIconView = IconImageView(frame: CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0))
+        let _iconView = IconImageView(frame: CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0))
+        self.iconView = _iconView
         
-        MarkerIconView.loadIconImage(prime_noun, imageView: iconImgView, complete: {
-            self.iconView = iconImgView
+        _iconView.load(prime_noun, complete: {
+            self.iconView = _iconView
         })
         
         // Convert id to public or local

@@ -23,7 +23,6 @@
 		EC6DDCDB1BAF31EE00458B42 /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */; };
 		EC6DDCDE1BAF31EE00458B42 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCDC1BAF31EE00458B42 /* Main.storyboard */; };
 		EC6DDCE01BAF31EE00458B42 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCDF1BAF31EE00458B42 /* Images.xcassets */; };
-		EC6DDCE31BAF31EE00458B42 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCE11BAF31EE00458B42 /* LaunchScreen.xib */; };
 		EC6DDCEF1BAF31EE00458B42 /* DuckTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC6DDCEE1BAF31EE00458B42 /* DuckTests.swift */; };
 		EC6DDCF91BAF329F00458B42 /* Settings.bundle in Resources */ = {isa = PBXBuildFile; fileRef = EC6DDCF81BAF329F00458B42 /* Settings.bundle */; };
 		EC7043891C60E0AE00EA0BE4 /* PublishConfirmController.swift in Sources */ = {isa = PBXBuildFile; fileRef = EC7043881C60E0AE00EA0BE4 /* PublishConfirmController.swift */; };
@@ -88,7 +87,6 @@
 		EC6DDCDA1BAF31EE00458B42 /* MapViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		EC6DDCDD1BAF31EE00458B42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		EC6DDCDF1BAF31EE00458B42 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		EC6DDCE21BAF31EE00458B42 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
 		EC6DDCE81BAF31EE00458B42 /* DuckTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DuckTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		EC6DDCED1BAF31EE00458B42 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EC6DDCEE1BAF31EE00458B42 /* DuckTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DuckTests.swift; sourceTree = "<group>"; };
@@ -218,7 +216,6 @@
 				ECC67C1B1DB41B9E00B4774C /* iconView.swift */,
 				EC6DDCDF1BAF31EE00458B42 /* Images.xcassets */,
 				EC3255801C678BDC00A12A2E /* PopOverDate.xib */,
-				EC6DDCE11BAF31EE00458B42 /* LaunchScreen.xib */,
 				EC6DDCD61BAF31EE00458B42 /* Supporting Files */,
 			);
 			path = Duck;
@@ -297,12 +294,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0720;
-				LastUpgradeCheck = 0820;
+				LastUpgradeCheck = 0830;
 				ORGANIZATIONNAME = "Charlie Blevins";
 				TargetAttributes = {
 					EC6DDCD21BAF31EE00458B42 = {
 						CreatedOnToolsVersion = 6.4;
-						DevelopmentTeam = 88282G4BXU;
+						DevelopmentTeam = NJY779C54X;
 						LastSwiftMigration = 0800;
 						SystemCapabilities = {
 							com.apple.BackgroundModes = {
@@ -312,6 +309,7 @@
 					};
 					EC6DDCE71BAF31EE00458B42 = {
 						CreatedOnToolsVersion = 6.4;
+						DevelopmentTeam = NJY779C54X;
 						LastSwiftMigration = 0800;
 						TestTargetID = EC6DDCD21BAF31EE00458B42;
 					};
@@ -344,7 +342,6 @@
 				EC6DDCF91BAF329F00458B42 /* Settings.bundle in Resources */,
 				EC3255811C678BDC00A12A2E /* PopOverDate.xib in Resources */,
 				EC6DDCDE1BAF31EE00458B42 /* Main.storyboard in Resources */,
-				EC6DDCE31BAF31EE00458B42 /* LaunchScreen.xib in Resources */,
 				EC6DDCE01BAF31EE00458B42 /* Images.xcassets in Resources */,
 				EC14494B1CD5330700496E07 /* InfoWindow.xib in Resources */,
 				ECD31B221D4424AB00494DCD /* SearchBox.xib in Resources */,
@@ -474,14 +471,6 @@
 			name = Main.storyboard;
 			sourceTree = "<group>";
 		};
-		EC6DDCE11BAF31EE00458B42 /* LaunchScreen.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				EC6DDCE21BAF31EE00458B42 /* Base */,
-			);
-			name = LaunchScreen.xib;
-			sourceTree = "<group>";
-		};
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
@@ -574,7 +563,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
@@ -585,16 +574,18 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = NJY779C54X;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/**",
 				);
 				INFOPLIST_FILE = Duck/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.blevins.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = io.dukapp.dukmap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -609,16 +600,18 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = LaunchImage;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				DEVELOPMENT_TEAM = NJY779C54X;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SRCROOT)/**",
 				);
 				INFOPLIST_FILE = Duck/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.blevins.$(PRODUCT_NAME:rfc1034identifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = io.dukapp.dukmap;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE = "";
 				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
@@ -631,6 +624,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = NJY779C54X;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -649,6 +643,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				DEVELOPMENT_TEAM = NJY779C54X;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)";
 				INFOPLIST_FILE = DuckTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

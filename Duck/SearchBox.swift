@@ -120,7 +120,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
     }
     
     func nearTabTapped (_ button: UIButton) {
-        print("\(button.currentTitle) tapped")
+        print("\(String(describing: button.currentTitle)) tapped")
         
         guard let tappedBtn = button as? UIButtonTab else {
             print("Could not convert button to UIButtonTab")

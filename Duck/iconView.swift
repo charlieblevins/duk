@@ -11,13 +11,11 @@ import UIKit
 
 class MarkerIconView: UIView {
     
-    var iconView: UIImageView = UIImageView(frame: CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0))
+    var iconView: IconImageView = IconImageView(frame: CGRect(x: 0.0, y: 0.0, width: 40.0, height: 40.0))
     var spinner: UIActivityIndicatorView = UIActivityIndicatorView()
     
     override init (frame: CGRect) {
         super.init(frame: frame)
-        
-        print("Have not handled normal init yet for marker icon view")
     }
     
     convenience init () {
@@ -46,7 +44,7 @@ class MarkerIconView: UIView {
         // load the icon
         self.startSpinner()
         
-        MarkerIconView.loadIconImage(final_noun, imageView: iconView, complete: {
+        self.iconView.load(final_noun, complete: {
             self.stopSpinner()
             
             self.spinner.removeFromSuperview()
@@ -62,30 +60,6 @@ class MarkerIconView: UIView {
         self.spinner.stopAnimating()
         self.spinner.isHidden = true
     }
-    
-    static func loadIconImage (_ noun: String, imageView: UIImageView, complete: @escaping ()->Void) {
-        
-        let file = MarkerIconView.filenameFromNoun(noun)
-        
-        imageView.kf.setImage(
-            with: URL(string: "http://dukapp.io/icon/\(file)?key=b185052862d41f43b2e3ffb06ed8b335")!,
-            placeholder: UIImage(named: "photoMarker2"),
-            options: nil,
-            progressBlock: nil,
-            completionHandler: { (image, error, cacheType, imageURL) -> () in
-                
-                if error !== nil {
-                    print("image GET failed: \(error)")
-                    imageView.image = UIImage(named: "photoMarker2")
-                    
-                } else {
-                    imageView.image = image
-                }
-                
-                complete()
-        })
-    }
-    
     
     // Create filename string from noun
     // for use with image creation api
@@ -103,5 +77,51 @@ class MarkerIconView: UIView {
         let file: String = "\(noun_no_hash)@\(scale)x.png"
         
         return file
+    }
+}
+
+class IconImageView: UIImageView {
+    
+    override init (frame: CGRect) {
+        super.init(frame: frame)
+        globalInit()
+    }
+    
+    convenience init () {
+        self.init(frame: CGRect.zero)
+        globalInit()
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        super.init(coder: aDecoder)
+        globalInit()
+    }
+    
+    func globalInit () {
+        
+        // set placeholder
+        self.image = UIImage(named: "photoMarker2")
+    }
+    
+    func load (_ noun: String, complete: @escaping ()->Void) {
+        
+        let file = MarkerIconView.filenameFromNoun(noun)
+        
+        self.kf.setImage(
+            with: URL(string: "http://dukapp.io/icon/\(file)?key=b185052862d41f43b2e3ffb06ed8b335")!,
+            placeholder: UIImage(named: "photoMarker2"),
+            options: nil,
+            progressBlock: nil,
+            completionHandler: { (image, error, cacheType, imageURL) -> () in
+                
+                if error !== nil {
+                    print("image GET failed: \(String(describing: error))")
+                    
+                } else {
+                    self.image = image
+                }
+                
+                complete()
+        })
     }
 }
