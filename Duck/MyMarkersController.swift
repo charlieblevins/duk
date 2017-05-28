@@ -647,7 +647,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
     
     // Query for a marker by publicId. If it exists, update and return true.
     // Otherwise return false
-    func updateMarkerApproved (_ publicId: String, approved: Int) -> String {
+    func updateMarkerApproved (_ publicId: String, approved: NSNumber) -> String {
         
         // Update savedMarkers
         if let ind = savedMarkers.index(where: { $0.public_id == publicId }) {
@@ -723,7 +723,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
                 
                 // Query core data for marker with matching public id
                 // If the marker exists - update it's approved value
-                guard let pid = public_id as? String, let appr = approved as? Int else {
+                guard let pid = public_id as? String, let appr = approved as? NSNumber else {
                     print("Cannot convert marker data")
                     break
                 }

@@ -277,6 +277,7 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         // If nouns have changed, enable save button
         if self.origNouns != new_nouns && imageChosen == true {
             self.PublishBtn.isHidden = true
+            self.SaveBtn.isHidden = false
             self.toggleButtonEnabled(self.SaveBtn, enabled: true)
         }
     }
@@ -729,7 +730,11 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         
         // Only tag changes are allowed for existing markers
         if marker.public_id == nil && marker.timestamp != nil {
-            if marker.updateInCore(["tags"]) {
+            guard let tags = marker.tags else {
+                print("Error: could not access marker tags")
+                return
+            }
+            if marker.updateInCore([MarkerValuePair("tags", tags)]) {
                 self.previousView()
             } else {
                 print("update marker in core failed in add marker controller")

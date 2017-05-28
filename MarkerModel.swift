@@ -12,7 +12,7 @@ import GoogleMaps
 
 class Marker: NSObject, ApiRequestDelegate {
     
-    enum Approval: Int {
+    enum Approval: NSNumber {
         case approved = 1
         case pending = 0
         case denied = -1
@@ -141,7 +141,7 @@ class Marker: NSObject, ApiRequestDelegate {
             self.public_id = pid
             
             // Set approved if public_id and an approved value is stored
-            if let appr = data.value(forKey: "approved") as? Int {
+            if let appr = data.value(forKey: "approved") as? NSNumber {
                 self.approved = Approval(rawValue: appr)
             }
             
@@ -215,7 +215,7 @@ class Marker: NSObject, ApiRequestDelegate {
         self.public_id = data.value(forKey: "_id") as? String
         
         // Approval
-        if let appr_int = data.value(forKey: "approved") as? Int {
+        if let appr_int = data.value(forKey: "approved") as? NSNumber {
         
             self.approved = Approval(rawValue: appr_int)
         }
@@ -234,7 +234,7 @@ class Marker: NSObject, ApiRequestDelegate {
     }
     
     // Make a copy of another marker
-    init?(copy marker: Marker) {
+    init (copy marker: Marker) {
         self.latitude = marker.latitude
         self.longitude = marker.longitude
         
@@ -302,7 +302,7 @@ class Marker: NSObject, ApiRequestDelegate {
         // If we're saving a marker that already exists on the server, dispatch an update
         if self.isPublic() {
             let copy = Marker(copy: self)
-            copy?.timestamp = nil
+            copy.timestamp = nil
             self.notifyUpdate(.update, oldMarker: copy)
         } else {
             self.notifyUpdate(.create)
@@ -312,7 +312,7 @@ class Marker: NSObject, ApiRequestDelegate {
     }
     
     // Update existing marker in core
-    func updateInCore(_ props: [String]) -> Bool {
+    func updateInCore(_ props: [MarkerValuePair]) -> Bool {
         
         /// Update core data
         // Get managed object context
@@ -338,13 +338,8 @@ class Marker: NSObject, ApiRequestDelegate {
             if  fetchResults != nil && fetchResults!.count > 0 {
                 let managedObject = fetchResults![0]
                 
-                for prop in props {
-                    
-                    guard let val = self.value(forKeyPath: prop) else {
-                        print("Marker has no value for prop: \(prop)")
-                        break
-                    }
-                    managedObject.setValue(val, forKey: prop)
+                for pair in props {
+                    managedObject.setValue(pair.val, forKey: pair.key)
                 }
                 
                 new = Marker(fromCoreData: managedObject)
@@ -453,6 +448,7 @@ class Marker: NSObject, ApiRequestDelegate {
         self.editMarkerCompletion = completion
     }
     
+    // For edit/create
     func notifyUpdate (_ editType: MarkerEditType) {
         self.notifyUpdate(editType, oldMarker: nil)
     }
@@ -816,7 +812,7 @@ class Marker: NSObject, ApiRequestDelegate {
                 return
             }
             
-            guard let rapproved = data["approved"] as? Int else {
+            guard let rapproved = data["approved"] as? NSNumber else {
                 print("Error: cannot complete update. Server did not return approved")
                 return
             }
@@ -826,18 +822,26 @@ class Marker: NSObject, ApiRequestDelegate {
                 return
             }
             
-            self.tags = nouns_arr.joined(separator: " ")
+            let tags = nouns_arr.joined(separator: " ")
+            
+            let copy = Marker(copy: self)
+            
+            self.tags = tags
             self.approved = approval
             
             if (self.timestamp != nil) {
-                if self.updateInCore(["tags", "approved"]) == false {
+                
+                let tagpair = MarkerValuePair("tags", tags)
+                let apprpair = MarkerValuePair("approved", approval.rawValue)
+                
+                if self.updateInCore([tagpair, apprpair]) == false {
                     print("update marker in core failed")
                     self.editMarkerCompletion?(false, "An error occurred while saving marker locally.")
                     return
                 }
             }
             
-            self.notifyUpdate(.update)
+            self.notifyUpdate(.update, oldMarker: copy)
             
             self.editMarkerCompletion?(true, "Marker update succeeded")
         }
@@ -875,4 +879,13 @@ enum MarkerEditType {
 
 enum DataLocation {
     case local, `public`
+}
+
+struct MarkerValuePair {
+    var key: String
+    var val: Any
+    init (_ key: String, _ val: Any) {
+        self.key = key
+        self.val = val
+    }
 }
