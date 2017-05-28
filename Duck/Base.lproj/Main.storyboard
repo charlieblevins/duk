@@ -445,6 +445,7 @@
                                     </view>
                                 </subviews>
                                 <constraints>
+                                    <constraint firstItem="E1H-Ym-uKX" firstAttribute="top" secondItem="QUg-ze-IRq" secondAttribute="top" id="J3B-vj-yTl"/>
                                     <constraint firstItem="E1H-Ym-uKX" firstAttribute="width" secondItem="QUg-ze-IRq" secondAttribute="width" id="Mif-pM-A67"/>
                                     <constraint firstAttribute="trailing" secondItem="E1H-Ym-uKX" secondAttribute="trailing" id="Tck-zw-GfG"/>
                                     <constraint firstAttribute="bottom" secondItem="E1H-Ym-uKX" secondAttribute="bottom" id="h3T-BW-VXf"/>
@@ -488,7 +489,6 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="vgS-3t-hPM" firstAttribute="centerX" secondItem="jrS-IA-BSx" secondAttribute="centerX" id="1Gg-ZB-wZs"/>
-                            <constraint firstItem="E1H-Ym-uKX" firstAttribute="top" secondItem="Tx0-v5-Pzh" secondAttribute="bottom" id="ARV-qU-qqR"/>
                             <constraint firstItem="QUg-ze-IRq" firstAttribute="height" secondItem="jrS-IA-BSx" secondAttribute="height" constant="-140" id="Jwb-gm-d2v"/>
                             <constraint firstItem="QUg-ze-IRq" firstAttribute="leading" secondItem="jrS-IA-BSx" secondAttribute="leading" id="Ud6-p4-LgG"/>
                             <constraint firstItem="XaU-hB-1Yq" firstAttribute="centerX" secondItem="jrS-IA-BSx" secondAttribute="centerX" id="Vqy-fq-PkK"/>
@@ -1234,7 +1234,7 @@
             <objects>
                 <navigationController storyboardIdentifier="MainNavigation" id="JpL-cz-e6M" customClass="MainNavigation" customModule="Duck" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="V3g-Kp-vZr"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="58t-KB-4nF">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="58t-KB-4nF">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
