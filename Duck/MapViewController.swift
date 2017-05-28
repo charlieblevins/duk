@@ -64,7 +64,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         showGMap()
         
         // Add buttons
-        //showAddMarkerButton()
         showMyLocationBtn()
         
         menuBtns = [searchBtn, addMarkerBtn, markersBtn, accountBtn]
@@ -229,11 +228,15 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             
             // Animate to marker
             if let map_marker = mapMarker {
-                self.mapView?.animate(to: GMSCameraPosition.camera(withTarget: map_marker.position, zoom: 16))
+                self.zoomToPosition(map_marker.position)
                 self.showInfoWindow(map_marker)
             }
         })
 
+    }
+    
+    func zoomToPosition (_ position: CLLocationCoordinate2D) {
+        self.mapView?.animate(to: GMSCameraPosition.camera(withTarget: position, zoom: 16))
     }
     
     // map reaches idle state
@@ -632,7 +635,12 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     func myLocationBtnTapped () {
         
         checkUserLocation(true) {
-            self.showNearbyMarkers()
+            
+            let coord = self.mapView?.myLocation?.coordinate
+            
+            if (coord != nil) {
+                self.zoomToPosition(self.mapView!.myLocation!.coordinate)
+            }
         }
     }
     
