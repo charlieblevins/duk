@@ -356,5 +356,25 @@ extension UIViewController {
         
         present(alertController, animated: true, completion: nil)
     }
+    
+    func popSettingsAlert (_ title: String, text: String) {
+        
+        let alertController = UIAlertController(title: title,
+                                                message: text,
+                                                preferredStyle: .alert)
+        
+        let settingsAction = UIAlertAction(title: "Settings", style: .default) { (alertAction) in
+            
+            if let appSettings = URL(string: UIApplicationOpenSettingsURLString) {
+                UIApplication.shared.openURL(appSettings)
+            }
+        }
+        alertController.addAction(settingsAction)
+        
+        let cancelAction = UIAlertAction(title: "Cancel", style: .cancel, handler: nil)
+        alertController.addAction(cancelAction)
+        
+        present(alertController, animated: true, completion: nil)
+    }
 }
 

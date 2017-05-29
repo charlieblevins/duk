@@ -11,6 +11,7 @@
 import CoreData
 import CoreLocation
 import UIKit
+import AVFoundation
 
 protocol AddMarkerViewDelegate {
     func addMarkerView(didUpdateMarker marker: Marker)
@@ -188,63 +189,111 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         imagePicker.showsCameraControls = false
         
         present(imagePicker, animated: true, completion: {
-            
-            // Assign the overlay and associate delegate
-            let overlay = CameraControlsOverlay.instanceFromNib()
-            overlay.delegate = self
-            self.imagePicker.cameraOverlayView = overlay
-            
-            // Turn off conclicting automatic constraints
-            self.imagePicker.cameraOverlayView!.translatesAutoresizingMaskIntoConstraints = false
-            
-            // Full width
-            let width_constraint = NSLayoutConstraint(
-                item: self.imagePicker.cameraOverlayView!,
-                attribute: .width,
-                relatedBy: .equal,
-                toItem: self.imagePicker.cameraOverlayView!.superview!,
-                attribute: .width,
-                multiplier: 1,
-                constant: 0
-            )
-            width_constraint.isActive = true
-            
-            // Constant height
-            let height_constraint = NSLayoutConstraint(
-                item: self.imagePicker.cameraOverlayView!,
-                attribute: .height,
-                relatedBy: .equal,
-                toItem: self.imagePicker.cameraOverlayView!.superview!,
-                attribute: .height,
-                multiplier: 1,
-                constant: 0
-            )
-            height_constraint.isActive = true
+            let status = AVCaptureDevice.authorizationStatus(forMediaType: AVMediaTypeVideo)
+            self.cameraAuthRouter(status)
+        })
+    }
     
-            // Top
-            let top_constraint = NSLayoutConstraint(
-                item: self.imagePicker.cameraOverlayView!,
-                attribute: .top,
-                relatedBy: .equal,
-                toItem: self.imagePicker.cameraOverlayView!.superview!,
-                attribute: .top,
-                multiplier: 1,
-                constant: 0
-            )
-            top_constraint.isActive = true
+    // Should be called after presentation complete of UIImagePickerControler
+    func presentCameraOverlay () {
+        
+        // Assign the overlay and associate delegate
+        let overlay = CameraControlsOverlay.instanceFromNib()
+        overlay.delegate = self
+        self.imagePicker.cameraOverlayView = overlay
+        
+        // Turn off conflicting automatic constraints
+        self.imagePicker.cameraOverlayView!.translatesAutoresizingMaskIntoConstraints = false
+        
+        // Full width
+        let width_constraint = NSLayoutConstraint(
+            item: self.imagePicker.cameraOverlayView!,
+            attribute: .width,
+            relatedBy: .equal,
+            toItem: self.imagePicker.cameraOverlayView!.superview!,
+            attribute: .width,
+            multiplier: 1,
+            constant: 0
+        )
+        width_constraint.isActive = true
+        
+        // Constant height
+        let height_constraint = NSLayoutConstraint(
+            item: self.imagePicker.cameraOverlayView!,
+            attribute: .height,
+            relatedBy: .equal,
+            toItem: self.imagePicker.cameraOverlayView!.superview!,
+            attribute: .height,
+            multiplier: 1,
+            constant: 0
+        )
+        height_constraint.isActive = true
+        
+        // Top
+        let top_constraint = NSLayoutConstraint(
+            item: self.imagePicker.cameraOverlayView!,
+            attribute: .top,
+            relatedBy: .equal,
+            toItem: self.imagePicker.cameraOverlayView!.superview!,
+            attribute: .top,
+            multiplier: 1,
+            constant: 0
+        )
+        top_constraint.isActive = true
+        
+        // Left
+        let left_constraint = NSLayoutConstraint(
+            item: self.imagePicker.cameraOverlayView!,
+            attribute: .leading,
+            relatedBy: .equal,
+            toItem: self.imagePicker.cameraOverlayView!.superview!,
+            attribute: .leading,
+            multiplier: 1,
+            constant: 0
+        )
+        left_constraint.isActive = true
+    }
     
-            // Left
-            let left_constraint = NSLayoutConstraint(
-                item: self.imagePicker.cameraOverlayView!,
-                attribute: .leading,
-                relatedBy: .equal,
-                toItem: self.imagePicker.cameraOverlayView!.superview!,
-                attribute: .leading,
-                multiplier: 1,
-                constant: 0
-            )
-            left_constraint.isActive = true
+    func cameraAuthRouter (_ status: AVAuthorizationStatus) {
+        
+        var msg: String
+        
+        switch status {
             
+        case .authorized:
+            self.presentCameraOverlay()
+            return
+            
+        case .notDetermined:
+            self.presentCameraOverlay()
+            
+            // Prompting user for the permission to use the camera.
+            AVCaptureDevice.requestAccess(forMediaType: AVMediaTypeVideo) { granted in
+                if granted {
+                    print("Granted access to \(AVMediaTypeVideo)")
+                    
+                } else {
+                    print("Denied access to \(AVMediaTypeVideo)")
+                    
+                    DispatchQueue.main.async(execute: {
+                        self.dismiss(animated: true, completion: nil)
+                    })
+                }
+            }
+            return
+            
+        case .restricted:
+            msg = "This user's camera access is restricted."
+            break
+            
+        case .denied:
+            msg = "You have previously denied camera access. Go to settings to enable it."
+            break
+        }
+        
+        // Dismiss the camera overlay and notify user of failure
+        dismiss(animated: true, completion: {
+           self.popSettingsAlert("Camera Access Denied", text: msg)
         })
     }
     
