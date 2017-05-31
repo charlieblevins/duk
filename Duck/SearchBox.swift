@@ -169,6 +169,7 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
             }
         }
     }
+
     
     @IBAction func closeTapped(_ sender: UIButton) {
         self.view.removeFromSuperview()
@@ -177,7 +178,15 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
     
     @IBAction func searchTapped(_ sender: AnyObject) {
         print("search tapped")
-        
+        runSearch()
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        runSearch()
+        return true
+    }
+    
+    func runSearch () {
         self.noun = (self.nounsField.text != "") ? self.nounsField.text : nil
         
         var point: CLLocationCoordinate2D? = nil
@@ -225,8 +234,8 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
                 self.delegate?.locationAccessFailed()
                 return
             }
-        
-        // Get coord set by g places
+            
+            // Get coord set by g places
         } else if tab_name == "address" {
             
             guard self.coord != nil else {
@@ -241,11 +250,10 @@ class SearchBox: UIViewController, GMSAutocompleteViewControllerDelegate, UIText
             print("unrecognized tab_name")
             return
         }
-
+        
         // Search near point
         marker_aggregator.loadNearPoint(point!, noun: self.noun, searchType: search_type!);
     }
-    
     
     // Handle the user's selection.
     func viewController(_ viewController: GMSAutocompleteViewController, didAutocompleteWith place: GMSPlace) {
