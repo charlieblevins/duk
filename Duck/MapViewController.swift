@@ -1037,43 +1037,23 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
     func markerAggregator(loadDidComplete data: [Marker], method: LoadMethod, noun: String?) {
         print("Marker load complete")
         
-        // Clear all existing markers
-        mapView.clear()
-        curMapMarkers = []
-        
-        // If no markers, stop here
-        if data.count == 0 {
-            return
-        }
+        let result_viewer = ResultViewer(markers: data, mapView: self.mapView, noun: noun, method: method)
         
         hideSearchBox()
         
-        // Iterate through markers, adding them to the map
-        // and creating a bounding box for the group
-        var groupBounds: GMSCoordinateBounds? = nil
-        for marker in data {
-            
-            let map_marker: DukGMSMarker? = (noun != nil) ? marker.constructMapMarker(noun) : marker.constructMapMarker(nil)
-            
-            if let mm = map_marker {
-                
-                // Display marker on map
-                mm.map = self.mapView
-                
-                // Store reference
-                curMapMarkers.append(mm)
-                
-                if groupBounds == nil {
-                    groupBounds = GMSCoordinateBounds(coordinate: mm.position, coordinate: mm.position)
-                } else {
-                    groupBounds = groupBounds!.includingCoordinate(mm.position)
-                }
-            }
+        // no markers found
+        if data.count == 0 {
+            appendSearchResults(result_viewer.resultText.text)
+            return
         }
         
-        // Animate camera to markers
-        let cameraUpdate = GMSCameraUpdate.fit(groupBounds!)
-        mapView!.animate(with: cameraUpdate)
+        // Clear all existing markers
+        mapView.clear()
+        
+        // Update map view controller's marker value store
+        curMapMarkers = result_viewer.mapToDukMarkers()
+        
+        result_viewer.updateMap()
         
         // Search is automatic on app open
         // so search results are unexpected
@@ -1082,13 +1062,17 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
             return
         }
         
-        if method == .markersNearPoint {
-            appendSearchResults("\(data.count) nearby markers")
+        appendSearchResults(result_viewer.resultText.text)
+    }
+    
+    func resultText (_ count: Int, method: LoadMethod) -> String {
         
-        } else if method == .markersWithinBounds {
-            appendSearchResults("\(data.count) markers in view")
+        if method == .markersNearPoint {
+            return "\(count) nearby markers"
         }
         
+        // markersWithinBounds
+        return "\(count) markers in view"
     }
     
     // Called when any marker is changed on any view
@@ -1255,6 +1239,137 @@ class DukBtn: UIButton {
         if (self.orig_bg != nil) {
             self.backgroundColor = self.orig_bg
         }
+    }
+}
+
+class ResultViewer {
+    
+    var markers: [Marker]
+    var mapView: GMSMapView
+    var noun: String?
+    var resultText: ResultText
+    
+    init (markers: [Marker], mapView: GMSMapView, noun: String?, method: LoadMethod) {
+        self.markers = markers
+        self.mapView = mapView
+        self.noun = noun
+        
+        self.resultText = (method == .markersNearPoint) ? NearbyResultText(markers.count) : WithinBoundsResultText(markers.count)
+    }
+    
+    func mapToDukMarkers () -> [DukGMSMarker] {
+        
+        var gms_markers: [DukGMSMarker] = []
+        
+        for marker in markers {
+            
+            let map_marker: DukGMSMarker? = marker.constructMapMarker(noun)
+            
+            if let mm = map_marker {
+                
+                gms_markers.append(mm)
+            }
+        }
+        
+        return gms_markers
+    }
+    
+    func addToMap (markers: [DukGMSMarker]) {
+        
+        for marker in markers {
+            
+            // Display marker on map
+            marker.map = self.mapView
+        }
+    }
+
+    func getBoundingBox (_ markers: [DukGMSMarker]) -> GMSCoordinateBounds {
+        
+        // Iterate through markers, adding them to the map
+        // and creating a bounding box for the group
+        var groupBounds: GMSCoordinateBounds = GMSCoordinateBounds()
+        
+        for marker in markers {
+
+            groupBounds = groupBounds.includingCoordinate(marker.position)
+        }
+        
+        return groupBounds
+    }
+
+    // Add markers to map, then zoom to appropriate bounding box
+    func updateMap () {
+        
+        let gms_markers = self.mapToDukMarkers();
+        
+        self.addToMap(markers: gms_markers)
+        
+        let bounds = self.getBoundingBox(gms_markers)
+        
+        // Animate camera to markers
+        let cameraUpdate = GMSCameraUpdate.fit(bounds)
+        self.mapView.animate(with: cameraUpdate)
+    }
+}
+
+protocol ResultText {
+    
+    var count: Int { get set }
+    
+    var text: String { get }
+    
+    init (_ count: Int)
+}
+
+extension ResultText {
+    
+    var markerWord: String {
+        
+        get {
+            
+            switch self.count {
+            case 0:
+                return "markers"
+            case 1:
+                return "marker"
+            default:
+                return "markers"
+            }
+        }
+    }
+}
+
+class NearbyResultText: ResultText {
+    
+    var count: Int
+    
+    var text: String {
+        
+        // ex. "10 nearby markers"
+        // ex. "1 nearby marker"
+        get {
+            return "\(self.count) nearby \(self.markerWord)"
+        }
+    }
+    
+    required init (_ count: Int) {
+        self.count = count
+    }
+}
+
+
+class WithinBoundsResultText: ResultText {
+    
+    var count: Int
+    
+    var text: String {
+        get {
+            return "\(self.count) \(self.markerWord) in view"
+        }
+    }
+    
+    required init (_ count: Int) {
+        self.count = count
     }
 }
 
