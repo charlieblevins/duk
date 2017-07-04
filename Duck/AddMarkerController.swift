@@ -583,6 +583,10 @@ class AddMarkerController: UIViewController, UINavigationControllerDelegate, UII
         self.imagePicker.takePicture()
     }
     
+    func didTapClose () {
+        self.imagePicker.dismiss(animated: true, completion: nil)
+    }
+    
     // Display taken photo
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
         

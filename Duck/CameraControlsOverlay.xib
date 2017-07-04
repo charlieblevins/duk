@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="11201" systemVersion="16A323" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES">
+    <device id="retina4_7" orientation="portrait">
+        <adaptation id="fullscreen"/>
+    </device>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="11161"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="12089"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -12,6 +15,7 @@
             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
             <subviews>
                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="hcS-uu-oSN" userLabel="shutter">
+                    <rect key="frame" x="162.5" y="587" width="50" height="50"/>
                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                     <constraints>
                         <constraint firstAttribute="height" constant="50" id="0jc-6l-wYg"/>
@@ -26,15 +30,28 @@
                         <action selector="shutterTapped:" destination="iN0-l3-epB" eventType="touchUpInside" id="Yq6-dC-OlE"/>
                     </connections>
                 </button>
+                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RAP-Sq-rBM" userLabel="close">
+                    <rect key="frame" x="310" y="602" width="35" height="35"/>
+                    <state key="normal" image="close-x"/>
+                    <connections>
+                        <action selector="closeTapped:forEvent:" destination="iN0-l3-epB" eventType="touchUpInside" id="8Qw-ml-oNF"/>
+                    </connections>
+                </button>
             </subviews>
             <color key="backgroundColor" red="1" green="1" blue="1" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
             <constraints>
+                <constraint firstAttribute="trailing" secondItem="RAP-Sq-rBM" secondAttribute="trailing" constant="30" id="OKu-nl-xc5"/>
                 <constraint firstItem="hcS-uu-oSN" firstAttribute="centerX" secondItem="iN0-l3-epB" secondAttribute="centerX" id="dZS-T0-S7J"/>
+                <constraint firstAttribute="bottom" secondItem="RAP-Sq-rBM" secondAttribute="bottom" constant="30" id="kRC-va-tx9"/>
                 <constraint firstAttribute="bottom" secondItem="hcS-uu-oSN" secondAttribute="bottom" constant="30" id="wmU-EK-Fha"/>
             </constraints>
             <connections>
                 <outlet property="shutter" destination="hcS-uu-oSN" id="wIR-Ge-gb3"/>
             </connections>
+            <point key="canvasLocation" x="33.5" y="54.5"/>
         </view>
     </objects>
+    <resources>
+        <image name="close-x" width="35" height="35"/>
+    </resources>
 </document>

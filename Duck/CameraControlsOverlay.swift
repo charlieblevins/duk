@@ -10,6 +10,7 @@ import UIKit
 
 protocol CameraControlsOverlayDelegate {
     func didTapShutter ()
+    func didTapClose ()
 }
 
 class CameraControlsOverlay: UIView {
@@ -27,6 +28,13 @@ class CameraControlsOverlay: UIView {
         
         if self.delegate != nil {
             self.delegate?.didTapShutter()
+        }
+    }
+    @IBAction func closeTapped(_ sender: UIButton, forEvent event: UIEvent) {
+        print("close tapped")
+        
+        if self.delegate != nil {
+            self.delegate?.didTapClose()
         }
     }
 }

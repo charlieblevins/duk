@@ -1065,16 +1065,6 @@ class MapViewController: UIViewController, GMSMapViewDelegate, CLLocationManager
         appendSearchResults(result_viewer.resultText.text)
     }
     
-    func resultText (_ count: Int, method: LoadMethod) -> String {
-        
-        if method == .markersNearPoint {
-            return "\(count) nearby markers"
-        }
-        
-        // markersWithinBounds
-        return "\(count) markers in view"
-    }
-    
     // Called when any marker is changed on any view
     // Used to keep the map up to date with the latest marker data
     func handleMarkerUpdate (notification: Notification) {
