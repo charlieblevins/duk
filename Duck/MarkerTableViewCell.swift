@@ -111,7 +111,7 @@ class MarkerTableViewCell: UITableViewCell, ApiRequestDelegate {
     
     func updateStatus (_ content: String) {
         
-        if (master!.isViewLoaded == false) {
+        if (master == nil || master!.isViewLoaded == false) {
             return Void()
         }
         
