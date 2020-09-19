@@ -173,7 +173,7 @@ class MyMarkersController: UITableViewController, PublishSuccessDelegate, ApiReq
         let fetchReq: NSFetchRequest<NSFetchRequestResult> = NSFetchRequest()
         fetchReq.entity = NSEntityDescription.entity(forEntityName: "Marker", in: managedContext)
         
-        
+        // Limit markers to current user or no user
         let user_id: String = (Credentials.sharedInstance?.id == nil) ? "" : Credentials.sharedInstance!.id
         
         fetchReq.predicate = NSPredicate(format: "user_id = %@ OR user_id = nil", user_id)

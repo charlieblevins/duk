@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="JpL-cz-e6M">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12121" systemVersion="16G29" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="JpL-cz-e6M">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -680,23 +680,23 @@
                         <viewControllerLayoutGuide type="bottom" id="eOw-u5-xdc"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="BCu-JJ-30K">
-                        <rect key="frame" x="0.0" y="64" width="375" height="603"/>
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <scrollView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="WT4-hc-neF">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="553"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="597"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JkQ-0E-2WQ" userLabel="ContainerView">
-                                        <rect key="frame" x="0.0" y="0.0" width="375" height="553"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="617"/>
                                         <subviews>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CCt-3F-3ql" userLabel="PhotoSection">
-                                                <rect key="frame" x="0.0" y="0.0" width="375" height="325"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="375" height="389"/>
                                                 <subviews>
                                                     <imageView userInteractionEnabled="NO" contentMode="center" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="camera" translatesAutoresizingMaskIntoConstraints="NO" id="IVc-kA-wdL" customClass="ZoomableImageView" customModule="Duck" customModuleProvider="target">
-                                                        <rect key="frame" x="0.0" y="0.0" width="375" height="275"/>
+                                                        <rect key="frame" x="0.0" y="0.0" width="375" height="339"/>
                                                     </imageView>
                                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="uay-sv-EJ1">
-                                                        <rect key="frame" x="152" y="285" width="72" height="30"/>
+                                                        <rect key="frame" x="152" y="349" width="72" height="30"/>
                                                         <state key="normal" title="Add Photo"/>
                                                         <connections>
                                                             <action selector="addPhoto:" destination="qwp-Vw-ANI" eventType="touchUpInside" id="gF0-eV-7qU"/>
@@ -713,7 +713,7 @@
                                                 </constraints>
                                             </view>
                                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="t2y-YH-0od" userLabel="LowerStatic">
-                                                <rect key="frame" x="0.0" y="325" width="375" height="228"/>
+                                                <rect key="frame" x="0.0" y="389" width="375" height="228"/>
                                                 <subviews>
                                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="JoL-QU-Pnj" userLabel="TextSection">
                                                         <rect key="frame" x="21" y="0.0" width="335" height="50"/>
@@ -949,7 +949,7 @@
                                 </constraints>
                             </scrollView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xc9-8z-WyT" userLabel="SaveView">
-                                <rect key="frame" x="0.0" y="553" width="375" height="50"/>
+                                <rect key="frame" x="0.0" y="617" width="375" height="50"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HUM-2v-u5E" userLabel="Save Btn">
                                         <rect key="frame" x="0.0" y="0.0" width="375" height="50"/>
@@ -1234,7 +1234,7 @@
             <objects>
                 <navigationController storyboardIdentifier="MainNavigation" id="JpL-cz-e6M" customClass="MainNavigation" customModule="Duck" sceneMemberID="viewController">
                     <tabBarItem key="tabBarItem" title="Item" id="V3g-Kp-vZr"/>
-                    <navigationBar key="navigationBar" contentMode="scaleToFill" misplaced="YES" id="58t-KB-4nF">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="58t-KB-4nF">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
@@ -1314,6 +1314,6 @@
         <image name="info" width="20" height="20"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="kqa-9W-h1L"/>
+        <segue reference="mO3-IZ-UfX"/>
     </inferredMetricsTieBreakers>
 </document>
