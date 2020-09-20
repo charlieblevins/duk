@@ -23,10 +23,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // Override point for customization after application launch.
         
         // G Maps Api Key
-        GMSServices.provideAPIKey("AIzaSyCx00Cy9jGzz0hIcv485TWytTq82sAQYaI")
+        // TODO: replace with env var
+        GMSServices.provideAPIKey("__KEY__")
         
         // G Places Api Key
-        GMSPlacesClient.provideAPIKey("AIzaSyCx00Cy9jGzz0hIcv485TWytTq82sAQYaI")
+        // TODO: replace with env var
+        GMSPlacesClient.provideAPIKey("__KEY__")
         
         // Populate created attribute by timestamp attribute (one time only)
 //        let appDelegate = UIApplication.shared.delegate as! AppDelegate
